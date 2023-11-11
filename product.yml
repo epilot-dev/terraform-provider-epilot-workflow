@@ -15,6 +15,9 @@ security:
   - EpilotAuth: []
   - EpilotOrg: []
 
+servers:
+  - url: https://product.sls.epilot.io
+
 paths:
   # Tax
   /v1/tax:
@@ -35,14 +38,14 @@ paths:
           $ref: '#/components/responses/ServerErrorResponse'
 
   /v1/tax/{taxId}:
-    parameters:
-      - $ref: '#/components/parameters/TaxIdPathParam'
     get:
       operationId: getTax
       summary: getTax
       description: Read a specific tax entity by a given id
       tags:
         - Tax
+      parameters:
+        - $ref: '#/components/parameters/TaxIdPathParam'
       responses:
         '200':
           $ref: '#/components/responses/TaxResponse'
@@ -56,6 +59,8 @@ paths:
       description: Delete a specific tax entity by a given id
       tags:
         - Tax
+      parameters:
+        - $ref: '#/components/parameters/TaxIdPathParam'
       responses:
         '200':
           $ref: '#/components/responses/TaxResponse'
@@ -69,6 +74,8 @@ paths:
       description: Partially update a specific tax entity's properties by a given id and a given payload 
       tags:
         - Tax
+      parameters:
+        - $ref: '#/components/parameters/TaxIdPathParam'
       requestBody:
         $ref: '#/components/requestBodies/TaxPatchRequest'
       responses:
@@ -84,6 +91,8 @@ paths:
       description: Completly replace a specific tax entity's properties by a given id and a given payload
       tags:
         - Tax
+      parameters:
+        - $ref: '#/components/parameters/TaxIdPathParam'
       requestBody:
         $ref: '#/components/requestBodies/TaxUpdateRequest'
       responses:
@@ -113,14 +122,14 @@ paths:
           $ref: '#/components/responses/ServerErrorResponse'
 
   /v1/price/{priceId}:
-    parameters:
-      - $ref: '#/components/parameters/PriceIdPathParam'
     get:
       operationId: getPrice
       summary: getPrice
       description: Read a specific price entity by a given id
       tags:
         - Price
+      parameters:
+        - $ref: '#/components/parameters/PriceIdPathParam'
       responses:
         '200':
           $ref: '#/components/responses/PriceResponse'
@@ -134,6 +143,8 @@ paths:
       description: Delete a specific price entity by a given id
       tags:
         - Price
+      parameters:
+        - $ref: '#/components/parameters/PriceIdPathParam'
       responses:
         '200':
           $ref: '#/components/responses/PriceResponse'
@@ -147,6 +158,8 @@ paths:
       description: Partially update a specific price entity's properties by a given id and a given payload
       tags:
         - Price
+      parameters:
+        - $ref: '#/components/parameters/PriceIdPathParam'
       requestBody:
         $ref: '#/components/requestBodies/PricePatchRequest'
       responses:
@@ -162,6 +175,8 @@ paths:
       description: Completly replace a specific tax entity's properties by a given id and given payload
       tags:
         - Price
+      parameters:
+        - $ref: '#/components/parameters/PriceIdPathParam'
       requestBody:
         $ref: '#/components/requestBodies/PriceUpdateRequest'
       responses:
@@ -191,14 +206,14 @@ paths:
           $ref: '#/components/responses/ServerErrorResponse'
 
   /v1/product/{productId}:
-    parameters:
-      - $ref: '#/components/parameters/ProductIdPathParam'
     get:
       operationId: getProduct
       summary: getProduct
       description: Read a specific product entity by a given id
       tags:
         - Product
+      parameters:
+        - $ref: '#/components/parameters/ProductIdPathParam'
       responses:
         '200':
           $ref: '#/components/responses/ProductResponse'
@@ -212,6 +227,8 @@ paths:
       description: Delete a specific product entity by a given id
       tags:
         - Product
+      parameters:
+        - $ref: '#/components/parameters/ProductIdPathParam'
       responses:
         '200':
           $ref: '#/components/responses/ProductResponse'
@@ -225,6 +242,8 @@ paths:
       description: Partially update a specific product entity's properties by a given id and a given payload
       tags:
         - Product
+      parameters:
+        - $ref: '#/components/parameters/ProductIdPathParam'
       requestBody:
         $ref: '#/components/requestBodies/ProductPatchRequest'
       responses:
@@ -240,6 +259,8 @@ paths:
       description: Completly replace a specific product entity's properties by a given id and given payload
       tags:
         - Product
+      parameters:
+        - $ref: '#/components/parameters/ProductIdPathParam'
       requestBody:
         $ref: '#/components/requestBodies/ProductUpdateRequest'
       responses:
