@@ -6,6 +6,14 @@ generation:
     optionalPropertyRendering: withExample
   telemetryEnabled: false
 features:
+  go:
+    additionalProperties: 0.1.1
+    constsAndDefaults: 0.1.1
+    core: 3.1.4
+    flattening: 2.81.1
+    globalSecurity: 2.82.2
+    globalServerURLs: 2.82.0
+    unions: 2.85.0
   terraform:
     additionalProperties: 0.1.1
     constsAndDefaults: 0.1.1
@@ -13,6 +21,22 @@ features:
     globalSecurity: 2.81.1
     globalServerURLs: 2.82.0
     unions: 2.81.5
+go:
+  version: 0.0.1
+  clientServerStatusCodesAsErrors: true
+  flattenGlobalSecurity: true
+  imports:
+    option: openapi
+    paths:
+      callbacks: models/callbacks
+      errors: models/sdkerrors
+      operations: models/operations
+      shared: models/components
+      webhooks: models/webhooks
+  inputModelSuffix: input
+  maxMethodParams: 4
+  outputModelSuffix: output
+  packageName: openapi
 terraform:
   version: 0.2.0
   author: epilot-dev
