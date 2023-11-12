@@ -88,4 +88,10 @@ internal/sdk/pkg/models/shared/security.go
 USAGE.md
 internal/provider/provider.go
 examples/provider/provider.tf
+internal/provider/tax_resource.go
+internal/provider/tax_resource_sdk.go
+examples/resources/epilot-product_tax/resource.tf
+internal/provider/tax_data_source.go
+internal/provider/tax_data_source_sdk.go
+examples/data-sources/epilot-product_tax/data-source.tf
 .gitattributes

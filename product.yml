@@ -22,6 +22,7 @@ paths:
   # Tax
   /v1/tax:
     post:
+      x-speakeasy-entity-operation: Tax#create
       operationId: createTax
       summary: createTax
       description: Create a new tax entity
@@ -39,6 +40,7 @@ paths:
 
   /v1/tax/{taxId}:
     get:
+      x-speakeasy-entity-operation: Tax#get
       operationId: getTax
       summary: getTax
       description: Read a specific tax entity by a given id
@@ -54,6 +56,7 @@ paths:
         '500':
           $ref: '#/components/responses/ServerErrorResponse'
     delete:
+      x-speakeasy-entity-operation: Tax#delete
       operationId: deleteTax
       summary: deleteTax
       description: Delete a specific tax entity by a given id
@@ -86,6 +89,7 @@ paths:
         '500':
           $ref: '#/components/responses/ServerErrorResponse'
     put:
+      x-speakeasy-entity-operation: Tax#update
       operationId: updateTax
       summary: updateTax
       description: Completly replace a specific tax entity's properties by a given id and a given payload
@@ -321,6 +325,8 @@ components:
 
     BaseSystemId:
       type: object
+      x-speakeasy-match: id
+      x-speakeasy-param-readonly: true
       readOnly: true
       properties:
         _id:
@@ -372,31 +378,47 @@ components:
           type: string
           description: Organization Id the entity belongs to
           readOnly: true
+          x-speakeasy-terraform-ignore: true
+          x-speakeasy-param-readonly: true
         _owners:
           type: array
+          x-speakeasy-terraform-ignore: true
+          x-speakeasy-param-readonly: true
           readOnly: true
           items:
             $ref: '#/components/schemas/EntityOwner'
         _schema:
+          x-speakeasy-terraform-ignore: true
+          x-speakeasy-param-readonly: true
           readOnly: true
           type: string
         _title:
+          x-speakeasy-terraform-ignore: true
+          x-speakeasy-param-readonly: true
           readOnly: true
           type: string
         _tags:
+          x-speakeasy-terraform-ignore: true
+          x-speakeasy-param-readonly: true
           readOnly: true
           type: array
           items:
             type: string
         _created_at:
+          x-speakeasy-terraform-ignore: true
+          x-speakeasy-param-readonly: true
           readOnly: true
           type: string
           format: date-time
         _updated_at:
+          x-speakeasy-terraform-ignore: true
+          x-speakeasy-param-readonly: true
           readOnly: true
           type: string
           format: date-time
         _acl:
+          x-speakeasy-terraform-ignore: true
+          x-speakeasy-param-readonly: true
           readOnly: true
           type: array
           items:
@@ -446,6 +468,7 @@ components:
         - type
 
     Tax:
+      x-speakeasy-entity: Tax
       allOf:
         - $ref: '#/components/schemas/BaseTax'
         - $ref: '#/components/schemas/BaseTaxRequired'
@@ -724,6 +747,7 @@ components:
       description: The tax id
       in: path
       required: true
+      x-speakeasy-match: id
       schema:
         $ref: '#/components/schemas/BaseUUID'
 
