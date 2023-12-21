@@ -33,7 +33,7 @@ type TaxResource struct {
 
 // TaxResourceModel describes the resource data model.
 type TaxResourceModel struct {
-	ACL         []EntityACL    `tfsdk:"acl"`
+	ACL         TaxACL         `tfsdk:"acl"`
 	CreatedAt   types.String   `tfsdk:"created_at"`
 	ID          types.String   `tfsdk:"id"`
 	Org         types.String   `tfsdk:"org"`
@@ -58,31 +58,9 @@ func (r *TaxResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 		MarkdownDescription: "Tax Resource",
 
 		Attributes: map[string]schema.Attribute{
-			"acl": schema.ListNestedAttribute{
-				Computed: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"additional_properties": schema.StringAttribute{
-							Computed:    true,
-							Description: `Parsed as JSON.`,
-							Validators: []validator.String{
-								validators.IsValidJSON(),
-							},
-						},
-						"delete": schema.ListAttribute{
-							Computed:    true,
-							ElementType: types.StringType,
-						},
-						"edit": schema.ListAttribute{
-							Computed:    true,
-							ElementType: types.StringType,
-						},
-						"view": schema.ListAttribute{
-							Computed:    true,
-							ElementType: types.StringType,
-						},
-					},
-				},
+			"acl": schema.SingleNestedAttribute{
+				Computed:   true,
+				Attributes: map[string]schema.Attribute{},
 			},
 			"created_at": schema.StringAttribute{
 				Computed: true,

@@ -9,6 +9,9 @@ import (
 	"time"
 )
 
+type TaxACL struct {
+}
+
 type Region string
 
 const (
@@ -67,9 +70,9 @@ func (e *TaxType) UnmarshalJSON(data []byte) error {
 }
 
 type Tax struct {
-	ACL       []EntityACL `json:"_acl"`
-	CreatedAt time.Time   `json:"_created_at"`
-	ID        string      `json:"_id"`
+	ACL       TaxACL    `json:"_acl"`
+	CreatedAt time.Time `json:"_created_at"`
+	ID        string    `json:"_id"`
 	// Organization Id the entity belongs to
 	Org         string        `json:"_org"`
 	Owners      []EntityOwner `json:"_owners"`
@@ -95,9 +98,9 @@ func (t *Tax) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *Tax) GetACL() []EntityACL {
+func (o *Tax) GetACL() TaxACL {
 	if o == nil {
-		return []EntityACL{}
+		return TaxACL{}
 	}
 	return o.ACL
 }

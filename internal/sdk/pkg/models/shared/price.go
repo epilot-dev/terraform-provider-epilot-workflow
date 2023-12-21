@@ -10,6 +10,9 @@ import (
 	"time"
 )
 
+type ACL struct {
+}
+
 // BillingDurationUnit - The billing period duration unit
 type BillingDurationUnit string
 
@@ -357,9 +360,9 @@ func (u Unit) MarshalJSON() ([]byte, error) {
 }
 
 type Price struct {
-	ACL       []EntityACL `json:"_acl"`
-	CreatedAt time.Time   `json:"_created_at"`
-	ID        string      `json:"_id"`
+	ACL       ACL       `json:"_acl"`
+	CreatedAt time.Time `json:"_created_at"`
+	ID        string    `json:"_id"`
 	// Organization Id the entity belongs to
 	Org       string        `json:"_org"`
 	Owners    []EntityOwner `json:"_owners"`
@@ -431,9 +434,9 @@ func (p *Price) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *Price) GetACL() []EntityACL {
+func (o *Price) GetACL() ACL {
 	if o == nil {
-		return []EntityACL{}
+		return ACL{}
 	}
 	return o.ACL
 }

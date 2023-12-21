@@ -9,6 +9,9 @@ import (
 	"time"
 )
 
+type ProductACL struct {
+}
+
 // CrossSellableProducts - Stores references to products that can be cross sold with the current product.
 type CrossSellableProducts struct {
 	DollarRelation []BaseRelation `json:"$relation,omitempty"`
@@ -100,9 +103,9 @@ func (e *ProductType) UnmarshalJSON(data []byte) error {
 }
 
 type Product struct {
-	ACL       []EntityACL `json:"_acl"`
-	CreatedAt time.Time   `json:"_created_at"`
-	ID        string      `json:"_id"`
+	ACL       ProductACL `json:"_acl"`
+	CreatedAt time.Time  `json:"_created_at"`
+	ID        string     `json:"_id"`
 	// Organization Id the entity belongs to
 	Org       string        `json:"_org"`
 	Owners    []EntityOwner `json:"_owners"`
@@ -153,9 +156,9 @@ func (p *Product) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *Product) GetACL() []EntityACL {
+func (o *Product) GetACL() ProductACL {
 	if o == nil {
-		return []EntityACL{}
+		return ProductACL{}
 	}
 	return o.ACL
 }

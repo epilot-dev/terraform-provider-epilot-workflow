@@ -35,6 +35,26 @@ resource "epilot-product_tax" "my_tax" {
 
 ### Read-Only
 
+- `acl` (Attributes) (see [below for nested schema](#nestedatt--acl))
+- `created_at` (String)
 - `id` (String) The ID of this resource.
+- `org` (String) Organization Id the entity belongs to
+- `owners` (Attributes List) (see [below for nested schema](#nestedatt--owners))
+- `schema` (String)
+- `tags` (List of String)
+- `title` (String)
+- `updated_at` (String)
+
+<a id="nestedatt--acl"></a>
+### Nested Schema for `acl`
+
+
+<a id="nestedatt--owners"></a>
+### Nested Schema for `owners`
+
+Read-Only:
+
+- `org_id` (String)
+- `user_id` (String)
 
 

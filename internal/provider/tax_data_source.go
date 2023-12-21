@@ -29,7 +29,7 @@ type TaxDataSource struct {
 
 // TaxDataSourceModel describes the data model.
 type TaxDataSourceModel struct {
-	ACL         []EntityACL    `tfsdk:"acl"`
+	ACL         TaxACL         `tfsdk:"acl"`
 	CreatedAt   types.String   `tfsdk:"created_at"`
 	Org         types.String   `tfsdk:"org"`
 	Owners      []EntityOwner  `tfsdk:"owners"`
@@ -56,28 +56,9 @@ func (r *TaxDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 		MarkdownDescription: "Tax DataSource",
 
 		Attributes: map[string]schema.Attribute{
-			"acl": schema.ListNestedAttribute{
-				Computed: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"additional_properties": schema.StringAttribute{
-							Computed:    true,
-							Description: `Parsed as JSON.`,
-						},
-						"delete": schema.ListAttribute{
-							Computed:    true,
-							ElementType: types.StringType,
-						},
-						"edit": schema.ListAttribute{
-							Computed:    true,
-							ElementType: types.StringType,
-						},
-						"view": schema.ListAttribute{
-							Computed:    true,
-							ElementType: types.StringType,
-						},
-					},
-				},
+			"acl": schema.SingleNestedAttribute{
+				Computed:   true,
+				Attributes: map[string]schema.Attribute{},
 			},
 			"created_at": schema.StringAttribute{
 				Computed: true,

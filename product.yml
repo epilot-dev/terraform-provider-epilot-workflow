@@ -17,6 +17,7 @@ security:
 
 servers:
   - url: https://product.sls.epilot.io
+  - url: https://product.dev.sls.epilot.io
 
 paths:
   # Tax
@@ -402,7 +403,7 @@ components:
           format: date-time
         _acl:
           readOnly: true
-          type: array
+          type: object
           items:
             $ref: "#/components/schemas/EntityAcl"
       required:
