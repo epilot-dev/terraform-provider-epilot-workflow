@@ -29,12 +29,20 @@ type TaxDataSource struct {
 
 // TaxDataSourceModel describes the data model.
 type TaxDataSourceModel struct {
-	Active      types.Bool   `tfsdk:"active"`
-	Description types.String `tfsdk:"description"`
-	ID          types.String `tfsdk:"id"`
-	Rate        types.String `tfsdk:"rate"`
-	Region      types.String `tfsdk:"region"`
-	Type        types.String `tfsdk:"type"`
+	ACL         []EntityACL    `tfsdk:"acl"`
+	CreatedAt   types.String   `tfsdk:"created_at"`
+	Org         types.String   `tfsdk:"org"`
+	Owners      []EntityOwner  `tfsdk:"owners"`
+	Schema      types.String   `tfsdk:"schema"`
+	Tags        []types.String `tfsdk:"tags"`
+	Title       types.String   `tfsdk:"title"`
+	UpdatedAt   types.String   `tfsdk:"updated_at"`
+	Active      types.Bool     `tfsdk:"active"`
+	Description types.String   `tfsdk:"description"`
+	ID          types.String   `tfsdk:"id"`
+	Rate        types.String   `tfsdk:"rate"`
+	Region      types.String   `tfsdk:"region"`
+	Type        types.String   `tfsdk:"type"`
 }
 
 // Metadata returns the data source type name.
@@ -48,6 +56,62 @@ func (r *TaxDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 		MarkdownDescription: "Tax DataSource",
 
 		Attributes: map[string]schema.Attribute{
+			"acl": schema.ListNestedAttribute{
+				Computed: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"additional_properties": schema.StringAttribute{
+							Computed:    true,
+							Description: `Parsed as JSON.`,
+						},
+						"delete": schema.ListAttribute{
+							Computed:    true,
+							ElementType: types.StringType,
+						},
+						"edit": schema.ListAttribute{
+							Computed:    true,
+							ElementType: types.StringType,
+						},
+						"view": schema.ListAttribute{
+							Computed:    true,
+							ElementType: types.StringType,
+						},
+					},
+				},
+			},
+			"created_at": schema.StringAttribute{
+				Computed: true,
+			},
+			"org": schema.StringAttribute{
+				Computed:    true,
+				Description: `Organization Id the entity belongs to`,
+			},
+			"owners": schema.ListNestedAttribute{
+				Computed: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"org_id": schema.StringAttribute{
+							Computed: true,
+						},
+						"user_id": schema.StringAttribute{
+							Computed: true,
+						},
+					},
+				},
+			},
+			"schema": schema.StringAttribute{
+				Computed: true,
+			},
+			"tags": schema.ListAttribute{
+				Computed:    true,
+				ElementType: types.StringType,
+			},
+			"title": schema.StringAttribute{
+				Computed: true,
+			},
+			"updated_at": schema.StringAttribute{
+				Computed: true,
+			},
 			"active": schema.BoolAttribute{
 				Computed: true,
 			},

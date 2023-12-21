@@ -16,7 +16,7 @@ Tax Resource
 resource "epilot-product_tax" "my_tax" {
   active      = true
   description = "...my_description..."
-  rate        = "11"
+  rate        = "...my_rate..."
   region      = "CH"
   type        = "VAT"
 }

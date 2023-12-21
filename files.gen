@@ -62,7 +62,7 @@ internal/sdk/pkg/models/operations/createproduct.go
 internal/sdk/pkg/models/operations/deleteproduct.go
 internal/sdk/pkg/models/operations/getproduct.go
 internal/sdk/pkg/models/operations/patchproduct.go
-internal/sdk/pkg/models/operations/putproductbyid.go
+internal/sdk/pkg/models/operations/updateproduct.go
 internal/sdk/pkg/models/operations/createtax.go
 internal/sdk/pkg/models/operations/deletetax.go
 internal/sdk/pkg/models/operations/gettax.go
@@ -85,6 +85,8 @@ internal/sdk/pkg/models/shared/tax.go
 internal/sdk/pkg/models/shared/taxcreate.go
 internal/sdk/pkg/models/shared/taxupdate.go
 internal/sdk/pkg/models/shared/security.go
+internal/provider/type_entity_acl.go
+internal/provider/type_entity_owner.go
 USAGE.md
 internal/provider/provider.go
 examples/provider/provider.tf

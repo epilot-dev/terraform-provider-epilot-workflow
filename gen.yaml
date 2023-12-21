@@ -4,6 +4,8 @@ generation:
   sdkClassName: SDK
   usageSnippets:
     optionalPropertyRendering: withExample
+  fixes:
+    nameResolutionDec2023: false
   telemetryEnabled: false
 features:
   go:
@@ -15,12 +17,12 @@ features:
     globalServerURLs: 2.82.0
     unions: 2.85.0
   terraform:
-    additionalProperties: 0.1.1
-    constsAndDefaults: 0.1.1
-    core: 3.4.3
-    globalSecurity: 2.81.1
-    globalServerURLs: 2.82.0
-    unions: 2.81.5
+    additionalProperties: 0.1.2
+    constsAndDefaults: 0.1.2
+    core: 3.6.3
+    globalSecurity: 2.81.2
+    globalServerURLs: 2.82.1
+    unions: 2.81.7
 go:
   version: 0.0.1
   clientServerStatusCodesAsErrors: true

@@ -29,14 +29,14 @@ paths:
       tags:
         - Tax
       requestBody:
-        $ref: '#/components/requestBodies/TaxCreateRequest'
+        $ref: "#/components/requestBodies/TaxCreateRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/TaxResponse'
-        '400':
-          $ref: '#/components/responses/ClientErrorResponse'
-        '500':
-          $ref: '#/components/responses/ServerErrorResponse'
+        "200":
+          $ref: "#/components/responses/TaxResponse"
+        "400":
+          $ref: "#/components/responses/ClientErrorResponse"
+        "500":
+          $ref: "#/components/responses/ServerErrorResponse"
 
   /v1/tax/{taxId}:
     get:
@@ -47,14 +47,14 @@ paths:
       tags:
         - Tax
       parameters:
-        - $ref: '#/components/parameters/TaxIdPathParam'
+        - $ref: "#/components/parameters/TaxIdPathParam"
       responses:
-        '200':
-          $ref: '#/components/responses/TaxResponse'
-        '400':
-          $ref: '#/components/responses/ClientErrorResponse'
-        '500':
-          $ref: '#/components/responses/ServerErrorResponse'
+        "200":
+          $ref: "#/components/responses/TaxResponse"
+        "400":
+          $ref: "#/components/responses/ClientErrorResponse"
+        "500":
+          $ref: "#/components/responses/ServerErrorResponse"
     delete:
       x-speakeasy-entity-operation: Tax#delete
       operationId: deleteTax
@@ -63,31 +63,31 @@ paths:
       tags:
         - Tax
       parameters:
-        - $ref: '#/components/parameters/TaxIdPathParam'
+        - $ref: "#/components/parameters/TaxIdPathParam"
       responses:
-        '200':
-          $ref: '#/components/responses/TaxResponse'
-        '400':
-          $ref: '#/components/responses/ClientErrorResponse'
-        '500':
-          $ref: '#/components/responses/ServerErrorResponse'
+        "200":
+          $ref: "#/components/responses/TaxResponse"
+        "400":
+          $ref: "#/components/responses/ClientErrorResponse"
+        "500":
+          $ref: "#/components/responses/ServerErrorResponse"
     patch:
       operationId: patchTax
       summary: patchTax
-      description: Partially update a specific tax entity's properties by a given id and a given payload 
+      description: Partially update a specific tax entity's properties by a given id and a given payload
       tags:
         - Tax
       parameters:
-        - $ref: '#/components/parameters/TaxIdPathParam'
+        - $ref: "#/components/parameters/TaxIdPathParam"
       requestBody:
-        $ref: '#/components/requestBodies/TaxPatchRequest'
+        $ref: "#/components/requestBodies/TaxPatchRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/TaxResponse'
-        '400':
-          $ref: '#/components/responses/ClientErrorResponse'
-        '500':
-          $ref: '#/components/responses/ServerErrorResponse'
+        "200":
+          $ref: "#/components/responses/TaxResponse"
+        "400":
+          $ref: "#/components/responses/ClientErrorResponse"
+        "500":
+          $ref: "#/components/responses/ServerErrorResponse"
     put:
       x-speakeasy-entity-operation: Tax#update
       operationId: updateTax
@@ -96,16 +96,16 @@ paths:
       tags:
         - Tax
       parameters:
-        - $ref: '#/components/parameters/TaxIdPathParam'
+        - $ref: "#/components/parameters/TaxIdPathParam"
       requestBody:
-        $ref: '#/components/requestBodies/TaxUpdateRequest'
+        $ref: "#/components/requestBodies/TaxUpdateRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/TaxResponse'
-        '400':
-          $ref: '#/components/responses/ClientErrorResponse'
-        '500':
-          $ref: '#/components/responses/ServerErrorResponse'
+        "200":
+          $ref: "#/components/responses/TaxResponse"
+        "400":
+          $ref: "#/components/responses/ClientErrorResponse"
+        "500":
+          $ref: "#/components/responses/ServerErrorResponse"
 
   # Price
   /v1/price/:
@@ -116,14 +116,14 @@ paths:
       tags:
         - Price
       requestBody:
-        $ref: '#/components/requestBodies/PriceCreateRequest'
+        $ref: "#/components/requestBodies/PriceCreateRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/PriceResponse'
-        '400':
-          $ref: '#/components/responses/ClientErrorResponse'
-        '500':
-          $ref: '#/components/responses/ServerErrorResponse'
+        "200":
+          $ref: "#/components/responses/PriceResponse"
+        "400":
+          $ref: "#/components/responses/ClientErrorResponse"
+        "500":
+          $ref: "#/components/responses/ServerErrorResponse"
 
   /v1/price/{priceId}:
     get:
@@ -133,14 +133,14 @@ paths:
       tags:
         - Price
       parameters:
-        - $ref: '#/components/parameters/PriceIdPathParam'
+        - $ref: "#/components/parameters/PriceIdPathParam"
       responses:
-        '200':
-          $ref: '#/components/responses/PriceResponse'
-        '400':
-          $ref: '#/components/responses/ClientErrorResponse'
-        '500':
-          $ref: '#/components/responses/ServerErrorResponse'
+        "200":
+          $ref: "#/components/responses/PriceResponse"
+        "400":
+          $ref: "#/components/responses/ClientErrorResponse"
+        "500":
+          $ref: "#/components/responses/ServerErrorResponse"
     delete:
       operationId: deletePrice
       summary: deletePrice
@@ -148,14 +148,14 @@ paths:
       tags:
         - Price
       parameters:
-        - $ref: '#/components/parameters/PriceIdPathParam'
+        - $ref: "#/components/parameters/PriceIdPathParam"
       responses:
-        '200':
-          $ref: '#/components/responses/PriceResponse'
-        '400':
-          $ref: '#/components/responses/ClientErrorResponse'
-        '500':
-          $ref: '#/components/responses/ServerErrorResponse'
+        "200":
+          $ref: "#/components/responses/PriceResponse"
+        "400":
+          $ref: "#/components/responses/ClientErrorResponse"
+        "500":
+          $ref: "#/components/responses/ServerErrorResponse"
     patch:
       operationId: patchPrice
       summary: patchPrice
@@ -163,16 +163,16 @@ paths:
       tags:
         - Price
       parameters:
-        - $ref: '#/components/parameters/PriceIdPathParam'
+        - $ref: "#/components/parameters/PriceIdPathParam"
       requestBody:
-        $ref: '#/components/requestBodies/PricePatchRequest'
+        $ref: "#/components/requestBodies/PricePatchRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/PriceResponse'
-        '400':
-          $ref: '#/components/responses/ClientErrorResponse'
-        '500':
-          $ref: '#/components/responses/ServerErrorResponse'
+        "200":
+          $ref: "#/components/responses/PriceResponse"
+        "400":
+          $ref: "#/components/responses/ClientErrorResponse"
+        "500":
+          $ref: "#/components/responses/ServerErrorResponse"
     put:
       operationId: updatePrice
       summary: updatePrice
@@ -180,16 +180,16 @@ paths:
       tags:
         - Price
       parameters:
-        - $ref: '#/components/parameters/PriceIdPathParam'
+        - $ref: "#/components/parameters/PriceIdPathParam"
       requestBody:
-        $ref: '#/components/requestBodies/PriceUpdateRequest'
+        $ref: "#/components/requestBodies/PriceUpdateRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/PriceResponse'
-        '400':
-          $ref: '#/components/responses/ClientErrorResponse'
-        '500':
-          $ref: '#/components/responses/ServerErrorResponse'
+        "200":
+          $ref: "#/components/responses/PriceResponse"
+        "400":
+          $ref: "#/components/responses/ClientErrorResponse"
+        "500":
+          $ref: "#/components/responses/ServerErrorResponse"
 
   # Product
   /v1/product:
@@ -200,14 +200,14 @@ paths:
       tags:
         - Product
       requestBody:
-        $ref: '#/components/requestBodies/ProductCreateRequest'
+        $ref: "#/components/requestBodies/ProductCreateRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/ProductResponse'
-        '400':
-          $ref: '#/components/responses/ClientErrorResponse'
-        '500':
-          $ref: '#/components/responses/ServerErrorResponse'
+        "200":
+          $ref: "#/components/responses/ProductResponse"
+        "400":
+          $ref: "#/components/responses/ClientErrorResponse"
+        "500":
+          $ref: "#/components/responses/ServerErrorResponse"
 
   /v1/product/{productId}:
     get:
@@ -217,14 +217,14 @@ paths:
       tags:
         - Product
       parameters:
-        - $ref: '#/components/parameters/ProductIdPathParam'
+        - $ref: "#/components/parameters/ProductIdPathParam"
       responses:
-        '200':
-          $ref: '#/components/responses/ProductResponse'
-        '400':
-          $ref: '#/components/responses/ClientErrorResponse'
-        '500':
-          $ref: '#/components/responses/ServerErrorResponse'
+        "200":
+          $ref: "#/components/responses/ProductResponse"
+        "400":
+          $ref: "#/components/responses/ClientErrorResponse"
+        "500":
+          $ref: "#/components/responses/ServerErrorResponse"
     delete:
       operationId: deleteProduct
       summary: deleteProduct
@@ -232,14 +232,14 @@ paths:
       tags:
         - Product
       parameters:
-        - $ref: '#/components/parameters/ProductIdPathParam'
+        - $ref: "#/components/parameters/ProductIdPathParam"
       responses:
-        '200':
-          $ref: '#/components/responses/ProductResponse'
-        '400':
-          $ref: '#/components/responses/ClientErrorResponse'
-        '500':
-          $ref: '#/components/responses/ServerErrorResponse'
+        "200":
+          $ref: "#/components/responses/ProductResponse"
+        "400":
+          $ref: "#/components/responses/ClientErrorResponse"
+        "500":
+          $ref: "#/components/responses/ServerErrorResponse"
     patch:
       operationId: patchProduct
       summary: patchProduct
@@ -247,33 +247,33 @@ paths:
       tags:
         - Product
       parameters:
-        - $ref: '#/components/parameters/ProductIdPathParam'
+        - $ref: "#/components/parameters/ProductIdPathParam"
       requestBody:
-        $ref: '#/components/requestBodies/ProductPatchRequest'
+        $ref: "#/components/requestBodies/ProductPatchRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/ProductResponse'
-        '400':
-          $ref: '#/components/responses/ClientErrorResponse'
-        '500':
-          $ref: '#/components/responses/ServerErrorResponse'
+        "200":
+          $ref: "#/components/responses/ProductResponse"
+        "400":
+          $ref: "#/components/responses/ClientErrorResponse"
+        "500":
+          $ref: "#/components/responses/ServerErrorResponse"
     put:
-      operationId: putProductById
-      summary: putProductById
+      operationId: updateProduct
+      summary: updateProduct
       description: Completly replace a specific product entity's properties by a given id and given payload
       tags:
         - Product
       parameters:
-        - $ref: '#/components/parameters/ProductIdPathParam'
+        - $ref: "#/components/parameters/ProductIdPathParam"
       requestBody:
-        $ref: '#/components/requestBodies/ProductUpdateRequest'
+        $ref: "#/components/requestBodies/ProductUpdateRequest"
       responses:
-        '200':
-          $ref: '#/components/responses/ProductResponse'
-        '400':
-          $ref: '#/components/responses/ClientErrorResponse'
-        '500':
-          $ref: '#/components/responses/ServerErrorResponse'
+        "200":
+          $ref: "#/components/responses/ProductResponse"
+        "400":
+          $ref: "#/components/responses/ClientErrorResponse"
+        "500":
+          $ref: "#/components/responses/ServerErrorResponse"
 
 components:
   securitySchemes:
@@ -296,16 +296,16 @@ components:
           type: integer
         message:
           type: string
-          example: 'Product not found'
+          example: "Product not found"
       required:
         - status
         - message
 
     ServerError:
-      $ref: '#/components/schemas/BaseError'
+      $ref: "#/components/schemas/BaseError"
 
     ClientError:
-      $ref: '#/components/schemas/BaseError'
+      $ref: "#/components/schemas/BaseError"
 
     BaseUUID:
       type: string
@@ -321,16 +321,14 @@ components:
             type: object
             properties:
               entity_id:
-                $ref: '#/components/schemas/BaseUUID'
+                $ref: "#/components/schemas/BaseUUID"
 
     BaseSystemId:
       type: object
-      x-speakeasy-match: id
-      x-speakeasy-param-readonly: true
       readOnly: true
       properties:
         _id:
-          $ref: '#/components/schemas/BaseUUID'
+          $ref: "#/components/schemas/BaseUUID"
       required:
         - _id
 
@@ -343,10 +341,10 @@ components:
       properties:
         org_id:
           type: string
-          example: '123'
+          example: "123"
         user_id:
           type: string
-          example: '123'
+          example: "123"
       required:
         - org_id
 
@@ -358,17 +356,17 @@ components:
           type: array
           items:
             type: string
-            example: 'org:456'
+            example: "org:456"
         edit:
           type: array
           items:
             type: string
-            example: 'org:456'
+            example: "org:456"
         delete:
           type: array
           items:
             type: string
-            example: 'org:456'
+            example: "org:456"
       additionalProperties: true
 
     BaseSystemFields:
@@ -378,54 +376,35 @@ components:
           type: string
           description: Organization Id the entity belongs to
           readOnly: true
-          x-speakeasy-terraform-ignore: true
-          x-speakeasy-param-readonly: true
         _owners:
           type: array
-          x-speakeasy-terraform-ignore: true
-          x-speakeasy-param-readonly: true
           readOnly: true
           items:
-            $ref: '#/components/schemas/EntityOwner'
+            $ref: "#/components/schemas/EntityOwner"
         _schema:
-          x-speakeasy-terraform-ignore: true
-          x-speakeasy-param-readonly: true
           readOnly: true
           type: string
         _title:
-          x-speakeasy-terraform-ignore: true
-          x-speakeasy-param-readonly: true
           readOnly: true
           type: string
         _tags:
-          x-speakeasy-terraform-ignore: true
-          x-speakeasy-param-readonly: true
           readOnly: true
           type: array
           items:
             type: string
         _created_at:
-          x-speakeasy-terraform-ignore: true
-          x-speakeasy-param-readonly: true
           readOnly: true
           type: string
           format: date-time
         _updated_at:
-          x-speakeasy-terraform-ignore: true
-          x-speakeasy-param-readonly: true
           readOnly: true
           type: string
           format: date-time
         _acl:
-          x-speakeasy-terraform-ignore: true
-          x-speakeasy-param-readonly: true
           readOnly: true
           type: array
           items:
-            $ref: '#/components/schemas/EntityAcl'
-
-    BaseSystemFieldsRequired:
-      type: object
+            $ref: "#/components/schemas/EntityAcl"
       required:
         - _org
         - _owners
@@ -470,19 +449,18 @@ components:
     Tax:
       x-speakeasy-entity: Tax
       allOf:
-        - $ref: '#/components/schemas/BaseTax'
-        - $ref: '#/components/schemas/BaseTaxRequired'
-        - $ref: '#/components/schemas/BaseSystemId'
-        - $ref: '#/components/schemas/BaseSystemFields'
-        - $ref: '#/components/schemas/BaseSystemFieldsRequired'
+        - $ref: "#/components/schemas/BaseTax"
+        - $ref: "#/components/schemas/BaseTaxRequired"
+        - $ref: "#/components/schemas/BaseSystemId"
+        - $ref: "#/components/schemas/BaseSystemFields"
 
     TaxCreate:
       allOf:
-        - $ref: '#/components/schemas/BaseTax'
-        - $ref: '#/components/schemas/BaseTaxRequired'
+        - $ref: "#/components/schemas/BaseTax"
+        - $ref: "#/components/schemas/BaseTaxRequired"
 
     TaxUpdate:
-      $ref: '#/components/schemas/BaseTax'
+      $ref: "#/components/schemas/BaseTax"
 
     # Price
     BasePrice:
@@ -501,9 +479,9 @@ components:
           type: string
           description: One of `one_time` or `recurring` depending on whether the price is for a one-time purchase or a recurring (subscription) purchase.
           enum:
-            - 'one_time'
-            - 'recurring'
-          default: 'one_time'
+            - "one_time"
+            - "recurring"
+          default: "one_time"
         pricing_model:
           type: string
           description: |
@@ -513,11 +491,11 @@ components:
             - `tiered_volume` indicates that the unit pricing will be computed using tiers attribute. The customer pays the same unit price for all purchased units.
             - `tiered_flatfee` While similar to tiered_volume, tiered flat fee charges for the same price (flat) for the entire range instead using the unit price to multiply the quantity.
           enum:
-            - 'per_unit' # standardpreis
-            - 'tiered_volume' # mengenpreis
-            - 'tiered_graduated' # kumulativer preis
-            - 'tiered_flatfee' # gestaffelter pauschalpreis
-          default: 'per_unit'
+            - "per_unit" # standardpreis
+            - "tiered_volume" # mengenpreis
+            - "tiered_graduated" # kumulativer preis
+            - "tiered_flatfee" # gestaffelter pauschalpreis
+          default: "per_unit"
         unit_amount:
           description: The unit amount in cents to be charged, represented as a whole integer if possible.
           type: number
@@ -527,7 +505,7 @@ components:
         unit_amount_currency:
           description: Three-letter ISO currency code, in lowercase.
           oneOf:
-            - $ref: '#/components/schemas/Currency'
+            - $ref: "#/components/schemas/Currency"
         is_composite_price:
           description: The flag for prices that contain price components.
           type: boolean
@@ -536,7 +514,7 @@ components:
             Defines an array of tiers. Each tier has an upper bound, an unit amount and a flat fee.
           type: array
           items:
-            $ref: '#/components/schemas/PriceTier'
+            $ref: "#/components/schemas/PriceTier"
         is_tax_inclusive:
           type: boolean
           default: false
@@ -544,35 +522,35 @@ components:
         price_display_in_journeys:
           description: Defines the way the price amount is display in epilot journeys.
           type: string
-          enum: ['show_price', 'show_as_starting_price', 'show_as_on_request']
+          enum: ["show_price", "show_as_starting_price", "show_as_on_request"]
         billing_duration_amount:
           description: The billing period duration
           type: number
         billing_duration_unit:
           description: The billing period duration unit
           type: string
-          enum: ['weeks', 'months', 'years']
+          enum: ["weeks", "months", "years"]
         notice_time_amount:
           description: The notice period duration
           type: number
         notice_time_unit:
           description: The notice period duration unit
           type: string
-          enum: ['weeks', 'months', 'years']
+          enum: ["weeks", "months", "years"]
         termination_time_amount:
           description: The termination period duration
           type: number
         termination_time_unit:
           description: The termination period duration unit
           type: string
-          enum: ['weeks', 'months', 'years']
+          enum: ["weeks", "months", "years"]
         renewal_duration_amount:
           description: The renewal period duration
           type: number
         renewal_duration_unit:
           description: The renewal period duration unit
           type: string
-          enum: ['weeks', 'months', 'years']
+          enum: ["weeks", "months", "years"]
         variable_price:
           description: The flag for prices that can be influenced by external variables such as user input.
           type: boolean
@@ -582,11 +560,26 @@ components:
           oneOf:
             - type: string
               description: built-in units
-              enum: ['kw', 'kwh', 'm', 'm2', 'l', 'cubic-meter', 'cubic-meter-h', 'ls', 'a', 'kva', 'w', 'wp', 'kwp']
+              enum:
+                [
+                  "kw",
+                  "kwh",
+                  "m",
+                  "m2",
+                  "l",
+                  "cubic-meter",
+                  "cubic-meter-h",
+                  "ls",
+                  "a",
+                  "kva",
+                  "w",
+                  "wp",
+                  "kwp",
+                ]
             - type: string
               description: user custom unit
         tax:
-          $ref: '#/components/schemas/BaseRelation'
+          $ref: "#/components/schemas/BaseRelation"
           description: The tax to apply to this price, must be an existing tax
 
     PriceTier:
@@ -604,13 +597,13 @@ components:
         unit_amount_decimal:
           type: string
         display_mode:
-          $ref: '#/components/schemas/PriceTierDisplayMode'
-          
+          $ref: "#/components/schemas/PriceTierDisplayMode"
+
     PriceTierDisplayMode:
       type: string
       enum:
-        - 'hidden'
-        - 'on_request'
+        - "hidden"
+        - "on_request"
 
     Currency:
       type: string
@@ -628,22 +621,22 @@ components:
 
     Price:
       allOf:
-        - $ref: '#/components/schemas/BasePrice'
-        - $ref: '#/components/schemas/BasePriceRequired'
-        - $ref: '#/components/schemas/BaseSystemId'
-        - $ref: '#/components/schemas/BaseSystemFields'
-        - $ref: '#/components/schemas/BaseSystemFieldsRequired'
+        - $ref: "#/components/schemas/BasePrice"
+        - $ref: "#/components/schemas/BasePriceRequired"
+        - $ref: "#/components/schemas/BaseSystemId"
+        - $ref: "#/components/schemas/BaseSystemFields"
 
     PriceCreate:
       allOf:
-        - $ref: '#/components/schemas/BasePrice'
-        - $ref: '#/components/schemas/BasePriceRequired'
+        - $ref: "#/components/schemas/BasePrice"
+        - $ref: "#/components/schemas/BasePriceRequired"
 
     PriceUpdate:
-      $ref: '#/components/schemas/BasePrice'
+      $ref: "#/components/schemas/BasePrice"
 
     # Product
     BaseProduct:
+      type: object
       properties:
         name:
           type: string
@@ -689,7 +682,7 @@ components:
             $relation:
               type: array
               items:
-                $ref: '#/components/schemas/BaseRelation'
+                $ref: "#/components/schemas/BaseRelation"
         product_images:
           type: object
           description: Stores references to a set of file images of the product
@@ -697,7 +690,7 @@ components:
             $relation:
               type: array
               items:
-                $ref: '#/components/schemas/BaseRelation'
+                $ref: "#/components/schemas/BaseRelation"
         product_downloads:
           type: object
           description: |
@@ -707,9 +700,9 @@ components:
             $relation:
               type: array
               items:
-                $ref: '#/components/schemas/BaseRelation'
+                $ref: "#/components/schemas/BaseRelation"
         price_options:
-          $ref: '#/components/schemas/BaseRelation'
+          $ref: "#/components/schemas/BaseRelation"
           description: A set of [prices](/api/pricing#tag/simple_price_schema) or [composite prices](/api/pricing#tag/dynamic_price_schema) for the current product.
         availability_files:
           type: array
@@ -717,7 +710,7 @@ components:
             Stores references to the availability files that define where this product is available.
             These files are used when interacting with products via epilot Journeys, thought the AvailabilityCheck block.
           items:
-            $ref: '#/components/schemas/BaseRelation'
+            $ref: "#/components/schemas/BaseRelation"
 
     BaseProductRequired:
       type: object
@@ -727,19 +720,18 @@ components:
 
     Product:
       allOf:
-        - $ref: '#/components/schemas/BaseProduct'
-        - $ref: '#/components/schemas/BaseProductRequired'
-        - $ref: '#/components/schemas/BaseSystemId'
-        - $ref: '#/components/schemas/BaseSystemFields'
-        - $ref: '#/components/schemas/BaseSystemFieldsRequired'
+        - $ref: "#/components/schemas/BaseProduct"
+        - $ref: "#/components/schemas/BaseProductRequired"
+        - $ref: "#/components/schemas/BaseSystemId"
+        - $ref: "#/components/schemas/BaseSystemFields"
 
     ProductCreate:
       allOf:
-        - $ref: '#/components/schemas/BaseProduct'
-        - $ref: '#/components/schemas/BaseProductRequired'
+        - $ref: "#/components/schemas/BaseProduct"
+        - $ref: "#/components/schemas/BaseProductRequired"
 
     ProductUpdate:
-      $ref: '#/components/schemas/BaseProduct'
+      $ref: "#/components/schemas/BaseProduct"
 
   parameters:
     TaxIdPathParam:
@@ -749,7 +741,7 @@ components:
       required: true
       x-speakeasy-match: id
       schema:
-        $ref: '#/components/schemas/BaseUUID'
+        $ref: "#/components/schemas/BaseUUID"
 
     PriceIdPathParam:
       name: priceId
@@ -757,7 +749,7 @@ components:
       in: path
       required: true
       schema:
-        $ref: '#/components/schemas/BaseUUID'
+        $ref: "#/components/schemas/BaseUUID"
 
     ProductIdPathParam:
       name: productId
@@ -765,7 +757,7 @@ components:
       in: path
       required: true
       schema:
-        $ref: '#/components/schemas/BaseUUID'
+        $ref: "#/components/schemas/BaseUUID"
 
   requestBodies:
     TaxCreateRequest:
@@ -774,7 +766,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/TaxCreate'
+            $ref: "#/components/schemas/TaxCreate"
 
     TaxPatchRequest:
       description: Tax to patch
@@ -782,7 +774,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/TaxUpdate'
+            $ref: "#/components/schemas/TaxUpdate"
 
     TaxUpdateRequest:
       description: Tax to update
@@ -790,7 +782,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/TaxCreate'
+            $ref: "#/components/schemas/TaxCreate"
 
     PriceCreateRequest:
       description: Price to create
@@ -798,7 +790,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/PriceCreate'
+            $ref: "#/components/schemas/PriceCreate"
 
     PricePatchRequest:
       description: Price to patch
@@ -806,7 +798,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/PriceUpdate'
+            $ref: "#/components/schemas/PriceUpdate"
 
     PriceUpdateRequest:
       description: Price to update
@@ -814,7 +806,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/PriceCreate'
+            $ref: "#/components/schemas/PriceCreate"
 
     ProductCreateRequest:
       description: Product to create
@@ -822,7 +814,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ProductCreate'
+            $ref: "#/components/schemas/ProductCreate"
 
     ProductPatchRequest:
       description: Product to patch
@@ -830,7 +822,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ProductUpdate'
+            $ref: "#/components/schemas/ProductUpdate"
 
     ProductUpdateRequest:
       description: Product to update
@@ -838,7 +830,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ProductCreate'
+            $ref: "#/components/schemas/ProductCreate"
 
   responses:
     ClientErrorResponse:
@@ -846,32 +838,32 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ClientError'
+            $ref: "#/components/schemas/ClientError"
 
     ServerErrorResponse:
       description: Any error based on the server-side
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/ServerError'
+            $ref: "#/components/schemas/ServerError"
 
     TaxResponse:
       description: Tax entity response
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Tax'
+            $ref: "#/components/schemas/Tax"
 
     PriceResponse:
       description: Price entity with id
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Price'
+            $ref: "#/components/schemas/Price"
 
     ProductResponse:
       description: Product entity response
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Product'
+            $ref: "#/components/schemas/Product"

@@ -299,6 +299,7 @@ const (
 	UnitTypeStr UnitType = "str"
 )
 
+// Unit - The unit of measurement used for display purposes and possibly for calculations when the price is variable.
 type Unit struct {
 	One *One
 	Str *string

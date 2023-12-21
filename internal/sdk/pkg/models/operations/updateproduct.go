@@ -7,28 +7,28 @@ import (
 	"net/http"
 )
 
-type PutProductByIDRequest struct {
+type UpdateProductRequest struct {
 	// Product to update
 	ProductCreate shared.ProductCreate `request:"mediaType=application/json"`
 	// The product id
 	ProductID string `pathParam:"style=simple,explode=false,name=productId"`
 }
 
-func (o *PutProductByIDRequest) GetProductCreate() shared.ProductCreate {
+func (o *UpdateProductRequest) GetProductCreate() shared.ProductCreate {
 	if o == nil {
 		return shared.ProductCreate{}
 	}
 	return o.ProductCreate
 }
 
-func (o *PutProductByIDRequest) GetProductID() string {
+func (o *UpdateProductRequest) GetProductID() string {
 	if o == nil {
 		return ""
 	}
 	return o.ProductID
 }
 
-type PutProductByIDResponse struct {
+type UpdateProductResponse struct {
 	// Any error based on client data errors
 	ClientError *shared.ClientError
 	// HTTP response content type for this operation
@@ -43,42 +43,42 @@ type PutProductByIDResponse struct {
 	ServerError *shared.ServerError
 }
 
-func (o *PutProductByIDResponse) GetClientError() *shared.ClientError {
+func (o *UpdateProductResponse) GetClientError() *shared.ClientError {
 	if o == nil {
 		return nil
 	}
 	return o.ClientError
 }
 
-func (o *PutProductByIDResponse) GetContentType() string {
+func (o *UpdateProductResponse) GetContentType() string {
 	if o == nil {
 		return ""
 	}
 	return o.ContentType
 }
 
-func (o *PutProductByIDResponse) GetProduct() *shared.Product {
+func (o *UpdateProductResponse) GetProduct() *shared.Product {
 	if o == nil {
 		return nil
 	}
 	return o.Product
 }
 
-func (o *PutProductByIDResponse) GetStatusCode() int {
+func (o *UpdateProductResponse) GetStatusCode() int {
 	if o == nil {
 		return 0
 	}
 	return o.StatusCode
 }
 
-func (o *PutProductByIDResponse) GetRawResponse() *http.Response {
+func (o *UpdateProductResponse) GetRawResponse() *http.Response {
 	if o == nil {
 		return nil
 	}
 	return o.RawResponse
 }
 
-func (o *PutProductByIDResponse) GetServerError() *shared.ServerError {
+func (o *UpdateProductResponse) GetServerError() *shared.ServerError {
 	if o == nil {
 		return nil
 	}

@@ -379,9 +379,9 @@ func (s *Product) PatchProduct(ctx context.Context, request operations.PatchProd
 	return res, nil
 }
 
-// PutProductByID - putProductById
+// UpdateProduct - updateProduct
 // Completly replace a specific product entity's properties by a given id and given payload
-func (s *Product) PutProductByID(ctx context.Context, request operations.PutProductByIDRequest) (*operations.PutProductByIDResponse, error) {
+func (s *Product) UpdateProduct(ctx context.Context, request operations.UpdateProductRequest) (*operations.UpdateProductResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url, err := utils.GenerateURL(ctx, baseURL, "/v1/product/{productId}", request, nil)
 	if err != nil {
@@ -428,7 +428,7 @@ func (s *Product) PutProductByID(ctx context.Context, request operations.PutProd
 
 	contentType := httpRes.Header.Get("Content-Type")
 
-	res := &operations.PutProductByIDResponse{
+	res := &operations.UpdateProductResponse{
 		StatusCode:  httpRes.StatusCode,
 		ContentType: contentType,
 		RawResponse: httpRes,

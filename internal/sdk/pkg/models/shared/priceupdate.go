@@ -298,6 +298,7 @@ const (
 	PriceUpdateUnitTypeStr          PriceUpdateUnitType = "str"
 )
 
+// PriceUpdateUnit - The unit of measurement used for display purposes and possibly for calculations when the price is variable.
 type PriceUpdateUnit struct {
 	PriceUpdate1 *PriceUpdate1
 	Str          *string

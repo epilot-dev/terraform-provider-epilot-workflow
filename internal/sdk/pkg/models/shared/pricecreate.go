@@ -298,6 +298,7 @@ const (
 	PriceCreateUnitTypeStr          PriceCreateUnitType = "str"
 )
 
+// PriceCreateUnit - The unit of measurement used for display purposes and possibly for calculations when the price is variable.
 type PriceCreateUnit struct {
 	PriceCreate1 *PriceCreate1
 	Str          *string
