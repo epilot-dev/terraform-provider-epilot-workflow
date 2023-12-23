@@ -30,3 +30,7 @@ override.tf.json
 .terraformrc
 terraform.rc
 .DS_Store
+
+./terraform-provider-epilot-product
+./terraform-provider-epilot-price
+./terraform-provider-epilot-tax

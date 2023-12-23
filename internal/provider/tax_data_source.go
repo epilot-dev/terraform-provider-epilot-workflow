@@ -29,7 +29,7 @@ type TaxDataSource struct {
 
 // TaxDataSourceModel describes the data model.
 type TaxDataSourceModel struct {
-	ACL         TaxACL         `tfsdk:"acl"`
+	ACL         ACL            `tfsdk:"acl"`
 	CreatedAt   types.String   `tfsdk:"created_at"`
 	Org         types.String   `tfsdk:"org"`
 	Owners      []EntityOwner  `tfsdk:"owners"`

@@ -8,17 +8,17 @@ import (
 )
 
 type PatchProductRequest struct {
-	// Product to patch
-	ProductUpdate shared.ProductUpdate `request:"mediaType=application/json"`
+	// Product to patch (partial update)
+	ProductPatch shared.ProductPatch `request:"mediaType=application/json"`
 	// The product id
 	ProductID string `pathParam:"style=simple,explode=false,name=productId"`
 }
 
-func (o *PatchProductRequest) GetProductUpdate() shared.ProductUpdate {
+func (o *PatchProductRequest) GetProductPatch() shared.ProductPatch {
 	if o == nil {
-		return shared.ProductUpdate{}
+		return shared.ProductPatch{}
 	}
-	return o.ProductUpdate
+	return o.ProductPatch
 }
 
 func (o *PatchProductRequest) GetProductID() string {

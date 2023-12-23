@@ -105,7 +105,7 @@ func (e *ProductType) UnmarshalJSON(data []byte) error {
 type Product struct {
 	ACL       ProductACL `json:"_acl"`
 	CreatedAt time.Time  `json:"_created_at"`
-	ID        string     `json:"_id"`
+	ID        *string    `json:"_id,omitempty"`
 	// Organization Id the entity belongs to
 	Org       string        `json:"_org"`
 	Owners    []EntityOwner `json:"_owners"`
@@ -170,9 +170,9 @@ func (o *Product) GetCreatedAt() time.Time {
 	return o.CreatedAt
 }
 
-func (o *Product) GetID() string {
+func (o *Product) GetID() *string {
 	if o == nil {
-		return ""
+		return nil
 	}
 	return o.ID
 }

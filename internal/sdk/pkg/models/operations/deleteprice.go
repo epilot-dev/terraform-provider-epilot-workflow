@@ -24,7 +24,7 @@ type DeletePriceResponse struct {
 	ClientError *shared.ClientError
 	// HTTP response content type for this operation
 	ContentType string
-	// Price entity with id
+	// Price entity response
 	Price *shared.Price
 	// HTTP response status code for this operation
 	StatusCode int

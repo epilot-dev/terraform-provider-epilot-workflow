@@ -8,7 +8,7 @@ import (
 )
 
 type UpdateProductRequest struct {
-	// Product to update
+	// Product to update (complete update)
 	ProductCreate shared.ProductCreate `request:"mediaType=application/json"`
 	// The product id
 	ProductID string `pathParam:"style=simple,explode=false,name=productId"`

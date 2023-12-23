@@ -8,81 +8,81 @@ import (
 	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/pkg/utils"
 )
 
-// ProductUpdateCrossSellableProducts - Stores references to products that can be cross sold with the current product.
-type ProductUpdateCrossSellableProducts struct {
+// ProductPatchCrossSellableProducts - Stores references to products that can be cross sold with the current product.
+type ProductPatchCrossSellableProducts struct {
 	DollarRelation []BaseRelation `json:"$relation,omitempty"`
 }
 
-func (o *ProductUpdateCrossSellableProducts) GetDollarRelation() []BaseRelation {
+func (o *ProductPatchCrossSellableProducts) GetDollarRelation() []BaseRelation {
 	if o == nil {
 		return nil
 	}
 	return o.DollarRelation
 }
 
-type ProductUpdateFeature struct {
+type ProductPatchFeature struct {
 	// An arbitrary set of tags attached to a feature
 	Tags    []string `json:"_tags,omitempty"`
 	Feature *string  `json:"feature,omitempty"`
 }
 
-func (o *ProductUpdateFeature) GetTags() []string {
+func (o *ProductPatchFeature) GetTags() []string {
 	if o == nil {
 		return nil
 	}
 	return o.Tags
 }
 
-func (o *ProductUpdateFeature) GetFeature() *string {
+func (o *ProductPatchFeature) GetFeature() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Feature
 }
 
-// ProductUpdateProductDownloads - Stores references to a set of files downloadable from the product.
+// ProductPatchProductDownloads - Stores references to a set of files downloadable from the product.
 // e.g: tech specifications, quality control sheets, privacy policy agreements
-type ProductUpdateProductDownloads struct {
+type ProductPatchProductDownloads struct {
 	DollarRelation []BaseRelation `json:"$relation,omitempty"`
 }
 
-func (o *ProductUpdateProductDownloads) GetDollarRelation() []BaseRelation {
+func (o *ProductPatchProductDownloads) GetDollarRelation() []BaseRelation {
 	if o == nil {
 		return nil
 	}
 	return o.DollarRelation
 }
 
-// ProductUpdateProductImages - Stores references to a set of file images of the product
-type ProductUpdateProductImages struct {
+// ProductPatchProductImages - Stores references to a set of file images of the product
+type ProductPatchProductImages struct {
 	DollarRelation []BaseRelation `json:"$relation,omitempty"`
 }
 
-func (o *ProductUpdateProductImages) GetDollarRelation() []BaseRelation {
+func (o *ProductPatchProductImages) GetDollarRelation() []BaseRelation {
 	if o == nil {
 		return nil
 	}
 	return o.DollarRelation
 }
 
-// ProductUpdateType - The type of Product:
+// ProductPatchType - The type of Product:
 //
 // | type | description |
 // |----| ----|
 // | `product` | Represents a physical good |
 // | `service` | Represents a service or virtual product |
-type ProductUpdateType string
+type ProductPatchType string
 
 const (
-	ProductUpdateTypeProduct ProductUpdateType = "product"
-	ProductUpdateTypeService ProductUpdateType = "service"
+	ProductPatchTypeProduct ProductPatchType = "product"
+	ProductPatchTypeService ProductPatchType = "service"
 )
 
-func (e ProductUpdateType) ToPointer() *ProductUpdateType {
+func (e ProductPatchType) ToPointer() *ProductPatchType {
 	return &e
 }
 
-func (e *ProductUpdateType) UnmarshalJSON(data []byte) error {
+func (e *ProductPatchType) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -91,14 +91,14 @@ func (e *ProductUpdateType) UnmarshalJSON(data []byte) error {
 	case "product":
 		fallthrough
 	case "service":
-		*e = ProductUpdateType(v)
+		*e = ProductPatchType(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for ProductUpdateType: %v", v)
+		return fmt.Errorf("invalid value for ProductPatchType: %v", v)
 	}
 }
 
-type ProductUpdate struct {
+type ProductPatch struct {
 	// Stores references to the availability files that define where this product is available.
 	// These files are used when interacting with products via epilot Journeys, thought the AvailabilityCheck block.
 	//
@@ -106,10 +106,10 @@ type ProductUpdate struct {
 	// The product code
 	Code *string `json:"code,omitempty"`
 	// Stores references to products that can be cross sold with the current product.
-	CrossSellableProducts *ProductUpdateCrossSellableProducts `json:"cross_sellable_products,omitempty"`
+	CrossSellableProducts *ProductPatchCrossSellableProducts `json:"cross_sellable_products,omitempty"`
 	// A description of the product. Multi-line supported.
-	Description *string                `json:"description,omitempty"`
-	Feature     []ProductUpdateFeature `json:"feature,omitempty"`
+	Description *string               `json:"description,omitempty"`
+	Feature     []ProductPatchFeature `json:"feature,omitempty"`
 	// Not visible to customers, only in internal tables
 	InternalName *string `json:"internal_name,omitempty"`
 	// The description for the product
@@ -118,9 +118,9 @@ type ProductUpdate struct {
 	// Stores references to a set of files downloadable from the product.
 	// e.g: tech specifications, quality control sheets, privacy policy agreements
 	//
-	ProductDownloads *ProductUpdateProductDownloads `json:"product_downloads,omitempty"`
+	ProductDownloads *ProductPatchProductDownloads `json:"product_downloads,omitempty"`
 	// Stores references to a set of file images of the product
-	ProductImages *ProductUpdateProductImages `json:"product_images,omitempty"`
+	ProductImages *ProductPatchProductImages `json:"product_images,omitempty"`
 	// The type of Product:
 	//
 	// | type | description |
@@ -128,91 +128,91 @@ type ProductUpdate struct {
 	// | `product` | Represents a physical good |
 	// | `service` | Represents a service or virtual product |
 	//
-	Type *ProductUpdateType `default:"product" json:"type"`
+	Type *ProductPatchType `default:"product" json:"type"`
 }
 
-func (p ProductUpdate) MarshalJSON() ([]byte, error) {
+func (p ProductPatch) MarshalJSON() ([]byte, error) {
 	return utils.MarshalJSON(p, "", false)
 }
 
-func (p *ProductUpdate) UnmarshalJSON(data []byte) error {
+func (p *ProductPatch) UnmarshalJSON(data []byte) error {
 	if err := utils.UnmarshalJSON(data, &p, "", false, false); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *ProductUpdate) GetAvailabilityFiles() []BaseRelation {
+func (o *ProductPatch) GetAvailabilityFiles() []BaseRelation {
 	if o == nil {
 		return nil
 	}
 	return o.AvailabilityFiles
 }
 
-func (o *ProductUpdate) GetCode() *string {
+func (o *ProductPatch) GetCode() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Code
 }
 
-func (o *ProductUpdate) GetCrossSellableProducts() *ProductUpdateCrossSellableProducts {
+func (o *ProductPatch) GetCrossSellableProducts() *ProductPatchCrossSellableProducts {
 	if o == nil {
 		return nil
 	}
 	return o.CrossSellableProducts
 }
 
-func (o *ProductUpdate) GetDescription() *string {
+func (o *ProductPatch) GetDescription() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Description
 }
 
-func (o *ProductUpdate) GetFeature() []ProductUpdateFeature {
+func (o *ProductPatch) GetFeature() []ProductPatchFeature {
 	if o == nil {
 		return nil
 	}
 	return o.Feature
 }
 
-func (o *ProductUpdate) GetInternalName() *string {
+func (o *ProductPatch) GetInternalName() *string {
 	if o == nil {
 		return nil
 	}
 	return o.InternalName
 }
 
-func (o *ProductUpdate) GetName() *string {
+func (o *ProductPatch) GetName() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Name
 }
 
-func (o *ProductUpdate) GetPriceOptions() *BaseRelation {
+func (o *ProductPatch) GetPriceOptions() *BaseRelation {
 	if o == nil {
 		return nil
 	}
 	return o.PriceOptions
 }
 
-func (o *ProductUpdate) GetProductDownloads() *ProductUpdateProductDownloads {
+func (o *ProductPatch) GetProductDownloads() *ProductPatchProductDownloads {
 	if o == nil {
 		return nil
 	}
 	return o.ProductDownloads
 }
 
-func (o *ProductUpdate) GetProductImages() *ProductUpdateProductImages {
+func (o *ProductPatch) GetProductImages() *ProductPatchProductImages {
 	if o == nil {
 		return nil
 	}
 	return o.ProductImages
 }
 
-func (o *ProductUpdate) GetType() *ProductUpdateType {
+func (o *ProductPatch) GetType() *ProductPatchType {
 	if o == nil {
 		return nil
 	}

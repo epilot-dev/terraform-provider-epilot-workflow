@@ -362,7 +362,7 @@ func (u Unit) MarshalJSON() ([]byte, error) {
 type Price struct {
 	ACL       ACL       `json:"_acl"`
 	CreatedAt time.Time `json:"_created_at"`
-	ID        string    `json:"_id"`
+	ID        *string   `json:"_id,omitempty"`
 	// Organization Id the entity belongs to
 	Org       string        `json:"_org"`
 	Owners    []EntityOwner `json:"_owners"`
@@ -448,9 +448,9 @@ func (o *Price) GetCreatedAt() time.Time {
 	return o.CreatedAt
 }
 
-func (o *Price) GetID() string {
+func (o *Price) GetID() *string {
 	if o == nil {
-		return ""
+		return nil
 	}
 	return o.ID
 }

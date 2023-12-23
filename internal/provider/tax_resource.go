@@ -33,7 +33,7 @@ type TaxResource struct {
 
 // TaxResourceModel describes the resource data model.
 type TaxResourceModel struct {
-	ACL         TaxACL         `tfsdk:"acl"`
+	ACL         ACL            `tfsdk:"acl"`
 	CreatedAt   types.String   `tfsdk:"created_at"`
 	ID          types.String   `tfsdk:"id"`
 	Org         types.String   `tfsdk:"org"`

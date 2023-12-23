@@ -72,7 +72,7 @@ func (e *TaxType) UnmarshalJSON(data []byte) error {
 type Tax struct {
 	ACL       TaxACL    `json:"_acl"`
 	CreatedAt time.Time `json:"_created_at"`
-	ID        string    `json:"_id"`
+	ID        *string   `json:"_id,omitempty"`
 	// Organization Id the entity belongs to
 	Org         string        `json:"_org"`
 	Owners      []EntityOwner `json:"_owners"`
@@ -112,9 +112,9 @@ func (o *Tax) GetCreatedAt() time.Time {
 	return o.CreatedAt
 }
 
-func (o *Tax) GetID() string {
+func (o *Tax) GetID() *string {
 	if o == nil {
-		return ""
+		return nil
 	}
 	return o.ID
 }

@@ -8,7 +8,7 @@ import (
 )
 
 type UpdateTaxRequest struct {
-	// Tax to update
+	// Tax to update (complete update)
 	TaxCreate shared.TaxCreate `request:"mediaType=application/json"`
 	// The tax id
 	TaxID string `pathParam:"style=simple,explode=false,name=taxId"`

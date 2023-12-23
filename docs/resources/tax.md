@@ -14,11 +14,11 @@ Tax Resource
 
 ```terraform
 resource "epilot-product_tax" "my_tax" {
-  active      = true
-  description = "...my_description..."
+  active      = false
+  description = "TF_TAX"
   rate        = "...my_rate..."
   region      = "CH"
-  type        = "VAT"
+  type        = "Custom"
 }
 ```
 

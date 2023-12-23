@@ -111,6 +111,7 @@ paths:
   # Price
   /v1/price/:
     post:
+      x-speakeasy-entity-operation: Price#create
       operationId: createPrice
       summary: createPrice
       description: Create a new price entity
@@ -128,6 +129,7 @@ paths:
 
   /v1/price/{priceId}:
     get:
+      x-speakeasy-entity-operation: Price#get
       operationId: getPrice
       summary: getPrice
       description: Read a specific price entity by a given id
@@ -145,6 +147,7 @@ paths:
     delete:
       operationId: deletePrice
       summary: deletePrice
+      x-speakeasy-entity-operation: Price#delete
       description: Delete a specific price entity by a given id
       tags:
         - Price
@@ -175,6 +178,7 @@ paths:
         "500":
           $ref: "#/components/responses/ServerErrorResponse"
     put:
+      x-speakeasy-entity-operation: Price#update
       operationId: updatePrice
       summary: updatePrice
       description: Completly replace a specific tax entity's properties by a given id and given payload
@@ -195,6 +199,7 @@ paths:
   # Product
   /v1/product:
     post:
+      x-speakeasy-entity-operation: Product#create
       operationId: createProduct
       summary: createProduct
       description: Create a new product entity
@@ -212,6 +217,7 @@ paths:
 
   /v1/product/{productId}:
     get:
+      x-speakeasy-entity-operation: Product#get
       operationId: getProduct
       summary: getProduct
       description: Read a specific product entity by a given id
@@ -227,6 +233,7 @@ paths:
         "500":
           $ref: "#/components/responses/ServerErrorResponse"
     delete:
+      x-speakeasy-entity-operation: Product#delete
       operationId: deleteProduct
       summary: deleteProduct
       description: Delete a specific product entity by a given id
@@ -259,6 +266,7 @@ paths:
         "500":
           $ref: "#/components/responses/ServerErrorResponse"
     put:
+      x-speakeasy-entity-operation: Product#update
       operationId: updateProduct
       summary: updateProduct
       description: Completly replace a specific product entity's properties by a given id and given payload
@@ -322,6 +330,7 @@ components:
             type: object
             properties:
               entity_id:
+                required: true
                 $ref: "#/components/schemas/BaseUUID"
 
     BaseSystemId:
@@ -329,9 +338,8 @@ components:
       readOnly: true
       properties:
         _id:
+          required: true
           $ref: "#/components/schemas/BaseUUID"
-      required:
-        - _id
 
     EntityOwner:
       description: |
@@ -370,39 +378,62 @@ components:
             example: "org:456"
       additionalProperties: true
 
+    BaseTaxSchema:
+      type: object
+      readOnly: true
+      properties:
+        _schema:
+          type: string
+          enum: [tax]
+      required:
+        - _schema
+
+    BasePriceSchema:
+      type: object
+      readOnly: true
+      properties:
+        _schema:
+          type: string
+          enum: [price]
+      required:
+        - _schema
+
+    BaseProductSchema:
+      type: object
+      readOnly: true
+      properties:
+        _schema:
+          type: string
+          enum: [product]
+      required:
+        - _schema
+
     BaseSystemFields:
       type: object
+      readOnly: true
       properties:
         _org:
           type: string
           description: Organization Id the entity belongs to
-          readOnly: true
         _owners:
           type: array
-          readOnly: true
           items:
             $ref: "#/components/schemas/EntityOwner"
         _schema:
-          readOnly: true
           type: string
         _title:
-          readOnly: true
           type: string
         _tags:
-          readOnly: true
           type: array
           items:
             type: string
         _created_at:
-          readOnly: true
           type: string
           format: date-time
         _updated_at:
-          readOnly: true
           type: string
           format: date-time
         _acl:
-          readOnly: true
           type: object
           items:
             $ref: "#/components/schemas/EntityAcl"
@@ -452,6 +483,7 @@ components:
       allOf:
         - $ref: "#/components/schemas/BaseTax"
         - $ref: "#/components/schemas/BaseTaxRequired"
+        - $ref: "#/components/schemas/BaseTaxSchema"
         - $ref: "#/components/schemas/BaseSystemId"
         - $ref: "#/components/schemas/BaseSystemFields"
 
@@ -460,7 +492,7 @@ components:
         - $ref: "#/components/schemas/BaseTax"
         - $ref: "#/components/schemas/BaseTaxRequired"
 
-    TaxUpdate:
+    TaxPatch:
       $ref: "#/components/schemas/BaseTax"
 
     # Price
@@ -621,9 +653,11 @@ components:
         - type
 
     Price:
+      x-speakeasy-entity: Price
       allOf:
         - $ref: "#/components/schemas/BasePrice"
         - $ref: "#/components/schemas/BasePriceRequired"
+        - $ref: "#/components/schemas/BasePriceSchema"
         - $ref: "#/components/schemas/BaseSystemId"
         - $ref: "#/components/schemas/BaseSystemFields"
 
@@ -632,7 +666,7 @@ components:
         - $ref: "#/components/schemas/BasePrice"
         - $ref: "#/components/schemas/BasePriceRequired"
 
-    PriceUpdate:
+    PricePatch:
       $ref: "#/components/schemas/BasePrice"
 
     # Product
@@ -720,9 +754,11 @@ components:
         - type
 
     Product:
+      x-speakeasy-entity: Product
       allOf:
         - $ref: "#/components/schemas/BaseProduct"
         - $ref: "#/components/schemas/BaseProductRequired"
+        - $ref: "#/components/schemas/BaseProductSchema"
         - $ref: "#/components/schemas/BaseSystemId"
         - $ref: "#/components/schemas/BaseSystemFields"
 
@@ -731,7 +767,7 @@ components:
         - $ref: "#/components/schemas/BaseProduct"
         - $ref: "#/components/schemas/BaseProductRequired"
 
-    ProductUpdate:
+    ProductPatch:
       $ref: "#/components/schemas/BaseProduct"
 
   parameters:
@@ -749,12 +785,14 @@ components:
       description: The price id
       in: path
       required: true
+      x-speakeasy-match: id
       schema:
         $ref: "#/components/schemas/BaseUUID"
 
     ProductIdPathParam:
       name: productId
       description: The product id
+      x-speakeasy-match: id
       in: path
       required: true
       schema:
@@ -770,15 +808,15 @@ components:
             $ref: "#/components/schemas/TaxCreate"
 
     TaxPatchRequest:
-      description: Tax to patch
+      description: Tax to patch (partial update)
       required: true
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/TaxUpdate"
+            $ref: "#/components/schemas/TaxPatch"
 
     TaxUpdateRequest:
-      description: Tax to update
+      description: Tax to update (complete update)
       required: true
       content:
         application/json:
@@ -794,15 +832,15 @@ components:
             $ref: "#/components/schemas/PriceCreate"
 
     PricePatchRequest:
-      description: Price to patch
+      description: Price to patch (partial update)
       required: true
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/PriceUpdate"
+            $ref: "#/components/schemas/PricePatch"
 
     PriceUpdateRequest:
-      description: Price to update
+      description: Price to update (complete update)
       required: true
       content:
         application/json:
@@ -818,15 +856,15 @@ components:
             $ref: "#/components/schemas/ProductCreate"
 
     ProductPatchRequest:
-      description: Product to patch
+      description: Product to patch (partial update)
       required: true
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ProductUpdate"
+            $ref: "#/components/schemas/ProductPatch"
 
     ProductUpdateRequest:
-      description: Product to update
+      description: Product to update (complete update)
       required: true
       content:
         application/json:
@@ -856,7 +894,7 @@ components:
             $ref: "#/components/schemas/Tax"
 
     PriceResponse:
-      description: Price entity with id
+      description: Price entity response
       content:
         application/json:
           schema:

@@ -2,5 +2,6 @@
 
 package provider
 
-type TaxACL struct {
+type BaseRelation struct {
+	DollarRelation []DollarRelation `tfsdk:"dollar_relation"`
 }

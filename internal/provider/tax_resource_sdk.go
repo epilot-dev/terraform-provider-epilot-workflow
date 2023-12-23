@@ -41,7 +41,11 @@ func (r *TaxResourceModel) ToDeleteSDKType() *shared.TaxCreate {
 
 func (r *TaxResourceModel) RefreshFromGetResponse(resp *shared.Tax) {
 	r.CreatedAt = types.StringValue(resp.CreatedAt.Format(time.RFC3339Nano))
-	r.ID = types.StringValue(resp.ID)
+	if resp.ID != nil {
+		r.ID = types.StringValue(*resp.ID)
+	} else {
+		r.ID = types.StringNull()
+	}
 	r.Org = types.StringValue(resp.Org)
 	if len(r.Owners) > len(resp.Owners) {
 		r.Owners = r.Owners[:len(resp.Owners)]
