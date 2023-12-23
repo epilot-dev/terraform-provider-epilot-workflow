@@ -30,6 +30,9 @@ resource "epilot-product_price" "my_price" {
   tax = {
     dollar_relation = [
       {
+        tags = [
+          "...",
+        ]
         entity_id = "123e4567-e89b-12d3-a456-426614174000"
       },
     ]
@@ -104,7 +107,7 @@ The flag for prices that can be influenced by external variables such as user in
 
 ### Read-Only
 
-- `acl` (Attributes) (see [below for nested schema](#nestedatt--acl))
+- `acl` (Attributes) Access control list (ACL) for an entity. Defines sharing access to external orgs or users. (see [below for nested schema](#nestedatt--acl))
 - `created_at` (String)
 - `id` (String) The ID of this resource.
 - `org` (String) Organization Id the entity belongs to
@@ -127,6 +130,7 @@ Optional:
 Optional:
 
 - `entity_id` (String)
+- `tags` (List of String)
 
 
 
@@ -155,6 +159,13 @@ built-in units
 
 <a id="nestedatt--acl"></a>
 ### Nested Schema for `acl`
+
+Read-Only:
+
+- `additional_properties` (String) Parsed as JSON.
+- `delete` (List of String)
+- `edit` (List of String)
+- `view` (List of String)
 
 
 <a id="nestedatt--owners"></a>

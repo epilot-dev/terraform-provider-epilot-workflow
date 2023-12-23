@@ -3,7 +3,15 @@
 package shared
 
 type DollarRelation struct {
-	EntityID *string `json:"entity_id,omitempty"`
+	Tags     []string `json:"_tags,omitempty"`
+	EntityID *string  `json:"entity_id,omitempty"`
+}
+
+func (o *DollarRelation) GetTags() []string {
+	if o == nil {
+		return nil
+	}
+	return o.Tags
 }
 
 func (o *DollarRelation) GetEntityID() *string {

@@ -9,64 +9,24 @@ import (
 	"time"
 )
 
-type ProductACL struct {
-}
-
-// CrossSellableProducts - Stores references to products that can be cross sold with the current product.
-type CrossSellableProducts struct {
-	DollarRelation []BaseRelation `json:"$relation,omitempty"`
-}
-
-func (o *CrossSellableProducts) GetDollarRelation() []BaseRelation {
-	if o == nil {
-		return nil
-	}
-	return o.DollarRelation
-}
-
-type Feature struct {
+type ProductFeature struct {
 	// An arbitrary set of tags attached to a feature
 	Tags    []string `json:"_tags,omitempty"`
 	Feature *string  `json:"feature,omitempty"`
 }
 
-func (o *Feature) GetTags() []string {
+func (o *ProductFeature) GetTags() []string {
 	if o == nil {
 		return nil
 	}
 	return o.Tags
 }
 
-func (o *Feature) GetFeature() *string {
+func (o *ProductFeature) GetFeature() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Feature
-}
-
-// ProductDownloads - Stores references to a set of files downloadable from the product.
-// e.g: tech specifications, quality control sheets, privacy policy agreements
-type ProductDownloads struct {
-	DollarRelation []BaseRelation `json:"$relation,omitempty"`
-}
-
-func (o *ProductDownloads) GetDollarRelation() []BaseRelation {
-	if o == nil {
-		return nil
-	}
-	return o.DollarRelation
-}
-
-// ProductImages - Stores references to a set of file images of the product
-type ProductImages struct {
-	DollarRelation []BaseRelation `json:"$relation,omitempty"`
-}
-
-func (o *ProductImages) GetDollarRelation() []BaseRelation {
-	if o == nil {
-		return nil
-	}
-	return o.DollarRelation
 }
 
 // ProductType - The type of Product:
@@ -103,9 +63,10 @@ func (e *ProductType) UnmarshalJSON(data []byte) error {
 }
 
 type Product struct {
-	ACL       ProductACL `json:"_acl"`
-	CreatedAt time.Time  `json:"_created_at"`
-	ID        *string    `json:"_id,omitempty"`
+	// Access control list (ACL) for an entity. Defines sharing access to external orgs or users.
+	ACL       EntityACL `json:"_acl"`
+	CreatedAt time.Time `json:"_created_at"`
+	ID        string    `json:"_id"`
 	// Organization Id the entity belongs to
 	Org       string        `json:"_org"`
 	Owners    []EntityOwner `json:"_owners"`
@@ -113,28 +74,16 @@ type Product struct {
 	Tags      []string      `json:"_tags"`
 	Title     string        `json:"_title"`
 	UpdatedAt time.Time     `json:"_updated_at"`
-	// Stores references to the availability files that define where this product is available.
-	// These files are used when interacting with products via epilot Journeys, thought the AvailabilityCheck block.
-	//
-	AvailabilityFiles []BaseRelation `json:"availability_files,omitempty"`
 	// The product code
 	Code *string `json:"code,omitempty"`
-	// Stores references to products that can be cross sold with the current product.
-	CrossSellableProducts *CrossSellableProducts `json:"cross_sellable_products,omitempty"`
 	// A description of the product. Multi-line supported.
-	Description *string   `json:"description,omitempty"`
-	Feature     []Feature `json:"feature,omitempty"`
+	Description *string          `json:"description,omitempty"`
+	Feature     []ProductFeature `json:"feature,omitempty"`
 	// Not visible to customers, only in internal tables
 	InternalName *string `json:"internal_name,omitempty"`
 	// The description for the product
 	Name         string        `json:"name"`
 	PriceOptions *BaseRelation `json:"price_options,omitempty"`
-	// Stores references to a set of files downloadable from the product.
-	// e.g: tech specifications, quality control sheets, privacy policy agreements
-	//
-	ProductDownloads *ProductDownloads `json:"product_downloads,omitempty"`
-	// Stores references to a set of file images of the product
-	ProductImages *ProductImages `json:"product_images,omitempty"`
 	// The type of Product:
 	//
 	// | type | description |
@@ -156,9 +105,9 @@ func (p *Product) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *Product) GetACL() ProductACL {
+func (o *Product) GetACL() EntityACL {
 	if o == nil {
-		return ProductACL{}
+		return EntityACL{}
 	}
 	return o.ACL
 }
@@ -170,9 +119,9 @@ func (o *Product) GetCreatedAt() time.Time {
 	return o.CreatedAt
 }
 
-func (o *Product) GetID() *string {
+func (o *Product) GetID() string {
 	if o == nil {
-		return nil
+		return ""
 	}
 	return o.ID
 }
@@ -219,25 +168,11 @@ func (o *Product) GetUpdatedAt() time.Time {
 	return o.UpdatedAt
 }
 
-func (o *Product) GetAvailabilityFiles() []BaseRelation {
-	if o == nil {
-		return nil
-	}
-	return o.AvailabilityFiles
-}
-
 func (o *Product) GetCode() *string {
 	if o == nil {
 		return nil
 	}
 	return o.Code
-}
-
-func (o *Product) GetCrossSellableProducts() *CrossSellableProducts {
-	if o == nil {
-		return nil
-	}
-	return o.CrossSellableProducts
 }
 
 func (o *Product) GetDescription() *string {
@@ -247,7 +182,7 @@ func (o *Product) GetDescription() *string {
 	return o.Description
 }
 
-func (o *Product) GetFeature() []Feature {
+func (o *Product) GetFeature() []ProductFeature {
 	if o == nil {
 		return nil
 	}
@@ -273,20 +208,6 @@ func (o *Product) GetPriceOptions() *BaseRelation {
 		return nil
 	}
 	return o.PriceOptions
-}
-
-func (o *Product) GetProductDownloads() *ProductDownloads {
-	if o == nil {
-		return nil
-	}
-	return o.ProductDownloads
-}
-
-func (o *Product) GetProductImages() *ProductImages {
-	if o == nil {
-		return nil
-	}
-	return o.ProductImages
 }
 
 func (o *Product) GetType() *ProductType {

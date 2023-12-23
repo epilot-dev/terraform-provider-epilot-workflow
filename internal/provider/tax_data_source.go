@@ -29,7 +29,7 @@ type TaxDataSource struct {
 
 // TaxDataSourceModel describes the data model.
 type TaxDataSourceModel struct {
-	ACL         ACL            `tfsdk:"acl"`
+	ACL         EntityACL      `tfsdk:"acl"`
 	CreatedAt   types.String   `tfsdk:"created_at"`
 	Org         types.String   `tfsdk:"org"`
 	Owners      []EntityOwner  `tfsdk:"owners"`
@@ -57,8 +57,26 @@ func (r *TaxDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 
 		Attributes: map[string]schema.Attribute{
 			"acl": schema.SingleNestedAttribute{
-				Computed:   true,
-				Attributes: map[string]schema.Attribute{},
+				Computed: true,
+				Attributes: map[string]schema.Attribute{
+					"additional_properties": schema.StringAttribute{
+						Computed:    true,
+						Description: `Parsed as JSON.`,
+					},
+					"delete": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
+					},
+					"edit": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
+					},
+					"view": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
+					},
+				},
+				Description: `Access control list (ACL) for an entity. Defines sharing access to external orgs or users.`,
 			},
 			"created_at": schema.StringAttribute{
 				Computed: true,

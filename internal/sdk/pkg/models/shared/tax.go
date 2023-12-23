@@ -9,9 +9,6 @@ import (
 	"time"
 )
 
-type TaxACL struct {
-}
-
 type Region string
 
 const (
@@ -70,9 +67,10 @@ func (e *TaxType) UnmarshalJSON(data []byte) error {
 }
 
 type Tax struct {
-	ACL       TaxACL    `json:"_acl"`
+	// Access control list (ACL) for an entity. Defines sharing access to external orgs or users.
+	ACL       EntityACL `json:"_acl"`
 	CreatedAt time.Time `json:"_created_at"`
-	ID        *string   `json:"_id,omitempty"`
+	ID        string    `json:"_id"`
 	// Organization Id the entity belongs to
 	Org         string        `json:"_org"`
 	Owners      []EntityOwner `json:"_owners"`
@@ -98,9 +96,9 @@ func (t *Tax) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *Tax) GetACL() TaxACL {
+func (o *Tax) GetACL() EntityACL {
 	if o == nil {
-		return TaxACL{}
+		return EntityACL{}
 	}
 	return o.ACL
 }
@@ -112,9 +110,9 @@ func (o *Tax) GetCreatedAt() time.Time {
 	return o.CreatedAt
 }
 
-func (o *Tax) GetID() *string {
+func (o *Tax) GetID() string {
 	if o == nil {
-		return nil
+		return ""
 	}
 	return o.ID
 }

@@ -8,17 +8,17 @@ import (
 )
 
 type PatchTaxRequest struct {
-	// Tax to patch (partial update)
-	TaxPatch shared.TaxPatch `request:"mediaType=application/json"`
+	// Tax to patch
+	TaxUpdate shared.TaxUpdate `request:"mediaType=application/json"`
 	// The tax id
 	TaxID string `pathParam:"style=simple,explode=false,name=taxId"`
 }
 
-func (o *PatchTaxRequest) GetTaxPatch() shared.TaxPatch {
+func (o *PatchTaxRequest) GetTaxUpdate() shared.TaxUpdate {
 	if o == nil {
-		return shared.TaxPatch{}
+		return shared.TaxUpdate{}
 	}
-	return o.TaxPatch
+	return o.TaxUpdate
 }
 
 func (o *PatchTaxRequest) GetTaxID() string {

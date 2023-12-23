@@ -27,7 +27,7 @@ data "epilot-product_tax" "my_tax" {
 
 ### Read-Only
 
-- `acl` (Attributes) (see [below for nested schema](#nestedatt--acl))
+- `acl` (Attributes) Access control list (ACL) for an entity. Defines sharing access to external orgs or users. (see [below for nested schema](#nestedatt--acl))
 - `active` (Boolean)
 - `created_at` (String)
 - `description` (String)
@@ -43,6 +43,13 @@ data "epilot-product_tax" "my_tax" {
 
 <a id="nestedatt--acl"></a>
 ### Nested Schema for `acl`
+
+Read-Only:
+
+- `additional_properties` (String) Parsed as JSON.
+- `delete` (List of String)
+- `edit` (List of String)
+- `view` (List of String)
 
 
 <a id="nestedatt--owners"></a>

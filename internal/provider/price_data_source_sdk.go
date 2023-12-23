@@ -3,6 +3,7 @@
 package provider
 
 import (
+	"encoding/json"
 	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/pkg/models/shared"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"math/big"
@@ -10,6 +11,24 @@ import (
 )
 
 func (r *PriceDataSourceModel) RefreshFromGetResponse(resp *shared.Price) {
+	if resp.ACL.AdditionalProperties == nil {
+		r.ACL.AdditionalProperties = types.StringNull()
+	} else {
+		additionalPropertiesResult, _ := json.Marshal(resp.ACL.AdditionalProperties)
+		r.ACL.AdditionalProperties = types.StringValue(string(additionalPropertiesResult))
+	}
+	r.ACL.Delete = nil
+	for _, v := range resp.ACL.Delete {
+		r.ACL.Delete = append(r.ACL.Delete, types.StringValue(v))
+	}
+	r.ACL.Edit = nil
+	for _, v := range resp.ACL.Edit {
+		r.ACL.Edit = append(r.ACL.Edit, types.StringValue(v))
+	}
+	r.ACL.View = nil
+	for _, v := range resp.ACL.View {
+		r.ACL.View = append(r.ACL.View, types.StringValue(v))
+	}
 	r.CreatedAt = types.StringValue(resp.CreatedAt.Format(time.RFC3339Nano))
 	r.Org = types.StringValue(resp.Org)
 	if len(r.Owners) > len(resp.Owners) {
@@ -49,11 +68,7 @@ func (r *PriceDataSourceModel) RefreshFromGetResponse(resp *shared.Price) {
 		r.BillingDurationUnit = types.StringNull()
 	}
 	r.Description = types.StringValue(resp.Description)
-	if resp.ID != nil {
-		r.ID = types.StringValue(*resp.ID)
-	} else {
-		r.ID = types.StringNull()
-	}
+	r.ID = types.StringValue(resp.ID)
 	if resp.IsCompositePrice != nil {
 		r.IsCompositePrice = types.BoolValue(*resp.IsCompositePrice)
 	} else {
@@ -108,6 +123,10 @@ func (r *PriceDataSourceModel) RefreshFromGetResponse(resp *shared.Price) {
 		}
 		for dollarRelationCount, dollarRelationItem := range resp.Tax.DollarRelation {
 			var dollarRelation1 DollarRelation
+			dollarRelation1.Tags = nil
+			for _, v := range dollarRelationItem.Tags {
+				dollarRelation1.Tags = append(dollarRelation1.Tags, types.StringValue(v))
+			}
 			if dollarRelationItem.EntityID != nil {
 				dollarRelation1.EntityID = types.StringValue(*dollarRelationItem.EntityID)
 			} else {
@@ -116,6 +135,7 @@ func (r *PriceDataSourceModel) RefreshFromGetResponse(resp *shared.Price) {
 			if dollarRelationCount+1 > len(r.Tax.DollarRelation) {
 				r.Tax.DollarRelation = append(r.Tax.DollarRelation, dollarRelation1)
 			} else {
+				r.Tax.DollarRelation[dollarRelationCount].Tags = dollarRelation1.Tags
 				r.Tax.DollarRelation[dollarRelationCount].EntityID = dollarRelation1.EntityID
 			}
 		}

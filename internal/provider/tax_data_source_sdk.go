@@ -3,12 +3,31 @@
 package provider
 
 import (
+	"encoding/json"
 	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/pkg/models/shared"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"time"
 )
 
 func (r *TaxDataSourceModel) RefreshFromGetResponse(resp *shared.Tax) {
+	if resp.ACL.AdditionalProperties == nil {
+		r.ACL.AdditionalProperties = types.StringNull()
+	} else {
+		additionalPropertiesResult, _ := json.Marshal(resp.ACL.AdditionalProperties)
+		r.ACL.AdditionalProperties = types.StringValue(string(additionalPropertiesResult))
+	}
+	r.ACL.Delete = nil
+	for _, v := range resp.ACL.Delete {
+		r.ACL.Delete = append(r.ACL.Delete, types.StringValue(v))
+	}
+	r.ACL.Edit = nil
+	for _, v := range resp.ACL.Edit {
+		r.ACL.Edit = append(r.ACL.Edit, types.StringValue(v))
+	}
+	r.ACL.View = nil
+	for _, v := range resp.ACL.View {
+		r.ACL.View = append(r.ACL.View, types.StringValue(v))
+	}
 	r.CreatedAt = types.StringValue(resp.CreatedAt.Format(time.RFC3339Nano))
 	r.Org = types.StringValue(resp.Org)
 	if len(r.Owners) > len(resp.Owners) {
@@ -38,11 +57,7 @@ func (r *TaxDataSourceModel) RefreshFromGetResponse(resp *shared.Tax) {
 	r.UpdatedAt = types.StringValue(resp.UpdatedAt.Format(time.RFC3339Nano))
 	r.Active = types.BoolValue(resp.Active)
 	r.Description = types.StringValue(resp.Description)
-	if resp.ID != nil {
-		r.ID = types.StringValue(*resp.ID)
-	} else {
-		r.ID = types.StringNull()
-	}
+	r.ID = types.StringValue(resp.ID)
 	r.Rate = types.StringValue(resp.Rate)
 	r.Region = types.StringValue(string(resp.Region))
 	r.Type = types.StringValue(string(resp.Type))

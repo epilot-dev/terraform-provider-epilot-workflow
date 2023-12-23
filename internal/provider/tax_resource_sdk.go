@@ -3,6 +3,7 @@
 package provider
 
 import (
+	"encoding/json"
 	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/pkg/models/shared"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"time"
@@ -40,12 +41,26 @@ func (r *TaxResourceModel) ToDeleteSDKType() *shared.TaxCreate {
 }
 
 func (r *TaxResourceModel) RefreshFromGetResponse(resp *shared.Tax) {
-	r.CreatedAt = types.StringValue(resp.CreatedAt.Format(time.RFC3339Nano))
-	if resp.ID != nil {
-		r.ID = types.StringValue(*resp.ID)
+	if resp.ACL.AdditionalProperties == nil {
+		r.ACL.AdditionalProperties = types.StringNull()
 	} else {
-		r.ID = types.StringNull()
+		additionalPropertiesResult, _ := json.Marshal(resp.ACL.AdditionalProperties)
+		r.ACL.AdditionalProperties = types.StringValue(string(additionalPropertiesResult))
 	}
+	r.ACL.Delete = nil
+	for _, v := range resp.ACL.Delete {
+		r.ACL.Delete = append(r.ACL.Delete, types.StringValue(v))
+	}
+	r.ACL.Edit = nil
+	for _, v := range resp.ACL.Edit {
+		r.ACL.Edit = append(r.ACL.Edit, types.StringValue(v))
+	}
+	r.ACL.View = nil
+	for _, v := range resp.ACL.View {
+		r.ACL.View = append(r.ACL.View, types.StringValue(v))
+	}
+	r.CreatedAt = types.StringValue(resp.CreatedAt.Format(time.RFC3339Nano))
+	r.ID = types.StringValue(resp.ID)
 	r.Org = types.StringValue(resp.Org)
 	if len(r.Owners) > len(resp.Owners) {
 		r.Owners = r.Owners[:len(resp.Owners)]

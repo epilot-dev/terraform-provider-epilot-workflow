@@ -17,6 +17,7 @@ features:
     globalServerURLs: 2.82.0
     unions: 2.85.0
   terraform:
+    additionalProperties: 0.1.2
     constsAndDefaults: 0.1.2
     core: 3.6.3
     globalSecurity: 2.81.2

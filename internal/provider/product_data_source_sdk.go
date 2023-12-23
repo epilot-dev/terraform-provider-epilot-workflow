@@ -3,12 +3,31 @@
 package provider
 
 import (
+	"encoding/json"
 	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/pkg/models/shared"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"time"
 )
 
 func (r *ProductDataSourceModel) RefreshFromGetResponse(resp *shared.Product) {
+	if resp.ACL.AdditionalProperties == nil {
+		r.ACL.AdditionalProperties = types.StringNull()
+	} else {
+		additionalPropertiesResult, _ := json.Marshal(resp.ACL.AdditionalProperties)
+		r.ACL.AdditionalProperties = types.StringValue(string(additionalPropertiesResult))
+	}
+	r.ACL.Delete = nil
+	for _, v := range resp.ACL.Delete {
+		r.ACL.Delete = append(r.ACL.Delete, types.StringValue(v))
+	}
+	r.ACL.Edit = nil
+	for _, v := range resp.ACL.Edit {
+		r.ACL.Edit = append(r.ACL.Edit, types.StringValue(v))
+	}
+	r.ACL.View = nil
+	for _, v := range resp.ACL.View {
+		r.ACL.View = append(r.ACL.View, types.StringValue(v))
+	}
 	r.CreatedAt = types.StringValue(resp.CreatedAt.Format(time.RFC3339Nano))
 	r.Org = types.StringValue(resp.Org)
 	if len(r.Owners) > len(resp.Owners) {
@@ -36,69 +55,10 @@ func (r *ProductDataSourceModel) RefreshFromGetResponse(resp *shared.Product) {
 	}
 	r.Title = types.StringValue(resp.Title)
 	r.UpdatedAt = types.StringValue(resp.UpdatedAt.Format(time.RFC3339Nano))
-	if len(r.AvailabilityFiles) > len(resp.AvailabilityFiles) {
-		r.AvailabilityFiles = r.AvailabilityFiles[:len(resp.AvailabilityFiles)]
-	}
-	for availabilityFilesCount, availabilityFilesItem := range resp.AvailabilityFiles {
-		var availabilityFiles1 BaseRelation
-		if len(availabilityFiles1.DollarRelation) > len(availabilityFilesItem.DollarRelation) {
-			availabilityFiles1.DollarRelation = availabilityFiles1.DollarRelation[:len(availabilityFilesItem.DollarRelation)]
-		}
-		for dollarRelationCount, dollarRelationItem := range availabilityFilesItem.DollarRelation {
-			var dollarRelation1 DollarRelation
-			if dollarRelationItem.EntityID != nil {
-				dollarRelation1.EntityID = types.StringValue(*dollarRelationItem.EntityID)
-			} else {
-				dollarRelation1.EntityID = types.StringNull()
-			}
-			if dollarRelationCount+1 > len(availabilityFiles1.DollarRelation) {
-				availabilityFiles1.DollarRelation = append(availabilityFiles1.DollarRelation, dollarRelation1)
-			} else {
-				availabilityFiles1.DollarRelation[dollarRelationCount].EntityID = dollarRelation1.EntityID
-			}
-		}
-		if availabilityFilesCount+1 > len(r.AvailabilityFiles) {
-			r.AvailabilityFiles = append(r.AvailabilityFiles, availabilityFiles1)
-		} else {
-			r.AvailabilityFiles[availabilityFilesCount].DollarRelation = availabilityFiles1.DollarRelation
-		}
-	}
 	if resp.Code != nil {
 		r.Code = types.StringValue(*resp.Code)
 	} else {
 		r.Code = types.StringNull()
-	}
-	if resp.CrossSellableProducts == nil {
-		r.CrossSellableProducts = nil
-	} else {
-		r.CrossSellableProducts = &ProductCreateCrossSellableProducts{}
-		if len(r.CrossSellableProducts.DollarRelation) > len(resp.CrossSellableProducts.DollarRelation) {
-			r.CrossSellableProducts.DollarRelation = r.CrossSellableProducts.DollarRelation[:len(resp.CrossSellableProducts.DollarRelation)]
-		}
-		for dollarRelationCount1, dollarRelationItem1 := range resp.CrossSellableProducts.DollarRelation {
-			var dollarRelation3 BaseRelation
-			if len(dollarRelation3.DollarRelation) > len(dollarRelationItem1.DollarRelation) {
-				dollarRelation3.DollarRelation = dollarRelation3.DollarRelation[:len(dollarRelationItem1.DollarRelation)]
-			}
-			for dollarRelationCount2, dollarRelationItem2 := range dollarRelationItem1.DollarRelation {
-				var dollarRelation5 DollarRelation
-				if dollarRelationItem2.EntityID != nil {
-					dollarRelation5.EntityID = types.StringValue(*dollarRelationItem2.EntityID)
-				} else {
-					dollarRelation5.EntityID = types.StringNull()
-				}
-				if dollarRelationCount2+1 > len(dollarRelation3.DollarRelation) {
-					dollarRelation3.DollarRelation = append(dollarRelation3.DollarRelation, dollarRelation5)
-				} else {
-					dollarRelation3.DollarRelation[dollarRelationCount2].EntityID = dollarRelation5.EntityID
-				}
-			}
-			if dollarRelationCount1+1 > len(r.CrossSellableProducts.DollarRelation) {
-				r.CrossSellableProducts.DollarRelation = append(r.CrossSellableProducts.DollarRelation, dollarRelation3)
-			} else {
-				r.CrossSellableProducts.DollarRelation[dollarRelationCount1].DollarRelation = dollarRelation3.DollarRelation
-			}
-		}
 	}
 	if resp.Description != nil {
 		r.Description = types.StringValue(*resp.Description)
@@ -126,11 +86,7 @@ func (r *ProductDataSourceModel) RefreshFromGetResponse(resp *shared.Product) {
 			r.Feature[featureCount].Feature = feature1.Feature
 		}
 	}
-	if resp.ID != nil {
-		r.ID = types.StringValue(*resp.ID)
-	} else {
-		r.ID = types.StringNull()
-	}
+	r.ID = types.StringValue(resp.ID)
 	if resp.InternalName != nil {
 		r.InternalName = types.StringValue(*resp.InternalName)
 	} else {
@@ -144,81 +100,22 @@ func (r *ProductDataSourceModel) RefreshFromGetResponse(resp *shared.Product) {
 		if len(r.PriceOptions.DollarRelation) > len(resp.PriceOptions.DollarRelation) {
 			r.PriceOptions.DollarRelation = r.PriceOptions.DollarRelation[:len(resp.PriceOptions.DollarRelation)]
 		}
-		for dollarRelationCount3, dollarRelationItem3 := range resp.PriceOptions.DollarRelation {
-			var dollarRelation7 DollarRelation
-			if dollarRelationItem3.EntityID != nil {
-				dollarRelation7.EntityID = types.StringValue(*dollarRelationItem3.EntityID)
+		for dollarRelationCount, dollarRelationItem := range resp.PriceOptions.DollarRelation {
+			var dollarRelation1 DollarRelation
+			dollarRelation1.Tags = nil
+			for _, v := range dollarRelationItem.Tags {
+				dollarRelation1.Tags = append(dollarRelation1.Tags, types.StringValue(v))
+			}
+			if dollarRelationItem.EntityID != nil {
+				dollarRelation1.EntityID = types.StringValue(*dollarRelationItem.EntityID)
 			} else {
-				dollarRelation7.EntityID = types.StringNull()
+				dollarRelation1.EntityID = types.StringNull()
 			}
-			if dollarRelationCount3+1 > len(r.PriceOptions.DollarRelation) {
-				r.PriceOptions.DollarRelation = append(r.PriceOptions.DollarRelation, dollarRelation7)
+			if dollarRelationCount+1 > len(r.PriceOptions.DollarRelation) {
+				r.PriceOptions.DollarRelation = append(r.PriceOptions.DollarRelation, dollarRelation1)
 			} else {
-				r.PriceOptions.DollarRelation[dollarRelationCount3].EntityID = dollarRelation7.EntityID
-			}
-		}
-	}
-	if resp.ProductDownloads == nil {
-		r.ProductDownloads = nil
-	} else {
-		r.ProductDownloads = &ProductCreateCrossSellableProducts{}
-		if len(r.ProductDownloads.DollarRelation) > len(resp.ProductDownloads.DollarRelation) {
-			r.ProductDownloads.DollarRelation = r.ProductDownloads.DollarRelation[:len(resp.ProductDownloads.DollarRelation)]
-		}
-		for dollarRelationCount4, dollarRelationItem4 := range resp.ProductDownloads.DollarRelation {
-			var dollarRelation9 BaseRelation
-			if len(dollarRelation9.DollarRelation) > len(dollarRelationItem4.DollarRelation) {
-				dollarRelation9.DollarRelation = dollarRelation9.DollarRelation[:len(dollarRelationItem4.DollarRelation)]
-			}
-			for dollarRelationCount5, dollarRelationItem5 := range dollarRelationItem4.DollarRelation {
-				var dollarRelation11 DollarRelation
-				if dollarRelationItem5.EntityID != nil {
-					dollarRelation11.EntityID = types.StringValue(*dollarRelationItem5.EntityID)
-				} else {
-					dollarRelation11.EntityID = types.StringNull()
-				}
-				if dollarRelationCount5+1 > len(dollarRelation9.DollarRelation) {
-					dollarRelation9.DollarRelation = append(dollarRelation9.DollarRelation, dollarRelation11)
-				} else {
-					dollarRelation9.DollarRelation[dollarRelationCount5].EntityID = dollarRelation11.EntityID
-				}
-			}
-			if dollarRelationCount4+1 > len(r.ProductDownloads.DollarRelation) {
-				r.ProductDownloads.DollarRelation = append(r.ProductDownloads.DollarRelation, dollarRelation9)
-			} else {
-				r.ProductDownloads.DollarRelation[dollarRelationCount4].DollarRelation = dollarRelation9.DollarRelation
-			}
-		}
-	}
-	if resp.ProductImages == nil {
-		r.ProductImages = nil
-	} else {
-		r.ProductImages = &ProductCreateCrossSellableProducts{}
-		if len(r.ProductImages.DollarRelation) > len(resp.ProductImages.DollarRelation) {
-			r.ProductImages.DollarRelation = r.ProductImages.DollarRelation[:len(resp.ProductImages.DollarRelation)]
-		}
-		for dollarRelationCount6, dollarRelationItem6 := range resp.ProductImages.DollarRelation {
-			var dollarRelation13 BaseRelation
-			if len(dollarRelation13.DollarRelation) > len(dollarRelationItem6.DollarRelation) {
-				dollarRelation13.DollarRelation = dollarRelation13.DollarRelation[:len(dollarRelationItem6.DollarRelation)]
-			}
-			for dollarRelationCount7, dollarRelationItem7 := range dollarRelationItem6.DollarRelation {
-				var dollarRelation15 DollarRelation
-				if dollarRelationItem7.EntityID != nil {
-					dollarRelation15.EntityID = types.StringValue(*dollarRelationItem7.EntityID)
-				} else {
-					dollarRelation15.EntityID = types.StringNull()
-				}
-				if dollarRelationCount7+1 > len(dollarRelation13.DollarRelation) {
-					dollarRelation13.DollarRelation = append(dollarRelation13.DollarRelation, dollarRelation15)
-				} else {
-					dollarRelation13.DollarRelation[dollarRelationCount7].EntityID = dollarRelation15.EntityID
-				}
-			}
-			if dollarRelationCount6+1 > len(r.ProductImages.DollarRelation) {
-				r.ProductImages.DollarRelation = append(r.ProductImages.DollarRelation, dollarRelation13)
-			} else {
-				r.ProductImages.DollarRelation[dollarRelationCount6].DollarRelation = dollarRelation13.DollarRelation
+				r.PriceOptions.DollarRelation[dollarRelationCount].Tags = dollarRelation1.Tags
+				r.PriceOptions.DollarRelation[dollarRelationCount].EntityID = dollarRelation1.EntityID
 			}
 		}
 	}

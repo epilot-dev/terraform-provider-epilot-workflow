@@ -8,17 +8,17 @@ import (
 )
 
 type PatchPriceRequest struct {
-	// Price to patch (partial update)
-	PricePatch shared.PricePatch `request:"mediaType=application/json"`
+	// Price to patch
+	PriceUpdate shared.PriceUpdate `request:"mediaType=application/json"`
 	// The price id
 	PriceID string `pathParam:"style=simple,explode=false,name=priceId"`
 }
 
-func (o *PatchPriceRequest) GetPricePatch() shared.PricePatch {
+func (o *PatchPriceRequest) GetPriceUpdate() shared.PriceUpdate {
 	if o == nil {
-		return shared.PricePatch{}
+		return shared.PriceUpdate{}
 	}
-	return o.PricePatch
+	return o.PriceUpdate
 }
 
 func (o *PatchPriceRequest) GetPriceID() string {
@@ -33,7 +33,7 @@ type PatchPriceResponse struct {
 	ClientError *shared.ClientError
 	// HTTP response content type for this operation
 	ContentType string
-	// Price entity response
+	// Price entity with id
 	Price *shared.Price
 	// HTTP response status code for this operation
 	StatusCode int

@@ -33,26 +33,22 @@ type ProductResource struct {
 
 // ProductResourceModel describes the resource data model.
 type ProductResourceModel struct {
-	ACL                   ACL                                 `tfsdk:"acl"`
-	CreatedAt             types.String                        `tfsdk:"created_at"`
-	ID                    types.String                        `tfsdk:"id"`
-	Org                   types.String                        `tfsdk:"org"`
-	Owners                []EntityOwner                       `tfsdk:"owners"`
-	Schema                types.String                        `tfsdk:"schema"`
-	Tags                  []types.String                      `tfsdk:"tags"`
-	Title                 types.String                        `tfsdk:"title"`
-	UpdatedAt             types.String                        `tfsdk:"updated_at"`
-	AvailabilityFiles     []BaseRelation                      `tfsdk:"availability_files"`
-	Code                  types.String                        `tfsdk:"code"`
-	CrossSellableProducts *ProductCreateCrossSellableProducts `tfsdk:"cross_sellable_products"`
-	Description           types.String                        `tfsdk:"description"`
-	Feature               []Feature                           `tfsdk:"feature"`
-	InternalName          types.String                        `tfsdk:"internal_name"`
-	Name                  types.String                        `tfsdk:"name"`
-	PriceOptions          *BaseRelation                       `tfsdk:"price_options"`
-	ProductDownloads      *ProductCreateCrossSellableProducts `tfsdk:"product_downloads"`
-	ProductImages         *ProductCreateCrossSellableProducts `tfsdk:"product_images"`
-	Type                  types.String                        `tfsdk:"type"`
+	ACL          EntityACL      `tfsdk:"acl"`
+	CreatedAt    types.String   `tfsdk:"created_at"`
+	ID           types.String   `tfsdk:"id"`
+	Org          types.String   `tfsdk:"org"`
+	Owners       []EntityOwner  `tfsdk:"owners"`
+	Schema       types.String   `tfsdk:"schema"`
+	Tags         []types.String `tfsdk:"tags"`
+	Title        types.String   `tfsdk:"title"`
+	UpdatedAt    types.String   `tfsdk:"updated_at"`
+	Code         types.String   `tfsdk:"code"`
+	Description  types.String   `tfsdk:"description"`
+	Feature      []Feature      `tfsdk:"feature"`
+	InternalName types.String   `tfsdk:"internal_name"`
+	Name         types.String   `tfsdk:"name"`
+	PriceOptions *BaseRelation  `tfsdk:"price_options"`
+	Type         types.String   `tfsdk:"type"`
 }
 
 func (r *ProductResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -65,8 +61,29 @@ func (r *ProductResource) Schema(ctx context.Context, req resource.SchemaRequest
 
 		Attributes: map[string]schema.Attribute{
 			"acl": schema.SingleNestedAttribute{
-				Computed:   true,
-				Attributes: map[string]schema.Attribute{},
+				Computed: true,
+				Attributes: map[string]schema.Attribute{
+					"additional_properties": schema.StringAttribute{
+						Computed:    true,
+						Description: `Parsed as JSON.`,
+						Validators: []validator.String{
+							validators.IsValidJSON(),
+						},
+					},
+					"delete": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
+					},
+					"edit": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
+					},
+					"view": schema.ListAttribute{
+						Computed:    true,
+						ElementType: types.StringType,
+					},
+				},
+				Description: `Access control list (ACL) for an entity. Defines sharing access to external orgs or users.`,
 			},
 			"created_at": schema.StringAttribute{
 				Computed: true,
@@ -110,60 +127,10 @@ func (r *ProductResource) Schema(ctx context.Context, req resource.SchemaRequest
 					validators.IsRFC3339(),
 				},
 			},
-			"availability_files": schema.ListNestedAttribute{
-				Computed: true,
-				Optional: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"dollar_relation": schema.ListNestedAttribute{
-							Computed: true,
-							Optional: true,
-							NestedObject: schema.NestedAttributeObject{
-								Attributes: map[string]schema.Attribute{
-									"entity_id": schema.StringAttribute{
-										Computed: true,
-										Optional: true,
-									},
-								},
-							},
-						},
-					},
-				},
-				MarkdownDescription: `Stores references to the availability files that define where this product is available.` + "\n" +
-					`These files are used when interacting with products via epilot Journeys, thought the AvailabilityCheck block.` + "\n" +
-					``,
-			},
 			"code": schema.StringAttribute{
 				Computed:    true,
 				Optional:    true,
 				Description: `The product code`,
-			},
-			"cross_sellable_products": schema.SingleNestedAttribute{
-				Computed: true,
-				Optional: true,
-				Attributes: map[string]schema.Attribute{
-					"dollar_relation": schema.ListNestedAttribute{
-						Computed: true,
-						Optional: true,
-						NestedObject: schema.NestedAttributeObject{
-							Attributes: map[string]schema.Attribute{
-								"dollar_relation": schema.ListNestedAttribute{
-									Computed: true,
-									Optional: true,
-									NestedObject: schema.NestedAttributeObject{
-										Attributes: map[string]schema.Attribute{
-											"entity_id": schema.StringAttribute{
-												Computed: true,
-												Optional: true,
-											},
-										},
-									},
-								},
-							},
-						},
-					},
-				},
-				Description: `Stores references to products that can be cross sold with the current product.`,
 			},
 			"description": schema.StringAttribute{
 				Computed:    true,
@@ -194,7 +161,8 @@ func (r *ProductResource) Schema(ctx context.Context, req resource.SchemaRequest
 				Description: `Not visible to customers, only in internal tables`,
 			},
 			"name": schema.StringAttribute{
-				Required:    true,
+				Computed:    true,
+				Optional:    true,
 				Description: `The description for the product`,
 			},
 			"price_options": schema.SingleNestedAttribute{
@@ -206,6 +174,11 @@ func (r *ProductResource) Schema(ctx context.Context, req resource.SchemaRequest
 						Optional: true,
 						NestedObject: schema.NestedAttributeObject{
 							Attributes: map[string]schema.Attribute{
+								"tags": schema.ListAttribute{
+									Computed:    true,
+									Optional:    true,
+									ElementType: types.StringType,
+								},
 								"entity_id": schema.StringAttribute{
 									Computed: true,
 									Optional: true,
@@ -214,62 +187,6 @@ func (r *ProductResource) Schema(ctx context.Context, req resource.SchemaRequest
 						},
 					},
 				},
-			},
-			"product_downloads": schema.SingleNestedAttribute{
-				Computed: true,
-				Optional: true,
-				Attributes: map[string]schema.Attribute{
-					"dollar_relation": schema.ListNestedAttribute{
-						Computed: true,
-						Optional: true,
-						NestedObject: schema.NestedAttributeObject{
-							Attributes: map[string]schema.Attribute{
-								"dollar_relation": schema.ListNestedAttribute{
-									Computed: true,
-									Optional: true,
-									NestedObject: schema.NestedAttributeObject{
-										Attributes: map[string]schema.Attribute{
-											"entity_id": schema.StringAttribute{
-												Computed: true,
-												Optional: true,
-											},
-										},
-									},
-								},
-							},
-						},
-					},
-				},
-				MarkdownDescription: `Stores references to a set of files downloadable from the product.` + "\n" +
-					`e.g: tech specifications, quality control sheets, privacy policy agreements` + "\n" +
-					``,
-			},
-			"product_images": schema.SingleNestedAttribute{
-				Computed: true,
-				Optional: true,
-				Attributes: map[string]schema.Attribute{
-					"dollar_relation": schema.ListNestedAttribute{
-						Computed: true,
-						Optional: true,
-						NestedObject: schema.NestedAttributeObject{
-							Attributes: map[string]schema.Attribute{
-								"dollar_relation": schema.ListNestedAttribute{
-									Computed: true,
-									Optional: true,
-									NestedObject: schema.NestedAttributeObject{
-										Attributes: map[string]schema.Attribute{
-											"entity_id": schema.StringAttribute{
-												Computed: true,
-												Optional: true,
-											},
-										},
-									},
-								},
-							},
-						},
-					},
-				},
-				Description: `Stores references to a set of file images of the product`,
 			},
 			"type": schema.StringAttribute{
 				Computed: true,
@@ -413,11 +330,11 @@ func (r *ProductResource) Update(ctx context.Context, req resource.UpdateRequest
 		return
 	}
 
-	productCreate := *data.ToUpdateSDKType()
+	baseProduct := *data.ToUpdateSDKType()
 	productID := data.ID.ValueString()
 	request := operations.UpdateProductRequest{
-		ProductCreate: productCreate,
-		ProductID:     productID,
+		BaseProduct: baseProduct,
+		ProductID:   productID,
 	}
 	res, err := r.client.Product.UpdateProduct(ctx, request)
 	if err != nil {

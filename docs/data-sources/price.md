@@ -27,7 +27,7 @@ data "epilot-product_price" "my_price" {
 
 ### Read-Only
 
-- `acl` (Attributes) (see [below for nested schema](#nestedatt--acl))
+- `acl` (Attributes) Access control list (ACL) for an entity. Defines sharing access to external orgs or users. (see [below for nested schema](#nestedatt--acl))
 - `active` (Boolean) Whether the price can be used for new purchases.
 - `billing_duration_amount` (Number) The billing period duration
 - `billing_duration_unit` (String) must be one of ["weeks", "months", "years"]
@@ -75,6 +75,13 @@ The flag for prices that can be influenced by external variables such as user in
 <a id="nestedatt--acl"></a>
 ### Nested Schema for `acl`
 
+Read-Only:
+
+- `additional_properties` (String) Parsed as JSON.
+- `delete` (List of String)
+- `edit` (List of String)
+- `view` (List of String)
+
 
 <a id="nestedatt--owners"></a>
 ### Nested Schema for `owners`
@@ -98,6 +105,7 @@ Read-Only:
 Read-Only:
 
 - `entity_id` (String)
+- `tags` (List of String)
 
 
 

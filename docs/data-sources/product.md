@@ -27,12 +27,9 @@ data "epilot-product_product" "my_product" {
 
 ### Read-Only
 
-- `acl` (Attributes) (see [below for nested schema](#nestedatt--acl))
-- `availability_files` (Attributes List) Stores references to the availability files that define where this product is available.
-These files are used when interacting with products via epilot Journeys, thought the AvailabilityCheck block. (see [below for nested schema](#nestedatt--availability_files))
+- `acl` (Attributes) Access control list (ACL) for an entity. Defines sharing access to external orgs or users. (see [below for nested schema](#nestedatt--acl))
 - `code` (String) The product code
 - `created_at` (String)
-- `cross_sellable_products` (Attributes) Stores references to products that can be cross sold with the current product. (see [below for nested schema](#nestedatt--cross_sellable_products))
 - `description` (String) A description of the product. Multi-line supported.
 - `feature` (Attributes List) (see [below for nested schema](#nestedatt--feature))
 - `internal_name` (String) Not visible to customers, only in internal tables
@@ -40,9 +37,6 @@ These files are used when interacting with products via epilot Journeys, thought
 - `org` (String) Organization Id the entity belongs to
 - `owners` (Attributes List) (see [below for nested schema](#nestedatt--owners))
 - `price_options` (Attributes) (see [below for nested schema](#nestedatt--price_options))
-- `product_downloads` (Attributes) Stores references to a set of files downloadable from the product.
-e.g: tech specifications, quality control sheets, privacy policy agreements (see [below for nested schema](#nestedatt--product_downloads))
-- `product_images` (Attributes) Stores references to a set of file images of the product (see [below for nested schema](#nestedatt--product_images))
 - `schema` (String)
 - `tags` (List of String)
 - `title` (String)
@@ -58,45 +52,12 @@ The type of Product:
 <a id="nestedatt--acl"></a>
 ### Nested Schema for `acl`
 
-
-<a id="nestedatt--availability_files"></a>
-### Nested Schema for `availability_files`
-
 Read-Only:
 
-- `dollar_relation` (Attributes List) (see [below for nested schema](#nestedatt--availability_files--dollar_relation))
-
-<a id="nestedatt--availability_files--dollar_relation"></a>
-### Nested Schema for `availability_files.dollar_relation`
-
-Read-Only:
-
-- `entity_id` (String)
-
-
-
-<a id="nestedatt--cross_sellable_products"></a>
-### Nested Schema for `cross_sellable_products`
-
-Read-Only:
-
-- `dollar_relation` (Attributes List) (see [below for nested schema](#nestedatt--cross_sellable_products--dollar_relation))
-
-<a id="nestedatt--cross_sellable_products--dollar_relation"></a>
-### Nested Schema for `cross_sellable_products.dollar_relation`
-
-Read-Only:
-
-- `dollar_relation` (Attributes List) (see [below for nested schema](#nestedatt--cross_sellable_products--dollar_relation--dollar_relation))
-
-<a id="nestedatt--cross_sellable_products--dollar_relation--dollar_relation"></a>
-### Nested Schema for `cross_sellable_products.dollar_relation.dollar_relation`
-
-Read-Only:
-
-- `entity_id` (String)
-
-
+- `additional_properties` (String) Parsed as JSON.
+- `delete` (List of String)
+- `edit` (List of String)
+- `view` (List of String)
 
 
 <a id="nestedatt--feature"></a>
@@ -130,52 +91,6 @@ Read-Only:
 Read-Only:
 
 - `entity_id` (String)
-
-
-
-<a id="nestedatt--product_downloads"></a>
-### Nested Schema for `product_downloads`
-
-Read-Only:
-
-- `dollar_relation` (Attributes List) (see [below for nested schema](#nestedatt--product_downloads--dollar_relation))
-
-<a id="nestedatt--product_downloads--dollar_relation"></a>
-### Nested Schema for `product_downloads.dollar_relation`
-
-Read-Only:
-
-- `dollar_relation` (Attributes List) (see [below for nested schema](#nestedatt--product_downloads--dollar_relation--dollar_relation))
-
-<a id="nestedatt--product_downloads--dollar_relation--dollar_relation"></a>
-### Nested Schema for `product_downloads.dollar_relation.dollar_relation`
-
-Read-Only:
-
-- `entity_id` (String)
-
-
-
-
-<a id="nestedatt--product_images"></a>
-### Nested Schema for `product_images`
-
-Read-Only:
-
-- `dollar_relation` (Attributes List) (see [below for nested schema](#nestedatt--product_images--dollar_relation))
-
-<a id="nestedatt--product_images--dollar_relation"></a>
-### Nested Schema for `product_images.dollar_relation`
-
-Read-Only:
-
-- `dollar_relation` (Attributes List) (see [below for nested schema](#nestedatt--product_images--dollar_relation--dollar_relation))
-
-<a id="nestedatt--product_images--dollar_relation--dollar_relation"></a>
-### Nested Schema for `product_images.dollar_relation.dollar_relation`
-
-Read-Only:
-
-- `entity_id` (String)
+- `tags` (List of String)
 
 

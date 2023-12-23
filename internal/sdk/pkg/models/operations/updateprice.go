@@ -8,7 +8,7 @@ import (
 )
 
 type UpdatePriceRequest struct {
-	// Price to update (complete update)
+	// Price to update
 	PriceCreate shared.PriceCreate `request:"mediaType=application/json"`
 	// The price id
 	PriceID string `pathParam:"style=simple,explode=false,name=priceId"`
@@ -33,7 +33,7 @@ type UpdatePriceResponse struct {
 	ClientError *shared.ClientError
 	// HTTP response content type for this operation
 	ContentType string
-	// Price entity response
+	// Price entity with id
 	Price *shared.Price
 	// HTTP response status code for this operation
 	StatusCode int
