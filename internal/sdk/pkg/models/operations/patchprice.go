@@ -9,16 +9,16 @@ import (
 
 type PatchPriceRequest struct {
 	// Price to patch
-	PriceUpdate shared.PriceUpdate `request:"mediaType=application/json"`
+	PricePatch shared.PricePatch `request:"mediaType=application/json"`
 	// The price id
 	PriceID string `pathParam:"style=simple,explode=false,name=priceId"`
 }
 
-func (o *PatchPriceRequest) GetPriceUpdate() shared.PriceUpdate {
+func (o *PatchPriceRequest) GetPricePatch() shared.PricePatch {
 	if o == nil {
-		return shared.PriceUpdate{}
+		return shared.PricePatch{}
 	}
-	return o.PriceUpdate
+	return o.PricePatch
 }
 
 func (o *PatchPriceRequest) GetPriceID() string {

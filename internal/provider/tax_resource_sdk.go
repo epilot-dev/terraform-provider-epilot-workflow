@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func (r *TaxResourceModel) ToCreateSDKType() *shared.TaxCreate {
+func (r *TaxResourceModel) ToSharedTaxCreate() *shared.TaxCreate {
 	active := r.Active.ValueBool()
 	description := r.Description.ValueString()
 	rate := r.Rate.ValueString()
@@ -25,22 +25,7 @@ func (r *TaxResourceModel) ToCreateSDKType() *shared.TaxCreate {
 	return &out
 }
 
-func (r *TaxResourceModel) ToGetSDKType() *shared.TaxCreate {
-	out := r.ToCreateSDKType()
-	return out
-}
-
-func (r *TaxResourceModel) ToUpdateSDKType() *shared.TaxCreate {
-	out := r.ToCreateSDKType()
-	return out
-}
-
-func (r *TaxResourceModel) ToDeleteSDKType() *shared.TaxCreate {
-	out := r.ToCreateSDKType()
-	return out
-}
-
-func (r *TaxResourceModel) RefreshFromGetResponse(resp *shared.Tax) {
+func (r *TaxResourceModel) RefreshFromSharedTax(resp *shared.Tax) {
 	if resp.ACL.AdditionalProperties == nil {
 		r.ACL.AdditionalProperties = types.StringNull()
 	} else {
@@ -66,13 +51,9 @@ func (r *TaxResourceModel) RefreshFromGetResponse(resp *shared.Tax) {
 		r.Owners = r.Owners[:len(resp.Owners)]
 	}
 	for ownersCount, ownersItem := range resp.Owners {
-		var owners1 EntityOwner
+		var owners1 BaseEntityOwner
 		owners1.OrgID = types.StringValue(ownersItem.OrgID)
-		if ownersItem.UserID != nil {
-			owners1.UserID = types.StringValue(*ownersItem.UserID)
-		} else {
-			owners1.UserID = types.StringNull()
-		}
+		owners1.UserID = types.StringPointerValue(ownersItem.UserID)
 		if ownersCount+1 > len(r.Owners) {
 			r.Owners = append(r.Owners, owners1)
 		} else {
@@ -92,12 +73,4 @@ func (r *TaxResourceModel) RefreshFromGetResponse(resp *shared.Tax) {
 	r.Rate = types.StringValue(resp.Rate)
 	r.Region = types.StringValue(string(resp.Region))
 	r.Type = types.StringValue(string(resp.Type))
-}
-
-func (r *TaxResourceModel) RefreshFromCreateResponse(resp *shared.Tax) {
-	r.RefreshFromGetResponse(resp)
-}
-
-func (r *TaxResourceModel) RefreshFromUpdateResponse(resp *shared.Tax) {
-	r.RefreshFromGetResponse(resp)
 }

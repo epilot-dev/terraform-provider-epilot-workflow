@@ -203,19 +203,19 @@ func (e *TerminationTimeUnit) UnmarshalJSON(data []byte) error {
 	}
 }
 
-// PriceType - One of `one_time` or `recurring` depending on whether the price is for a one-time purchase or a recurring (subscription) purchase.
-type PriceType string
+// Type - One of `one_time` or `recurring` depending on whether the price is for a one-time purchase or a recurring (subscription) purchase.
+type Type string
 
 const (
-	PriceTypeOneTime   PriceType = "one_time"
-	PriceTypeRecurring PriceType = "recurring"
+	TypeOneTime   Type = "one_time"
+	TypeRecurring Type = "recurring"
 )
 
-func (e PriceType) ToPointer() *PriceType {
+func (e Type) ToPointer() *Type {
 	return &e
 }
 
-func (e *PriceType) UnmarshalJSON(data []byte) error {
+func (e *Type) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -224,10 +224,10 @@ func (e *PriceType) UnmarshalJSON(data []byte) error {
 	case "one_time":
 		fallthrough
 	case "recurring":
-		*e = PriceType(v)
+		*e = Type(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for PriceType: %v", v)
+		return fmt.Errorf("invalid value for Type: %v", v)
 	}
 }
 
@@ -358,16 +358,16 @@ func (u Unit) MarshalJSON() ([]byte, error) {
 
 type Price struct {
 	// Access control list (ACL) for an entity. Defines sharing access to external orgs or users.
-	ACL       EntityACL `json:"_acl"`
-	CreatedAt time.Time `json:"_created_at"`
-	ID        string    `json:"_id"`
+	ACL       BaseEntityACL `json:"_acl"`
+	CreatedAt time.Time     `json:"_created_at"`
+	ID        string        `json:"_id"`
 	// Organization Id the entity belongs to
-	Org       string        `json:"_org"`
-	Owners    []EntityOwner `json:"_owners"`
-	Schema    string        `json:"_schema"`
-	Tags      []string      `json:"_tags"`
-	Title     string        `json:"_title"`
-	UpdatedAt time.Time     `json:"_updated_at"`
+	Org       string            `json:"_org"`
+	Owners    []BaseEntityOwner `json:"_owners"`
+	Schema    string            `json:"_schema"`
+	Tags      []string          `json:"_tags"`
+	Title     string            `json:"_title"`
+	UpdatedAt time.Time         `json:"_updated_at"`
 	// Whether the price can be used for new purchases.
 	Active bool `json:"active"`
 	// The billing period duration
@@ -408,7 +408,7 @@ type Price struct {
 	//
 	Tiers []PriceTier `json:"tiers,omitempty"`
 	// One of `one_time` or `recurring` depending on whether the price is for a one-time purchase or a recurring (subscription) purchase.
-	Type *PriceType `default:"one_time" json:"type"`
+	Type *Type `default:"one_time" json:"type"`
 	// The unit of measurement used for display purposes and possibly for calculations when the price is variable.
 	Unit *Unit `json:"unit,omitempty"`
 	// The unit amount in cents to be charged, represented as a whole integer if possible.
@@ -432,9 +432,9 @@ func (p *Price) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *Price) GetACL() EntityACL {
+func (o *Price) GetACL() BaseEntityACL {
 	if o == nil {
-		return EntityACL{}
+		return BaseEntityACL{}
 	}
 	return o.ACL
 }
@@ -460,9 +460,9 @@ func (o *Price) GetOrg() string {
 	return o.Org
 }
 
-func (o *Price) GetOwners() []EntityOwner {
+func (o *Price) GetOwners() []BaseEntityOwner {
 	if o == nil {
-		return []EntityOwner{}
+		return []BaseEntityOwner{}
 	}
 	return o.Owners
 }
@@ -476,7 +476,7 @@ func (o *Price) GetSchema() string {
 
 func (o *Price) GetTags() []string {
 	if o == nil {
-		return []string{}
+		return nil
 	}
 	return o.Tags
 }
@@ -614,7 +614,7 @@ func (o *Price) GetTiers() []PriceTier {
 	return o.Tiers
 }
 
-func (o *Price) GetType() *PriceType {
+func (o *Price) GetType() *Type {
 	if o == nil {
 		return nil
 	}

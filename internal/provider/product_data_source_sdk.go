@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func (r *ProductDataSourceModel) RefreshFromGetResponse(resp *shared.Product) {
+func (r *ProductDataSourceModel) RefreshFromSharedProduct(resp *shared.Product) {
 	if resp.ACL.AdditionalProperties == nil {
 		r.ACL.AdditionalProperties = types.StringNull()
 	} else {
@@ -34,13 +34,9 @@ func (r *ProductDataSourceModel) RefreshFromGetResponse(resp *shared.Product) {
 		r.Owners = r.Owners[:len(resp.Owners)]
 	}
 	for ownersCount, ownersItem := range resp.Owners {
-		var owners1 EntityOwner
+		var owners1 BaseEntityOwner
 		owners1.OrgID = types.StringValue(ownersItem.OrgID)
-		if ownersItem.UserID != nil {
-			owners1.UserID = types.StringValue(*ownersItem.UserID)
-		} else {
-			owners1.UserID = types.StringNull()
-		}
+		owners1.UserID = types.StringPointerValue(ownersItem.UserID)
 		if ownersCount+1 > len(r.Owners) {
 			r.Owners = append(r.Owners, owners1)
 		} else {
@@ -55,43 +51,29 @@ func (r *ProductDataSourceModel) RefreshFromGetResponse(resp *shared.Product) {
 	}
 	r.Title = types.StringValue(resp.Title)
 	r.UpdatedAt = types.StringValue(resp.UpdatedAt.Format(time.RFC3339Nano))
-	if resp.Code != nil {
-		r.Code = types.StringValue(*resp.Code)
-	} else {
-		r.Code = types.StringNull()
-	}
-	if resp.Description != nil {
-		r.Description = types.StringValue(*resp.Description)
-	} else {
-		r.Description = types.StringNull()
-	}
+	r.Code = types.StringPointerValue(resp.Code)
+	r.Description = types.StringPointerValue(resp.Description)
 	if len(r.Feature) > len(resp.Feature) {
 		r.Feature = r.Feature[:len(resp.Feature)]
 	}
 	for featureCount, featureItem := range resp.Feature {
 		var feature1 Feature
+		feature1.ID = types.StringPointerValue(featureItem.ID)
 		feature1.Tags = nil
 		for _, v := range featureItem.Tags {
 			feature1.Tags = append(feature1.Tags, types.StringValue(v))
 		}
-		if featureItem.Feature != nil {
-			feature1.Feature = types.StringValue(*featureItem.Feature)
-		} else {
-			feature1.Feature = types.StringNull()
-		}
+		feature1.Feature = types.StringPointerValue(featureItem.Feature)
 		if featureCount+1 > len(r.Feature) {
 			r.Feature = append(r.Feature, feature1)
 		} else {
+			r.Feature[featureCount].ID = feature1.ID
 			r.Feature[featureCount].Tags = feature1.Tags
 			r.Feature[featureCount].Feature = feature1.Feature
 		}
 	}
 	r.ID = types.StringValue(resp.ID)
-	if resp.InternalName != nil {
-		r.InternalName = types.StringValue(*resp.InternalName)
-	} else {
-		r.InternalName = types.StringNull()
-	}
+	r.InternalName = types.StringPointerValue(resp.InternalName)
 	r.Name = types.StringValue(resp.Name)
 	if resp.PriceOptions == nil {
 		r.PriceOptions = nil
@@ -106,11 +88,7 @@ func (r *ProductDataSourceModel) RefreshFromGetResponse(resp *shared.Product) {
 			for _, v := range dollarRelationItem.Tags {
 				dollarRelation1.Tags = append(dollarRelation1.Tags, types.StringValue(v))
 			}
-			if dollarRelationItem.EntityID != nil {
-				dollarRelation1.EntityID = types.StringValue(*dollarRelationItem.EntityID)
-			} else {
-				dollarRelation1.EntityID = types.StringNull()
-			}
+			dollarRelation1.EntityID = types.StringPointerValue(dollarRelationItem.EntityID)
 			if dollarRelationCount+1 > len(r.PriceOptions.DollarRelation) {
 				r.PriceOptions.DollarRelation = append(r.PriceOptions.DollarRelation, dollarRelation1)
 			} else {

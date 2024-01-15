@@ -14,7 +14,8 @@ Tax DataSource
 
 ```terraform
 data "epilot-product_tax" "my_tax" {
-  id = "123e4567-e89b-12d3-a456-426614174000"
+  hydrate = false
+  id      = "123e4567-e89b-12d3-a456-426614174000"
 }
 ```
 
@@ -24,6 +25,10 @@ data "epilot-product_tax" "my_tax" {
 ### Required
 
 - `id` (String) The tax id
+
+### Optional
+
+- `hydrate` (Boolean) Hydrates entities in relations when passed true
 
 ### Read-Only
 

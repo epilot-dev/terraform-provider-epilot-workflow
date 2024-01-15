@@ -8,8 +8,17 @@ import (
 )
 
 type GetTaxRequest struct {
+	// Hydrates entities in relations when passed true
+	Hydrate *bool `queryParam:"style=form,explode=true,name=hydrate"`
 	// The tax id
 	TaxID string `pathParam:"style=simple,explode=false,name=taxId"`
+}
+
+func (o *GetTaxRequest) GetHydrate() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.Hydrate
 }
 
 func (o *GetTaxRequest) GetTaxID() string {

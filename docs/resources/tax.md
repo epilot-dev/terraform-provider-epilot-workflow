@@ -17,7 +17,7 @@ resource "epilot-product_tax" "my_tax" {
   active      = false
   description = "...my_description..."
   rate        = "...my_rate..."
-  region      = "AT"
+  region      = "DE"
   type        = "VAT"
 }
 ```
@@ -37,7 +37,7 @@ resource "epilot-product_tax" "my_tax" {
 
 - `acl` (Attributes) Access control list (ACL) for an entity. Defines sharing access to external orgs or users. (see [below for nested schema](#nestedatt--acl))
 - `created_at` (String)
-- `id` (String) The ID of this resource.
+- `id` (String) The tax id
 - `org` (String) Organization Id the entity belongs to
 - `owners` (Attributes List) (see [below for nested schema](#nestedatt--owners))
 - `schema` (String)

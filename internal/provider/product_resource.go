@@ -6,7 +6,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk"
-
 	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/pkg/models/operations"
 	"github.com/epilot-dev/terraform-provider-epilot-product/internal/validators"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -33,22 +32,22 @@ type ProductResource struct {
 
 // ProductResourceModel describes the resource data model.
 type ProductResourceModel struct {
-	ACL          EntityACL      `tfsdk:"acl"`
-	CreatedAt    types.String   `tfsdk:"created_at"`
-	ID           types.String   `tfsdk:"id"`
-	Org          types.String   `tfsdk:"org"`
-	Owners       []EntityOwner  `tfsdk:"owners"`
-	Schema       types.String   `tfsdk:"schema"`
-	Tags         []types.String `tfsdk:"tags"`
-	Title        types.String   `tfsdk:"title"`
-	UpdatedAt    types.String   `tfsdk:"updated_at"`
-	Code         types.String   `tfsdk:"code"`
-	Description  types.String   `tfsdk:"description"`
-	Feature      []Feature      `tfsdk:"feature"`
-	InternalName types.String   `tfsdk:"internal_name"`
-	Name         types.String   `tfsdk:"name"`
-	PriceOptions *BaseRelation  `tfsdk:"price_options"`
-	Type         types.String   `tfsdk:"type"`
+	ACL          BaseEntityACL     `tfsdk:"acl"`
+	CreatedAt    types.String      `tfsdk:"created_at"`
+	ID           types.String      `tfsdk:"id"`
+	Org          types.String      `tfsdk:"org"`
+	Owners       []BaseEntityOwner `tfsdk:"owners"`
+	Schema       types.String      `tfsdk:"schema"`
+	Tags         []types.String    `tfsdk:"tags"`
+	Title        types.String      `tfsdk:"title"`
+	UpdatedAt    types.String      `tfsdk:"updated_at"`
+	Code         types.String      `tfsdk:"code"`
+	Description  types.String      `tfsdk:"description"`
+	Feature      []Feature         `tfsdk:"feature"`
+	InternalName types.String      `tfsdk:"internal_name"`
+	Name         types.String      `tfsdk:"name"`
+	PriceOptions *BaseRelation     `tfsdk:"price_options"`
+	Type         types.String      `tfsdk:"type"`
 }
 
 func (r *ProductResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -92,7 +91,8 @@ func (r *ProductResource) Schema(ctx context.Context, req resource.SchemaRequest
 				},
 			},
 			"id": schema.StringAttribute{
-				Computed: true,
+				Computed:    true,
+				Description: `The product id`,
 			},
 			"org": schema.StringAttribute{
 				Computed:    true,
@@ -142,11 +142,14 @@ func (r *ProductResource) Schema(ctx context.Context, req resource.SchemaRequest
 				Optional: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
+						"id": schema.StringAttribute{
+							Computed: true,
+							Optional: true,
+						},
 						"tags": schema.ListAttribute{
 							Computed:    true,
 							Optional:    true,
 							ElementType: types.StringType,
-							Description: `An arbitrary set of tags attached to a feature`,
 						},
 						"feature": schema.StringAttribute{
 							Computed: true,
@@ -161,8 +164,7 @@ func (r *ProductResource) Schema(ctx context.Context, req resource.SchemaRequest
 				Description: `Not visible to customers, only in internal tables`,
 			},
 			"name": schema.StringAttribute{
-				Computed:    true,
-				Optional:    true,
+				Required:    true,
 				Description: `The description for the product`,
 			},
 			"price_options": schema.SingleNestedAttribute{
@@ -191,14 +193,14 @@ func (r *ProductResource) Schema(ctx context.Context, req resource.SchemaRequest
 			"type": schema.StringAttribute{
 				Computed: true,
 				Optional: true,
-				MarkdownDescription: `must be one of ["product", "service"]; Default: "product"` + "\n" +
-					`The type of Product:` + "\n" +
+				MarkdownDescription: `The type of Product:` + "\n" +
 					`` + "\n" +
 					`| type | description |` + "\n" +
 					`|----| ----|` + "\n" +
 					`| ` + "`" + `product` + "`" + ` | Represents a physical good |` + "\n" +
 					`| ` + "`" + `service` + "`" + ` | Represents a service or virtual product |` + "\n" +
-					``,
+					`` + "\n" +
+					`must be one of ["product", "service"]; Default: "product"`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
 						"product",
@@ -232,14 +234,14 @@ func (r *ProductResource) Configure(ctx context.Context, req resource.ConfigureR
 
 func (r *ProductResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var data *ProductResourceModel
-	var item types.Object
+	var plan types.Object
 
-	resp.Diagnostics.Append(req.Plan.Get(ctx, &item)...)
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	resp.Diagnostics.Append(item.As(ctx, &data, basetypes.ObjectAsOptions{
+	resp.Diagnostics.Append(plan.As(ctx, &data, basetypes.ObjectAsOptions{
 		UnhandledNullAsEmpty:    true,
 		UnhandledUnknownAsEmpty: true,
 	})...)
@@ -248,7 +250,7 @@ func (r *ProductResource) Create(ctx context.Context, req resource.CreateRequest
 		return
 	}
 
-	request := *data.ToCreateSDKType()
+	request := *data.ToSharedProductCreate()
 	res, err := r.client.Product.CreateProduct(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
@@ -269,7 +271,8 @@ func (r *ProductResource) Create(ctx context.Context, req resource.CreateRequest
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromCreateResponse(res.Product)
+	data.RefreshFromSharedProduct(res.Product)
+	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -293,8 +296,10 @@ func (r *ProductResource) Read(ctx context.Context, req resource.ReadRequest, re
 		return
 	}
 
+	var hydrate *bool
 	productID := data.ID.ValueString()
 	request := operations.GetProductRequest{
+		Hydrate:   hydrate,
 		ProductID: productID,
 	}
 	res, err := r.client.Product.GetProduct(ctx, request)
@@ -317,7 +322,7 @@ func (r *ProductResource) Read(ctx context.Context, req resource.ReadRequest, re
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.Product)
+	data.RefreshFromSharedProduct(res.Product)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -325,16 +330,23 @@ func (r *ProductResource) Read(ctx context.Context, req resource.ReadRequest, re
 
 func (r *ProductResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var data *ProductResourceModel
+	var plan types.Object
+
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
 	merge(ctx, req, resp, &data)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	baseProduct := *data.ToUpdateSDKType()
+	productCreate := *data.ToSharedProductCreate()
 	productID := data.ID.ValueString()
 	request := operations.UpdateProductRequest{
-		BaseProduct: baseProduct,
-		ProductID:   productID,
+		ProductCreate: productCreate,
+		ProductID:     productID,
 	}
 	res, err := r.client.Product.UpdateProduct(ctx, request)
 	if err != nil {
@@ -356,7 +368,8 @@ func (r *ProductResource) Update(ctx context.Context, req resource.UpdateRequest
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromUpdateResponse(res.Product)
+	data.RefreshFromSharedProduct(res.Product)
+	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

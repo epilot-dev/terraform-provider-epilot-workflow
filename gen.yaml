@@ -1,28 +1,11 @@
-configVersion: 1.0.0
+configVersion: 2.0.0
 generation:
-  comments: {}
   sdkClassName: SDK
   usageSnippets:
     optionalPropertyRendering: withExample
   fixes:
     nameResolutionDec2023: false
   telemetryEnabled: false
-features:
-  go:
-    additionalProperties: 0.1.1
-    constsAndDefaults: 0.1.1
-    core: 3.1.4
-    flattening: 2.81.1
-    globalSecurity: 2.82.2
-    globalServerURLs: 2.82.0
-    unions: 2.85.0
-  terraform:
-    additionalProperties: 0.1.2
-    constsAndDefaults: 0.1.2
-    core: 3.6.3
-    globalSecurity: 2.81.2
-    globalServerURLs: 2.82.1
-    unions: 2.81.7
 go:
   version: 0.0.1
   clientServerStatusCodesAsErrors: true
@@ -40,7 +23,7 @@ go:
   outputModelSuffix: output
   packageName: openapi
 terraform:
-  version: 0.2.0
+  version: 0.4.1
   author: epilot-dev
   imports:
     option: openapi

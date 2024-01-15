@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func (r *TaxDataSourceModel) RefreshFromGetResponse(resp *shared.Tax) {
+func (r *TaxDataSourceModel) RefreshFromSharedTax(resp *shared.Tax) {
 	if resp.ACL.AdditionalProperties == nil {
 		r.ACL.AdditionalProperties = types.StringNull()
 	} else {
@@ -34,13 +34,9 @@ func (r *TaxDataSourceModel) RefreshFromGetResponse(resp *shared.Tax) {
 		r.Owners = r.Owners[:len(resp.Owners)]
 	}
 	for ownersCount, ownersItem := range resp.Owners {
-		var owners1 EntityOwner
+		var owners1 BaseEntityOwner
 		owners1.OrgID = types.StringValue(ownersItem.OrgID)
-		if ownersItem.UserID != nil {
-			owners1.UserID = types.StringValue(*ownersItem.UserID)
-		} else {
-			owners1.UserID = types.StringNull()
-		}
+		owners1.UserID = types.StringPointerValue(ownersItem.UserID)
 		if ownersCount+1 > len(r.Owners) {
 			r.Owners = append(r.Owners, owners1)
 		} else {

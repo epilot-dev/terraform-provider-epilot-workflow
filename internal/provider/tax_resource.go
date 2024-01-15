@@ -6,7 +6,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk"
-
 	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/pkg/models/operations"
 	"github.com/epilot-dev/terraform-provider-epilot-product/internal/validators"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -33,20 +32,20 @@ type TaxResource struct {
 
 // TaxResourceModel describes the resource data model.
 type TaxResourceModel struct {
-	ACL         EntityACL      `tfsdk:"acl"`
-	CreatedAt   types.String   `tfsdk:"created_at"`
-	ID          types.String   `tfsdk:"id"`
-	Org         types.String   `tfsdk:"org"`
-	Owners      []EntityOwner  `tfsdk:"owners"`
-	Schema      types.String   `tfsdk:"schema"`
-	Tags        []types.String `tfsdk:"tags"`
-	Title       types.String   `tfsdk:"title"`
-	UpdatedAt   types.String   `tfsdk:"updated_at"`
-	Active      types.Bool     `tfsdk:"active"`
-	Description types.String   `tfsdk:"description"`
-	Rate        types.String   `tfsdk:"rate"`
-	Region      types.String   `tfsdk:"region"`
-	Type        types.String   `tfsdk:"type"`
+	ACL         BaseEntityACL     `tfsdk:"acl"`
+	CreatedAt   types.String      `tfsdk:"created_at"`
+	ID          types.String      `tfsdk:"id"`
+	Org         types.String      `tfsdk:"org"`
+	Owners      []BaseEntityOwner `tfsdk:"owners"`
+	Schema      types.String      `tfsdk:"schema"`
+	Tags        []types.String    `tfsdk:"tags"`
+	Title       types.String      `tfsdk:"title"`
+	UpdatedAt   types.String      `tfsdk:"updated_at"`
+	Active      types.Bool        `tfsdk:"active"`
+	Description types.String      `tfsdk:"description"`
+	Rate        types.String      `tfsdk:"rate"`
+	Region      types.String      `tfsdk:"region"`
+	Type        types.String      `tfsdk:"type"`
 }
 
 func (r *TaxResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -90,7 +89,8 @@ func (r *TaxResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 				},
 			},
 			"id": schema.StringAttribute{
-				Computed: true,
+				Computed:    true,
+				Description: `The tax id`,
 			},
 			"org": schema.StringAttribute{
 				Computed:    true,
@@ -181,14 +181,14 @@ func (r *TaxResource) Configure(ctx context.Context, req resource.ConfigureReque
 
 func (r *TaxResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var data *TaxResourceModel
-	var item types.Object
+	var plan types.Object
 
-	resp.Diagnostics.Append(req.Plan.Get(ctx, &item)...)
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	resp.Diagnostics.Append(item.As(ctx, &data, basetypes.ObjectAsOptions{
+	resp.Diagnostics.Append(plan.As(ctx, &data, basetypes.ObjectAsOptions{
 		UnhandledNullAsEmpty:    true,
 		UnhandledUnknownAsEmpty: true,
 	})...)
@@ -197,7 +197,7 @@ func (r *TaxResource) Create(ctx context.Context, req resource.CreateRequest, re
 		return
 	}
 
-	request := *data.ToCreateSDKType()
+	request := *data.ToSharedTaxCreate()
 	res, err := r.client.Tax.CreateTax(ctx, request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
@@ -218,7 +218,8 @@ func (r *TaxResource) Create(ctx context.Context, req resource.CreateRequest, re
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromCreateResponse(res.Tax)
+	data.RefreshFromSharedTax(res.Tax)
+	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -242,9 +243,11 @@ func (r *TaxResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 		return
 	}
 
+	var hydrate *bool
 	taxID := data.ID.ValueString()
 	request := operations.GetTaxRequest{
-		TaxID: taxID,
+		Hydrate: hydrate,
+		TaxID:   taxID,
 	}
 	res, err := r.client.Tax.GetTax(ctx, request)
 	if err != nil {
@@ -266,7 +269,7 @@ func (r *TaxResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.Tax)
+	data.RefreshFromSharedTax(res.Tax)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -274,12 +277,19 @@ func (r *TaxResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 
 func (r *TaxResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var data *TaxResourceModel
+	var plan types.Object
+
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
 	merge(ctx, req, resp, &data)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	taxCreate := *data.ToUpdateSDKType()
+	taxCreate := *data.ToSharedTaxCreate()
 	taxID := data.ID.ValueString()
 	request := operations.UpdateTaxRequest{
 		TaxCreate: taxCreate,
@@ -305,7 +315,8 @@ func (r *TaxResource) Update(ctx context.Context, req resource.UpdateRequest, re
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromUpdateResponse(res.Tax)
+	data.RefreshFromSharedTax(res.Tax)
+	refreshPlan(ctx, plan, &data, resp.Diagnostics)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

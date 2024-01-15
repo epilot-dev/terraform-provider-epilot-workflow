@@ -68,21 +68,21 @@ func (e *TaxType) UnmarshalJSON(data []byte) error {
 
 type Tax struct {
 	// Access control list (ACL) for an entity. Defines sharing access to external orgs or users.
-	ACL       EntityACL `json:"_acl"`
-	CreatedAt time.Time `json:"_created_at"`
-	ID        string    `json:"_id"`
+	ACL       BaseEntityACL `json:"_acl"`
+	CreatedAt time.Time     `json:"_created_at"`
+	ID        string        `json:"_id"`
 	// Organization Id the entity belongs to
-	Org         string        `json:"_org"`
-	Owners      []EntityOwner `json:"_owners"`
-	Schema      string        `json:"_schema"`
-	Tags        []string      `json:"_tags"`
-	Title       string        `json:"_title"`
-	UpdatedAt   time.Time     `json:"_updated_at"`
-	Active      bool          `json:"active"`
-	Description string        `json:"description"`
-	Rate        string        `json:"rate"`
-	Region      Region        `json:"region"`
-	Type        TaxType       `json:"type"`
+	Org         string            `json:"_org"`
+	Owners      []BaseEntityOwner `json:"_owners"`
+	Schema      string            `json:"_schema"`
+	Tags        []string          `json:"_tags"`
+	Title       string            `json:"_title"`
+	UpdatedAt   time.Time         `json:"_updated_at"`
+	Active      bool              `json:"active"`
+	Description string            `json:"description"`
+	Rate        string            `json:"rate"`
+	Region      Region            `json:"region"`
+	Type        TaxType           `json:"type"`
 }
 
 func (t Tax) MarshalJSON() ([]byte, error) {
@@ -96,9 +96,9 @@ func (t *Tax) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *Tax) GetACL() EntityACL {
+func (o *Tax) GetACL() BaseEntityACL {
 	if o == nil {
-		return EntityACL{}
+		return BaseEntityACL{}
 	}
 	return o.ACL
 }
@@ -124,9 +124,9 @@ func (o *Tax) GetOrg() string {
 	return o.Org
 }
 
-func (o *Tax) GetOwners() []EntityOwner {
+func (o *Tax) GetOwners() []BaseEntityOwner {
 	if o == nil {
-		return []EntityOwner{}
+		return []BaseEntityOwner{}
 	}
 	return o.Owners
 }
@@ -140,7 +140,7 @@ func (o *Tax) GetSchema() string {
 
 func (o *Tax) GetTags() []string {
 	if o == nil {
-		return []string{}
+		return nil
 	}
 	return o.Tags
 }

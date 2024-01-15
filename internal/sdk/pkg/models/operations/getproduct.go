@@ -8,8 +8,17 @@ import (
 )
 
 type GetProductRequest struct {
+	// Hydrates entities in relations when passed true
+	Hydrate *bool `queryParam:"style=form,explode=true,name=hydrate"`
 	// The product id
 	ProductID string `pathParam:"style=simple,explode=false,name=productId"`
+}
+
+func (o *GetProductRequest) GetHydrate() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.Hydrate
 }
 
 func (o *GetProductRequest) GetProductID() string {

@@ -14,7 +14,8 @@ Product DataSource
 
 ```terraform
 data "epilot-product_product" "my_product" {
-  id = "123e4567-e89b-12d3-a456-426614174000"
+  hydrate = false
+  id      = "123e4567-e89b-12d3-a456-426614174000"
 }
 ```
 
@@ -24,6 +25,10 @@ data "epilot-product_product" "my_product" {
 ### Required
 
 - `id` (String) The product id
+
+### Optional
+
+- `hydrate` (Boolean) Hydrates entities in relations when passed true
 
 ### Read-Only
 
@@ -40,13 +45,14 @@ data "epilot-product_product" "my_product" {
 - `schema` (String)
 - `tags` (List of String)
 - `title` (String)
-- `type` (String) must be one of ["product", "service"]; Default: "product"
-The type of Product:
+- `type` (String) The type of Product:
 
 | type | description |
 |----| ----|
 | `product` | Represents a physical good |
 | `service` | Represents a service or virtual product |
+
+must be one of ["product", "service"]; Default: "product"
 - `updated_at` (String)
 
 <a id="nestedatt--acl"></a>
@@ -66,7 +72,8 @@ Read-Only:
 Read-Only:
 
 - `feature` (String)
-- `tags` (List of String) An arbitrary set of tags attached to a feature
+- `id` (String)
+- `tags` (List of String)
 
 
 <a id="nestedatt--owners"></a>

@@ -5,6 +5,7 @@ package provider
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
 type Feature struct {
+	ID      types.String   `tfsdk:"id"`
 	Tags    []types.String `tfsdk:"tags"`
 	Feature types.String   `tfsdk:"feature"`
 }

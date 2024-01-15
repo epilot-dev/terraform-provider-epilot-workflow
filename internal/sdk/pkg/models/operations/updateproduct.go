@@ -9,16 +9,16 @@ import (
 
 type UpdateProductRequest struct {
 	// Product to update
-	BaseProduct shared.BaseProduct `request:"mediaType=application/json"`
+	ProductCreate shared.ProductCreate `request:"mediaType=application/json"`
 	// The product id
 	ProductID string `pathParam:"style=simple,explode=false,name=productId"`
 }
 
-func (o *UpdateProductRequest) GetBaseProduct() shared.BaseProduct {
+func (o *UpdateProductRequest) GetProductCreate() shared.ProductCreate {
 	if o == nil {
-		return shared.BaseProduct{}
+		return shared.ProductCreate{}
 	}
-	return o.BaseProduct
+	return o.ProductCreate
 }
 
 func (o *UpdateProductRequest) GetProductID() string {

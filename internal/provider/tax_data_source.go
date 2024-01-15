@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk"
 	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/pkg/models/operations"
-
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -29,20 +28,21 @@ type TaxDataSource struct {
 
 // TaxDataSourceModel describes the data model.
 type TaxDataSourceModel struct {
-	ACL         EntityACL      `tfsdk:"acl"`
-	CreatedAt   types.String   `tfsdk:"created_at"`
-	Org         types.String   `tfsdk:"org"`
-	Owners      []EntityOwner  `tfsdk:"owners"`
-	Schema      types.String   `tfsdk:"schema"`
-	Tags        []types.String `tfsdk:"tags"`
-	Title       types.String   `tfsdk:"title"`
-	UpdatedAt   types.String   `tfsdk:"updated_at"`
-	Active      types.Bool     `tfsdk:"active"`
-	Description types.String   `tfsdk:"description"`
-	ID          types.String   `tfsdk:"id"`
-	Rate        types.String   `tfsdk:"rate"`
-	Region      types.String   `tfsdk:"region"`
-	Type        types.String   `tfsdk:"type"`
+	ACL         BaseEntityACL     `tfsdk:"acl"`
+	CreatedAt   types.String      `tfsdk:"created_at"`
+	Org         types.String      `tfsdk:"org"`
+	Owners      []BaseEntityOwner `tfsdk:"owners"`
+	Schema      types.String      `tfsdk:"schema"`
+	Tags        []types.String    `tfsdk:"tags"`
+	Title       types.String      `tfsdk:"title"`
+	UpdatedAt   types.String      `tfsdk:"updated_at"`
+	Active      types.Bool        `tfsdk:"active"`
+	Description types.String      `tfsdk:"description"`
+	Hydrate     types.Bool        `tfsdk:"hydrate"`
+	ID          types.String      `tfsdk:"id"`
+	Rate        types.String      `tfsdk:"rate"`
+	Region      types.String      `tfsdk:"region"`
+	Type        types.String      `tfsdk:"type"`
 }
 
 // Metadata returns the data source type name.
@@ -117,6 +117,10 @@ func (r *TaxDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 			"description": schema.StringAttribute{
 				Computed: true,
 			},
+			"hydrate": schema.BoolAttribute{
+				Optional:    true,
+				Description: `Hydrates entities in relations when passed true`,
+			},
 			"id": schema.StringAttribute{
 				Required:    true,
 				Description: `The tax id`,
@@ -174,9 +178,16 @@ func (r *TaxDataSource) Read(ctx context.Context, req datasource.ReadRequest, re
 		return
 	}
 
+	hydrate := new(bool)
+	if !data.Hydrate.IsUnknown() && !data.Hydrate.IsNull() {
+		*hydrate = data.Hydrate.ValueBool()
+	} else {
+		hydrate = nil
+	}
 	taxID := data.ID.ValueString()
 	request := operations.GetTaxRequest{
-		TaxID: taxID,
+		Hydrate: hydrate,
+		TaxID:   taxID,
 	}
 	res, err := r.client.Tax.GetTax(ctx, request)
 	if err != nil {
@@ -198,7 +209,7 @@ func (r *TaxDataSource) Read(ctx context.Context, req datasource.ReadRequest, re
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.Tax)
+	data.RefreshFromSharedTax(res.Tax)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

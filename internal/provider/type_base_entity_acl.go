@@ -4,7 +4,7 @@ package provider
 
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
-type EntityACL struct {
+type BaseEntityACL struct {
 	AdditionalProperties types.String   `tfsdk:"additional_properties"`
 	Delete               []types.String `tfsdk:"delete"`
 	Edit                 []types.String `tfsdk:"edit"`

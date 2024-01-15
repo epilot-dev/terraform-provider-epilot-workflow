@@ -28,7 +28,7 @@ func newProduct(sdkConfig sdkConfiguration) *Product {
 
 // CreateProduct - createProduct
 // Create a new product entity
-func (s *Product) CreateProduct(ctx context.Context, request shared.BaseProduct) (*operations.CreateProductResponse, error) {
+func (s *Product) CreateProduct(ctx context.Context, request shared.ProductCreate) (*operations.CreateProductResponse, error) {
 	baseURL := utils.ReplaceParameters(s.sdkConfiguration.GetServerDetails())
 	url := strings.TrimSuffix(baseURL, "/") + "/v1/product"
 
@@ -217,6 +217,10 @@ func (s *Product) GetProduct(ctx context.Context, request operations.GetProductR
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("user-agent", s.sdkConfiguration.UserAgent)
 
+	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
+		return nil, fmt.Errorf("error populating query params: %w", err)
+	}
+
 	client := s.sdkConfiguration.SecurityClient
 
 	httpRes, err := client.Do(req)
@@ -292,7 +296,7 @@ func (s *Product) PatchProduct(ctx context.Context, request operations.PatchProd
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
-	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "ProductUpdate", "json", `request:"mediaType=application/json"`)
+	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "ProductPatch", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, fmt.Errorf("error serializing request body: %w", err)
 	}
@@ -388,7 +392,7 @@ func (s *Product) UpdateProduct(ctx context.Context, request operations.UpdatePr
 		return nil, fmt.Errorf("error generating URL: %w", err)
 	}
 
-	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "BaseProduct", "json", `request:"mediaType=application/json"`)
+	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "ProductCreate", "json", `request:"mediaType=application/json"`)
 	if err != nil {
 		return nil, fmt.Errorf("error serializing request body: %w", err)
 	}

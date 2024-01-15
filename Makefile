@@ -2,7 +2,7 @@
 all: docs speakeasy
 
 speakeasy:
-	speakeasy generate sdk --lang terraform -o . -s product.yml
+	speakeasy generate sdk --lang terraform -o . -s https://docs.api.epilot.io/product.yaml
 
 docs:
 	go generate ./...

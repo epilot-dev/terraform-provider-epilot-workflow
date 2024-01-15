@@ -14,7 +14,8 @@ Price DataSource
 
 ```terraform
 data "epilot-product_price" "my_price" {
-  id = "123e4567-e89b-12d3-a456-426614174000"
+  hydrate = true
+  id      = "123e4567-e89b-12d3-a456-426614174000"
 }
 ```
 
@@ -25,52 +26,49 @@ data "epilot-product_price" "my_price" {
 
 - `id` (String) The price id
 
+### Optional
+
+- `hydrate` (Boolean) Hydrates entities in relations when passed true
+
 ### Read-Only
 
 - `acl` (Attributes) Access control list (ACL) for an entity. Defines sharing access to external orgs or users. (see [below for nested schema](#nestedatt--acl))
 - `active` (Boolean) Whether the price can be used for new purchases.
 - `billing_duration_amount` (Number) The billing period duration
-- `billing_duration_unit` (String) must be one of ["weeks", "months", "years"]
-The billing period duration unit
+- `billing_duration_unit` (String) The billing period duration unit. must be one of ["weeks", "months", "years"]
 - `created_at` (String)
 - `description` (String) A brief description of the price.
 - `is_composite_price` (Boolean) The flag for prices that contain price components.
-- `is_tax_inclusive` (Boolean) Default: false
-Specifies whether the price is considered `inclusive` of taxes or not.
+- `is_tax_inclusive` (Boolean) Specifies whether the price is considered `inclusive` of taxes or not. Default: false
 - `long_description` (String) A detailed description of the price. This is shown on the order document and order table. Multi-line supported.
 - `notice_time_amount` (Number) The notice period duration
-- `notice_time_unit` (String) must be one of ["weeks", "months", "years"]
-The notice period duration unit
+- `notice_time_unit` (String) The notice period duration unit. must be one of ["weeks", "months", "years"]
 - `org` (String) Organization Id the entity belongs to
 - `owners` (Attributes List) (see [below for nested schema](#nestedatt--owners))
-- `price_display_in_journeys` (String) must be one of ["show_price", "show_as_starting_price", "show_as_on_request"]
-Defines the way the price amount is display in epilot journeys.
-- `pricing_model` (String) must be one of ["per_unit", "tiered_volume", "tiered_graduated", "tiered_flatfee"]; Default: "per_unit"
-Describes how to compute the price per period. Either `per_unit`, `tiered_graduated` or `tiered_volume`.
+- `price_display_in_journeys` (String) Defines the way the price amount is display in epilot journeys. must be one of ["show_price", "show_as_starting_price", "show_as_on_request"]
+- `pricing_model` (String) Describes how to compute the price per period. Either `per_unit`, `tiered_graduated` or `tiered_volume`.
 - `per_unit` indicates that the fixed amount (specified in unit_amount or unit_amount_decimal) will be charged per unit in quantity
 - `tiered_graduated` indicates that the unit pricing will be computed using tiers attribute. The customer pays the price per unit in every range their purchase rises through.
 - `tiered_volume` indicates that the unit pricing will be computed using tiers attribute. The customer pays the same unit price for all purchased units.
 - `tiered_flatfee` While similar to tiered_volume, tiered flat fee charges for the same price (flat) for the entire range instead using the unit price to multiply the quantity.
+
+must be one of ["per_unit", "tiered_volume", "tiered_graduated", "tiered_flatfee"]; Default: "per_unit"
 - `renewal_duration_amount` (Number) The renewal period duration
-- `renewal_duration_unit` (String) must be one of ["weeks", "months", "years"]
-The renewal period duration unit
+- `renewal_duration_unit` (String) The renewal period duration unit. must be one of ["weeks", "months", "years"]
 - `schema` (String)
 - `tags` (List of String)
 - `tax` (Attributes) (see [below for nested schema](#nestedatt--tax))
 - `termination_time_amount` (Number) The termination period duration
-- `termination_time_unit` (String) must be one of ["weeks", "months", "years"]
-The termination period duration unit
+- `termination_time_unit` (String) The termination period duration unit. must be one of ["weeks", "months", "years"]
 - `tiers` (Attributes List) Defines an array of tiers. Each tier has an upper bound, an unit amount and a flat fee. (see [below for nested schema](#nestedatt--tiers))
 - `title` (String)
-- `type` (String) must be one of ["one_time", "recurring"]; Default: "one_time"
-One of `one_time` or `recurring` depending on whether the price is for a one-time purchase or a recurring (subscription) purchase.
+- `type` (String) One of `one_time` or `recurring` depending on whether the price is for a one-time purchase or a recurring (subscription) purchase. must be one of ["one_time", "recurring"]; Default: "one_time"
 - `unit` (Attributes) The unit of measurement used for display purposes and possibly for calculations when the price is variable. (see [below for nested schema](#nestedatt--unit))
 - `unit_amount` (Number) The unit amount in cents to be charged, represented as a whole integer if possible.
 - `unit_amount_currency` (String) Three-letter ISO currency code, in lowercase.
 - `unit_amount_decimal` (String) The unit amount in cents to be charged, represented as a decimal string with at most 12 decimal places.
 - `updated_at` (String)
-- `variable_price` (Boolean) Default: false
-The flag for prices that can be influenced by external variables such as user input.
+- `variable_price` (Boolean) The flag for prices that can be influenced by external variables such as user input. Default: false
 
 <a id="nestedatt--acl"></a>
 ### Nested Schema for `acl`
@@ -127,8 +125,7 @@ Read-Only:
 
 Read-Only:
 
-- `one` (String) must be one of ["kw", "kwh", "m", "m2", "l", "cubic-meter", "cubic-meter-h", "ls", "a", "kva", "w", "wp", "kwp"]
-built-in units
+- `one` (String) built-in units. must be one of ["kw", "kwh", "m", "m2", "l", "cubic-meter", "cubic-meter-h", "ls", "a", "kva", "w", "wp", "kwp"]
 - `str` (String)
 
 

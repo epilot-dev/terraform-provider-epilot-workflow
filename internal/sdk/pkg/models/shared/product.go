@@ -9,20 +9,27 @@ import (
 	"time"
 )
 
-type ProductFeature struct {
-	// An arbitrary set of tags attached to a feature
+type Feature struct {
+	ID      *string  `json:"_id,omitempty"`
 	Tags    []string `json:"_tags,omitempty"`
 	Feature *string  `json:"feature,omitempty"`
 }
 
-func (o *ProductFeature) GetTags() []string {
+func (o *Feature) GetID() *string {
+	if o == nil {
+		return nil
+	}
+	return o.ID
+}
+
+func (o *Feature) GetTags() []string {
 	if o == nil {
 		return nil
 	}
 	return o.Tags
 }
 
-func (o *ProductFeature) GetFeature() *string {
+func (o *Feature) GetFeature() *string {
 	if o == nil {
 		return nil
 	}
@@ -64,21 +71,21 @@ func (e *ProductType) UnmarshalJSON(data []byte) error {
 
 type Product struct {
 	// Access control list (ACL) for an entity. Defines sharing access to external orgs or users.
-	ACL       EntityACL `json:"_acl"`
-	CreatedAt time.Time `json:"_created_at"`
-	ID        string    `json:"_id"`
+	ACL       BaseEntityACL `json:"_acl"`
+	CreatedAt time.Time     `json:"_created_at"`
+	ID        string        `json:"_id"`
 	// Organization Id the entity belongs to
-	Org       string        `json:"_org"`
-	Owners    []EntityOwner `json:"_owners"`
-	Schema    string        `json:"_schema"`
-	Tags      []string      `json:"_tags"`
-	Title     string        `json:"_title"`
-	UpdatedAt time.Time     `json:"_updated_at"`
+	Org       string            `json:"_org"`
+	Owners    []BaseEntityOwner `json:"_owners"`
+	Schema    string            `json:"_schema"`
+	Tags      []string          `json:"_tags"`
+	Title     string            `json:"_title"`
+	UpdatedAt time.Time         `json:"_updated_at"`
 	// The product code
 	Code *string `json:"code,omitempty"`
 	// A description of the product. Multi-line supported.
-	Description *string          `json:"description,omitempty"`
-	Feature     []ProductFeature `json:"feature,omitempty"`
+	Description *string   `json:"description,omitempty"`
+	Feature     []Feature `json:"feature,omitempty"`
 	// Not visible to customers, only in internal tables
 	InternalName *string `json:"internal_name,omitempty"`
 	// The description for the product
@@ -105,9 +112,9 @@ func (p *Product) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *Product) GetACL() EntityACL {
+func (o *Product) GetACL() BaseEntityACL {
 	if o == nil {
-		return EntityACL{}
+		return BaseEntityACL{}
 	}
 	return o.ACL
 }
@@ -133,9 +140,9 @@ func (o *Product) GetOrg() string {
 	return o.Org
 }
 
-func (o *Product) GetOwners() []EntityOwner {
+func (o *Product) GetOwners() []BaseEntityOwner {
 	if o == nil {
-		return []EntityOwner{}
+		return []BaseEntityOwner{}
 	}
 	return o.Owners
 }
@@ -149,7 +156,7 @@ func (o *Product) GetSchema() string {
 
 func (o *Product) GetTags() []string {
 	if o == nil {
-		return []string{}
+		return nil
 	}
 	return o.Tags
 }
@@ -182,7 +189,7 @@ func (o *Product) GetDescription() *string {
 	return o.Description
 }
 
-func (o *Product) GetFeature() []ProductFeature {
+func (o *Product) GetFeature() []Feature {
 	if o == nil {
 		return nil
 	}

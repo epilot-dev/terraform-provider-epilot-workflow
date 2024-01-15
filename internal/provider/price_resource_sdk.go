@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func (r *PriceResourceModel) ToCreateSDKType() *shared.PriceCreate {
+func (r *PriceResourceModel) ToSharedPriceCreate() *shared.PriceCreate {
 	active := r.Active.ValueBool()
 	billingDurationAmount := new(float64)
 	if !r.BillingDurationAmount.IsUnknown() && !r.BillingDurationAmount.IsNull() {
@@ -244,22 +244,7 @@ func (r *PriceResourceModel) ToCreateSDKType() *shared.PriceCreate {
 	return &out
 }
 
-func (r *PriceResourceModel) ToGetSDKType() *shared.PriceCreate {
-	out := r.ToCreateSDKType()
-	return out
-}
-
-func (r *PriceResourceModel) ToUpdateSDKType() *shared.PriceCreate {
-	out := r.ToCreateSDKType()
-	return out
-}
-
-func (r *PriceResourceModel) ToDeleteSDKType() *shared.PriceCreate {
-	out := r.ToCreateSDKType()
-	return out
-}
-
-func (r *PriceResourceModel) RefreshFromGetResponse(resp *shared.Price) {
+func (r *PriceResourceModel) RefreshFromSharedPrice(resp *shared.Price) {
 	if resp.ACL.AdditionalProperties == nil {
 		r.ACL.AdditionalProperties = types.StringNull()
 	} else {
@@ -285,13 +270,9 @@ func (r *PriceResourceModel) RefreshFromGetResponse(resp *shared.Price) {
 		r.Owners = r.Owners[:len(resp.Owners)]
 	}
 	for ownersCount, ownersItem := range resp.Owners {
-		var owners1 EntityOwner
+		var owners1 BaseEntityOwner
 		owners1.OrgID = types.StringValue(ownersItem.OrgID)
-		if ownersItem.UserID != nil {
-			owners1.UserID = types.StringValue(*ownersItem.UserID)
-		} else {
-			owners1.UserID = types.StringNull()
-		}
+		owners1.UserID = types.StringPointerValue(ownersItem.UserID)
 		if ownersCount+1 > len(r.Owners) {
 			r.Owners = append(r.Owners, owners1)
 		} else {
@@ -318,21 +299,9 @@ func (r *PriceResourceModel) RefreshFromGetResponse(resp *shared.Price) {
 		r.BillingDurationUnit = types.StringNull()
 	}
 	r.Description = types.StringValue(resp.Description)
-	if resp.IsCompositePrice != nil {
-		r.IsCompositePrice = types.BoolValue(*resp.IsCompositePrice)
-	} else {
-		r.IsCompositePrice = types.BoolNull()
-	}
-	if resp.IsTaxInclusive != nil {
-		r.IsTaxInclusive = types.BoolValue(*resp.IsTaxInclusive)
-	} else {
-		r.IsTaxInclusive = types.BoolNull()
-	}
-	if resp.LongDescription != nil {
-		r.LongDescription = types.StringValue(*resp.LongDescription)
-	} else {
-		r.LongDescription = types.StringNull()
-	}
+	r.IsCompositePrice = types.BoolPointerValue(resp.IsCompositePrice)
+	r.IsTaxInclusive = types.BoolPointerValue(resp.IsTaxInclusive)
+	r.LongDescription = types.StringPointerValue(resp.LongDescription)
 	if resp.NoticeTimeAmount != nil {
 		r.NoticeTimeAmount = types.NumberValue(big.NewFloat(float64(*resp.NoticeTimeAmount)))
 	} else {
@@ -376,11 +345,7 @@ func (r *PriceResourceModel) RefreshFromGetResponse(resp *shared.Price) {
 			for _, v := range dollarRelationItem.Tags {
 				dollarRelation1.Tags = append(dollarRelation1.Tags, types.StringValue(v))
 			}
-			if dollarRelationItem.EntityID != nil {
-				dollarRelation1.EntityID = types.StringValue(*dollarRelationItem.EntityID)
-			} else {
-				dollarRelation1.EntityID = types.StringNull()
-			}
+			dollarRelation1.EntityID = types.StringPointerValue(dollarRelationItem.EntityID)
 			if dollarRelationCount+1 > len(r.Tax.DollarRelation) {
 				r.Tax.DollarRelation = append(r.Tax.DollarRelation, dollarRelation1)
 			} else {
@@ -414,21 +379,13 @@ func (r *PriceResourceModel) RefreshFromGetResponse(resp *shared.Price) {
 		} else {
 			tiers1.FlatFeeAmount = types.NumberNull()
 		}
-		if tiersItem.FlatFeeAmountDecimal != nil {
-			tiers1.FlatFeeAmountDecimal = types.StringValue(*tiersItem.FlatFeeAmountDecimal)
-		} else {
-			tiers1.FlatFeeAmountDecimal = types.StringNull()
-		}
+		tiers1.FlatFeeAmountDecimal = types.StringPointerValue(tiersItem.FlatFeeAmountDecimal)
 		if tiersItem.UnitAmount != nil {
 			tiers1.UnitAmount = types.NumberValue(big.NewFloat(float64(*tiersItem.UnitAmount)))
 		} else {
 			tiers1.UnitAmount = types.NumberNull()
 		}
-		if tiersItem.UnitAmountDecimal != nil {
-			tiers1.UnitAmountDecimal = types.StringValue(*tiersItem.UnitAmountDecimal)
-		} else {
-			tiers1.UnitAmountDecimal = types.StringNull()
-		}
+		tiers1.UnitAmountDecimal = types.StringPointerValue(tiersItem.UnitAmountDecimal)
 		if tiersItem.UpTo != nil {
 			tiers1.UpTo = types.NumberValue(big.NewFloat(float64(*tiersItem.UpTo)))
 		} else {
@@ -455,11 +412,7 @@ func (r *PriceResourceModel) RefreshFromGetResponse(resp *shared.Price) {
 	} else {
 		r.Unit = &PriceCreateUnit{}
 		if resp.Unit.Str != nil {
-			if resp.Unit.Str != nil {
-				r.Unit.Str = types.StringValue(*resp.Unit.Str)
-			} else {
-				r.Unit.Str = types.StringNull()
-			}
+			r.Unit.Str = types.StringPointerValue(resp.Unit.Str)
 		}
 		if resp.Unit.One != nil {
 			if resp.Unit.One != nil {
@@ -474,27 +427,7 @@ func (r *PriceResourceModel) RefreshFromGetResponse(resp *shared.Price) {
 	} else {
 		r.UnitAmount = types.NumberNull()
 	}
-	if resp.UnitAmountCurrency != nil {
-		r.UnitAmountCurrency = types.StringValue(*resp.UnitAmountCurrency)
-	} else {
-		r.UnitAmountCurrency = types.StringNull()
-	}
-	if resp.UnitAmountDecimal != nil {
-		r.UnitAmountDecimal = types.StringValue(*resp.UnitAmountDecimal)
-	} else {
-		r.UnitAmountDecimal = types.StringNull()
-	}
-	if resp.VariablePrice != nil {
-		r.VariablePrice = types.BoolValue(*resp.VariablePrice)
-	} else {
-		r.VariablePrice = types.BoolNull()
-	}
-}
-
-func (r *PriceResourceModel) RefreshFromCreateResponse(resp *shared.Price) {
-	r.RefreshFromGetResponse(resp)
-}
-
-func (r *PriceResourceModel) RefreshFromUpdateResponse(resp *shared.Price) {
-	r.RefreshFromGetResponse(resp)
+	r.UnitAmountCurrency = types.StringPointerValue(resp.UnitAmountCurrency)
+	r.UnitAmountDecimal = types.StringPointerValue(resp.UnitAmountDecimal)
+	r.VariablePrice = types.BoolPointerValue(resp.VariablePrice)
 }

@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk"
 	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/pkg/models/operations"
-
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -29,22 +28,23 @@ type ProductDataSource struct {
 
 // ProductDataSourceModel describes the data model.
 type ProductDataSourceModel struct {
-	ACL          EntityACL      `tfsdk:"acl"`
-	CreatedAt    types.String   `tfsdk:"created_at"`
-	Org          types.String   `tfsdk:"org"`
-	Owners       []EntityOwner  `tfsdk:"owners"`
-	Schema       types.String   `tfsdk:"schema"`
-	Tags         []types.String `tfsdk:"tags"`
-	Title        types.String   `tfsdk:"title"`
-	UpdatedAt    types.String   `tfsdk:"updated_at"`
-	Code         types.String   `tfsdk:"code"`
-	Description  types.String   `tfsdk:"description"`
-	Feature      []Feature      `tfsdk:"feature"`
-	ID           types.String   `tfsdk:"id"`
-	InternalName types.String   `tfsdk:"internal_name"`
-	Name         types.String   `tfsdk:"name"`
-	PriceOptions *BaseRelation  `tfsdk:"price_options"`
-	Type         types.String   `tfsdk:"type"`
+	ACL          BaseEntityACL     `tfsdk:"acl"`
+	CreatedAt    types.String      `tfsdk:"created_at"`
+	Org          types.String      `tfsdk:"org"`
+	Owners       []BaseEntityOwner `tfsdk:"owners"`
+	Schema       types.String      `tfsdk:"schema"`
+	Tags         []types.String    `tfsdk:"tags"`
+	Title        types.String      `tfsdk:"title"`
+	UpdatedAt    types.String      `tfsdk:"updated_at"`
+	Code         types.String      `tfsdk:"code"`
+	Description  types.String      `tfsdk:"description"`
+	Feature      []Feature         `tfsdk:"feature"`
+	Hydrate      types.Bool        `tfsdk:"hydrate"`
+	ID           types.String      `tfsdk:"id"`
+	InternalName types.String      `tfsdk:"internal_name"`
+	Name         types.String      `tfsdk:"name"`
+	PriceOptions *BaseRelation     `tfsdk:"price_options"`
+	Type         types.String      `tfsdk:"type"`
 }
 
 // Metadata returns the data source type name.
@@ -125,16 +125,22 @@ func (r *ProductDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
+						"id": schema.StringAttribute{
+							Computed: true,
+						},
 						"tags": schema.ListAttribute{
 							Computed:    true,
 							ElementType: types.StringType,
-							Description: `An arbitrary set of tags attached to a feature`,
 						},
 						"feature": schema.StringAttribute{
 							Computed: true,
 						},
 					},
 				},
+			},
+			"hydrate": schema.BoolAttribute{
+				Optional:    true,
+				Description: `Hydrates entities in relations when passed true`,
 			},
 			"id": schema.StringAttribute{
 				Required:    true,
@@ -169,14 +175,14 @@ func (r *ProductDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 			},
 			"type": schema.StringAttribute{
 				Computed: true,
-				MarkdownDescription: `must be one of ["product", "service"]; Default: "product"` + "\n" +
-					`The type of Product:` + "\n" +
+				MarkdownDescription: `The type of Product:` + "\n" +
 					`` + "\n" +
 					`| type | description |` + "\n" +
 					`|----| ----|` + "\n" +
 					`| ` + "`" + `product` + "`" + ` | Represents a physical good |` + "\n" +
 					`| ` + "`" + `service` + "`" + ` | Represents a service or virtual product |` + "\n" +
-					``,
+					`` + "\n" +
+					`must be one of ["product", "service"]; Default: "product"`,
 			},
 		},
 	}
@@ -220,8 +226,15 @@ func (r *ProductDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		return
 	}
 
+	hydrate := new(bool)
+	if !data.Hydrate.IsUnknown() && !data.Hydrate.IsNull() {
+		*hydrate = data.Hydrate.ValueBool()
+	} else {
+		hydrate = nil
+	}
 	productID := data.ID.ValueString()
 	request := operations.GetProductRequest{
+		Hydrate:   hydrate,
 		ProductID: productID,
 	}
 	res, err := r.client.Product.GetProduct(ctx, request)
@@ -244,7 +257,7 @@ func (r *ProductDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromGetResponse(res.Product)
+	data.RefreshFromSharedProduct(res.Product)
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

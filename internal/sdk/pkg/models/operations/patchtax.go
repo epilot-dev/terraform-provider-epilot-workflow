@@ -9,16 +9,16 @@ import (
 
 type PatchTaxRequest struct {
 	// Tax to patch
-	TaxUpdate shared.TaxUpdate `request:"mediaType=application/json"`
+	TaxPatch shared.TaxPatch `request:"mediaType=application/json"`
 	// The tax id
 	TaxID string `pathParam:"style=simple,explode=false,name=taxId"`
 }
 
-func (o *PatchTaxRequest) GetTaxUpdate() shared.TaxUpdate {
+func (o *PatchTaxRequest) GetTaxPatch() shared.TaxPatch {
 	if o == nil {
-		return shared.TaxUpdate{}
+		return shared.TaxPatch{}
 	}
-	return o.TaxUpdate
+	return o.TaxPatch
 }
 
 func (o *PatchTaxRequest) GetTaxID() string {

@@ -2,22 +2,22 @@
 
 package shared
 
-// EntityOwner - The user / organization owning this entity.
+// BaseEntityOwner - The user / organization owning this entity.
 //
 // Note: Owner implicitly has access to the entity regardless of ACLs.
-type EntityOwner struct {
+type BaseEntityOwner struct {
 	OrgID  string  `json:"org_id"`
 	UserID *string `json:"user_id,omitempty"`
 }
 
-func (o *EntityOwner) GetOrgID() string {
+func (o *BaseEntityOwner) GetOrgID() string {
 	if o == nil {
 		return ""
 	}
 	return o.OrgID
 }
 
-func (o *EntityOwner) GetUserID() *string {
+func (o *BaseEntityOwner) GetUserID() *string {
 	if o == nil {
 		return nil
 	}
