@@ -22,8 +22,13 @@ terraform {
   }
 }
 
+variable epilot_auth {
+  type = string
+}
+
 provider "epilot-product" {
   # Configuration options
+  epilot_auth = var.epilot_auth
 }
 ```
 

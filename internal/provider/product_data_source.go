@@ -36,6 +36,7 @@ type ProductDataSourceModel struct {
 	Tags         []types.String    `tfsdk:"tags"`
 	Title        types.String      `tfsdk:"title"`
 	UpdatedAt    types.String      `tfsdk:"updated_at"`
+	Active       types.Bool        `tfsdk:"active"`
 	Code         types.String      `tfsdk:"code"`
 	Description  types.String      `tfsdk:"description"`
 	Feature      []Feature         `tfsdk:"feature"`
@@ -111,6 +112,9 @@ func (r *ProductDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 				Computed: true,
 			},
 			"updated_at": schema.StringAttribute{
+				Computed: true,
+			},
+			"active": schema.BoolAttribute{
 				Computed: true,
 			},
 			"code": schema.StringAttribute{

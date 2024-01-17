@@ -69,6 +69,7 @@ func (e *ProductCreateType) UnmarshalJSON(data []byte) error {
 }
 
 type ProductCreate struct {
+	Active bool `json:"active"`
 	// The product code
 	Code *string `json:"code,omitempty"`
 	// A description of the product. Multi-line supported.
@@ -98,6 +99,13 @@ func (p *ProductCreate) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	return nil
+}
+
+func (o *ProductCreate) GetActive() bool {
+	if o == nil {
+		return false
+	}
+	return o.Active
 }
 
 func (o *ProductCreate) GetCode() *string {

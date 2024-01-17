@@ -41,6 +41,7 @@ type ProductResourceModel struct {
 	Tags         []types.String    `tfsdk:"tags"`
 	Title        types.String      `tfsdk:"title"`
 	UpdatedAt    types.String      `tfsdk:"updated_at"`
+	Active       types.Bool        `tfsdk:"active"`
 	Code         types.String      `tfsdk:"code"`
 	Description  types.String      `tfsdk:"description"`
 	Feature      []Feature         `tfsdk:"feature"`
@@ -126,6 +127,9 @@ func (r *ProductResource) Schema(ctx context.Context, req resource.SchemaRequest
 				Validators: []validator.String{
 					validators.IsRFC3339(),
 				},
+			},
+			"active": schema.BoolAttribute{
+				Required: true,
 			},
 			"code": schema.StringAttribute{
 				Computed:    true,

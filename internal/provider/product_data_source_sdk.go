@@ -51,6 +51,7 @@ func (r *ProductDataSourceModel) RefreshFromSharedProduct(resp *shared.Product) 
 	}
 	r.Title = types.StringValue(resp.Title)
 	r.UpdatedAt = types.StringValue(resp.UpdatedAt.Format(time.RFC3339Nano))
+	r.Active = types.BoolValue(resp.Active)
 	r.Code = types.StringPointerValue(resp.Code)
 	r.Description = types.StringPointerValue(resp.Description)
 	if len(r.Feature) > len(resp.Feature) {

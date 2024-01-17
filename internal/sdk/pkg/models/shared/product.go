@@ -81,6 +81,7 @@ type Product struct {
 	Tags      []string          `json:"_tags"`
 	Title     string            `json:"_title"`
 	UpdatedAt time.Time         `json:"_updated_at"`
+	Active    bool              `json:"active"`
 	// The product code
 	Code *string `json:"code,omitempty"`
 	// A description of the product. Multi-line supported.
@@ -173,6 +174,13 @@ func (o *Product) GetUpdatedAt() time.Time {
 		return time.Time{}
 	}
 	return o.UpdatedAt
+}
+
+func (o *Product) GetActive() bool {
+	if o == nil {
+		return false
+	}
+	return o.Active
 }
 
 func (o *Product) GetCode() *string {

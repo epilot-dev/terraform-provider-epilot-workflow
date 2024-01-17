@@ -10,6 +10,7 @@ import (
 )
 
 func (r *ProductResourceModel) ToSharedProductCreate() *shared.ProductCreate {
+	active := r.Active.ValueBool()
 	code := new(string)
 	if !r.Code.IsUnknown() && !r.Code.IsNull() {
 		*code = r.Code.ValueString()
@@ -83,6 +84,7 @@ func (r *ProductResourceModel) ToSharedProductCreate() *shared.ProductCreate {
 		typeVar = nil
 	}
 	out := shared.ProductCreate{
+		Active:       active,
 		Code:         code,
 		Description:  description,
 		Feature:      feature,
@@ -137,6 +139,7 @@ func (r *ProductResourceModel) RefreshFromSharedProduct(resp *shared.Product) {
 	}
 	r.Title = types.StringValue(resp.Title)
 	r.UpdatedAt = types.StringValue(resp.UpdatedAt.Format(time.RFC3339Nano))
+	r.Active = types.BoolValue(resp.Active)
 	r.Code = types.StringPointerValue(resp.Code)
 	r.Description = types.StringPointerValue(resp.Description)
 	if len(r.Feature) > len(resp.Feature) {
