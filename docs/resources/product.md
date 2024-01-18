@@ -14,10 +14,11 @@ Product Resource
 
 ```terraform
 resource "epilot-product_product" "my_product" {
+  active        = true
   code          = "...my_code..."
   description   = "...my_description..."
   internal_name = "...my_internal_name..."
-  name          = "Rogelio Brakus"
+  name          = "Juan Morar Jr."
   type          = "product"
 }
 ```
@@ -27,6 +28,7 @@ resource "epilot-product_product" "my_product" {
 
 ### Required
 
+- `active` (Boolean)
 - `name` (String) The description for the product
 
 ### Optional
