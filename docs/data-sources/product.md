@@ -14,7 +14,7 @@ Product DataSource
 
 ```terraform
 data "epilot-product_product" "my_product" {
-  hydrate = false
+  hydrate = true
   id      = "123e4567-e89b-12d3-a456-426614174000"
 }
 ```
@@ -33,6 +33,7 @@ data "epilot-product_product" "my_product" {
 ### Read-Only
 
 - `acl` (Attributes) Access control list (ACL) for an entity. Defines sharing access to external orgs or users. (see [below for nested schema](#nestedatt--acl))
+- `active` (Boolean)
 - `code` (String) The product code
 - `created_at` (String)
 - `description` (String) A description of the product. Multi-line supported.

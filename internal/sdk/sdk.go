@@ -13,6 +13,7 @@ import (
 
 // ServerList contains the list of servers available to the SDK
 var ServerList = []string{
+	"https://product.sls.epilot.io",
 	// Production server
 	"https://product.sls.epilot.io",
 }
@@ -145,9 +146,9 @@ func New(opts ...SDKOption) *SDK {
 		sdkConfiguration: sdkConfiguration{
 			Language:          "go",
 			OpenAPIDocVersion: "1.0.0",
-			SDKVersion:        "0.4.2",
-			GenVersion:        "2.231.0",
-			UserAgent:         "speakeasy-sdk/go 0.4.2 2.231.0 1.0.0 epilot-product",
+			SDKVersion:        "0.4.4",
+			GenVersion:        "2.237.2",
+			UserAgent:         "speakeasy-sdk/go 0.4.4 2.237.2 1.0.0 epilot-product",
 		},
 	}
 	for _, opt := range opts {
