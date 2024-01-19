@@ -32,23 +32,24 @@ type ProductResource struct {
 
 // ProductResourceModel describes the resource data model.
 type ProductResourceModel struct {
-	ACL          BaseEntityACL     `tfsdk:"acl"`
-	CreatedAt    types.String      `tfsdk:"created_at"`
-	ID           types.String      `tfsdk:"id"`
-	Org          types.String      `tfsdk:"org"`
-	Owners       []BaseEntityOwner `tfsdk:"owners"`
-	Schema       types.String      `tfsdk:"schema"`
-	Tags         []types.String    `tfsdk:"tags"`
-	Title        types.String      `tfsdk:"title"`
-	UpdatedAt    types.String      `tfsdk:"updated_at"`
-	Active       types.Bool        `tfsdk:"active"`
-	Code         types.String      `tfsdk:"code"`
-	Description  types.String      `tfsdk:"description"`
-	Feature      []Feature         `tfsdk:"feature"`
-	InternalName types.String      `tfsdk:"internal_name"`
-	Name         types.String      `tfsdk:"name"`
-	PriceOptions *BaseRelation     `tfsdk:"price_options"`
-	Type         types.String      `tfsdk:"type"`
+	ACL           BaseEntityACL     `tfsdk:"acl"`
+	CreatedAt     types.String      `tfsdk:"created_at"`
+	ID            types.String      `tfsdk:"id"`
+	Org           types.String      `tfsdk:"org"`
+	Owners        []BaseEntityOwner `tfsdk:"owners"`
+	Schema        types.String      `tfsdk:"schema"`
+	Tags          []types.String    `tfsdk:"tags"`
+	Title         types.String      `tfsdk:"title"`
+	UpdatedAt     types.String      `tfsdk:"updated_at"`
+	Active        types.Bool        `tfsdk:"active"`
+	Code          types.String      `tfsdk:"code"`
+	Description   types.String      `tfsdk:"description"`
+	Feature       []Feature         `tfsdk:"feature"`
+	InternalName  types.String      `tfsdk:"internal_name"`
+	Name          types.String      `tfsdk:"name"`
+	PriceOptions  *BaseRelation     `tfsdk:"price_options"`
+	ProductImages *BaseImage        `tfsdk:"product_images"`
+	Type          types.String      `tfsdk:"type"`
 }
 
 func (r *ProductResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -185,6 +186,24 @@ func (r *ProductResource) Schema(ctx context.Context, req resource.SchemaRequest
 									Optional:    true,
 									ElementType: types.StringType,
 								},
+								"entity_id": schema.StringAttribute{
+									Computed: true,
+									Optional: true,
+								},
+							},
+						},
+					},
+				},
+			},
+			"product_images": schema.SingleNestedAttribute{
+				Computed: true,
+				Optional: true,
+				Attributes: map[string]schema.Attribute{
+					"dollar_relation": schema.ListNestedAttribute{
+						Computed: true,
+						Optional: true,
+						NestedObject: schema.NestedAttributeObject{
+							Attributes: map[string]schema.Attribute{
 								"entity_id": schema.StringAttribute{
 									Computed: true,
 									Optional: true,

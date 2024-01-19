@@ -28,24 +28,25 @@ type ProductDataSource struct {
 
 // ProductDataSourceModel describes the data model.
 type ProductDataSourceModel struct {
-	ACL          BaseEntityACL     `tfsdk:"acl"`
-	CreatedAt    types.String      `tfsdk:"created_at"`
-	Org          types.String      `tfsdk:"org"`
-	Owners       []BaseEntityOwner `tfsdk:"owners"`
-	Schema       types.String      `tfsdk:"schema"`
-	Tags         []types.String    `tfsdk:"tags"`
-	Title        types.String      `tfsdk:"title"`
-	UpdatedAt    types.String      `tfsdk:"updated_at"`
-	Active       types.Bool        `tfsdk:"active"`
-	Code         types.String      `tfsdk:"code"`
-	Description  types.String      `tfsdk:"description"`
-	Feature      []Feature         `tfsdk:"feature"`
-	Hydrate      types.Bool        `tfsdk:"hydrate"`
-	ID           types.String      `tfsdk:"id"`
-	InternalName types.String      `tfsdk:"internal_name"`
-	Name         types.String      `tfsdk:"name"`
-	PriceOptions *BaseRelation     `tfsdk:"price_options"`
-	Type         types.String      `tfsdk:"type"`
+	ACL           BaseEntityACL     `tfsdk:"acl"`
+	CreatedAt     types.String      `tfsdk:"created_at"`
+	Org           types.String      `tfsdk:"org"`
+	Owners        []BaseEntityOwner `tfsdk:"owners"`
+	Schema        types.String      `tfsdk:"schema"`
+	Tags          []types.String    `tfsdk:"tags"`
+	Title         types.String      `tfsdk:"title"`
+	UpdatedAt     types.String      `tfsdk:"updated_at"`
+	Active        types.Bool        `tfsdk:"active"`
+	Code          types.String      `tfsdk:"code"`
+	Description   types.String      `tfsdk:"description"`
+	Feature       []Feature         `tfsdk:"feature"`
+	Hydrate       types.Bool        `tfsdk:"hydrate"`
+	ID            types.String      `tfsdk:"id"`
+	InternalName  types.String      `tfsdk:"internal_name"`
+	Name          types.String      `tfsdk:"name"`
+	PriceOptions  *BaseRelation     `tfsdk:"price_options"`
+	ProductImages *BaseImage        `tfsdk:"product_images"`
+	Type          types.String      `tfsdk:"type"`
 }
 
 // Metadata returns the data source type name.
@@ -169,6 +170,21 @@ func (r *ProductDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 									Computed:    true,
 									ElementType: types.StringType,
 								},
+								"entity_id": schema.StringAttribute{
+									Computed: true,
+								},
+							},
+						},
+					},
+				},
+			},
+			"product_images": schema.SingleNestedAttribute{
+				Computed: true,
+				Attributes: map[string]schema.Attribute{
+					"dollar_relation": schema.ListNestedAttribute{
+						Computed: true,
+						NestedObject: schema.NestedAttributeObject{
+							Attributes: map[string]schema.Attribute{
 								"entity_id": schema.StringAttribute{
 									Computed: true,
 								},

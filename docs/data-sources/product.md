@@ -43,6 +43,7 @@ data "epilot-product_product" "my_product" {
 - `org` (String) Organization Id the entity belongs to
 - `owners` (Attributes List) (see [below for nested schema](#nestedatt--owners))
 - `price_options` (Attributes) (see [below for nested schema](#nestedatt--price_options))
+- `product_images` (Attributes) (see [below for nested schema](#nestedatt--product_images))
 - `schema` (String)
 - `tags` (List of String)
 - `title` (String)
@@ -95,6 +96,23 @@ Read-Only:
 
 <a id="nestedatt--price_options--dollar_relation"></a>
 ### Nested Schema for `price_options.dollar_relation`
+
+Read-Only:
+
+- `entity_id` (String)
+- `tags` (List of String)
+
+
+
+<a id="nestedatt--product_images"></a>
+### Nested Schema for `product_images`
+
+Read-Only:
+
+- `dollar_relation` (Attributes List) (see [below for nested schema](#nestedatt--product_images--dollar_relation))
+
+<a id="nestedatt--product_images--dollar_relation"></a>
+### Nested Schema for `product_images.dollar_relation`
 
 Read-Only:
 

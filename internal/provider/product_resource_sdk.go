@@ -56,7 +56,7 @@ func (r *ProductResourceModel) ToSharedProductCreate() *shared.ProductCreate {
 	name := r.Name.ValueString()
 	var priceOptions *shared.BaseRelation
 	if r.PriceOptions != nil {
-		var dollarRelation []shared.DollarRelation = nil
+		var dollarRelation []shared.BaseRelationDollarRelation = nil
 		for _, dollarRelationItem := range r.PriceOptions.DollarRelation {
 			var tags1 []string = nil
 			for _, tagsItem1 := range dollarRelationItem.Tags {
@@ -68,13 +68,31 @@ func (r *ProductResourceModel) ToSharedProductCreate() *shared.ProductCreate {
 			} else {
 				entityID = nil
 			}
-			dollarRelation = append(dollarRelation, shared.DollarRelation{
+			dollarRelation = append(dollarRelation, shared.BaseRelationDollarRelation{
 				Tags:     tags1,
 				EntityID: entityID,
 			})
 		}
 		priceOptions = &shared.BaseRelation{
 			DollarRelation: dollarRelation,
+		}
+	}
+	var productImages *shared.BaseImage
+	if r.ProductImages != nil {
+		var dollarRelation1 []shared.DollarRelation = nil
+		for _, dollarRelationItem1 := range r.ProductImages.DollarRelation {
+			entityId1 := new(string)
+			if !dollarRelationItem1.EntityID.IsUnknown() && !dollarRelationItem1.EntityID.IsNull() {
+				*entityId1 = dollarRelationItem1.EntityID.ValueString()
+			} else {
+				entityId1 = nil
+			}
+			dollarRelation1 = append(dollarRelation1, shared.DollarRelation{
+				EntityID: entityId1,
+			})
+		}
+		productImages = &shared.BaseImage{
+			DollarRelation: dollarRelation1,
 		}
 	}
 	typeVar := new(shared.ProductCreateType)
@@ -84,14 +102,15 @@ func (r *ProductResourceModel) ToSharedProductCreate() *shared.ProductCreate {
 		typeVar = nil
 	}
 	out := shared.ProductCreate{
-		Active:       active,
-		Code:         code,
-		Description:  description,
-		Feature:      feature,
-		InternalName: internalName,
-		Name:         name,
-		PriceOptions: priceOptions,
-		Type:         typeVar,
+		Active:        active,
+		Code:          code,
+		Description:   description,
+		Feature:       feature,
+		InternalName:  internalName,
+		Name:          name,
+		PriceOptions:  priceOptions,
+		ProductImages: productImages,
+		Type:          typeVar,
 	}
 	return &out
 }
@@ -171,7 +190,7 @@ func (r *ProductResourceModel) RefreshFromSharedProduct(resp *shared.Product) {
 			r.PriceOptions.DollarRelation = r.PriceOptions.DollarRelation[:len(resp.PriceOptions.DollarRelation)]
 		}
 		for dollarRelationCount, dollarRelationItem := range resp.PriceOptions.DollarRelation {
-			var dollarRelation1 DollarRelation
+			var dollarRelation1 BaseRelationDollarRelation
 			dollarRelation1.Tags = nil
 			for _, v := range dollarRelationItem.Tags {
 				dollarRelation1.Tags = append(dollarRelation1.Tags, types.StringValue(v))
@@ -182,6 +201,23 @@ func (r *ProductResourceModel) RefreshFromSharedProduct(resp *shared.Product) {
 			} else {
 				r.PriceOptions.DollarRelation[dollarRelationCount].Tags = dollarRelation1.Tags
 				r.PriceOptions.DollarRelation[dollarRelationCount].EntityID = dollarRelation1.EntityID
+			}
+		}
+	}
+	if resp.ProductImages == nil {
+		r.ProductImages = nil
+	} else {
+		r.ProductImages = &BaseImage{}
+		if len(r.ProductImages.DollarRelation) > len(resp.ProductImages.DollarRelation) {
+			r.ProductImages.DollarRelation = r.ProductImages.DollarRelation[:len(resp.ProductImages.DollarRelation)]
+		}
+		for dollarRelationCount1, dollarRelationItem1 := range resp.ProductImages.DollarRelation {
+			var dollarRelation3 DollarRelation
+			dollarRelation3.EntityID = types.StringPointerValue(dollarRelationItem1.EntityID)
+			if dollarRelationCount1+1 > len(r.ProductImages.DollarRelation) {
+				r.ProductImages.DollarRelation = append(r.ProductImages.DollarRelation, dollarRelation3)
+			} else {
+				r.ProductImages.DollarRelation[dollarRelationCount1].EntityID = dollarRelation3.EntityID
 			}
 		}
 	}

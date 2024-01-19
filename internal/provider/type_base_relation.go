@@ -3,5 +3,5 @@
 package provider
 
 type BaseRelation struct {
-	DollarRelation []DollarRelation `tfsdk:"dollar_relation"`
+	DollarRelation []BaseRelationDollarRelation `tfsdk:"dollar_relation"`
 }

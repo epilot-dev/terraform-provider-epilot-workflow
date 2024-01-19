@@ -20,6 +20,13 @@ resource "epilot-product_product" "my_product" {
   internal_name = "...my_internal_name..."
   name          = "Juan Morar Jr."
   type          = "product"
+  product_images = {
+    dollar_relation = [
+      {
+        entity_id = "19f56123-a334-4ecd-a2a6-d31d275b439d"
+      }
+    ]
+  }
 }
 ```
 
@@ -38,6 +45,7 @@ resource "epilot-product_product" "my_product" {
 - `feature` (Attributes List) (see [below for nested schema](#nestedatt--feature))
 - `internal_name` (String) Not visible to customers, only in internal tables
 - `price_options` (Attributes) (see [below for nested schema](#nestedatt--price_options))
+- `product_images` (Attributes) (see [below for nested schema](#nestedatt--product_images))
 - `type` (String) The type of Product:
 
 | type | description |
@@ -78,6 +86,23 @@ Optional:
 
 <a id="nestedatt--price_options--dollar_relation"></a>
 ### Nested Schema for `price_options.dollar_relation`
+
+Optional:
+
+- `entity_id` (String)
+- `tags` (List of String)
+
+
+
+<a id="nestedatt--product_images"></a>
+### Nested Schema for `product_images`
+
+Optional:
+
+- `dollar_relation` (Attributes List) (see [below for nested schema](#nestedatt--product_images--dollar_relation))
+
+<a id="nestedatt--product_images--dollar_relation"></a>
+### Nested Schema for `product_images.dollar_relation`
 
 Optional:
 

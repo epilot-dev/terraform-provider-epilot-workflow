@@ -17,7 +17,7 @@ terraform {
   required_providers {
     epilot-product = {
       source  = "epilot-dev/epilot-product"
-      version = "0.4.4"
+      version = "0.5.0"
     }
   }
 }

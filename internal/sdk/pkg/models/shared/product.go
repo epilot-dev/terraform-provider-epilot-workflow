@@ -90,8 +90,9 @@ type Product struct {
 	// Not visible to customers, only in internal tables
 	InternalName *string `json:"internal_name,omitempty"`
 	// The description for the product
-	Name         string        `json:"name"`
-	PriceOptions *BaseRelation `json:"price_options,omitempty"`
+	Name          string        `json:"name"`
+	PriceOptions  *BaseRelation `json:"price_options,omitempty"`
+	ProductImages *BaseImage    `json:"product_images,omitempty"`
 	// The type of Product:
 	//
 	// | type | description |
@@ -223,6 +224,13 @@ func (o *Product) GetPriceOptions() *BaseRelation {
 		return nil
 	}
 	return o.PriceOptions
+}
+
+func (o *Product) GetProductImages() *BaseImage {
+	if o == nil {
+		return nil
+	}
+	return o.ProductImages
 }
 
 func (o *Product) GetType() *ProductType {

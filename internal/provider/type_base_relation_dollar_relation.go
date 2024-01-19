@@ -4,6 +4,7 @@ package provider
 
 import "github.com/hashicorp/terraform-plugin-framework/types"
 
-type DollarRelation struct {
-	EntityID types.String `tfsdk:"entity_id"`
+type BaseRelationDollarRelation struct {
+	Tags     []types.String `tfsdk:"tags"`
+	EntityID types.String   `tfsdk:"entity_id"`
 }
