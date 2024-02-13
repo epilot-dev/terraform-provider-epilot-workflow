@@ -13,9 +13,9 @@ import (
 
 // ServerList contains the list of servers available to the SDK
 var ServerList = []string{
-	"https://product.sls.epilot.io",
+	"https://product.dev.sls.epilot.io",
 	// Production server
-	"https://product.sls.epilot.io",
+	"https://product.dev.sls.epilot.io",
 }
 
 // HTTPClient provides an interface for suplying the SDK with a custom HTTP client
