@@ -28,25 +28,26 @@ type ProductDataSource struct {
 
 // ProductDataSourceModel describes the data model.
 type ProductDataSourceModel struct {
-	ACL           BaseEntityACL     `tfsdk:"acl"`
-	CreatedAt     types.String      `tfsdk:"created_at"`
-	Org           types.String      `tfsdk:"org"`
-	Owners        []BaseEntityOwner `tfsdk:"owners"`
-	Schema        types.String      `tfsdk:"schema"`
-	Tags          []types.String    `tfsdk:"tags"`
-	Title         types.String      `tfsdk:"title"`
-	UpdatedAt     types.String      `tfsdk:"updated_at"`
-	Active        types.Bool        `tfsdk:"active"`
-	Code          types.String      `tfsdk:"code"`
-	Description   types.String      `tfsdk:"description"`
-	Feature       []types.String    `tfsdk:"feature"`
-	Hydrate       types.Bool        `tfsdk:"hydrate"`
-	ID            types.String      `tfsdk:"id"`
-	InternalName  types.String      `tfsdk:"internal_name"`
-	Name          types.String      `tfsdk:"name"`
-	PriceOptions  *BaseRelation     `tfsdk:"price_options"`
-	ProductImages types.String      `tfsdk:"product_images"`
-	Type          types.String      `tfsdk:"type"`
+	ACL              BaseEntityACL     `tfsdk:"acl"`
+	CreatedAt        types.String      `tfsdk:"created_at"`
+	Org              types.String      `tfsdk:"org"`
+	Owners           []BaseEntityOwner `tfsdk:"owners"`
+	Schema           types.String      `tfsdk:"schema"`
+	Tags             []types.String    `tfsdk:"tags"`
+	Title            types.String      `tfsdk:"title"`
+	UpdatedAt        types.String      `tfsdk:"updated_at"`
+	Active           types.Bool        `tfsdk:"active"`
+	Code             types.String      `tfsdk:"code"`
+	Description      types.String      `tfsdk:"description"`
+	Feature          []types.String    `tfsdk:"feature"`
+	Hydrate          types.Bool        `tfsdk:"hydrate"`
+	ID               types.String      `tfsdk:"id"`
+	InternalName     types.String      `tfsdk:"internal_name"`
+	Name             types.String      `tfsdk:"name"`
+	PriceOptions     *BaseRelation     `tfsdk:"price_options"`
+	ProductDownloads types.String      `tfsdk:"product_downloads"`
+	ProductImages    types.String      `tfsdk:"product_images"`
+	Type             types.String      `tfsdk:"type"`
 }
 
 // Metadata returns the data source type name.
@@ -164,6 +165,10 @@ func (r *ProductDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 						},
 					},
 				},
+			},
+			"product_downloads": schema.StringAttribute{
+				Computed:    true,
+				Description: `Parsed as JSON.`,
 			},
 			"product_images": schema.StringAttribute{
 				Computed:    true,

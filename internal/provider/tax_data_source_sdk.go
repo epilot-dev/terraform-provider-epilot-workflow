@@ -52,7 +52,7 @@ func (r *TaxDataSourceModel) RefreshFromSharedTax(resp *shared.Tax) {
 	r.Title = types.StringValue(resp.Title)
 	r.UpdatedAt = types.StringValue(resp.UpdatedAt.Format(time.RFC3339Nano))
 	r.Active = types.BoolValue(resp.Active)
-	r.Description = types.StringValue(resp.Description)
+	r.Description = types.StringPointerValue(resp.Description)
 	r.ID = types.StringValue(resp.ID)
 	r.Rate = types.StringValue(resp.Rate)
 	r.Region = types.StringValue(string(resp.Region))

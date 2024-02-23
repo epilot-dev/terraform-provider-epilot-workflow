@@ -12,6 +12,7 @@ resource "epilot-product_price" "my_price" {
   pricing_model             = "per_unit"
   renewal_duration_amount   = 66.53
   renewal_duration_unit     = "months"
+  tax                       = "{ \"see\": \"documentation\" }"
   termination_time_amount   = 20
   termination_time_unit     = "weeks"
   type                      = "recurring"

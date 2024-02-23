@@ -79,7 +79,7 @@ type Tax struct {
 	Title       string            `json:"_title"`
 	UpdatedAt   time.Time         `json:"_updated_at"`
 	Active      bool              `json:"active"`
-	Description string            `json:"description"`
+	Description *string           `json:"description,omitempty"`
 	Rate        string            `json:"rate"`
 	Region      Region            `json:"region"`
 	Type        TaxType           `json:"type"`
@@ -166,9 +166,9 @@ func (o *Tax) GetActive() bool {
 	return o.Active
 }
 
-func (o *Tax) GetDescription() string {
+func (o *Tax) GetDescription() *string {
 	if o == nil {
-		return ""
+		return nil
 	}
 	return o.Description
 }

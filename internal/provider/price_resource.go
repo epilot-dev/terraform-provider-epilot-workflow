@@ -54,7 +54,7 @@ type PriceResourceModel struct {
 	PricingModel           types.String      `tfsdk:"pricing_model"`
 	RenewalDurationAmount  types.Number      `tfsdk:"renewal_duration_amount"`
 	RenewalDurationUnit    types.String      `tfsdk:"renewal_duration_unit"`
-	Tax                    *BaseRelation     `tfsdk:"tax"`
+	Tax                    types.String      `tfsdk:"tax"`
 	TerminationTimeAmount  types.Number      `tfsdk:"termination_time_amount"`
 	TerminationTimeUnit    types.String      `tfsdk:"termination_time_unit"`
 	Tiers                  []PriceTier       `tfsdk:"tiers"`
@@ -248,27 +248,12 @@ func (r *PriceResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					),
 				},
 			},
-			"tax": schema.SingleNestedAttribute{
-				Computed: true,
-				Optional: true,
-				Attributes: map[string]schema.Attribute{
-					"dollar_relation": schema.ListNestedAttribute{
-						Computed: true,
-						Optional: true,
-						NestedObject: schema.NestedAttributeObject{
-							Attributes: map[string]schema.Attribute{
-								"tags": schema.ListAttribute{
-									Computed:    true,
-									Optional:    true,
-									ElementType: types.StringType,
-								},
-								"entity_id": schema.StringAttribute{
-									Computed: true,
-									Optional: true,
-								},
-							},
-						},
-					},
+			"tax": schema.StringAttribute{
+				Computed:    true,
+				Optional:    true,
+				Description: `Parsed as JSON.`,
+				Validators: []validator.String{
+					validators.IsValidJSON(),
 				},
 			},
 			"termination_time_amount": schema.NumberAttribute{

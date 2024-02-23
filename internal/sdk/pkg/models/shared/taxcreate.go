@@ -66,7 +66,7 @@ func (e *TaxCreateType) UnmarshalJSON(data []byte) error {
 
 type TaxCreate struct {
 	Active      bool            `json:"active"`
-	Description string          `json:"description"`
+	Description *string         `json:"description,omitempty"`
 	Rate        string          `json:"rate"`
 	Region      TaxCreateRegion `json:"region"`
 	Type        TaxCreateType   `json:"type"`
@@ -79,9 +79,9 @@ func (o *TaxCreate) GetActive() bool {
 	return o.Active
 }
 
-func (o *TaxCreate) GetDescription() string {
+func (o *TaxCreate) GetDescription() *string {
 	if o == nil {
-		return ""
+		return nil
 	}
 	return o.Description
 }

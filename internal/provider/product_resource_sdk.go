@@ -59,6 +59,10 @@ func (r *ProductResourceModel) ToSharedProductCreate() *shared.ProductCreate {
 			DollarRelation: dollarRelation,
 		}
 	}
+	var productDownloads interface{}
+	if !r.ProductDownloads.IsUnknown() && !r.ProductDownloads.IsNull() {
+		_ = json.Unmarshal([]byte(r.ProductDownloads.ValueString()), &productDownloads)
+	}
 	var productImages interface{}
 	if !r.ProductImages.IsUnknown() && !r.ProductImages.IsNull() {
 		_ = json.Unmarshal([]byte(r.ProductImages.ValueString()), &productImages)
@@ -70,15 +74,16 @@ func (r *ProductResourceModel) ToSharedProductCreate() *shared.ProductCreate {
 		typeVar = nil
 	}
 	out := shared.ProductCreate{
-		Active:        active,
-		Code:          code,
-		Description:   description,
-		Feature:       feature,
-		InternalName:  internalName,
-		Name:          name,
-		PriceOptions:  priceOptions,
-		ProductImages: productImages,
-		Type:          typeVar,
+		Active:           active,
+		Code:             code,
+		Description:      description,
+		Feature:          feature,
+		InternalName:     internalName,
+		Name:             name,
+		PriceOptions:     priceOptions,
+		ProductDownloads: productDownloads,
+		ProductImages:    productImages,
+		Type:             typeVar,
 	}
 	return &out
 }
@@ -159,6 +164,12 @@ func (r *ProductResourceModel) RefreshFromSharedProduct(resp *shared.Product) {
 				r.PriceOptions.DollarRelation[dollarRelationCount].EntityID = dollarRelation1.EntityID
 			}
 		}
+	}
+	if resp.ProductDownloads == nil {
+		r.ProductDownloads = types.StringNull()
+	} else {
+		productDownloadsResult, _ := json.Marshal(resp.ProductDownloads)
+		r.ProductDownloads = types.StringValue(string(productDownloadsResult))
 	}
 	if resp.ProductImages == nil {
 		r.ProductImages = types.StringNull()

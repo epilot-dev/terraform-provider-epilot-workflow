@@ -51,7 +51,7 @@ type PriceDataSourceModel struct {
 	PricingModel           types.String      `tfsdk:"pricing_model"`
 	RenewalDurationAmount  types.Number      `tfsdk:"renewal_duration_amount"`
 	RenewalDurationUnit    types.String      `tfsdk:"renewal_duration_unit"`
-	Tax                    *BaseRelation     `tfsdk:"tax"`
+	Tax                    types.String      `tfsdk:"tax"`
 	TerminationTimeAmount  types.Number      `tfsdk:"termination_time_amount"`
 	TerminationTimeUnit    types.String      `tfsdk:"termination_time_unit"`
 	Tiers                  []PriceTier       `tfsdk:"tiers"`
@@ -195,24 +195,9 @@ func (r *PriceDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				Computed:    true,
 				Description: `The renewal period duration unit. must be one of ["weeks", "months", "years"]`,
 			},
-			"tax": schema.SingleNestedAttribute{
-				Computed: true,
-				Attributes: map[string]schema.Attribute{
-					"dollar_relation": schema.ListNestedAttribute{
-						Computed: true,
-						NestedObject: schema.NestedAttributeObject{
-							Attributes: map[string]schema.Attribute{
-								"tags": schema.ListAttribute{
-									Computed:    true,
-									ElementType: types.StringType,
-								},
-								"entity_id": schema.StringAttribute{
-									Computed: true,
-								},
-							},
-						},
-					},
-				},
+			"tax": schema.StringAttribute{
+				Computed:    true,
+				Description: `Parsed as JSON.`,
 			},
 			"termination_time_amount": schema.NumberAttribute{
 				Computed:    true,

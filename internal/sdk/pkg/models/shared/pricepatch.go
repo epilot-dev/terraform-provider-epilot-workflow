@@ -387,7 +387,7 @@ type PricePatch struct {
 	RenewalDurationAmount *float64 `json:"renewal_duration_amount,omitempty"`
 	// The renewal period duration unit
 	RenewalDurationUnit *PricePatchRenewalDurationUnit `json:"renewal_duration_unit,omitempty"`
-	Tax                 *BaseRelation                  `json:"tax,omitempty"`
+	Tax                 interface{}                    `json:"tax,omitempty"`
 	// The termination period duration
 	TerminationTimeAmount *float64 `json:"termination_time_amount,omitempty"`
 	// The termination period duration unit
@@ -511,7 +511,7 @@ func (o *PricePatch) GetRenewalDurationUnit() *PricePatchRenewalDurationUnit {
 	return o.RenewalDurationUnit
 }
 
-func (o *PricePatch) GetTax() *BaseRelation {
+func (o *PricePatch) GetTax() interface{} {
 	if o == nil {
 		return nil
 	}

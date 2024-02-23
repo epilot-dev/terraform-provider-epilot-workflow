@@ -399,7 +399,7 @@ type Price struct {
 	RenewalDurationAmount *float64 `json:"renewal_duration_amount,omitempty"`
 	// The renewal period duration unit
 	RenewalDurationUnit *RenewalDurationUnit `json:"renewal_duration_unit,omitempty"`
-	Tax                 *BaseRelation        `json:"tax,omitempty"`
+	Tax                 interface{}          `json:"tax,omitempty"`
 	// The termination period duration
 	TerminationTimeAmount *float64 `json:"termination_time_amount,omitempty"`
 	// The termination period duration unit
@@ -586,7 +586,7 @@ func (o *Price) GetRenewalDurationUnit() *RenewalDurationUnit {
 	return o.RenewalDurationUnit
 }
 
-func (o *Price) GetTax() *BaseRelation {
+func (o *Price) GetTax() interface{} {
 	if o == nil {
 		return nil
 	}

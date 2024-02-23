@@ -11,7 +11,12 @@ import (
 
 func (r *TaxResourceModel) ToSharedTaxCreate() *shared.TaxCreate {
 	active := r.Active.ValueBool()
-	description := r.Description.ValueString()
+	description := new(string)
+	if !r.Description.IsUnknown() && !r.Description.IsNull() {
+		*description = r.Description.ValueString()
+	} else {
+		description = nil
+	}
 	rate := r.Rate.ValueString()
 	region := shared.TaxCreateRegion(r.Region.ValueString())
 	typeVar := shared.TaxCreateType(r.Type.ValueString())
@@ -69,7 +74,7 @@ func (r *TaxResourceModel) RefreshFromSharedTax(resp *shared.Tax) {
 	r.Title = types.StringValue(resp.Title)
 	r.UpdatedAt = types.StringValue(resp.UpdatedAt.Format(time.RFC3339Nano))
 	r.Active = types.BoolValue(resp.Active)
-	r.Description = types.StringValue(resp.Description)
+	r.Description = types.StringPointerValue(resp.Description)
 	r.Rate = types.StringValue(resp.Rate)
 	r.Region = types.StringValue(string(resp.Region))
 	r.Type = types.StringValue(string(resp.Type))

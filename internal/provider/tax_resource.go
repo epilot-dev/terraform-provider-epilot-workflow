@@ -129,7 +129,8 @@ func (r *TaxResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 				Required: true,
 			},
 			"description": schema.StringAttribute{
-				Required: true,
+				Computed: true,
+				Optional: true,
 			},
 			"rate": schema.StringAttribute{
 				Required: true,

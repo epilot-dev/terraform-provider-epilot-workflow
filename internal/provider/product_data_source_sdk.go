@@ -86,6 +86,12 @@ func (r *ProductDataSourceModel) RefreshFromSharedProduct(resp *shared.Product) 
 			}
 		}
 	}
+	if resp.ProductDownloads == nil {
+		r.ProductDownloads = types.StringNull()
+	} else {
+		productDownloadsResult, _ := json.Marshal(resp.ProductDownloads)
+		r.ProductDownloads = types.StringValue(string(productDownloadsResult))
+	}
 	if resp.ProductImages == nil {
 		r.ProductImages = types.StringNull()
 	} else {

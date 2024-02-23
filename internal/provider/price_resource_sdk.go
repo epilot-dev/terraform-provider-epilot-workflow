@@ -79,28 +79,9 @@ func (r *PriceResourceModel) ToSharedPriceCreate() *shared.PriceCreate {
 	} else {
 		renewalDurationUnit = nil
 	}
-	var tax *shared.BaseRelation
-	if r.Tax != nil {
-		var dollarRelation []shared.DollarRelation = nil
-		for _, dollarRelationItem := range r.Tax.DollarRelation {
-			var tags []string = nil
-			for _, tagsItem := range dollarRelationItem.Tags {
-				tags = append(tags, tagsItem.ValueString())
-			}
-			entityID := new(string)
-			if !dollarRelationItem.EntityID.IsUnknown() && !dollarRelationItem.EntityID.IsNull() {
-				*entityID = dollarRelationItem.EntityID.ValueString()
-			} else {
-				entityID = nil
-			}
-			dollarRelation = append(dollarRelation, shared.DollarRelation{
-				Tags:     tags,
-				EntityID: entityID,
-			})
-		}
-		tax = &shared.BaseRelation{
-			DollarRelation: dollarRelation,
-		}
+	var tax interface{}
+	if !r.Tax.IsUnknown() && !r.Tax.IsNull() {
+		_ = json.Unmarshal([]byte(r.Tax.ValueString()), &tax)
 	}
 	terminationTimeAmount := new(float64)
 	if !r.TerminationTimeAmount.IsUnknown() && !r.TerminationTimeAmount.IsNull() {
@@ -333,26 +314,10 @@ func (r *PriceResourceModel) RefreshFromSharedPrice(resp *shared.Price) {
 		r.RenewalDurationUnit = types.StringNull()
 	}
 	if resp.Tax == nil {
-		r.Tax = nil
+		r.Tax = types.StringNull()
 	} else {
-		r.Tax = &BaseRelation{}
-		if len(r.Tax.DollarRelation) > len(resp.Tax.DollarRelation) {
-			r.Tax.DollarRelation = r.Tax.DollarRelation[:len(resp.Tax.DollarRelation)]
-		}
-		for dollarRelationCount, dollarRelationItem := range resp.Tax.DollarRelation {
-			var dollarRelation1 DollarRelation
-			dollarRelation1.Tags = nil
-			for _, v := range dollarRelationItem.Tags {
-				dollarRelation1.Tags = append(dollarRelation1.Tags, types.StringValue(v))
-			}
-			dollarRelation1.EntityID = types.StringPointerValue(dollarRelationItem.EntityID)
-			if dollarRelationCount+1 > len(r.Tax.DollarRelation) {
-				r.Tax.DollarRelation = append(r.Tax.DollarRelation, dollarRelation1)
-			} else {
-				r.Tax.DollarRelation[dollarRelationCount].Tags = dollarRelation1.Tags
-				r.Tax.DollarRelation[dollarRelationCount].EntityID = dollarRelation1.EntityID
-			}
-		}
+		taxResult, _ := json.Marshal(resp.Tax)
+		r.Tax = types.StringValue(string(taxResult))
 	}
 	if resp.TerminationTimeAmount != nil {
 		r.TerminationTimeAmount = types.NumberValue(big.NewFloat(float64(*resp.TerminationTimeAmount)))

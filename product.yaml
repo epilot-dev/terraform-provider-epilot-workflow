@@ -444,7 +444,6 @@ components:
       type: object
       required:
       - active
-      - description
       - region
       - rate
       - type
@@ -590,9 +589,7 @@ components:
             - kwp
           - type: string
             description: user custom unit
-        tax:
-          $ref: '#/components/schemas/BaseRelation'
-          description: The tax to apply to this price, must be an existing tax
+        tax: {}
     PriceTier:
       type: object
       properties:
@@ -649,6 +646,7 @@ components:
           $ref: '#/components/schemas/BaseRelation'
           description: A set of [prices](/api/pricing#tag/simple_price_schema) or [composite prices](/api/pricing#tag/dynamic_price_schema) for the current product.
         product_images: {}
+        product_downloads: {}
         name:
           type: string
           description: The description for the product
