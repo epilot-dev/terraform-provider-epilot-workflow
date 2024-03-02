@@ -28,10 +28,13 @@ resource "epilot-product_tax" "my_tax" {
 ### Required
 
 - `active` (Boolean)
-- `description` (String)
 - `rate` (String)
 - `region` (String) must be one of ["DE", "AT", "CH"]
 - `type` (String) must be one of ["VAT", "Custom"]
+
+### Optional
+
+- `description` (String)
 
 ### Read-Only
 

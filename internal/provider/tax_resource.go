@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk"
 	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/pkg/models/operations"
-	"github.com/epilot-dev/terraform-provider-epilot-product/internal/validators"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -32,20 +31,12 @@ type TaxResource struct {
 
 // TaxResourceModel describes the resource data model.
 type TaxResourceModel struct {
-	ACL         BaseEntityACL     `tfsdk:"acl"`
-	CreatedAt   types.String      `tfsdk:"created_at"`
-	ID          types.String      `tfsdk:"id"`
-	Org         types.String      `tfsdk:"org"`
-	Owners      []BaseEntityOwner `tfsdk:"owners"`
-	Schema      types.String      `tfsdk:"schema"`
-	Tags        []types.String    `tfsdk:"tags"`
-	Title       types.String      `tfsdk:"title"`
-	UpdatedAt   types.String      `tfsdk:"updated_at"`
-	Active      types.Bool        `tfsdk:"active"`
-	Description types.String      `tfsdk:"description"`
-	Rate        types.String      `tfsdk:"rate"`
-	Region      types.String      `tfsdk:"region"`
-	Type        types.String      `tfsdk:"type"`
+	ID          types.String `tfsdk:"id"`
+	Active      types.Bool   `tfsdk:"active"`
+	Description types.String `tfsdk:"description"`
+	Rate        types.String `tfsdk:"rate"`
+	Region      types.String `tfsdk:"region"`
+	Type        types.String `tfsdk:"type"`
 }
 
 func (r *TaxResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -57,73 +48,9 @@ func (r *TaxResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 		MarkdownDescription: "Tax Resource",
 
 		Attributes: map[string]schema.Attribute{
-			"acl": schema.SingleNestedAttribute{
-				Computed: true,
-				Attributes: map[string]schema.Attribute{
-					"additional_properties": schema.StringAttribute{
-						Computed:    true,
-						Description: `Parsed as JSON.`,
-						Validators: []validator.String{
-							validators.IsValidJSON(),
-						},
-					},
-					"delete": schema.ListAttribute{
-						Computed:    true,
-						ElementType: types.StringType,
-					},
-					"edit": schema.ListAttribute{
-						Computed:    true,
-						ElementType: types.StringType,
-					},
-					"view": schema.ListAttribute{
-						Computed:    true,
-						ElementType: types.StringType,
-					},
-				},
-				Description: `Access control list (ACL) for an entity. Defines sharing access to external orgs or users.`,
-			},
-			"created_at": schema.StringAttribute{
-				Computed: true,
-				Validators: []validator.String{
-					validators.IsRFC3339(),
-				},
-			},
 			"id": schema.StringAttribute{
 				Computed:    true,
 				Description: `The tax id`,
-			},
-			"org": schema.StringAttribute{
-				Computed:    true,
-				Description: `Organization Id the entity belongs to`,
-			},
-			"owners": schema.ListNestedAttribute{
-				Computed: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"org_id": schema.StringAttribute{
-							Computed: true,
-						},
-						"user_id": schema.StringAttribute{
-							Computed: true,
-						},
-					},
-				},
-			},
-			"schema": schema.StringAttribute{
-				Computed: true,
-			},
-			"tags": schema.ListAttribute{
-				Computed:    true,
-				ElementType: types.StringType,
-			},
-			"title": schema.StringAttribute{
-				Computed: true,
-			},
-			"updated_at": schema.StringAttribute{
-				Computed: true,
-				Validators: []validator.String{
-					validators.IsRFC3339(),
-				},
 			},
 			"active": schema.BoolAttribute{
 				Required: true,

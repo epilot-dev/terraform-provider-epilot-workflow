@@ -14,13 +14,14 @@ Product Resource
 
 ```terraform
 resource "epilot-product_product" "my_product" {
-  active         = true
-  code           = "...my_code..."
-  description    = "...my_description..."
-  internal_name  = "...my_internal_name..."
-  name           = "Juan Morar Jr."
-  product_images = "{ \"see\": \"documentation\" }"
-  type           = "product"
+  active            = true
+  code              = "...my_code..."
+  description       = "...my_description..."
+  internal_name     = "...my_internal_name..."
+  name              = "Juan Morar Jr."
+  product_downloads = "{ \"see\": \"documentation\" }"
+  product_images    = "{ \"see\": \"documentation\" }"
+  type              = "product"
 }
 ```
 
@@ -39,6 +40,7 @@ resource "epilot-product_product" "my_product" {
 - `feature` (List of String)
 - `internal_name` (String) Not visible to customers, only in internal tables
 - `price_options` (Attributes) (see [below for nested schema](#nestedatt--price_options))
+- `product_downloads` (String) Parsed as JSON.
 - `product_images` (String) Parsed as JSON.
 - `type` (String) The type of Product:
 
@@ -51,15 +53,7 @@ must be one of ["product", "service"]; Default: "product"
 
 ### Read-Only
 
-- `acl` (Attributes) Access control list (ACL) for an entity. Defines sharing access to external orgs or users. (see [below for nested schema](#nestedatt--acl))
-- `created_at` (String)
 - `id` (String) The product id
-- `org` (String) Organization Id the entity belongs to
-- `owners` (Attributes List) (see [below for nested schema](#nestedatt--owners))
-- `schema` (String)
-- `tags` (List of String)
-- `title` (String)
-- `updated_at` (String)
 
 <a id="nestedatt--price_options"></a>
 ### Nested Schema for `price_options`
@@ -75,26 +69,5 @@ Optional:
 
 - `entity_id` (String)
 - `tags` (List of String)
-
-
-
-<a id="nestedatt--acl"></a>
-### Nested Schema for `acl`
-
-Read-Only:
-
-- `additional_properties` (String) Parsed as JSON.
-- `delete` (List of String)
-- `edit` (List of String)
-- `view` (List of String)
-
-
-<a id="nestedatt--owners"></a>
-### Nested Schema for `owners`
-
-Read-Only:
-
-- `org_id` (String)
-- `user_id` (String)
 
 

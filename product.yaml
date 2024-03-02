@@ -452,8 +452,8 @@ components:
       - $ref: '#/components/schemas/BaseTax'
       - $ref: '#/components/schemas/BaseTaxRequired'
       - $ref: '#/components/schemas/BaseSystemId'
-      - $ref: '#/components/schemas/BaseSystemFields'
-      - $ref: '#/components/schemas/BaseSystemFieldsRequired'
+      # - $ref: '#/components/schemas/BaseSystemFields'
+      # - $ref: '#/components/schemas/BaseSystemFieldsRequired'
     TaxCreate:
       allOf:
       - $ref: '#/components/schemas/BaseTax'
@@ -628,8 +628,8 @@ components:
       - $ref: '#/components/schemas/BasePrice'
       - $ref: '#/components/schemas/BasePriceRequired'
       - $ref: '#/components/schemas/BaseSystemId'
-      - $ref: '#/components/schemas/BaseSystemFields'
-      - $ref: '#/components/schemas/BaseSystemFieldsRequired'
+      # - $ref: '#/components/schemas/BaseSystemFields'
+      # - $ref: '#/components/schemas/BaseSystemFieldsRequired'
     PriceCreate:
       allOf:
       - $ref: '#/components/schemas/BasePrice'
@@ -686,8 +686,8 @@ components:
       - $ref: '#/components/schemas/BaseProduct'
       - $ref: '#/components/schemas/BaseProductRequired'
       - $ref: '#/components/schemas/BaseSystemId'
-      - $ref: '#/components/schemas/BaseSystemFields'
-      - $ref: '#/components/schemas/BaseSystemFieldsRequired'
+      # - $ref: '#/components/schemas/BaseSystemFields'
+      # - $ref: '#/components/schemas/BaseSystemFieldsRequired'
     ProductCreate:
       allOf:
       - $ref: '#/components/schemas/BaseProduct'
@@ -821,4 +821,3 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Product'
-

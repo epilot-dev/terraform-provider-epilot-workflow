@@ -27,6 +27,7 @@ resource "epilot-product_price" "my_price" {
   pricing_model             = "per_unit"
   renewal_duration_amount   = 66.53
   renewal_duration_unit     = "months"
+  tax                       = "{ \"see\": \"documentation\" }"
   termination_time_amount   = 20
   termination_time_unit     = "weeks"
   type                      = "recurring"
@@ -64,7 +65,7 @@ resource "epilot-product_price" "my_price" {
 must be one of ["per_unit", "tiered_volume", "tiered_graduated", "tiered_flatfee"]; Default: "per_unit"
 - `renewal_duration_amount` (Number) The renewal period duration
 - `renewal_duration_unit` (String) The renewal period duration unit. must be one of ["weeks", "months", "years"]
-- `tax` (Attributes) (see [below for nested schema](#nestedatt--tax))
+- `tax` (String) Parsed as JSON.
 - `termination_time_amount` (Number) The termination period duration
 - `termination_time_unit` (String) The termination period duration unit. must be one of ["weeks", "months", "years"]
 - `tiers` (Attributes List) Defines an array of tiers. Each tier has an upper bound, an unit amount and a flat fee. (see [below for nested schema](#nestedatt--tiers))
@@ -86,23 +87,6 @@ must be one of ["per_unit", "tiered_volume", "tiered_graduated", "tiered_flatfee
 - `tags` (List of String)
 - `title` (String)
 - `updated_at` (String)
-
-<a id="nestedatt--tax"></a>
-### Nested Schema for `tax`
-
-Optional:
-
-- `dollar_relation` (Attributes List) (see [below for nested schema](#nestedatt--tax--dollar_relation))
-
-<a id="nestedatt--tax--dollar_relation"></a>
-### Nested Schema for `tax.dollar_relation`
-
-Optional:
-
-- `entity_id` (String)
-- `tags` (List of String)
-
-
 
 <a id="nestedatt--tiers"></a>
 ### Nested Schema for `tiers`

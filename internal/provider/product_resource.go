@@ -33,25 +33,17 @@ type ProductResource struct {
 
 // ProductResourceModel describes the resource data model.
 type ProductResourceModel struct {
-	ACL              BaseEntityACL     `tfsdk:"acl"`
-	CreatedAt        types.String      `tfsdk:"created_at"`
-	ID               types.String      `tfsdk:"id"`
-	Org              types.String      `tfsdk:"org"`
-	Owners           []BaseEntityOwner `tfsdk:"owners"`
-	Schema           types.String      `tfsdk:"schema"`
-	Tags             []types.String    `tfsdk:"tags"`
-	Title            types.String      `tfsdk:"title"`
-	UpdatedAt        types.String      `tfsdk:"updated_at"`
-	Active           types.Bool        `tfsdk:"active"`
-	Code             types.String      `tfsdk:"code"`
-	Description      types.String      `tfsdk:"description"`
-	Feature          []types.String    `tfsdk:"feature"`
-	InternalName     types.String      `tfsdk:"internal_name"`
-	Name             types.String      `tfsdk:"name"`
-	PriceOptions     *BaseRelation     `tfsdk:"price_options"`
-	ProductDownloads types.String      `tfsdk:"product_downloads"`
-	ProductImages    types.String      `tfsdk:"product_images"`
-	Type             types.String      `tfsdk:"type"`
+	ID               types.String   `tfsdk:"id"`
+	Active           types.Bool     `tfsdk:"active"`
+	Code             types.String   `tfsdk:"code"`
+	Description      types.String   `tfsdk:"description"`
+	Feature          []types.String `tfsdk:"feature"`
+	InternalName     types.String   `tfsdk:"internal_name"`
+	Name             types.String   `tfsdk:"name"`
+	PriceOptions     *BaseRelation  `tfsdk:"price_options"`
+	ProductDownloads types.String   `tfsdk:"product_downloads"`
+	ProductImages    types.String   `tfsdk:"product_images"`
+	Type             types.String   `tfsdk:"type"`
 }
 
 func (r *ProductResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -63,73 +55,9 @@ func (r *ProductResource) Schema(ctx context.Context, req resource.SchemaRequest
 		MarkdownDescription: "Product Resource",
 
 		Attributes: map[string]schema.Attribute{
-			"acl": schema.SingleNestedAttribute{
-				Computed: true,
-				Attributes: map[string]schema.Attribute{
-					"additional_properties": schema.StringAttribute{
-						Computed:    true,
-						Description: `Parsed as JSON.`,
-						Validators: []validator.String{
-							validators.IsValidJSON(),
-						},
-					},
-					"delete": schema.ListAttribute{
-						Computed:    true,
-						ElementType: types.StringType,
-					},
-					"edit": schema.ListAttribute{
-						Computed:    true,
-						ElementType: types.StringType,
-					},
-					"view": schema.ListAttribute{
-						Computed:    true,
-						ElementType: types.StringType,
-					},
-				},
-				Description: `Access control list (ACL) for an entity. Defines sharing access to external orgs or users.`,
-			},
-			"created_at": schema.StringAttribute{
-				Computed: true,
-				Validators: []validator.String{
-					validators.IsRFC3339(),
-				},
-			},
 			"id": schema.StringAttribute{
 				Computed:    true,
 				Description: `The product id`,
-			},
-			"org": schema.StringAttribute{
-				Computed:    true,
-				Description: `Organization Id the entity belongs to`,
-			},
-			"owners": schema.ListNestedAttribute{
-				Computed: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"org_id": schema.StringAttribute{
-							Computed: true,
-						},
-						"user_id": schema.StringAttribute{
-							Computed: true,
-						},
-					},
-				},
-			},
-			"schema": schema.StringAttribute{
-				Computed: true,
-			},
-			"tags": schema.ListAttribute{
-				Computed:    true,
-				ElementType: types.StringType,
-			},
-			"title": schema.StringAttribute{
-				Computed: true,
-			},
-			"updated_at": schema.StringAttribute{
-				Computed: true,
-				Validators: []validator.String{
-					validators.IsRFC3339(),
-				},
 			},
 			"active": schema.BoolAttribute{
 				Required: true,

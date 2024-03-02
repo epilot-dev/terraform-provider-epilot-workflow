@@ -28,26 +28,18 @@ type ProductDataSource struct {
 
 // ProductDataSourceModel describes the data model.
 type ProductDataSourceModel struct {
-	ACL              BaseEntityACL     `tfsdk:"acl"`
-	CreatedAt        types.String      `tfsdk:"created_at"`
-	Org              types.String      `tfsdk:"org"`
-	Owners           []BaseEntityOwner `tfsdk:"owners"`
-	Schema           types.String      `tfsdk:"schema"`
-	Tags             []types.String    `tfsdk:"tags"`
-	Title            types.String      `tfsdk:"title"`
-	UpdatedAt        types.String      `tfsdk:"updated_at"`
-	Active           types.Bool        `tfsdk:"active"`
-	Code             types.String      `tfsdk:"code"`
-	Description      types.String      `tfsdk:"description"`
-	Feature          []types.String    `tfsdk:"feature"`
-	Hydrate          types.Bool        `tfsdk:"hydrate"`
-	ID               types.String      `tfsdk:"id"`
-	InternalName     types.String      `tfsdk:"internal_name"`
-	Name             types.String      `tfsdk:"name"`
-	PriceOptions     *BaseRelation     `tfsdk:"price_options"`
-	ProductDownloads types.String      `tfsdk:"product_downloads"`
-	ProductImages    types.String      `tfsdk:"product_images"`
-	Type             types.String      `tfsdk:"type"`
+	Active           types.Bool     `tfsdk:"active"`
+	Code             types.String   `tfsdk:"code"`
+	Description      types.String   `tfsdk:"description"`
+	Feature          []types.String `tfsdk:"feature"`
+	Hydrate          types.Bool     `tfsdk:"hydrate"`
+	ID               types.String   `tfsdk:"id"`
+	InternalName     types.String   `tfsdk:"internal_name"`
+	Name             types.String   `tfsdk:"name"`
+	PriceOptions     *BaseRelation  `tfsdk:"price_options"`
+	ProductDownloads types.String   `tfsdk:"product_downloads"`
+	ProductImages    types.String   `tfsdk:"product_images"`
+	Type             types.String   `tfsdk:"type"`
 }
 
 // Metadata returns the data source type name.
@@ -61,61 +53,6 @@ func (r *ProductDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 		MarkdownDescription: "Product DataSource",
 
 		Attributes: map[string]schema.Attribute{
-			"acl": schema.SingleNestedAttribute{
-				Computed: true,
-				Attributes: map[string]schema.Attribute{
-					"additional_properties": schema.StringAttribute{
-						Computed:    true,
-						Description: `Parsed as JSON.`,
-					},
-					"delete": schema.ListAttribute{
-						Computed:    true,
-						ElementType: types.StringType,
-					},
-					"edit": schema.ListAttribute{
-						Computed:    true,
-						ElementType: types.StringType,
-					},
-					"view": schema.ListAttribute{
-						Computed:    true,
-						ElementType: types.StringType,
-					},
-				},
-				Description: `Access control list (ACL) for an entity. Defines sharing access to external orgs or users.`,
-			},
-			"created_at": schema.StringAttribute{
-				Computed: true,
-			},
-			"org": schema.StringAttribute{
-				Computed:    true,
-				Description: `Organization Id the entity belongs to`,
-			},
-			"owners": schema.ListNestedAttribute{
-				Computed: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"org_id": schema.StringAttribute{
-							Computed: true,
-						},
-						"user_id": schema.StringAttribute{
-							Computed: true,
-						},
-					},
-				},
-			},
-			"schema": schema.StringAttribute{
-				Computed: true,
-			},
-			"tags": schema.ListAttribute{
-				Computed:    true,
-				ElementType: types.StringType,
-			},
-			"title": schema.StringAttribute{
-				Computed: true,
-			},
-			"updated_at": schema.StringAttribute{
-				Computed: true,
-			},
 			"active": schema.BoolAttribute{
 				Computed: true,
 			},

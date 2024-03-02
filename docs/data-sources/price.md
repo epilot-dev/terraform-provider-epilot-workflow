@@ -57,7 +57,7 @@ must be one of ["per_unit", "tiered_volume", "tiered_graduated", "tiered_flatfee
 - `renewal_duration_unit` (String) The renewal period duration unit. must be one of ["weeks", "months", "years"]
 - `schema` (String)
 - `tags` (List of String)
-- `tax` (Attributes) (see [below for nested schema](#nestedatt--tax))
+- `tax` (String) Parsed as JSON.
 - `termination_time_amount` (Number) The termination period duration
 - `termination_time_unit` (String) The termination period duration unit. must be one of ["weeks", "months", "years"]
 - `tiers` (Attributes List) Defines an array of tiers. Each tier has an upper bound, an unit amount and a flat fee. (see [below for nested schema](#nestedatt--tiers))
@@ -88,23 +88,6 @@ Read-Only:
 
 - `org_id` (String)
 - `user_id` (String)
-
-
-<a id="nestedatt--tax"></a>
-### Nested Schema for `tax`
-
-Read-Only:
-
-- `dollar_relation` (Attributes List) (see [below for nested schema](#nestedatt--tax--dollar_relation))
-
-<a id="nestedatt--tax--dollar_relation"></a>
-### Nested Schema for `tax.dollar_relation`
-
-Read-Only:
-
-- `entity_id` (String)
-- `tags` (List of String)
-
 
 
 <a id="nestedatt--tiers"></a>

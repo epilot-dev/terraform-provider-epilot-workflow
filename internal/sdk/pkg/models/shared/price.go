@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/pkg/utils"
-	"time"
 )
 
 // BillingDurationUnit - The billing period duration unit
@@ -357,17 +356,7 @@ func (u Unit) MarshalJSON() ([]byte, error) {
 }
 
 type Price struct {
-	// Access control list (ACL) for an entity. Defines sharing access to external orgs or users.
-	ACL       BaseEntityACL `json:"_acl"`
-	CreatedAt time.Time     `json:"_created_at"`
-	ID        string        `json:"_id"`
-	// Organization Id the entity belongs to
-	Org       string            `json:"_org"`
-	Owners    []BaseEntityOwner `json:"_owners"`
-	Schema    string            `json:"_schema"`
-	Tags      []string          `json:"_tags"`
-	Title     string            `json:"_title"`
-	UpdatedAt time.Time         `json:"_updated_at"`
+	ID string `json:"_id"`
 	// Whether the price can be used for new purchases.
 	Active bool `json:"active"`
 	// The billing period duration
@@ -432,67 +421,11 @@ func (p *Price) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *Price) GetACL() BaseEntityACL {
-	if o == nil {
-		return BaseEntityACL{}
-	}
-	return o.ACL
-}
-
-func (o *Price) GetCreatedAt() time.Time {
-	if o == nil {
-		return time.Time{}
-	}
-	return o.CreatedAt
-}
-
 func (o *Price) GetID() string {
 	if o == nil {
 		return ""
 	}
 	return o.ID
-}
-
-func (o *Price) GetOrg() string {
-	if o == nil {
-		return ""
-	}
-	return o.Org
-}
-
-func (o *Price) GetOwners() []BaseEntityOwner {
-	if o == nil {
-		return []BaseEntityOwner{}
-	}
-	return o.Owners
-}
-
-func (o *Price) GetSchema() string {
-	if o == nil {
-		return ""
-	}
-	return o.Schema
-}
-
-func (o *Price) GetTags() []string {
-	if o == nil {
-		return nil
-	}
-	return o.Tags
-}
-
-func (o *Price) GetTitle() string {
-	if o == nil {
-		return ""
-	}
-	return o.Title
-}
-
-func (o *Price) GetUpdatedAt() time.Time {
-	if o == nil {
-		return time.Time{}
-	}
-	return o.UpdatedAt
 }
 
 func (o *Price) GetActive() bool {

@@ -28,39 +28,31 @@ type PriceDataSource struct {
 
 // PriceDataSourceModel describes the data model.
 type PriceDataSourceModel struct {
-	ACL                    BaseEntityACL     `tfsdk:"acl"`
-	CreatedAt              types.String      `tfsdk:"created_at"`
-	Org                    types.String      `tfsdk:"org"`
-	Owners                 []BaseEntityOwner `tfsdk:"owners"`
-	Schema                 types.String      `tfsdk:"schema"`
-	Tags                   []types.String    `tfsdk:"tags"`
-	Title                  types.String      `tfsdk:"title"`
-	UpdatedAt              types.String      `tfsdk:"updated_at"`
-	Active                 types.Bool        `tfsdk:"active"`
-	BillingDurationAmount  types.Number      `tfsdk:"billing_duration_amount"`
-	BillingDurationUnit    types.String      `tfsdk:"billing_duration_unit"`
-	Description            types.String      `tfsdk:"description"`
-	Hydrate                types.Bool        `tfsdk:"hydrate"`
-	ID                     types.String      `tfsdk:"id"`
-	IsCompositePrice       types.Bool        `tfsdk:"is_composite_price"`
-	IsTaxInclusive         types.Bool        `tfsdk:"is_tax_inclusive"`
-	LongDescription        types.String      `tfsdk:"long_description"`
-	NoticeTimeAmount       types.Number      `tfsdk:"notice_time_amount"`
-	NoticeTimeUnit         types.String      `tfsdk:"notice_time_unit"`
-	PriceDisplayInJourneys types.String      `tfsdk:"price_display_in_journeys"`
-	PricingModel           types.String      `tfsdk:"pricing_model"`
-	RenewalDurationAmount  types.Number      `tfsdk:"renewal_duration_amount"`
-	RenewalDurationUnit    types.String      `tfsdk:"renewal_duration_unit"`
-	Tax                    types.String      `tfsdk:"tax"`
-	TerminationTimeAmount  types.Number      `tfsdk:"termination_time_amount"`
-	TerminationTimeUnit    types.String      `tfsdk:"termination_time_unit"`
-	Tiers                  []PriceTier       `tfsdk:"tiers"`
-	Type                   types.String      `tfsdk:"type"`
-	Unit                   *PriceCreateUnit  `tfsdk:"unit"`
-	UnitAmount             types.Number      `tfsdk:"unit_amount"`
-	UnitAmountCurrency     types.String      `tfsdk:"unit_amount_currency"`
-	UnitAmountDecimal      types.String      `tfsdk:"unit_amount_decimal"`
-	VariablePrice          types.Bool        `tfsdk:"variable_price"`
+	Active                 types.Bool       `tfsdk:"active"`
+	BillingDurationAmount  types.Number     `tfsdk:"billing_duration_amount"`
+	BillingDurationUnit    types.String     `tfsdk:"billing_duration_unit"`
+	Description            types.String     `tfsdk:"description"`
+	Hydrate                types.Bool       `tfsdk:"hydrate"`
+	ID                     types.String     `tfsdk:"id"`
+	IsCompositePrice       types.Bool       `tfsdk:"is_composite_price"`
+	IsTaxInclusive         types.Bool       `tfsdk:"is_tax_inclusive"`
+	LongDescription        types.String     `tfsdk:"long_description"`
+	NoticeTimeAmount       types.Number     `tfsdk:"notice_time_amount"`
+	NoticeTimeUnit         types.String     `tfsdk:"notice_time_unit"`
+	PriceDisplayInJourneys types.String     `tfsdk:"price_display_in_journeys"`
+	PricingModel           types.String     `tfsdk:"pricing_model"`
+	RenewalDurationAmount  types.Number     `tfsdk:"renewal_duration_amount"`
+	RenewalDurationUnit    types.String     `tfsdk:"renewal_duration_unit"`
+	Tax                    types.String     `tfsdk:"tax"`
+	TerminationTimeAmount  types.Number     `tfsdk:"termination_time_amount"`
+	TerminationTimeUnit    types.String     `tfsdk:"termination_time_unit"`
+	Tiers                  []PriceTier      `tfsdk:"tiers"`
+	Type                   types.String     `tfsdk:"type"`
+	Unit                   *PriceCreateUnit `tfsdk:"unit"`
+	UnitAmount             types.Number     `tfsdk:"unit_amount"`
+	UnitAmountCurrency     types.String     `tfsdk:"unit_amount_currency"`
+	UnitAmountDecimal      types.String     `tfsdk:"unit_amount_decimal"`
+	VariablePrice          types.Bool       `tfsdk:"variable_price"`
 }
 
 // Metadata returns the data source type name.
@@ -74,61 +66,6 @@ func (r *PriceDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 		MarkdownDescription: "Price DataSource",
 
 		Attributes: map[string]schema.Attribute{
-			"acl": schema.SingleNestedAttribute{
-				Computed: true,
-				Attributes: map[string]schema.Attribute{
-					"additional_properties": schema.StringAttribute{
-						Computed:    true,
-						Description: `Parsed as JSON.`,
-					},
-					"delete": schema.ListAttribute{
-						Computed:    true,
-						ElementType: types.StringType,
-					},
-					"edit": schema.ListAttribute{
-						Computed:    true,
-						ElementType: types.StringType,
-					},
-					"view": schema.ListAttribute{
-						Computed:    true,
-						ElementType: types.StringType,
-					},
-				},
-				Description: `Access control list (ACL) for an entity. Defines sharing access to external orgs or users.`,
-			},
-			"created_at": schema.StringAttribute{
-				Computed: true,
-			},
-			"org": schema.StringAttribute{
-				Computed:    true,
-				Description: `Organization Id the entity belongs to`,
-			},
-			"owners": schema.ListNestedAttribute{
-				Computed: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"org_id": schema.StringAttribute{
-							Computed: true,
-						},
-						"user_id": schema.StringAttribute{
-							Computed: true,
-						},
-					},
-				},
-			},
-			"schema": schema.StringAttribute{
-				Computed: true,
-			},
-			"tags": schema.ListAttribute{
-				Computed:    true,
-				ElementType: types.StringType,
-			},
-			"title": schema.StringAttribute{
-				Computed: true,
-			},
-			"updated_at": schema.StringAttribute{
-				Computed: true,
-			},
 			"active": schema.BoolAttribute{
 				Computed:    true,
 				Description: `Whether the price can be used for new purchases.`,
