@@ -64,7 +64,7 @@ terraform {
   required_providers {
     epilot-product = {
       source  = "epilot-dev/epilot-product"
-      version = "0.6.0"
+      version = "0.7.0"
     }
   }
 }
@@ -134,3 +134,4 @@ While we value open-source contributions to this SDK, this library is generated 
 Feel free to open a PR or a Github issue as a proof of concept and we'll do our best to include it in a future release!
 
 ### SDK Created by [Speakeasy](https://docs.speakeasyapi.dev/docs/using-speakeasy/client-sdks)
+# terraform-provider-epilot-workflow
