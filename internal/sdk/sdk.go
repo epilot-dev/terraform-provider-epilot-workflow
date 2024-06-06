@@ -14,8 +14,7 @@ import (
 
 // ServerList contains the list of servers available to the SDK
 var ServerList = []string{
-	// Production server
-	"https://product.sls.epilot.io",
+	"https://workflows-definition.sls.epilot.io",
 }
 
 // HTTPClient provides an interface for suplying the SDK with a custom HTTP client
@@ -63,13 +62,9 @@ func (c *sdkConfiguration) GetServerDetails() (string, map[string]string) {
 	return ServerList[c.ServerIndex], nil
 }
 
+// SDK - Workflows Definitions: Service for Workflow Definitions for different processes inside of an Organization
 type SDK struct {
-	// Price operations
-	Price *Price
-	// Product operations
-	Product *Product
-	// Tax operations
-	Tax *Tax
+	Workflows *Workflows
 
 	sdkConfiguration sdkConfiguration
 }
@@ -162,11 +157,7 @@ func New(opts ...SDKOption) *SDK {
 		sdk.sdkConfiguration.ServerURL = serverURL
 	}
 
-	sdk.Price = newPrice(sdk.sdkConfiguration)
-
-	sdk.Product = newProduct(sdk.sdkConfiguration)
-
-	sdk.Tax = newTax(sdk.sdkConfiguration)
+	sdk.Workflows = newWorkflows(sdk.sdkConfiguration)
 
 	return sdk
 }

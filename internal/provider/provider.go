@@ -26,8 +26,7 @@ type EpilotProductProvider struct {
 // EpilotProductProviderModel describes the provider data model.
 type EpilotProductProviderModel struct {
 	ServerURL  types.String `tfsdk:"server_url"`
-	EpilotAuth types.String `tfsdk:"epilot_auth"`
-	EpilotOrg  types.String `tfsdk:"epilot_org"`
+	BearerAuth types.String `tfsdk:"bearer_auth"`
 }
 
 func (p *EpilotProductProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -37,17 +36,15 @@ func (p *EpilotProductProvider) Metadata(ctx context.Context, req provider.Metad
 
 func (p *EpilotProductProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
+		MarkdownDescription: `Workflows Definitions: Service for Workflow Definitions for different processes inside of an Organization` + "\n" +
+			``,
 		Attributes: map[string]schema.Attribute{
 			"server_url": schema.StringAttribute{
-				MarkdownDescription: "Server URL (defaults to https://product.sls.epilot.io)",
+				MarkdownDescription: "Server URL (defaults to https://workflows-definition.sls.epilot.io)",
 				Optional:            true,
 				Required:            false,
 			},
-			"epilot_auth": schema.StringAttribute{
-				Optional:  true,
-				Sensitive: true,
-			},
-			"epilot_org": schema.StringAttribute{
+			"bearer_auth": schema.StringAttribute{
 				Optional:  true,
 				Sensitive: true,
 			},
@@ -67,24 +64,12 @@ func (p *EpilotProductProvider) Configure(ctx context.Context, req provider.Conf
 	ServerURL := data.ServerURL.ValueString()
 
 	if ServerURL == "" {
-		ServerURL = "https://product.sls.epilot.io"
+		ServerURL = "https://workflows-definition.sls.epilot.io"
 	}
 
-	epilotAuth := new(string)
-	if !data.EpilotAuth.IsUnknown() && !data.EpilotAuth.IsNull() {
-		*epilotAuth = data.EpilotAuth.ValueString()
-	} else {
-		epilotAuth = nil
-	}
-	epilotOrg := new(string)
-	if !data.EpilotOrg.IsUnknown() && !data.EpilotOrg.IsNull() {
-		*epilotOrg = data.EpilotOrg.ValueString()
-	} else {
-		epilotOrg = nil
-	}
+	bearerAuth := data.BearerAuth.ValueString()
 	security := shared.Security{
-		EpilotAuth: epilotAuth,
-		EpilotOrg:  epilotOrg,
+		BearerAuth: bearerAuth,
 	}
 
 	opts := []sdk.SDKOption{
@@ -100,17 +85,13 @@ func (p *EpilotProductProvider) Configure(ctx context.Context, req provider.Conf
 
 func (p *EpilotProductProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
-		NewPriceResource,
-		NewProductResource,
-		NewTaxResource,
+		NewWorkflowDefinitionResource,
 	}
 }
 
 func (p *EpilotProductProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
-		NewPriceDataSource,
-		NewProductDataSource,
-		NewTaxDataSource,
+		NewWorkflowDefinitionDataSource,
 	}
 }
 

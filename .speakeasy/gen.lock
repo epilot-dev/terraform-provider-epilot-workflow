@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: 5a857039-7f4b-42d5-86fd-449767242ed2
 management:
-  docChecksum: 49ed280caef5eeece793d407c91311b9
+  docChecksum: 49e71e8528a2034de903094a70555fe5
   docVersion: 1.0.0
   speakeasyVersion: 1.300.0
   generationVersion: 2.338.14
-  releaseVersion: 0.7.0
-  configChecksum: d31a4e2b4f3485ff79942468af450a99
+  releaseVersion: 0.8.0
+  configChecksum: b9b4343b0dcae6ca8e16dcda70cadc56
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-product.git
   repoSubDirectory: .
   published: true
@@ -21,16 +21,13 @@ features:
     unions: 2.85.0
   terraform:
     additionalDependencies: 0.1.0
-    constsAndDefaults: 0.1.4
     core: 3.21.2
+    deprecations: 2.81.1
     globalSecurity: 2.81.6
     globalServerURLs: 2.82.1
-    nullables: 0.0.0
     unions: 2.81.14
 generatedFiles:
-  - internal/sdk/price.go
-  - internal/sdk/product.go
-  - internal/sdk/tax.go
+  - internal/sdk/workflows.go
   - internal/sdk/sdk.go
   - internal/sdk/models/errors/sdkerror.go
   - internal/sdk/types/bigint.go
@@ -48,35 +45,30 @@ generatedFiles:
   - internal/sdk/internal/utils/retries.go
   - internal/sdk/internal/utils/security.go
   - internal/sdk/internal/utils/utils.go
-  - internal/sdk/models/operations/createprice.go
-  - internal/sdk/models/operations/deleteprice.go
-  - internal/sdk/models/operations/getprice.go
-  - internal/sdk/models/operations/patchprice.go
-  - internal/sdk/models/operations/updateprice.go
-  - internal/sdk/models/operations/createproduct.go
-  - internal/sdk/models/operations/deleteproduct.go
-  - internal/sdk/models/operations/getproduct.go
-  - internal/sdk/models/operations/patchproduct.go
-  - internal/sdk/models/operations/updateproduct.go
-  - internal/sdk/models/operations/createtax.go
-  - internal/sdk/models/operations/deletetax.go
-  - internal/sdk/models/operations/gettax.go
-  - internal/sdk/models/operations/patchtax.go
-  - internal/sdk/models/operations/updatetax.go
-  - internal/sdk/models/shared/servererror.go
-  - internal/sdk/models/shared/price.go
-  - internal/sdk/models/shared/pricetier.go
-  - internal/sdk/models/shared/pricetierdisplaymode.go
-  - internal/sdk/models/shared/clienterror.go
-  - internal/sdk/models/shared/pricecreate.go
-  - internal/sdk/models/shared/pricepatch.go
-  - internal/sdk/models/shared/product.go
-  - internal/sdk/models/shared/baserelation.go
-  - internal/sdk/models/shared/productcreate.go
-  - internal/sdk/models/shared/productpatch.go
-  - internal/sdk/models/shared/tax.go
-  - internal/sdk/models/shared/taxcreate.go
-  - internal/sdk/models/shared/taxpatch.go
+  - internal/sdk/models/operations/createdefinition.go
+  - internal/sdk/models/operations/deletedefinition.go
+  - internal/sdk/models/operations/getdefinition.go
+  - internal/sdk/models/operations/getdefinitions.go
+  - internal/sdk/models/operations/getmaxallowedlimit.go
+  - internal/sdk/models/operations/getworkflowclosingreasons.go
+  - internal/sdk/models/operations/setworkflowclosingreasons.go
+  - internal/sdk/models/operations/updatedefinition.go
+  - internal/sdk/models/shared/workflowdefinition.go
+  - internal/sdk/models/shared/updateentityattributes.go
+  - internal/sdk/models/shared/section.go
+  - internal/sdk/models/shared/itemtype.go
+  - internal/sdk/models/shared/step.go
+  - internal/sdk/models/shared/steprequirement.go
+  - internal/sdk/models/shared/stepjourney.go
+  - internal/sdk/models/shared/ecpdetails.go
+  - internal/sdk/models/shared/steptype.go
+  - internal/sdk/models/shared/dynamicduedate.go
+  - internal/sdk/models/shared/stepdescription.go
+  - internal/sdk/models/shared/closingreasonid.go
+  - internal/sdk/models/shared/errorresp.go
+  - internal/sdk/models/shared/definitionnotfoundresp.go
+  - internal/sdk/models/shared/maxallowedlimit.go
+  - internal/sdk/models/shared/closingreasonsids.go
   - internal/sdk/models/shared/security.go
   - internal/sdk/.gitignore
   - internal/sdk/.gitattributes
@@ -126,32 +118,26 @@ generatedFiles:
   - main.go
   - terraform-registry-manifest.json
   - tools/tools.go
-  - internal/provider/types/price_tier.go
-  - internal/provider/types/price_create_unit.go
-  - internal/provider/types/dollar_relation.go
-  - internal/provider/types/base_relation.go
+  - internal/provider/types/closing_reason_id.go
+  - internal/provider/types/dynamic_due_date.go
+  - internal/provider/types/automation_config.go
+  - internal/provider/types/step_description.go
+  - internal/provider/types/step_journey.go
+  - internal/provider/types/ecp_details.go
+  - internal/provider/types/step_requirement.go
+  - internal/provider/types/step.go
+  - internal/provider/types/section.go
+  - internal/provider/types/flow.go
+  - internal/provider/types/target.go
+  - internal/provider/types/update_entity_attributes.go
   - USAGE.md
   - internal/provider/provider.go
   - examples/provider/provider.tf
-  - examples/resources/epilot-product_price/import.sh
-  - internal/provider/price_resource.go
-  - internal/provider/price_resource_sdk.go
-  - examples/resources/epilot-product_price/resource.tf
-  - examples/resources/epilot-product_product/import.sh
-  - internal/provider/product_resource.go
-  - internal/provider/product_resource_sdk.go
-  - examples/resources/epilot-product_product/resource.tf
-  - examples/resources/epilot-product_tax/import.sh
-  - internal/provider/tax_resource.go
-  - internal/provider/tax_resource_sdk.go
-  - examples/resources/epilot-product_tax/resource.tf
-  - internal/provider/price_data_source.go
-  - internal/provider/price_data_source_sdk.go
-  - examples/data-sources/epilot-product_price/data-source.tf
-  - internal/provider/product_data_source.go
-  - internal/provider/product_data_source_sdk.go
-  - examples/data-sources/epilot-product_product/data-source.tf
-  - internal/provider/tax_data_source.go
-  - internal/provider/tax_data_source_sdk.go
-  - examples/data-sources/epilot-product_tax/data-source.tf
+  - examples/resources/epilot-product_workflow_definition/import.sh
+  - internal/provider/workflowdefinition_resource.go
+  - internal/provider/workflowdefinition_resource_sdk.go
+  - examples/resources/epilot-product_workflow_definition/resource.tf
+  - internal/provider/workflowdefinition_data_source.go
+  - internal/provider/workflowdefinition_data_source_sdk.go
+  - examples/data-sources/epilot-product_workflow_definition/data-source.tf
   - .gitattributes

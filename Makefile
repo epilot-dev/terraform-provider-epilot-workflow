@@ -2,7 +2,7 @@
 all: docs speakeasy
 
 speakeasy:
-	speakeasy generate sdk --lang terraform -o . -s product.yaml
+	speakeasy generate sdk --lang terraform -o . -s workflow.yaml
 
 docs:
 	go generate ./...
