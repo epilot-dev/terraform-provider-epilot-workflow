@@ -1,12 +1,12 @@
 terraform {
   required_providers {
-    epilot-product = {
-      source  = "epilot-dev/epilot-product"
-      version = "0.8.0"
+    epilot-workflow = {
+      source  = "epilot-dev/epilot-workflow"
+      version = "0.8.1"
     }
   }
 }
 
-provider "epilot-product" {
+provider "epilot-workflow" {
   # Configuration options
 }

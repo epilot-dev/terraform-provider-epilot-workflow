@@ -5,9 +5,9 @@ package sdk
 import (
 	"context"
 	"fmt"
-	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/internal/hooks"
-	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/internal/utils"
-	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/models/shared"
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/hooks"
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/models/shared"
 	"net/http"
 	"time"
 )
@@ -137,7 +137,7 @@ func New(opts ...SDKOption) *SDK {
 			OpenAPIDocVersion: "1.0.0",
 			SDKVersion:        "0.0.1",
 			GenVersion:        "2.338.14",
-			UserAgent:         "speakeasy-sdk/go 0.0.1 2.338.14 1.0.0 github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk",
+			UserAgent:         "speakeasy-sdk/go 0.0.1 2.338.14 1.0.0 github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk",
 			Hooks:             hooks.New(),
 		},
 	}

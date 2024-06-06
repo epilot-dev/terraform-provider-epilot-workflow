@@ -5,8 +5,8 @@ management:
   docVersion: 1.0.0
   speakeasyVersion: 1.300.0
   generationVersion: 2.338.14
-  releaseVersion: 0.8.0
-  configChecksum: b9b4343b0dcae6ca8e16dcda70cadc56
+  releaseVersion: 0.8.1
+  configChecksum: e7e9cc490827bbf6dac7a17daa218da8
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-product.git
   repoSubDirectory: .
   published: true
@@ -133,11 +133,11 @@ generatedFiles:
   - USAGE.md
   - internal/provider/provider.go
   - examples/provider/provider.tf
-  - examples/resources/epilot-product_workflow_definition/import.sh
+  - examples/resources/epilot-workflow_workflow_definition/import.sh
   - internal/provider/workflowdefinition_resource.go
   - internal/provider/workflowdefinition_resource_sdk.go
-  - examples/resources/epilot-product_workflow_definition/resource.tf
+  - examples/resources/epilot-workflow_workflow_definition/resource.tf
   - internal/provider/workflowdefinition_data_source.go
   - internal/provider/workflowdefinition_data_source_sdk.go
-  - examples/data-sources/epilot-product_workflow_definition/data-source.tf
+  - examples/data-sources/epilot-workflow_workflow_definition/data-source.tf
   - .gitattributes

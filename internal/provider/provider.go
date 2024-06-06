@@ -4,8 +4,8 @@ package provider
 
 import (
 	"context"
-	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk"
-	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/models/shared"
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk"
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/models/shared"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
@@ -14,27 +14,27 @@ import (
 	"net/http"
 )
 
-var _ provider.Provider = &EpilotProductProvider{}
+var _ provider.Provider = &EpilotWorkflowProvider{}
 
-type EpilotProductProvider struct {
+type EpilotWorkflowProvider struct {
 	// version is set to the provider version on release, "dev" when the
 	// provider is built and ran locally, and "test" when running acceptance
 	// testing.
 	version string
 }
 
-// EpilotProductProviderModel describes the provider data model.
-type EpilotProductProviderModel struct {
+// EpilotWorkflowProviderModel describes the provider data model.
+type EpilotWorkflowProviderModel struct {
 	ServerURL  types.String `tfsdk:"server_url"`
 	BearerAuth types.String `tfsdk:"bearer_auth"`
 }
 
-func (p *EpilotProductProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
-	resp.TypeName = "epilot-product"
+func (p *EpilotWorkflowProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
+	resp.TypeName = "epilot-workflow"
 	resp.Version = p.version
 }
 
-func (p *EpilotProductProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
+func (p *EpilotWorkflowProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: `Workflows Definitions: Service for Workflow Definitions for different processes inside of an Organization` + "\n" +
 			``,
@@ -52,8 +52,8 @@ func (p *EpilotProductProvider) Schema(ctx context.Context, req provider.SchemaR
 	}
 }
 
-func (p *EpilotProductProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
-	var data EpilotProductProviderModel
+func (p *EpilotWorkflowProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
+	var data EpilotWorkflowProviderModel
 
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 
@@ -83,13 +83,13 @@ func (p *EpilotProductProvider) Configure(ctx context.Context, req provider.Conf
 	resp.ResourceData = client
 }
 
-func (p *EpilotProductProvider) Resources(ctx context.Context) []func() resource.Resource {
+func (p *EpilotWorkflowProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewWorkflowDefinitionResource,
 	}
 }
 
-func (p *EpilotProductProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
+func (p *EpilotWorkflowProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		NewWorkflowDefinitionDataSource,
 	}
@@ -97,7 +97,7 @@ func (p *EpilotProductProvider) DataSources(ctx context.Context) []func() dataso
 
 func New(version string) func() provider.Provider {
 	return func() provider.Provider {
-		return &EpilotProductProvider{
+		return &EpilotWorkflowProvider{
 			version: version,
 		}
 	}

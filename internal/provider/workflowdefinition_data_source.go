@@ -5,9 +5,9 @@ package provider
 import (
 	"context"
 	"fmt"
-	tfTypes "github.com/epilot-dev/terraform-provider-epilot-product/internal/provider/types"
-	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk"
-	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/models/operations"
+	tfTypes "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/provider/types"
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk"
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/models/operations"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"

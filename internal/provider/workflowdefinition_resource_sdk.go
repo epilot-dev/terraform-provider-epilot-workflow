@@ -3,8 +3,8 @@
 package provider
 
 import (
-	tfTypes "github.com/epilot-dev/terraform-provider-epilot-product/internal/provider/types"
-	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/models/shared"
+	tfTypes "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/provider/types"
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/models/shared"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"math/big"
 )

@@ -4,7 +4,7 @@ package numberplanmodifier
 
 import (
 	"context"
-	"github.com/epilot-dev/terraform-provider-epilot-product/internal/planmodifiers/utils"
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/planmodifiers/utils"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 )

@@ -27,7 +27,7 @@ go:
   outputModelSuffix: output
   packageName: openapi
 terraform:
-  version: 0.8.0
+  version: 0.8.1
   additionalDataSources: []
   additionalDependencies: {}
   additionalResources: []
@@ -44,4 +44,4 @@ terraform:
       webhooks: webhooks
   inputModelSuffix: input
   outputModelSuffix: output
-  packageName: epilot-product
+  packageName: epilot-workflow

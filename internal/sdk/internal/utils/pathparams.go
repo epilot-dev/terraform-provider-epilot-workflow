@@ -13,7 +13,7 @@ import (
 
 	"github.com/ericlagergren/decimal"
 
-	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/types"
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/types"
 )
 
 func GenerateURL(_ context.Context, serverURL, path string, pathParams interface{}, globals interface{}) (string, error) {

@@ -13,7 +13,7 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/types"
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/types"
 
 	"github.com/ericlagergren/decimal"
 )

@@ -1,4 +1,4 @@
-module github.com/epilot-dev/terraform-provider-epilot-product
+module github.com/epilot-dev/terraform-provider-epilot-workflow
 
 go 1.21
 

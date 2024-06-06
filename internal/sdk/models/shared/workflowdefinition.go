@@ -5,7 +5,7 @@ package shared
 import (
 	"errors"
 	"fmt"
-	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/internal/utils"
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
 )
 
 type FlowType string
