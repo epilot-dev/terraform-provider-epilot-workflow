@@ -6,7 +6,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk"
-	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/pkg/models/operations"
+	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/models/operations"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -31,9 +31,9 @@ type TaxResource struct {
 
 // TaxResourceModel describes the resource data model.
 type TaxResourceModel struct {
-	ID          types.String `tfsdk:"id"`
 	Active      types.Bool   `tfsdk:"active"`
 	Description types.String `tfsdk:"description"`
+	ID          types.String `tfsdk:"id"`
 	Rate        types.String `tfsdk:"rate"`
 	Region      types.String `tfsdk:"region"`
 	Type        types.String `tfsdk:"type"`
@@ -46,18 +46,17 @@ func (r *TaxResource) Metadata(ctx context.Context, req resource.MetadataRequest
 func (r *TaxResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Tax Resource",
-
 		Attributes: map[string]schema.Attribute{
-			"id": schema.StringAttribute{
-				Computed:    true,
-				Description: `The tax id`,
-			},
 			"active": schema.BoolAttribute{
 				Required: true,
 			},
 			"description": schema.StringAttribute{
 				Computed: true,
 				Optional: true,
+			},
+			"id": schema.StringAttribute{
+				Computed:    true,
+				Description: `The tax id`,
 			},
 			"rate": schema.StringAttribute{
 				Required: true,
@@ -187,6 +186,10 @@ func (r *TaxResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
+		return
+	}
+	if res.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {

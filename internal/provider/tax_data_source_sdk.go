@@ -3,15 +3,17 @@
 package provider
 
 import (
-	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/pkg/models/shared"
+	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/models/shared"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
 func (r *TaxDataSourceModel) RefreshFromSharedTax(resp *shared.Tax) {
-	r.Active = types.BoolValue(resp.Active)
-	r.Description = types.StringPointerValue(resp.Description)
-	r.ID = types.StringValue(resp.ID)
-	r.Rate = types.StringValue(resp.Rate)
-	r.Region = types.StringValue(string(resp.Region))
-	r.Type = types.StringValue(string(resp.Type))
+	if resp != nil {
+		r.Active = types.BoolValue(resp.Active)
+		r.Description = types.StringPointerValue(resp.Description)
+		r.ID = types.StringValue(resp.ID)
+		r.Rate = types.StringValue(resp.Rate)
+		r.Region = types.StringValue(string(resp.Region))
+		r.Type = types.StringValue(string(resp.Type))
+	}
 }

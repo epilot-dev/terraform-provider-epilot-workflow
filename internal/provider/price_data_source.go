@@ -5,8 +5,9 @@ package provider
 import (
 	"context"
 	"fmt"
+	tfTypes "github.com/epilot-dev/terraform-provider-epilot-product/internal/provider/types"
 	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk"
-	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/pkg/models/operations"
+	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/models/operations"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -28,31 +29,31 @@ type PriceDataSource struct {
 
 // PriceDataSourceModel describes the data model.
 type PriceDataSourceModel struct {
-	Active                 types.Bool       `tfsdk:"active"`
-	BillingDurationAmount  types.Number     `tfsdk:"billing_duration_amount"`
-	BillingDurationUnit    types.String     `tfsdk:"billing_duration_unit"`
-	Description            types.String     `tfsdk:"description"`
-	Hydrate                types.Bool       `tfsdk:"hydrate"`
-	ID                     types.String     `tfsdk:"id"`
-	IsCompositePrice       types.Bool       `tfsdk:"is_composite_price"`
-	IsTaxInclusive         types.Bool       `tfsdk:"is_tax_inclusive"`
-	LongDescription        types.String     `tfsdk:"long_description"`
-	NoticeTimeAmount       types.Number     `tfsdk:"notice_time_amount"`
-	NoticeTimeUnit         types.String     `tfsdk:"notice_time_unit"`
-	PriceDisplayInJourneys types.String     `tfsdk:"price_display_in_journeys"`
-	PricingModel           types.String     `tfsdk:"pricing_model"`
-	RenewalDurationAmount  types.Number     `tfsdk:"renewal_duration_amount"`
-	RenewalDurationUnit    types.String     `tfsdk:"renewal_duration_unit"`
-	Tax                    types.String     `tfsdk:"tax"`
-	TerminationTimeAmount  types.Number     `tfsdk:"termination_time_amount"`
-	TerminationTimeUnit    types.String     `tfsdk:"termination_time_unit"`
-	Tiers                  []PriceTier      `tfsdk:"tiers"`
-	Type                   types.String     `tfsdk:"type"`
-	Unit                   *PriceCreateUnit `tfsdk:"unit"`
-	UnitAmount             types.Number     `tfsdk:"unit_amount"`
-	UnitAmountCurrency     types.String     `tfsdk:"unit_amount_currency"`
-	UnitAmountDecimal      types.String     `tfsdk:"unit_amount_decimal"`
-	VariablePrice          types.Bool       `tfsdk:"variable_price"`
+	Active                 types.Bool               `tfsdk:"active"`
+	BillingDurationAmount  types.Number             `tfsdk:"billing_duration_amount"`
+	BillingDurationUnit    types.String             `tfsdk:"billing_duration_unit"`
+	Description            types.String             `tfsdk:"description"`
+	Hydrate                types.Bool               `tfsdk:"hydrate"`
+	ID                     types.String             `tfsdk:"id"`
+	IsCompositePrice       types.Bool               `tfsdk:"is_composite_price"`
+	IsTaxInclusive         types.Bool               `tfsdk:"is_tax_inclusive"`
+	LongDescription        types.String             `tfsdk:"long_description"`
+	NoticeTimeAmount       types.Number             `tfsdk:"notice_time_amount"`
+	NoticeTimeUnit         types.String             `tfsdk:"notice_time_unit"`
+	PriceDisplayInJourneys types.String             `tfsdk:"price_display_in_journeys"`
+	PricingModel           types.String             `tfsdk:"pricing_model"`
+	RenewalDurationAmount  types.Number             `tfsdk:"renewal_duration_amount"`
+	RenewalDurationUnit    types.String             `tfsdk:"renewal_duration_unit"`
+	Tax                    types.String             `tfsdk:"tax"`
+	TerminationTimeAmount  types.Number             `tfsdk:"termination_time_amount"`
+	TerminationTimeUnit    types.String             `tfsdk:"termination_time_unit"`
+	Tiers                  []tfTypes.PriceTier      `tfsdk:"tiers"`
+	Type                   types.String             `tfsdk:"type"`
+	Unit                   *tfTypes.PriceCreateUnit `tfsdk:"unit"`
+	UnitAmount             types.Number             `tfsdk:"unit_amount"`
+	UnitAmountCurrency     types.String             `tfsdk:"unit_amount_currency"`
+	UnitAmountDecimal      types.String             `tfsdk:"unit_amount_decimal"`
+	VariablePrice          types.Bool               `tfsdk:"variable_price"`
 }
 
 // Metadata returns the data source type name.
@@ -96,7 +97,7 @@ func (r *PriceDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 			},
 			"is_tax_inclusive": schema.BoolAttribute{
 				Computed:    true,
-				Description: `Specifies whether the price is considered ` + "`" + `inclusive` + "`" + ` of taxes or not. Default: false`,
+				Description: `Specifies whether the price is considered ` + "`" + `inclusive` + "`" + ` of taxes or not.`,
 			},
 			"long_description": schema.StringAttribute{
 				Computed:    true,
@@ -122,7 +123,7 @@ func (r *PriceDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 					`- ` + "`" + `tiered_volume` + "`" + ` indicates that the unit pricing will be computed using tiers attribute. The customer pays the same unit price for all purchased units.` + "\n" +
 					`- ` + "`" + `tiered_flatfee` + "`" + ` While similar to tiered_volume, tiered flat fee charges for the same price (flat) for the entire range instead using the unit price to multiply the quantity.` + "\n" +
 					`` + "\n" +
-					`must be one of ["per_unit", "tiered_volume", "tiered_graduated", "tiered_flatfee"]; Default: "per_unit"`,
+					`must be one of ["per_unit", "tiered_volume", "tiered_graduated", "tiered_flatfee"]`,
 			},
 			"renewal_duration_amount": schema.NumberAttribute{
 				Computed:    true,
@@ -174,7 +175,7 @@ func (r *PriceDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 			},
 			"type": schema.StringAttribute{
 				Computed:    true,
-				Description: `One of ` + "`" + `one_time` + "`" + ` or ` + "`" + `recurring` + "`" + ` depending on whether the price is for a one-time purchase or a recurring (subscription) purchase. must be one of ["one_time", "recurring"]; Default: "one_time"`,
+				Description: `One of ` + "`" + `one_time` + "`" + ` or ` + "`" + `recurring` + "`" + ` depending on whether the price is for a one-time purchase or a recurring (subscription) purchase. must be one of ["one_time", "recurring"]`,
 			},
 			"unit": schema.SingleNestedAttribute{
 				Computed: true,
@@ -203,7 +204,7 @@ func (r *PriceDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 			},
 			"variable_price": schema.BoolAttribute{
 				Computed:    true,
-				Description: `The flag for prices that can be influenced by external variables such as user input. Default: false`,
+				Description: `The flag for prices that can be influenced by external variables such as user input.`,
 			},
 		},
 	}
@@ -268,6 +269,10 @@ func (r *PriceDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
+		return
+	}
+	if res.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {

@@ -5,8 +5,9 @@ package provider
 import (
 	"context"
 	"fmt"
+	tfTypes "github.com/epilot-dev/terraform-provider-epilot-product/internal/provider/types"
 	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk"
-	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/pkg/models/operations"
+	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/models/operations"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -28,18 +29,18 @@ type ProductDataSource struct {
 
 // ProductDataSourceModel describes the data model.
 type ProductDataSourceModel struct {
-	Active           types.Bool     `tfsdk:"active"`
-	Code             types.String   `tfsdk:"code"`
-	Description      types.String   `tfsdk:"description"`
-	Feature          []types.String `tfsdk:"feature"`
-	Hydrate          types.Bool     `tfsdk:"hydrate"`
-	ID               types.String   `tfsdk:"id"`
-	InternalName     types.String   `tfsdk:"internal_name"`
-	Name             types.String   `tfsdk:"name"`
-	PriceOptions     *BaseRelation  `tfsdk:"price_options"`
-	ProductDownloads types.String   `tfsdk:"product_downloads"`
-	ProductImages    types.String   `tfsdk:"product_images"`
-	Type             types.String   `tfsdk:"type"`
+	Active           types.Bool            `tfsdk:"active"`
+	Code             types.String          `tfsdk:"code"`
+	Description      types.String          `tfsdk:"description"`
+	Feature          []types.String        `tfsdk:"feature"`
+	Hydrate          types.Bool            `tfsdk:"hydrate"`
+	ID               types.String          `tfsdk:"id"`
+	InternalName     types.String          `tfsdk:"internal_name"`
+	Name             types.String          `tfsdk:"name"`
+	PriceOptions     *tfTypes.BaseRelation `tfsdk:"price_options"`
+	ProductDownloads types.String          `tfsdk:"product_downloads"`
+	ProductImages    types.String          `tfsdk:"product_images"`
+	Type             types.String          `tfsdk:"type"`
 }
 
 // Metadata returns the data source type name.
@@ -120,7 +121,7 @@ func (r *ProductDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 					`| ` + "`" + `product` + "`" + ` | Represents a physical good |` + "\n" +
 					`| ` + "`" + `service` + "`" + ` | Represents a service or virtual product |` + "\n" +
 					`` + "\n" +
-					`must be one of ["product", "service"]; Default: "product"`,
+					`must be one of ["product", "service"]`,
 			},
 		},
 	}
@@ -185,6 +186,10 @@ func (r *ProductDataSource) Read(ctx context.Context, req datasource.ReadRequest
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
+		return
+	}
+	if res.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {

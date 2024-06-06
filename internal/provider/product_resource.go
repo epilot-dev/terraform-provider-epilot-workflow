@@ -5,14 +5,16 @@ package provider
 import (
 	"context"
 	"fmt"
+	tfTypes "github.com/epilot-dev/terraform-provider-epilot-product/internal/provider/types"
 	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk"
-	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/pkg/models/operations"
+	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/models/operations"
 	"github.com/epilot-dev/terraform-provider-epilot-product/internal/validators"
 	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
@@ -33,17 +35,17 @@ type ProductResource struct {
 
 // ProductResourceModel describes the resource data model.
 type ProductResourceModel struct {
-	ID               types.String   `tfsdk:"id"`
-	Active           types.Bool     `tfsdk:"active"`
-	Code             types.String   `tfsdk:"code"`
-	Description      types.String   `tfsdk:"description"`
-	Feature          []types.String `tfsdk:"feature"`
-	InternalName     types.String   `tfsdk:"internal_name"`
-	Name             types.String   `tfsdk:"name"`
-	PriceOptions     *BaseRelation  `tfsdk:"price_options"`
-	ProductDownloads types.String   `tfsdk:"product_downloads"`
-	ProductImages    types.String   `tfsdk:"product_images"`
-	Type             types.String   `tfsdk:"type"`
+	Active           types.Bool            `tfsdk:"active"`
+	Code             types.String          `tfsdk:"code"`
+	Description      types.String          `tfsdk:"description"`
+	Feature          []types.String        `tfsdk:"feature"`
+	ID               types.String          `tfsdk:"id"`
+	InternalName     types.String          `tfsdk:"internal_name"`
+	Name             types.String          `tfsdk:"name"`
+	PriceOptions     *tfTypes.BaseRelation `tfsdk:"price_options"`
+	ProductDownloads types.String          `tfsdk:"product_downloads"`
+	ProductImages    types.String          `tfsdk:"product_images"`
+	Type             types.String          `tfsdk:"type"`
 }
 
 func (r *ProductResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -53,12 +55,7 @@ func (r *ProductResource) Metadata(ctx context.Context, req resource.MetadataReq
 func (r *ProductResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Product Resource",
-
 		Attributes: map[string]schema.Attribute{
-			"id": schema.StringAttribute{
-				Computed:    true,
-				Description: `The product id`,
-			},
 			"active": schema.BoolAttribute{
 				Required: true,
 			},
@@ -79,6 +76,10 @@ func (r *ProductResource) Schema(ctx context.Context, req resource.SchemaRequest
 				Validators: []validator.List{
 					listvalidator.ValueStringsAre(validators.IsValidJSON()),
 				},
+			},
+			"id": schema.StringAttribute{
+				Computed:    true,
+				Description: `The product id`,
 			},
 			"internal_name": schema.StringAttribute{
 				Computed:    true,
@@ -131,6 +132,7 @@ func (r *ProductResource) Schema(ctx context.Context, req resource.SchemaRequest
 			"type": schema.StringAttribute{
 				Computed: true,
 				Optional: true,
+				Default:  stringdefault.StaticString("product"),
 				MarkdownDescription: `The type of Product:` + "\n" +
 					`` + "\n" +
 					`| type | description |` + "\n" +
@@ -250,6 +252,10 @@ func (r *ProductResource) Read(ctx context.Context, req resource.ReadRequest, re
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
+		return
+	}
+	if res.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {

@@ -5,13 +5,16 @@ package provider
 import (
 	"context"
 	"fmt"
+	tfTypes "github.com/epilot-dev/terraform-provider-epilot-product/internal/provider/types"
 	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk"
-	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/pkg/models/operations"
+	"github.com/epilot-dev/terraform-provider-epilot-product/internal/sdk/models/operations"
 	"github.com/epilot-dev/terraform-provider-epilot-product/internal/validators"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
@@ -32,30 +35,30 @@ type PriceResource struct {
 
 // PriceResourceModel describes the resource data model.
 type PriceResourceModel struct {
-	ID                     types.String     `tfsdk:"id"`
-	Active                 types.Bool       `tfsdk:"active"`
-	BillingDurationAmount  types.Number     `tfsdk:"billing_duration_amount"`
-	BillingDurationUnit    types.String     `tfsdk:"billing_duration_unit"`
-	Description            types.String     `tfsdk:"description"`
-	IsCompositePrice       types.Bool       `tfsdk:"is_composite_price"`
-	IsTaxInclusive         types.Bool       `tfsdk:"is_tax_inclusive"`
-	LongDescription        types.String     `tfsdk:"long_description"`
-	NoticeTimeAmount       types.Number     `tfsdk:"notice_time_amount"`
-	NoticeTimeUnit         types.String     `tfsdk:"notice_time_unit"`
-	PriceDisplayInJourneys types.String     `tfsdk:"price_display_in_journeys"`
-	PricingModel           types.String     `tfsdk:"pricing_model"`
-	RenewalDurationAmount  types.Number     `tfsdk:"renewal_duration_amount"`
-	RenewalDurationUnit    types.String     `tfsdk:"renewal_duration_unit"`
-	Tax                    types.String     `tfsdk:"tax"`
-	TerminationTimeAmount  types.Number     `tfsdk:"termination_time_amount"`
-	TerminationTimeUnit    types.String     `tfsdk:"termination_time_unit"`
-	Tiers                  []PriceTier      `tfsdk:"tiers"`
-	Type                   types.String     `tfsdk:"type"`
-	Unit                   *PriceCreateUnit `tfsdk:"unit"`
-	UnitAmount             types.Number     `tfsdk:"unit_amount"`
-	UnitAmountCurrency     types.String     `tfsdk:"unit_amount_currency"`
-	UnitAmountDecimal      types.String     `tfsdk:"unit_amount_decimal"`
-	VariablePrice          types.Bool       `tfsdk:"variable_price"`
+	Active                 types.Bool               `tfsdk:"active"`
+	BillingDurationAmount  types.Number             `tfsdk:"billing_duration_amount"`
+	BillingDurationUnit    types.String             `tfsdk:"billing_duration_unit"`
+	Description            types.String             `tfsdk:"description"`
+	ID                     types.String             `tfsdk:"id"`
+	IsCompositePrice       types.Bool               `tfsdk:"is_composite_price"`
+	IsTaxInclusive         types.Bool               `tfsdk:"is_tax_inclusive"`
+	LongDescription        types.String             `tfsdk:"long_description"`
+	NoticeTimeAmount       types.Number             `tfsdk:"notice_time_amount"`
+	NoticeTimeUnit         types.String             `tfsdk:"notice_time_unit"`
+	PriceDisplayInJourneys types.String             `tfsdk:"price_display_in_journeys"`
+	PricingModel           types.String             `tfsdk:"pricing_model"`
+	RenewalDurationAmount  types.Number             `tfsdk:"renewal_duration_amount"`
+	RenewalDurationUnit    types.String             `tfsdk:"renewal_duration_unit"`
+	Tax                    types.String             `tfsdk:"tax"`
+	TerminationTimeAmount  types.Number             `tfsdk:"termination_time_amount"`
+	TerminationTimeUnit    types.String             `tfsdk:"termination_time_unit"`
+	Tiers                  []tfTypes.PriceTier      `tfsdk:"tiers"`
+	Type                   types.String             `tfsdk:"type"`
+	Unit                   *tfTypes.PriceCreateUnit `tfsdk:"unit"`
+	UnitAmount             types.Number             `tfsdk:"unit_amount"`
+	UnitAmountCurrency     types.String             `tfsdk:"unit_amount_currency"`
+	UnitAmountDecimal      types.String             `tfsdk:"unit_amount_decimal"`
+	VariablePrice          types.Bool               `tfsdk:"variable_price"`
 }
 
 func (r *PriceResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -65,12 +68,7 @@ func (r *PriceResource) Metadata(ctx context.Context, req resource.MetadataReque
 func (r *PriceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Price Resource",
-
 		Attributes: map[string]schema.Attribute{
-			"id": schema.StringAttribute{
-				Computed:    true,
-				Description: `The price id`,
-			},
 			"active": schema.BoolAttribute{
 				Required:    true,
 				Description: `Whether the price can be used for new purchases.`,
@@ -96,6 +94,10 @@ func (r *PriceResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Required:    true,
 				Description: `A brief description of the price.`,
 			},
+			"id": schema.StringAttribute{
+				Computed:    true,
+				Description: `The price id`,
+			},
 			"is_composite_price": schema.BoolAttribute{
 				Computed:    true,
 				Optional:    true,
@@ -104,6 +106,7 @@ func (r *PriceResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 			"is_tax_inclusive": schema.BoolAttribute{
 				Computed:    true,
 				Optional:    true,
+				Default:     booldefault.StaticBool(false),
 				Description: `Specifies whether the price is considered ` + "`" + `inclusive` + "`" + ` of taxes or not. Default: false`,
 			},
 			"long_description": schema.StringAttribute{
@@ -143,6 +146,7 @@ func (r *PriceResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 			"pricing_model": schema.StringAttribute{
 				Computed: true,
 				Optional: true,
+				Default:  stringdefault.StaticString("per_unit"),
 				MarkdownDescription: `Describes how to compute the price per period. Either ` + "`" + `per_unit` + "`" + `, ` + "`" + `tiered_graduated` + "`" + ` or ` + "`" + `tiered_volume` + "`" + `.` + "\n" +
 					`- ` + "`" + `per_unit` + "`" + ` indicates that the fixed amount (specified in unit_amount or unit_amount_decimal) will be charged per unit in quantity` + "\n" +
 					`- ` + "`" + `tiered_graduated` + "`" + ` indicates that the unit pricing will be computed using tiers attribute. The customer pays the price per unit in every range their purchase rises through.` + "\n" +
@@ -245,6 +249,7 @@ func (r *PriceResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 			"type": schema.StringAttribute{
 				Computed:    true,
 				Optional:    true,
+				Default:     stringdefault.StaticString("one_time"),
 				Description: `One of ` + "`" + `one_time` + "`" + ` or ` + "`" + `recurring` + "`" + ` depending on whether the price is for a one-time purchase or a recurring (subscription) purchase. must be one of ["one_time", "recurring"]; Default: "one_time"`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
@@ -260,12 +265,20 @@ func (r *PriceResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					"str": schema.StringAttribute{
 						Computed: true,
 						Optional: true,
+						Validators: []validator.String{
+							stringvalidator.ConflictsWith(path.Expressions{
+								path.MatchRelative().AtParent().AtName("one"),
+							}...),
+						},
 					},
 					"one": schema.StringAttribute{
 						Computed:    true,
 						Optional:    true,
 						Description: `built-in units. must be one of ["kw", "kwh", "m", "m2", "l", "cubic-meter", "cubic-meter-h", "ls", "a", "kva", "w", "wp", "kwp"]`,
 						Validators: []validator.String{
+							stringvalidator.ConflictsWith(path.Expressions{
+								path.MatchRelative().AtParent().AtName("str"),
+							}...),
 							stringvalidator.OneOf(
 								"kw",
 								"kwh",
@@ -307,6 +320,7 @@ func (r *PriceResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 			"variable_price": schema.BoolAttribute{
 				Computed:    true,
 				Optional:    true,
+				Default:     booldefault.StaticBool(false),
 				Description: `The flag for prices that can be influenced by external variables such as user input. Default: false`,
 			},
 		},
@@ -413,6 +427,10 @@ func (r *PriceResource) Read(ctx context.Context, req resource.ReadRequest, resp
 	}
 	if res == nil {
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
+		return
+	}
+	if res.StatusCode == 404 {
+		resp.State.RemoveResource(ctx)
 		return
 	}
 	if res.StatusCode != 200 {
