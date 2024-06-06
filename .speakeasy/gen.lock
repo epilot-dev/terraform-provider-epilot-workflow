@@ -7,7 +7,7 @@ management:
   generationVersion: 2.338.14
   releaseVersion: 0.8.1
   configChecksum: e7e9cc490827bbf6dac7a17daa218da8
-  repoURL: https://github.com/epilot-dev/terraform-provider-epilot-product.git
+  repoURL: https://github.com/epilot-dev/terraform-provider-epilot-workflow.git
   repoSubDirectory: .
   published: true
 features:
