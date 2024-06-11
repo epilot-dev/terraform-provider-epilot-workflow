@@ -8,6 +8,7 @@ import (
 	tfTypes "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/provider/types"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/models/operations"
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/validators"
 	speakeasy_listvalidators "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/validators/listvalidators"
 	speakeasy_numbervalidators "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/validators/numbervalidators"
 	speakeasy_objectvalidators "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/validators/objectvalidators"
@@ -872,8 +873,8 @@ func (r *WorkflowDefinitionResource) Create(ctx context.Context, req resource.Cr
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.WorkflowDefinition == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.WorkflowDefinition != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
 	data.RefreshFromSharedWorkflowDefinition(res.WorkflowDefinition)
@@ -925,8 +926,8 @@ func (r *WorkflowDefinitionResource) Read(ctx context.Context, req resource.Read
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.WorkflowDefinition == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.WorkflowDefinition != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
 	data.RefreshFromSharedWorkflowDefinition(res.WorkflowDefinition)
@@ -971,8 +972,8 @@ func (r *WorkflowDefinitionResource) Update(ctx context.Context, req resource.Up
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}
-	if res.WorkflowDefinition == nil {
-		resp.Diagnostics.AddError("unexpected response from API. No response body", debugResponse(res.RawResponse))
+	if !(res.WorkflowDefinition != nil) {
+		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
 	data.RefreshFromSharedWorkflowDefinition(res.WorkflowDefinition)
