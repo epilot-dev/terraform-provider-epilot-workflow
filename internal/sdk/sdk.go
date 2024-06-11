@@ -64,7 +64,8 @@ func (c *sdkConfiguration) GetServerDetails() (string, map[string]string) {
 
 // SDK - Workflows Definitions: Service for Workflow Definitions for different processes inside of an Organization
 type SDK struct {
-	Workflows *Workflows
+	ClosingReason *ClosingReason
+	Workflows     *Workflows
 
 	sdkConfiguration sdkConfiguration
 }
@@ -136,8 +137,8 @@ func New(opts ...SDKOption) *SDK {
 			Language:          "go",
 			OpenAPIDocVersion: "1.0.0",
 			SDKVersion:        "0.0.1",
-			GenVersion:        "2.338.14",
-			UserAgent:         "speakeasy-sdk/go 0.0.1 2.338.14 1.0.0 github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk",
+			GenVersion:        "2.339.1",
+			UserAgent:         "speakeasy-sdk/go 0.0.1 2.339.1 1.0.0 github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk",
 			Hooks:             hooks.New(),
 		},
 	}
@@ -156,6 +157,8 @@ func New(opts ...SDKOption) *SDK {
 	if serverURL != currentServerURL {
 		sdk.sdkConfiguration.ServerURL = serverURL
 	}
+
+	sdk.ClosingReason = newClosingReason(sdk.sdkConfiguration)
 
 	sdk.Workflows = newWorkflows(sdk.sdkConfiguration)
 

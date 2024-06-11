@@ -84,15 +84,11 @@ func (p *EpilotWorkflowProvider) Configure(ctx context.Context, req provider.Con
 }
 
 func (p *EpilotWorkflowProvider) Resources(ctx context.Context) []func() resource.Resource {
-	return []func() resource.Resource{
-		NewWorkflowDefinitionResource,
-	}
+	return []func() resource.Resource{}
 }
 
 func (p *EpilotWorkflowProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
-	return []func() datasource.DataSource{
-		NewWorkflowDefinitionDataSource,
-	}
+	return []func() datasource.DataSource{}
 }
 
 func New(version string) func() provider.Provider {
