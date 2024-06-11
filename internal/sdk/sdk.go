@@ -64,8 +64,7 @@ func (c *sdkConfiguration) GetServerDetails() (string, map[string]string) {
 
 // SDK - Workflows Definitions: Service for Workflow Definitions for different processes inside of an Organization
 type SDK struct {
-	ClosingReason *ClosingReason
-	Workflows     *Workflows
+	Workflows *Workflows
 
 	sdkConfiguration sdkConfiguration
 }
@@ -157,8 +156,6 @@ func New(opts ...SDKOption) *SDK {
 	if serverURL != currentServerURL {
 		sdk.sdkConfiguration.ServerURL = serverURL
 	}
-
-	sdk.ClosingReason = newClosingReason(sdk.sdkConfiguration)
 
 	sdk.Workflows = newWorkflows(sdk.sdkConfiguration)
 
