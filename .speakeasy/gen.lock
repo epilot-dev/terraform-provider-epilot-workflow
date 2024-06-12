@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: 5a857039-7f4b-42d5-86fd-449767242ed2
 management:
-  docChecksum: 49e71e8528a2034de903094a70555fe5
+  docChecksum: 8ae07697a4f59d026a44a7d6b287f46b
   docVersion: 1.0.0
   speakeasyVersion: 1.303.4
   generationVersion: 2.340.2
-  releaseVersion: 0.8.3
-  configChecksum: e7d1645bf627310ec7c8eeead96e97ea
+  releaseVersion: 0.8.4
+  configChecksum: 03142a0481bf8be5abbdacf2803b0832
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-workflow.git
   repoSubDirectory: .
   published: true
