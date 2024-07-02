@@ -2,7 +2,7 @@ module github.com/epilot-dev/terraform-provider-epilot-workflow
 
 go 1.21
 
-toolchain go1.21.6
+toolchain go1.21.9
 
 require (
 	github.com/cenkalti/backoff/v4 v4.2.0
