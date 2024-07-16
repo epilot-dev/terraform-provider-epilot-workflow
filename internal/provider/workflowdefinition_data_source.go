@@ -465,8 +465,7 @@ func (r *WorkflowDefinitionDataSource) Schema(ctx context.Context, req datasourc
 				},
 			},
 			"id": schema.StringAttribute{
-				Required:    true,
-				Description: `Short uuid (length 8) to identify the Workflow Definition.`,
+				Computed: true,
 			},
 			"last_update_time": schema.StringAttribute{
 				Computed:    true,

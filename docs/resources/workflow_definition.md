@@ -13,434 +13,82 @@ WorkflowDefinition Resource
 ## Example Usage
 
 ```terraform
-# Provider definitions
-terraform {
-  required_providers {
-    epilot-workflow = {
-      source  = "epilot-dev/epilot-workflow"
-      version = "0.2.2"
-    }
-  }
-}
-
-variable epilot_auth {
-  type        = string
-}
-
-
-
-provider "epilot-workflow" {
-  bearer_auth = var.epilot_auth
-}
-
-
-# resource "epilot-workflow_workflow_definition" "my_workflowdefinition" {
-#   description         = "...my_description..."
-#   due_date            = "2021-04-27T12:00:00.000Z"
-#   enable_ecp_workflow = false
-#   flow = [
-#     {
-#       section = {
-#         id    = "2a31ed4e-b201-4187-9740-15a348b64814"
-#         name  = "Meredith Bruen"
-#         order = 1.95
-#         steps = [
-#           {
-#             assigned_to = [
-#               "...",
-#             ]
-#             automation_config = {
-#               flow_id = "...my_flow_id..."
-#             }
-#             description = {
-#               enabled = true
-#               value   = "...my_value..."
-#             }
-#             due_date = "2021-04-27T12:00:00.000Z"
-#             dynamic_due_date = {
-#               action_type_condition = "STEP_CLOSED"
-#               number_of_units       = 73.8
-#               step_id               = "...my_step_id..."
-#               time_period           = "weeks"
-#             }
-#             ecp = {
-#               description = "...my_description..."
-#               enabled     = false
-#               journey = {
-#                 id         = "64361b27-76d7-498c-b5f3-e120ea0dc9e1"
-#                 journey_id = "...my_journey_id..."
-#                 name       = "Lorraine Witting"
-#               }
-#               label = "...my_label..."
-#             }
-#             execution_type = "AUTOMATION"
-#             id             = "3f96aa0e-3408-45f7-9b11-76521d792fea"
-#             installer = {
-#               description = "...my_description..."
-#               enabled     = true
-#               journey = {
-#                 id         = "830af35a-c0f0-4516-986c-6d56674fb26d"
-#                 journey_id = "...my_journey_id..."
-#                 name       = "Paulette O'Hara"
-#               }
-#               label = "...my_label..."
-#             }
-#             journey = {
-#               id         = "9b2b84e8-8293-4d18-a93f-16fc9936c940"
-#               journey_id = "...my_journey_id..."
-#               name       = "Dr. Joel Hermann"
-#             }
-#             name  = "Lorene Denesik"
-#             order = 4.83
-#             requirements = [
-#               {
-#                 condition     = "CLOSED"
-#                 definition_id = "...my_definition_id..."
-#                 type          = "STEP"
-#               },
-#             ]
-#             type = "SECTION"
-#             user_ids = [
-#               9.27,
-#             ]
-#           },
-#         ]
-#         type = "STEP"
-#       }
-#     },
-#   ]
-#   name             = "Nishu workflowing"
-# }
-
-resource "epilot-workflow_workflow_definition" "new_workflow_definition" {
-  assigned_to = [
-    "56201",
-  ]
-  closing_reasons = [
-    {
-      id = "J-9JNspGlmqHadNMfJCkj"
-    },
-    {
-      id = "vH2hoSZwV9odnm6mHRpsf"
-    },
-  ]
-  description         = "Fitsch test - blueprints"
-  enable_ecp_workflow = true
+resource "epilot-workflow_workflow_definition" "my_workflowdefinition" {
+  creation_time       = "2021-04-27T12:01:13.000Z"
+  definition_id       = "7hj28a"
+  description         = "...my_description..."
+  due_date            = "2021-04-27T12:00:00.000Z"
+  dynamic_due_date    = "{ \"see\": \"documentation\" }"
+  enable_ecp_workflow = false
   flow = [
     {
-      step = {
-        assigned_to = []
-        automation_config = {
-          flow_id = "58c35c04-9663-492f-872f-196552197bcf"
-        }
-        ecp = {
-          enabled = true
-          label   = "2.Schritt"
-        }
-        execution_type = "AUTOMATION"
-        id             = "ulcZkL"
-        installer = {
-          enabled = true
-          label   = "Installer label"
-        }
-        name         = "test assignee variablen"
-        order        = 1
-        requirements = []
-        type         = "STEP"
-        user_ids     = []
-      }
-    },
-    {
-      step = {
-        assigned_to = [
-          "101408",
-        ]
-        ecp = {
-          description = "33"
-          enabled     = true
-          label       = "3.Schritt"
-        }
-        id = "vZJNxC"
-        installer = {
-          description = "abc"
-          enabled     = true
-          label       = "aaa"
-        }
-        name         = "4. Aufgabe"
-        order        = 2
-        requirements = []
-        type         = "STEP"
-        user_ids     = []
-      }
-    },
-    {
       section = {
-        id    = "P9p_N8"
-        name  = "5. Aufgabe"
-        order = 3
+        id    = "2a31ed4e-b201-4187-9740-15a348b64814"
+        name  = "Meredith Bruen"
+        order = 1.95
         steps = [
           {
-            assigned_to = []
+            assigned_to = [
+              "...",
+            ]
             automation_config = {
-              flow_id = "b282a5e4-40c6-487f-a85d-8053d194027d"
+              flow_id = "...my_flow_id..."
             }
-            ecp = {
+            description = {
               enabled = true
-              label   = "4.Schritt"
+              value   = "...my_value..."
+            }
+            due_date         = "2021-04-27T12:00:00.000Z"
+            dynamic_due_date = "{ \"see\": \"documentation\" }"
+            ecp = {
+              description = "...my_description..."
+              enabled     = false
+              journey = {
+                id         = "b9364361-b277-46d7-98c7-5f3e120ea0dc"
+                journey_id = "...my_journey_id..."
+                name       = "Mrs. Grady Bins"
+              }
+              label = "...my_label..."
             }
             execution_type = "AUTOMATION"
-            id             = "-Rjb7y"
-            name           = "Demo test 20"
-            order          = 4
-            requirements   = []
-            type           = "STEP"
-            user_ids       = []
-          },
-        ]
-        type = "SECTION"
-      }
-    },
-    {
-      section = {
-        id    = "J0fYIk"
-        name  = "2 Aufgabe"
-        order = 5
-        steps = [
-          {
-            assigned_to = []
-            ecp = {
-              enabled = true
-              label   = "1.Schritt"
+            id             = "f93f96aa-0e34-4085-b7db-1176521d792f"
+            installer = {
+              description = "...my_description..."
+              enabled     = true
+              journey = {
+                id         = "a4830af3-5ac0-4f05-96d8-6c6d56674fb2"
+                journey_id = "...my_journey_id..."
+                name       = "Elena Kuhic"
+              }
+              label = "...my_label..."
             }
-            id           = "qA1wAj"
-            name         = "2.2"
-            order        = 6
-            requirements = []
-            type         = "STEP"
-            user_ids     = []
-          },
-        ]
-        type = "SECTION"
-      }
-    },
-    {
-      section = {
-        id    = "wdMc2C"
-        name  = "6. Aufgabe"
-        order = 7
-        steps = [
-          {
-            assigned_to = []
-            ecp = {
-              enabled = true
-              label   = "5.Schritt"
+            journey = {
+              id         = "9f9b2b84-e882-493d-9869-3f16fc9936c9"
+              journey_id = "...my_journey_id..."
+              name       = "Kimberly Marvin"
             }
-            id           = "_VzDmC"
-            name         = "6.1"
-            order        = 8
-            requirements = []
-            type         = "STEP"
-            user_ids     = []
-          },
-          {
-            assigned_to = []
-            automation_config = {
-              flow_id = "e0cf0f34-ebd3-44af-896d-cee9dcf89986"
-            }
-            ecp            = {}
-            execution_type = "AUTOMATION"
-            id             = "ysfBl6Jx"
-            name           = "ABC neuer NAME"
-            order          = 9
-            requirements   = []
-            type           = "STEP"
-            user_ids       = []
-          },
-        ]
-        type = "SECTION"
-      }
-    },
-    {
-      section = {
-        id    = "Kr0VHGpp"
-        name  = "test"
-        order = 10
-        steps = [
-          {
-            assigned_to = []
-            automation_config = {
-              flow_id = "986befe7-42ae-4cf4-9db5-5d380c8b7e0b"
-            }
-            ecp            = {}
-            execution_type = "AUTOMATION"
-            id             = "PghwjBKl"
-            name           = "Stadt7 Test"
-            order          = 11
-            requirements   = []
-            type           = "STEP"
-            user_ids       = []
-          },
-        ]
-        type = "SECTION"
-      }
-    },
-    {
-      section = {
-        id    = "w2sA7xeY"
-        name  = "test2"
-        order = 12
-        steps = [
-          {
-            assigned_to  = []
-            ecp          = {}
-            id           = "nQ1Nmmj0"
-            name         = "test2"
-            order        = 13
-            requirements = []
-            type         = "STEP"
-            user_ids     = []
-          },
-        ]
-        type = "SECTION"
-      }
-    },
-    {
-      section = {
-        id    = "2DZ5ypub"
-        name  = "test3"
-        order = 14
-        steps = [
-          {
-            assigned_to  = []
-            ecp          = {}
-            id           = "NQeLA5GC"
-            name         = "test3"
-            order        = 15
-            requirements = []
-            type         = "STEP"
-            user_ids     = []
-          },
-        ]
-        type = "SECTION"
-      }
-    },
-    {
-      section = {
-        id    = "v0d41u98"
-        name  = "Gestern noch Schritt, heute schon Phase"
-        order = 16
-        steps = [
-          {
-            assigned_to  = []
-            ecp          = {}
-            id           = "PqxLvCrb"
-            name         = "phasenfroh"
-            order        = 17
-            requirements = []
-            type         = "STEP"
-            user_ids     = []
-          },
-          {
-            assigned_to  = []
-            ecp          = {}
-            id           = "XZp0_yfi"
-            name         = "Phas ohne Boden"
-            order        = 18
-            requirements = []
-            type         = "STEP"
-            user_ids     = []
-          },
-        ]
-        type = "SECTION"
-      }
-    },
-    {
-      step = {
-        assigned_to = []
-        ecp = {
-          enabled = true
-          label   = "Tes 1"
-        }
-        id           = "yKAubPJy"
-        name         = "Unabhängiger Schritt"
-        order        = 19
-        requirements = []
-        type         = "STEP"
-        user_ids     = []
-      }
-    },
-    {
-      section = {
-        id    = "J7cZEGEo"
-        name  = "Gleich ne ganze Phase"
-        order = 20
-        steps = [
-          {
-            assigned_to  = []
-            ecp          = {}
-            id           = "KcM5SesM"
-            name         = "Teil 1 der Phase"
-            order        = 21
-            requirements = []
-            type         = "STEP"
-            user_ids     = []
-          },
-          {
-            assigned_to  = []
-            ecp          = {}
-            id           = "Smu-9fTo"
-            name         = "Teil 2 der Phase"
-            order        = 22
-            requirements = []
-            type         = "STEP"
-            user_ids     = []
-          },
-          {
-            assigned_to  = []
-            ecp          = {}
-            id           = "PV4mCyCY"
-            name         = "Teil 3 der Phase"
-            order        = 23
-            requirements = []
-            type         = "STEP"
-            user_ids     = []
-          },
-          {
-            assigned_to  = []
-            ecp          = {}
-            id           = "xbODvcLf"
-            name         = "4. Teil der Phase"
-            order        = 24
-            requirements = []
-            type         = "STEP"
-            user_ids     = []
-          },
-          {
-            assigned_to  = []
-            ecp          = {}
-            id           = "M0TGW_yc"
-            name         = "Phase Nummer 5"
-            order        = 25
-            requirements = []
-            type         = "STEP"
-            user_ids     = []
+            name  = "Dr. Eloise Nader"
+            order = 66.72
+            requirements = [
+              {
+                condition     = "CLOSED"
+                definition_id = "...my_definition_id..."
+                type          = "SECTION"
+              },
+            ]
+            type = "STEP"
+            user_ids = [
+              31.44,
+            ]
           },
         ]
         type = "SECTION"
       }
     },
   ]
-  name             = "Nishu test"
-  update_entity_attributes = [
-    {
-      source = "current_section"
-      target = {
-        entity_attribute = "mein_individueller_status"
-        entity_schema    = "opportunity"
-      }
-    },
-  ]
-  user_ids = []
+  id               = "1470408a-193e-4721-a537-6b6381b5dd26"
+  last_update_time = "2021-04-27T12:01:13.000Z"
+  name             = "Eloise Kreiger DVM"
 }
 ```
 
@@ -459,12 +107,15 @@ resource "epilot-workflow_workflow_definition" "new_workflow_definition" {
 - `creation_time` (String) ISO String Date & Time
 - `description` (String)
 - `due_date` (String)
-- `dynamic_due_date` (Attributes) set a Duedate for a step then a specific (see [below for nested schema](#nestedatt--dynamic_due_date))
+- `dynamic_due_date` (String) set a Duedate for a step then a specific. Parsed as JSON.
 - `enable_ecp_workflow` (Boolean) Indicates whether this workflow is available for End Customer Portal or not. By default it's not.
-- `id` (String) Id of the definition to de deleted.
 - `last_update_time` (String) ISO String Date & Time
 - `update_entity_attributes` (Attributes List) (see [below for nested schema](#nestedatt--update_entity_attributes))
 - `user_ids` (List of Number) This field is deprecated. Please use assignedTo
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 <a id="nestedatt--flow"></a>
 ### Nested Schema for `flow`
@@ -494,7 +145,7 @@ Optional:
 - `automation_config` (Attributes) (see [below for nested schema](#nestedatt--flow--section--steps--automation_config))
 - `description` (Attributes) Longer information regarding Task (see [below for nested schema](#nestedatt--flow--section--steps--description))
 - `due_date` (String)
-- `dynamic_due_date` (Attributes) set a Duedate for a step then a specific (see [below for nested schema](#nestedatt--flow--section--steps--dynamic_due_date))
+- `dynamic_due_date` (String) set a Duedate for a step then a specific. Parsed as JSON.
 - `ecp` (Attributes) Details regarding ECP for the workflow step (see [below for nested schema](#nestedatt--flow--section--steps--ecp))
 - `execution_type` (String) must be one of ["MANUAL", "AUTOMATION"]
 - `id` (String)
@@ -521,17 +172,6 @@ Optional:
 
 - `enabled` (Boolean)
 - `value` (String)
-
-
-<a id="nestedatt--flow--section--steps--dynamic_due_date"></a>
-### Nested Schema for `flow.section.steps.user_ids`
-
-Optional:
-
-- `action_type_condition` (String) Not Null; must be one of ["WORKFLOW_STARTED", "STEP_CLOSED"]
-- `number_of_units` (Number) Not Null
-- `step_id` (String)
-- `time_period` (String) Not Null; must be one of ["days", "weeks", "months"]
 
 
 <a id="nestedatt--flow--section--steps--ecp"></a>
@@ -607,7 +247,7 @@ Optional:
 - `automation_config` (Attributes) (see [below for nested schema](#nestedatt--flow--step--automation_config))
 - `description` (Attributes) Longer information regarding Task (see [below for nested schema](#nestedatt--flow--step--description))
 - `due_date` (String)
-- `dynamic_due_date` (Attributes) set a Duedate for a step then a specific (see [below for nested schema](#nestedatt--flow--step--dynamic_due_date))
+- `dynamic_due_date` (String) set a Duedate for a step then a specific. Parsed as JSON.
 - `ecp` (Attributes) Details regarding ECP for the workflow step (see [below for nested schema](#nestedatt--flow--step--ecp))
 - `execution_type` (String) must be one of ["MANUAL", "AUTOMATION"]
 - `id` (String)
@@ -634,17 +274,6 @@ Optional:
 
 - `enabled` (Boolean)
 - `value` (String)
-
-
-<a id="nestedatt--flow--step--dynamic_due_date"></a>
-### Nested Schema for `flow.step.dynamic_due_date`
-
-Optional:
-
-- `action_type_condition` (String) Not Null; must be one of ["WORKFLOW_STARTED", "STEP_CLOSED"]
-- `number_of_units` (Number) Not Null
-- `step_id` (String)
-- `time_period` (String) Not Null; must be one of ["days", "weeks", "months"]
 
 
 <a id="nestedatt--flow--step--ecp"></a>
@@ -719,17 +348,6 @@ Optional:
 - `id` (String) Not Null
 
 
-<a id="nestedatt--dynamic_due_date"></a>
-### Nested Schema for `dynamic_due_date`
-
-Optional:
-
-- `action_type_condition` (String) Not Null; must be one of ["WORKFLOW_STARTED", "STEP_CLOSED"]
-- `number_of_units` (Number) Not Null
-- `step_id` (String)
-- `time_period` (String) Not Null; must be one of ["days", "weeks", "months"]
-
-
 <a id="nestedatt--update_entity_attributes"></a>
 ### Nested Schema for `update_entity_attributes`
 
@@ -751,5 +369,5 @@ Optional:
 Import is supported using the following syntax:
 
 ```shell
-terraform import epilot-workflow_workflow_definition.my_epilot-workflow_workflow_definition "7hj28a"
+terraform import epilot-workflow_workflow_definition.my_epilot-workflow_workflow_definition ""
 ```

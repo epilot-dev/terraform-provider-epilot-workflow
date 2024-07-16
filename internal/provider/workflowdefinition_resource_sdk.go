@@ -41,15 +41,30 @@ func (r *WorkflowDefinitionResourceModel) ToSharedWorkflowDefinition() *shared.W
 	}
 	var dynamicDueDate *shared.DynamicDueDate
 	if r.DynamicDueDate != nil {
-		actionTypeCondition := shared.ActionTypeCondition(r.DynamicDueDate.ActionTypeCondition.ValueString())
-		numberOfUnits, _ := r.DynamicDueDate.NumberOfUnits.ValueBigFloat().Float64()
+		actionTypeCondition := new(shared.ActionTypeCondition)
+		if !r.DynamicDueDate.ActionTypeCondition.IsUnknown() && !r.DynamicDueDate.ActionTypeCondition.IsNull() {
+			*actionTypeCondition = shared.ActionTypeCondition(r.DynamicDueDate.ActionTypeCondition.ValueString())
+		} else {
+			actionTypeCondition = nil
+		}
+		numberOfUnits := new(float64)
+		if !r.DynamicDueDate.NumberOfUnits.IsUnknown() && !r.DynamicDueDate.NumberOfUnits.IsNull() {
+			*numberOfUnits, _ = r.DynamicDueDate.NumberOfUnits.ValueBigFloat().Float64()
+		} else {
+			numberOfUnits = nil
+		}
 		stepID := new(string)
 		if !r.DynamicDueDate.StepID.IsUnknown() && !r.DynamicDueDate.StepID.IsNull() {
 			*stepID = r.DynamicDueDate.StepID.ValueString()
 		} else {
 			stepID = nil
 		}
-		timePeriod := shared.TimePeriod(r.DynamicDueDate.TimePeriod.ValueString())
+		timePeriod := new(shared.TimePeriod)
+		if !r.DynamicDueDate.TimePeriod.IsUnknown() && !r.DynamicDueDate.TimePeriod.IsNull() {
+			*timePeriod = shared.TimePeriod(r.DynamicDueDate.TimePeriod.ValueString())
+		} else {
+			timePeriod = nil
+		}
 		dynamicDueDate = &shared.DynamicDueDate{
 			ActionTypeCondition: actionTypeCondition,
 			NumberOfUnits:       numberOfUnits,
@@ -114,15 +129,30 @@ func (r *WorkflowDefinitionResourceModel) ToSharedWorkflowDefinition() *shared.W
 				}
 				var dynamicDueDate1 *shared.DynamicDueDate
 				if stepsItem.DynamicDueDate != nil {
-					actionTypeCondition1 := shared.ActionTypeCondition(stepsItem.DynamicDueDate.ActionTypeCondition.ValueString())
-					numberOfUnits1, _ := stepsItem.DynamicDueDate.NumberOfUnits.ValueBigFloat().Float64()
+					actionTypeCondition1 := new(shared.ActionTypeCondition)
+					if !stepsItem.DynamicDueDate.ActionTypeCondition.IsUnknown() && !stepsItem.DynamicDueDate.ActionTypeCondition.IsNull() {
+						*actionTypeCondition1 = shared.ActionTypeCondition(stepsItem.DynamicDueDate.ActionTypeCondition.ValueString())
+					} else {
+						actionTypeCondition1 = nil
+					}
+					numberOfUnits1 := new(float64)
+					if !stepsItem.DynamicDueDate.NumberOfUnits.IsUnknown() && !stepsItem.DynamicDueDate.NumberOfUnits.IsNull() {
+						*numberOfUnits1, _ = stepsItem.DynamicDueDate.NumberOfUnits.ValueBigFloat().Float64()
+					} else {
+						numberOfUnits1 = nil
+					}
 					stepId1 := new(string)
 					if !stepsItem.DynamicDueDate.StepID.IsUnknown() && !stepsItem.DynamicDueDate.StepID.IsNull() {
 						*stepId1 = stepsItem.DynamicDueDate.StepID.ValueString()
 					} else {
 						stepId1 = nil
 					}
-					timePeriod1 := shared.TimePeriod(stepsItem.DynamicDueDate.TimePeriod.ValueString())
+					timePeriod1 := new(shared.TimePeriod)
+					if !stepsItem.DynamicDueDate.TimePeriod.IsUnknown() && !stepsItem.DynamicDueDate.TimePeriod.IsNull() {
+						*timePeriod1 = shared.TimePeriod(stepsItem.DynamicDueDate.TimePeriod.ValueString())
+					} else {
+						timePeriod1 = nil
+					}
 					dynamicDueDate1 = &shared.DynamicDueDate{
 						ActionTypeCondition: actionTypeCondition1,
 						NumberOfUnits:       numberOfUnits1,
@@ -362,15 +392,30 @@ func (r *WorkflowDefinitionResourceModel) ToSharedWorkflowDefinition() *shared.W
 			}
 			var dynamicDueDate2 *shared.DynamicDueDate
 			if flowItem.Step.DynamicDueDate != nil {
-				actionTypeCondition2 := shared.ActionTypeCondition(flowItem.Step.DynamicDueDate.ActionTypeCondition.ValueString())
-				numberOfUnits2, _ := flowItem.Step.DynamicDueDate.NumberOfUnits.ValueBigFloat().Float64()
+				actionTypeCondition2 := new(shared.ActionTypeCondition)
+				if !flowItem.Step.DynamicDueDate.ActionTypeCondition.IsUnknown() && !flowItem.Step.DynamicDueDate.ActionTypeCondition.IsNull() {
+					*actionTypeCondition2 = shared.ActionTypeCondition(flowItem.Step.DynamicDueDate.ActionTypeCondition.ValueString())
+				} else {
+					actionTypeCondition2 = nil
+				}
+				numberOfUnits2 := new(float64)
+				if !flowItem.Step.DynamicDueDate.NumberOfUnits.IsUnknown() && !flowItem.Step.DynamicDueDate.NumberOfUnits.IsNull() {
+					*numberOfUnits2, _ = flowItem.Step.DynamicDueDate.NumberOfUnits.ValueBigFloat().Float64()
+				} else {
+					numberOfUnits2 = nil
+				}
 				stepId2 := new(string)
 				if !flowItem.Step.DynamicDueDate.StepID.IsUnknown() && !flowItem.Step.DynamicDueDate.StepID.IsNull() {
 					*stepId2 = flowItem.Step.DynamicDueDate.StepID.ValueString()
 				} else {
 					stepId2 = nil
 				}
-				timePeriod2 := shared.TimePeriod(flowItem.Step.DynamicDueDate.TimePeriod.ValueString())
+				timePeriod2 := new(shared.TimePeriod)
+				if !flowItem.Step.DynamicDueDate.TimePeriod.IsUnknown() && !flowItem.Step.DynamicDueDate.TimePeriod.IsNull() {
+					*timePeriod2 = shared.TimePeriod(flowItem.Step.DynamicDueDate.TimePeriod.ValueString())
+				} else {
+					timePeriod2 = nil
+				}
 				dynamicDueDate2 = &shared.DynamicDueDate{
 					ActionTypeCondition: actionTypeCondition2,
 					NumberOfUnits:       numberOfUnits2,
@@ -639,10 +684,22 @@ func (r *WorkflowDefinitionResourceModel) RefreshFromSharedWorkflowDefinition(re
 			r.DynamicDueDate = nil
 		} else {
 			r.DynamicDueDate = &tfTypes.DynamicDueDate{}
-			r.DynamicDueDate.ActionTypeCondition = types.StringValue(string(resp.DynamicDueDate.ActionTypeCondition))
-			r.DynamicDueDate.NumberOfUnits = types.NumberValue(big.NewFloat(float64(resp.DynamicDueDate.NumberOfUnits)))
+			if resp.DynamicDueDate.ActionTypeCondition != nil {
+				r.DynamicDueDate.ActionTypeCondition = types.StringValue(string(*resp.DynamicDueDate.ActionTypeCondition))
+			} else {
+				r.DynamicDueDate.ActionTypeCondition = types.StringNull()
+			}
+			if resp.DynamicDueDate.NumberOfUnits != nil {
+				r.DynamicDueDate.NumberOfUnits = types.NumberValue(big.NewFloat(float64(*resp.DynamicDueDate.NumberOfUnits)))
+			} else {
+				r.DynamicDueDate.NumberOfUnits = types.NumberNull()
+			}
 			r.DynamicDueDate.StepID = types.StringPointerValue(resp.DynamicDueDate.StepID)
-			r.DynamicDueDate.TimePeriod = types.StringValue(string(resp.DynamicDueDate.TimePeriod))
+			if resp.DynamicDueDate.TimePeriod != nil {
+				r.DynamicDueDate.TimePeriod = types.StringValue(string(*resp.DynamicDueDate.TimePeriod))
+			} else {
+				r.DynamicDueDate.TimePeriod = types.StringNull()
+			}
 		}
 		r.EnableECPWorkflow = types.BoolPointerValue(resp.EnableECPWorkflow)
 		r.Flow = []tfTypes.Flow{}
@@ -681,10 +738,22 @@ func (r *WorkflowDefinitionResourceModel) RefreshFromSharedWorkflowDefinition(re
 						steps1.DynamicDueDate = nil
 					} else {
 						steps1.DynamicDueDate = &tfTypes.DynamicDueDate{}
-						steps1.DynamicDueDate.ActionTypeCondition = types.StringValue(string(stepsItem.DynamicDueDate.ActionTypeCondition))
-						steps1.DynamicDueDate.NumberOfUnits = types.NumberValue(big.NewFloat(float64(stepsItem.DynamicDueDate.NumberOfUnits)))
+						if stepsItem.DynamicDueDate.ActionTypeCondition != nil {
+							steps1.DynamicDueDate.ActionTypeCondition = types.StringValue(string(*stepsItem.DynamicDueDate.ActionTypeCondition))
+						} else {
+							steps1.DynamicDueDate.ActionTypeCondition = types.StringNull()
+						}
+						if stepsItem.DynamicDueDate.NumberOfUnits != nil {
+							steps1.DynamicDueDate.NumberOfUnits = types.NumberValue(big.NewFloat(float64(*stepsItem.DynamicDueDate.NumberOfUnits)))
+						} else {
+							steps1.DynamicDueDate.NumberOfUnits = types.NumberNull()
+						}
 						steps1.DynamicDueDate.StepID = types.StringPointerValue(stepsItem.DynamicDueDate.StepID)
-						steps1.DynamicDueDate.TimePeriod = types.StringValue(string(stepsItem.DynamicDueDate.TimePeriod))
+						if stepsItem.DynamicDueDate.TimePeriod != nil {
+							steps1.DynamicDueDate.TimePeriod = types.StringValue(string(*stepsItem.DynamicDueDate.TimePeriod))
+						} else {
+							steps1.DynamicDueDate.TimePeriod = types.StringNull()
+						}
 					}
 					if stepsItem.Ecp == nil {
 						steps1.Ecp = nil
@@ -799,10 +868,22 @@ func (r *WorkflowDefinitionResourceModel) RefreshFromSharedWorkflowDefinition(re
 					flow1.Step.DynamicDueDate = nil
 				} else {
 					flow1.Step.DynamicDueDate = &tfTypes.DynamicDueDate{}
-					flow1.Step.DynamicDueDate.ActionTypeCondition = types.StringValue(string(flowItem.Step.DynamicDueDate.ActionTypeCondition))
-					flow1.Step.DynamicDueDate.NumberOfUnits = types.NumberValue(big.NewFloat(float64(flowItem.Step.DynamicDueDate.NumberOfUnits)))
+					if flowItem.Step.DynamicDueDate.ActionTypeCondition != nil {
+						flow1.Step.DynamicDueDate.ActionTypeCondition = types.StringValue(string(*flowItem.Step.DynamicDueDate.ActionTypeCondition))
+					} else {
+						flow1.Step.DynamicDueDate.ActionTypeCondition = types.StringNull()
+					}
+					if flowItem.Step.DynamicDueDate.NumberOfUnits != nil {
+						flow1.Step.DynamicDueDate.NumberOfUnits = types.NumberValue(big.NewFloat(float64(*flowItem.Step.DynamicDueDate.NumberOfUnits)))
+					} else {
+						flow1.Step.DynamicDueDate.NumberOfUnits = types.NumberNull()
+					}
 					flow1.Step.DynamicDueDate.StepID = types.StringPointerValue(flowItem.Step.DynamicDueDate.StepID)
-					flow1.Step.DynamicDueDate.TimePeriod = types.StringValue(string(flowItem.Step.DynamicDueDate.TimePeriod))
+					if flowItem.Step.DynamicDueDate.TimePeriod != nil {
+						flow1.Step.DynamicDueDate.TimePeriod = types.StringValue(string(*flowItem.Step.DynamicDueDate.TimePeriod))
+					} else {
+						flow1.Step.DynamicDueDate.TimePeriod = types.StringNull()
+					}
 				}
 				if flowItem.Step.Ecp == nil {
 					flow1.Step.Ecp = nil

@@ -102,9 +102,8 @@ func (r *WorkflowDefinitionResource) Schema(ctx context.Context, req resource.Sc
 					"action_type_condition": schema.StringAttribute{
 						Computed:    true,
 						Optional:    true,
-						Description: `Not Null; must be one of ["WORKFLOW_STARTED", "STEP_CLOSED"]`,
+						Description: `must be one of ["WORKFLOW_STARTED", "STEP_CLOSED"]`,
 						Validators: []validator.String{
-							speakeasy_stringvalidators.NotNull(),
 							stringvalidator.OneOf(
 								"WORKFLOW_STARTED",
 								"STEP_CLOSED",
@@ -112,12 +111,8 @@ func (r *WorkflowDefinitionResource) Schema(ctx context.Context, req resource.Sc
 						},
 					},
 					"number_of_units": schema.NumberAttribute{
-						Computed:    true,
-						Optional:    true,
-						Description: `Not Null`,
-						Validators: []validator.Number{
-							speakeasy_numbervalidators.NotNull(),
-						},
+						Computed: true,
+						Optional: true,
 					},
 					"step_id": schema.StringAttribute{
 						Computed: true,
@@ -126,9 +121,8 @@ func (r *WorkflowDefinitionResource) Schema(ctx context.Context, req resource.Sc
 					"time_period": schema.StringAttribute{
 						Computed:    true,
 						Optional:    true,
-						Description: `Not Null; must be one of ["days", "weeks", "months"]`,
+						Description: `must be one of ["days", "weeks", "months"]`,
 						Validators: []validator.String{
-							speakeasy_stringvalidators.NotNull(),
 							stringvalidator.OneOf(
 								"days",
 								"weeks",
@@ -222,9 +216,8 @@ func (r *WorkflowDefinitionResource) Schema(ctx context.Context, req resource.Sc
 													"action_type_condition": schema.StringAttribute{
 														Computed:    true,
 														Optional:    true,
-														Description: `Not Null; must be one of ["WORKFLOW_STARTED", "STEP_CLOSED"]`,
+														Description: `must be one of ["WORKFLOW_STARTED", "STEP_CLOSED"]`,
 														Validators: []validator.String{
-															speakeasy_stringvalidators.NotNull(),
 															stringvalidator.OneOf(
 																"WORKFLOW_STARTED",
 																"STEP_CLOSED",
@@ -232,12 +225,8 @@ func (r *WorkflowDefinitionResource) Schema(ctx context.Context, req resource.Sc
 														},
 													},
 													"number_of_units": schema.NumberAttribute{
-														Computed:    true,
-														Optional:    true,
-														Description: `Not Null`,
-														Validators: []validator.Number{
-															speakeasy_numbervalidators.NotNull(),
-														},
+														Computed: true,
+														Optional: true,
 													},
 													"step_id": schema.StringAttribute{
 														Computed: true,
@@ -246,9 +235,8 @@ func (r *WorkflowDefinitionResource) Schema(ctx context.Context, req resource.Sc
 													"time_period": schema.StringAttribute{
 														Computed:    true,
 														Optional:    true,
-														Description: `Not Null; must be one of ["days", "weeks", "months"]`,
+														Description: `must be one of ["days", "weeks", "months"]`,
 														Validators: []validator.String{
-															speakeasy_stringvalidators.NotNull(),
 															stringvalidator.OneOf(
 																"days",
 																"weeks",
@@ -516,9 +504,8 @@ func (r *WorkflowDefinitionResource) Schema(ctx context.Context, req resource.Sc
 										"action_type_condition": schema.StringAttribute{
 											Computed:    true,
 											Optional:    true,
-											Description: `Not Null; must be one of ["WORKFLOW_STARTED", "STEP_CLOSED"]`,
+											Description: `must be one of ["WORKFLOW_STARTED", "STEP_CLOSED"]`,
 											Validators: []validator.String{
-												speakeasy_stringvalidators.NotNull(),
 												stringvalidator.OneOf(
 													"WORKFLOW_STARTED",
 													"STEP_CLOSED",
@@ -526,12 +513,8 @@ func (r *WorkflowDefinitionResource) Schema(ctx context.Context, req resource.Sc
 											},
 										},
 										"number_of_units": schema.NumberAttribute{
-											Computed:    true,
-											Optional:    true,
-											Description: `Not Null`,
-											Validators: []validator.Number{
-												speakeasy_numbervalidators.NotNull(),
-											},
+											Computed: true,
+											Optional: true,
 										},
 										"step_id": schema.StringAttribute{
 											Computed: true,
@@ -540,9 +523,8 @@ func (r *WorkflowDefinitionResource) Schema(ctx context.Context, req resource.Sc
 										"time_period": schema.StringAttribute{
 											Computed:    true,
 											Optional:    true,
-											Description: `Not Null; must be one of ["days", "weeks", "months"]`,
+											Description: `must be one of ["days", "weeks", "months"]`,
 											Validators: []validator.String{
-												speakeasy_stringvalidators.NotNull(),
 												stringvalidator.OneOf(
 													"days",
 													"weeks",
@@ -749,9 +731,8 @@ func (r *WorkflowDefinitionResource) Schema(ctx context.Context, req resource.Sc
 				},
 			},
 			"id": schema.StringAttribute{
-				Computed:    true,
-				Optional:    true,
-				Description: `Id of the definition to de deleted.`,
+				Computed: true,
+				Optional: true,
 			},
 			"last_update_time": schema.StringAttribute{
 				Computed:    true,

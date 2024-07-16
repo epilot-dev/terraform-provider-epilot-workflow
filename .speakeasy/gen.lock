@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: 5a857039-7f4b-42d5-86fd-449767242ed2
 management:
-  docChecksum: 8ae07697a4f59d026a44a7d6b287f46b
+  docChecksum: cdc191ce1bf61d7565b6f4caa1ea7ff9
   docVersion: 1.0.0
-  speakeasyVersion: 1.303.4
-  generationVersion: 2.340.2
-  releaseVersion: 0.8.4
-  configChecksum: 03142a0481bf8be5abbdacf2803b0832
+  speakeasyVersion: 1.330.0
+  generationVersion: 2.361.10
+  releaseVersion: 0.11.0
+  configChecksum: fe1f4f47e217555f3049bc6b86f7300b
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-workflow.git
   repoSubDirectory: .
   published: true
@@ -21,15 +21,16 @@ features:
     unions: 2.85.0
   terraform:
     additionalDependencies: 0.1.0
-    core: 3.21.3
+    core: 3.23.3
     deprecations: 2.81.1
     globalSecurity: 2.81.6
     globalServerURLs: 2.82.1
-    unions: 2.81.14
+    unions: 2.81.15
 generatedFiles:
   - internal/sdk/workflows.go
   - internal/sdk/sdk.go
   - internal/sdk/models/errors/sdkerror.go
+  - internal/sdk/retry/config.go
   - internal/sdk/types/bigint.go
   - internal/sdk/types/date.go
   - internal/sdk/types/datetime.go

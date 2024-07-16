@@ -1,1 +1,1 @@
-terraform import epilot-workflow_workflow_definition.my_epilot-workflow_workflow_definition "7hj28a"
+terraform import epilot-workflow_workflow_definition.my_epilot-workflow_workflow_definition ""

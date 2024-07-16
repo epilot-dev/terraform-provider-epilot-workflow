@@ -64,22 +64,22 @@ func (e *TimePeriod) UnmarshalJSON(data []byte) error {
 
 // DynamicDueDate - set a Duedate for a step then a specific
 type DynamicDueDate struct {
-	ActionTypeCondition ActionTypeCondition `json:"actionTypeCondition"`
-	NumberOfUnits       float64             `json:"numberOfUnits"`
-	StepID              *string             `json:"stepId,omitempty"`
-	TimePeriod          TimePeriod          `json:"timePeriod"`
+	ActionTypeCondition *ActionTypeCondition `json:"actionTypeCondition,omitempty"`
+	NumberOfUnits       *float64             `json:"numberOfUnits,omitempty"`
+	StepID              *string              `json:"stepId,omitempty"`
+	TimePeriod          *TimePeriod          `json:"timePeriod,omitempty"`
 }
 
-func (o *DynamicDueDate) GetActionTypeCondition() ActionTypeCondition {
+func (o *DynamicDueDate) GetActionTypeCondition() *ActionTypeCondition {
 	if o == nil {
-		return ActionTypeCondition("")
+		return nil
 	}
 	return o.ActionTypeCondition
 }
 
-func (o *DynamicDueDate) GetNumberOfUnits() float64 {
+func (o *DynamicDueDate) GetNumberOfUnits() *float64 {
 	if o == nil {
-		return 0.0
+		return nil
 	}
 	return o.NumberOfUnits
 }
@@ -91,9 +91,9 @@ func (o *DynamicDueDate) GetStepID() *string {
 	return o.StepID
 }
 
-func (o *DynamicDueDate) GetTimePeriod() TimePeriod {
+func (o *DynamicDueDate) GetTimePeriod() *TimePeriod {
 	if o == nil {
-		return TimePeriod("")
+		return nil
 	}
 	return o.TimePeriod
 }

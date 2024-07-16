@@ -791,10 +791,6 @@ components:
             - STEP_CLOSED
         stepId:
           type: string
-      required:
-        - numberOfUnits
-        - timePeriod
-        - actionTypeCondition
 
     StepRequirement:
       description: describe the requirement for step enablement
