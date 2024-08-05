@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: 5a857039-7f4b-42d5-86fd-449767242ed2
 management:
-  docChecksum: cdc191ce1bf61d7565b6f4caa1ea7ff9
+  docChecksum: 088d1c5acb62ad859574f77a4fa9cfe7
   docVersion: 1.0.0
-  speakeasyVersion: 1.330.0
-  generationVersion: 2.361.10
-  releaseVersion: 0.11.0
-  configChecksum: fe1f4f47e217555f3049bc6b86f7300b
+  speakeasyVersion: 1.346.0
+  generationVersion: 2.379.3
+  releaseVersion: 0.12.0
+  configChecksum: c0d92b66a873af7e8a44f04f3d7ceed7
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-workflow.git
   repoSubDirectory: .
   published: true
@@ -21,12 +21,13 @@ features:
     unions: 2.85.0
   terraform:
     additionalDependencies: 0.1.0
-    core: 3.23.3
+    core: 3.24.3
     deprecations: 2.81.1
     globalSecurity: 2.81.6
     globalServerURLs: 2.82.1
     unions: 2.81.15
 generatedFiles:
+  - internal/sdk/closingreason.go
   - internal/sdk/workflows.go
   - internal/sdk/sdk.go
   - internal/sdk/models/errors/sdkerror.go
@@ -46,14 +47,22 @@ generatedFiles:
   - internal/sdk/internal/utils/retries.go
   - internal/sdk/internal/utils/security.go
   - internal/sdk/internal/utils/utils.go
+  - internal/sdk/models/operations/changereasonstatus.go
+  - internal/sdk/models/operations/createclosingreason.go
+  - internal/sdk/models/operations/getallclosingreasons.go
+  - internal/sdk/models/operations/getclosingreason.go
   - internal/sdk/models/operations/createdefinition.go
   - internal/sdk/models/operations/deletedefinition.go
   - internal/sdk/models/operations/getdefinition.go
   - internal/sdk/models/operations/getdefinitions.go
   - internal/sdk/models/operations/getmaxallowedlimit.go
-  - internal/sdk/models/operations/getworkflowclosingreasons.go
-  - internal/sdk/models/operations/setworkflowclosingreasons.go
   - internal/sdk/models/operations/updatedefinition.go
+  - internal/sdk/models/shared/errorresp.go
+  - internal/sdk/models/shared/changereasonstatusreq.go
+  - internal/sdk/models/shared/closingreasonsstatus.go
+  - internal/sdk/models/shared/closingreason.go
+  - internal/sdk/models/shared/closingreasons.go
+  - internal/sdk/models/shared/closingreasonnotfoundresp.go
   - internal/sdk/models/shared/workflowdefinition.go
   - internal/sdk/models/shared/updateentityattributes.go
   - internal/sdk/models/shared/section.go
@@ -66,15 +75,15 @@ generatedFiles:
   - internal/sdk/models/shared/dynamicduedate.go
   - internal/sdk/models/shared/stepdescription.go
   - internal/sdk/models/shared/closingreasonid.go
-  - internal/sdk/models/shared/errorresp.go
   - internal/sdk/models/shared/definitionnotfoundresp.go
   - internal/sdk/models/shared/maxallowedlimit.go
-  - internal/sdk/models/shared/closingreasonsids.go
   - internal/sdk/models/shared/security.go
   - internal/sdk/.gitignore
+  - internal/sdk/models/operations/options.go
   - internal/sdk/.gitattributes
   - internal/sdk/internal/hooks/registration.go
   - internal/sdk/internal/hooks/hooks.go
+  - internal/sdk/CONTRIBUTING.md
   - examples/README.md
   - go.mod
   - go.sum
@@ -134,11 +143,19 @@ generatedFiles:
   - USAGE.md
   - internal/provider/provider.go
   - examples/provider/provider.tf
+  - examples/resources/epilot-workflow_closing_reason/import.sh
+  - internal/provider/closingreason_resource.go
+  - internal/provider/closingreason_resource_sdk.go
+  - examples/resources/epilot-workflow_closing_reason/resource.tf
   - examples/resources/epilot-workflow_workflow_definition/import.sh
   - internal/provider/workflowdefinition_resource.go
   - internal/provider/workflowdefinition_resource_sdk.go
   - examples/resources/epilot-workflow_workflow_definition/resource.tf
+  - internal/provider/closingreason_data_source.go
+  - internal/provider/closingreason_data_source_sdk.go
+  - examples/data-sources/epilot-workflow_closing_reason/data-source.tf
   - internal/provider/workflowdefinition_data_source.go
   - internal/provider/workflowdefinition_data_source_sdk.go
   - examples/data-sources/epilot-workflow_workflow_definition/data-source.tf
   - .gitattributes
+  - CONTRIBUTING.md

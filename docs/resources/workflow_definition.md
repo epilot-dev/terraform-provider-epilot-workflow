@@ -18,7 +18,6 @@ resource "epilot-workflow_workflow_definition" "my_workflowdefinition" {
   definition_id       = "7hj28a"
   description         = "...my_description..."
   due_date            = "2021-04-27T12:00:00.000Z"
-  dynamic_due_date    = "{ \"see\": \"documentation\" }"
   enable_ecp_workflow = false
   flow = [
     {
@@ -38,57 +37,62 @@ resource "epilot-workflow_workflow_definition" "my_workflowdefinition" {
               enabled = true
               value   = "...my_value..."
             }
-            due_date         = "2021-04-27T12:00:00.000Z"
-            dynamic_due_date = "{ \"see\": \"documentation\" }"
+            due_date = "2021-04-27T12:00:00.000Z"
+            dynamic_due_date = {
+              action_type_condition = "STEP_CLOSED"
+              number_of_units       = 73.8
+              step_id               = "...my_step_id..."
+              time_period           = "weeks"
+            }
             ecp = {
               description = "...my_description..."
               enabled     = false
               journey = {
-                id         = "b9364361-b277-46d7-98c7-5f3e120ea0dc"
+                id         = "64361b27-76d7-498c-b5f3-e120ea0dc9e1"
                 journey_id = "...my_journey_id..."
-                name       = "Mrs. Grady Bins"
+                name       = "Lorraine Witting"
               }
               label = "...my_label..."
             }
             execution_type = "AUTOMATION"
-            id             = "f93f96aa-0e34-4085-b7db-1176521d792f"
+            id             = "3f96aa0e-3408-45f7-9b11-76521d792fea"
             installer = {
               description = "...my_description..."
               enabled     = true
               journey = {
-                id         = "a4830af3-5ac0-4f05-96d8-6c6d56674fb2"
+                id         = "830af35a-c0f0-4516-986c-6d56674fb26d"
                 journey_id = "...my_journey_id..."
-                name       = "Elena Kuhic"
+                name       = "Paulette O'Hara"
               }
               label = "...my_label..."
             }
             journey = {
-              id         = "9f9b2b84-e882-493d-9869-3f16fc9936c9"
+              id         = "9b2b84e8-8293-4d18-a93f-16fc9936c940"
               journey_id = "...my_journey_id..."
-              name       = "Kimberly Marvin"
+              name       = "Dr. Joel Hermann"
             }
-            name  = "Dr. Eloise Nader"
-            order = 66.72
+            name  = "Lorene Denesik"
+            order = 4.83
             requirements = [
               {
                 condition     = "CLOSED"
                 definition_id = "...my_definition_id..."
-                type          = "SECTION"
+                type          = "STEP"
               },
             ]
-            type = "STEP"
+            type = "SECTION"
             user_ids = [
-              31.44,
+              9.27,
             ]
           },
         ]
-        type = "SECTION"
+        type = "STEP"
       }
     },
   ]
-  id               = "1470408a-193e-4721-a537-6b6381b5dd26"
+  id               = "70408a19-3e72-4165-b76b-6381b5dd263e"
   last_update_time = "2021-04-27T12:01:13.000Z"
-  name             = "Eloise Kreiger DVM"
+  name             = "Nina Bednar"
 }
 ```
 
@@ -107,7 +111,7 @@ resource "epilot-workflow_workflow_definition" "my_workflowdefinition" {
 - `creation_time` (String) ISO String Date & Time
 - `description` (String)
 - `due_date` (String)
-- `dynamic_due_date` (String) set a Duedate for a step then a specific. Parsed as JSON.
+- `dynamic_due_date` (Attributes) set a Duedate for a step then a specific (see [below for nested schema](#nestedatt--dynamic_due_date))
 - `enable_ecp_workflow` (Boolean) Indicates whether this workflow is available for End Customer Portal or not. By default it's not.
 - `last_update_time` (String) ISO String Date & Time
 - `update_entity_attributes` (Attributes List) (see [below for nested schema](#nestedatt--update_entity_attributes))
@@ -145,7 +149,7 @@ Optional:
 - `automation_config` (Attributes) (see [below for nested schema](#nestedatt--flow--section--steps--automation_config))
 - `description` (Attributes) Longer information regarding Task (see [below for nested schema](#nestedatt--flow--section--steps--description))
 - `due_date` (String)
-- `dynamic_due_date` (String) set a Duedate for a step then a specific. Parsed as JSON.
+- `dynamic_due_date` (Attributes) set a Duedate for a step then a specific (see [below for nested schema](#nestedatt--flow--section--steps--dynamic_due_date))
 - `ecp` (Attributes) Details regarding ECP for the workflow step (see [below for nested schema](#nestedatt--flow--section--steps--ecp))
 - `execution_type` (String) must be one of ["MANUAL", "AUTOMATION"]
 - `id` (String)
@@ -172,6 +176,17 @@ Optional:
 
 - `enabled` (Boolean)
 - `value` (String)
+
+
+<a id="nestedatt--flow--section--steps--dynamic_due_date"></a>
+### Nested Schema for `flow.section.steps.user_ids`
+
+Optional:
+
+- `action_type_condition` (String) must be one of ["WORKFLOW_STARTED", "STEP_CLOSED"]
+- `number_of_units` (Number)
+- `step_id` (String)
+- `time_period` (String) must be one of ["days", "weeks", "months"]
 
 
 <a id="nestedatt--flow--section--steps--ecp"></a>
@@ -247,7 +262,7 @@ Optional:
 - `automation_config` (Attributes) (see [below for nested schema](#nestedatt--flow--step--automation_config))
 - `description` (Attributes) Longer information regarding Task (see [below for nested schema](#nestedatt--flow--step--description))
 - `due_date` (String)
-- `dynamic_due_date` (String) set a Duedate for a step then a specific. Parsed as JSON.
+- `dynamic_due_date` (Attributes) set a Duedate for a step then a specific (see [below for nested schema](#nestedatt--flow--step--dynamic_due_date))
 - `ecp` (Attributes) Details regarding ECP for the workflow step (see [below for nested schema](#nestedatt--flow--step--ecp))
 - `execution_type` (String) must be one of ["MANUAL", "AUTOMATION"]
 - `id` (String)
@@ -274,6 +289,17 @@ Optional:
 
 - `enabled` (Boolean)
 - `value` (String)
+
+
+<a id="nestedatt--flow--step--dynamic_due_date"></a>
+### Nested Schema for `flow.step.dynamic_due_date`
+
+Optional:
+
+- `action_type_condition` (String) must be one of ["WORKFLOW_STARTED", "STEP_CLOSED"]
+- `number_of_units` (Number)
+- `step_id` (String)
+- `time_period` (String) must be one of ["days", "weeks", "months"]
 
 
 <a id="nestedatt--flow--step--ecp"></a>
@@ -346,6 +372,17 @@ Optional:
 Optional:
 
 - `id` (String) Not Null
+
+
+<a id="nestedatt--dynamic_due_date"></a>
+### Nested Schema for `dynamic_due_date`
+
+Optional:
+
+- `action_type_condition` (String) must be one of ["WORKFLOW_STARTED", "STEP_CLOSED"]
+- `number_of_units` (Number)
+- `step_id` (String)
+- `time_period` (String) must be one of ["days", "weeks", "months"]
 
 
 <a id="nestedatt--update_entity_attributes"></a>

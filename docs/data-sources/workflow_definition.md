@@ -28,7 +28,7 @@ data "epilot-workflow_workflow_definition" "my_workflowdefinition" {
 - `creation_time` (String) ISO String Date & Time
 - `description` (String)
 - `due_date` (String)
-- `dynamic_due_date` (String) set a Duedate for a step then a specific. Parsed as JSON.
+- `dynamic_due_date` (Attributes) set a Duedate for a step then a specific (see [below for nested schema](#nestedatt--dynamic_due_date))
 - `enable_ecp_workflow` (Boolean) Indicates whether this workflow is available for End Customer Portal or not. By default it's not.
 - `flow` (Attributes List) (see [below for nested schema](#nestedatt--flow))
 - `id` (String) The ID of this resource.
@@ -43,6 +43,17 @@ data "epilot-workflow_workflow_definition" "my_workflowdefinition" {
 Read-Only:
 
 - `id` (String)
+
+
+<a id="nestedatt--dynamic_due_date"></a>
+### Nested Schema for `dynamic_due_date`
+
+Read-Only:
+
+- `action_type_condition` (String) must be one of ["WORKFLOW_STARTED", "STEP_CLOSED"]
+- `number_of_units` (Number)
+- `step_id` (String)
+- `time_period` (String) must be one of ["days", "weeks", "months"]
 
 
 <a id="nestedatt--flow"></a>
@@ -73,7 +84,7 @@ Read-Only:
 - `automation_config` (Attributes) (see [below for nested schema](#nestedatt--flow--section--steps--automation_config))
 - `description` (Attributes) Longer information regarding Task (see [below for nested schema](#nestedatt--flow--section--steps--description))
 - `due_date` (String)
-- `dynamic_due_date` (String) set a Duedate for a step then a specific. Parsed as JSON.
+- `dynamic_due_date` (Attributes) set a Duedate for a step then a specific (see [below for nested schema](#nestedatt--flow--section--steps--dynamic_due_date))
 - `ecp` (Attributes) Details regarding ECP for the workflow step (see [below for nested schema](#nestedatt--flow--section--steps--ecp))
 - `execution_type` (String) must be one of ["MANUAL", "AUTOMATION"]
 - `id` (String)
@@ -100,6 +111,17 @@ Read-Only:
 
 - `enabled` (Boolean)
 - `value` (String)
+
+
+<a id="nestedatt--flow--section--steps--dynamic_due_date"></a>
+### Nested Schema for `flow.section.steps.user_ids`
+
+Read-Only:
+
+- `action_type_condition` (String) must be one of ["WORKFLOW_STARTED", "STEP_CLOSED"]
+- `number_of_units` (Number)
+- `step_id` (String)
+- `time_period` (String) must be one of ["days", "weeks", "months"]
 
 
 <a id="nestedatt--flow--section--steps--ecp"></a>
@@ -175,7 +197,7 @@ Read-Only:
 - `automation_config` (Attributes) (see [below for nested schema](#nestedatt--flow--step--automation_config))
 - `description` (Attributes) Longer information regarding Task (see [below for nested schema](#nestedatt--flow--step--description))
 - `due_date` (String)
-- `dynamic_due_date` (String) set a Duedate for a step then a specific. Parsed as JSON.
+- `dynamic_due_date` (Attributes) set a Duedate for a step then a specific (see [below for nested schema](#nestedatt--flow--step--dynamic_due_date))
 - `ecp` (Attributes) Details regarding ECP for the workflow step (see [below for nested schema](#nestedatt--flow--step--ecp))
 - `execution_type` (String) must be one of ["MANUAL", "AUTOMATION"]
 - `id` (String)
@@ -202,6 +224,17 @@ Read-Only:
 
 - `enabled` (Boolean)
 - `value` (String)
+
+
+<a id="nestedatt--flow--step--dynamic_due_date"></a>
+### Nested Schema for `flow.step.dynamic_due_date`
+
+Read-Only:
+
+- `action_type_condition` (String) must be one of ["WORKFLOW_STARTED", "STEP_CLOSED"]
+- `number_of_units` (Number)
+- `step_id` (String)
+- `time_period` (String) must be one of ["days", "weeks", "months"]
 
 
 <a id="nestedatt--flow--step--ecp"></a>
