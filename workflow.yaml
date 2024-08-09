@@ -434,52 +434,141 @@ paths:
         404:
           description: No definition found
 
-  /v1/workflows/definitions/{definitionId}/closing-reasons:
+  /v1/workflows/closing-reasons:
     get:
-      operationId: getWorkflowClosingReasons
-      summary: getWorkflowClosingReasons
-      description: Returns all closing reasons defined for the workflow.
+      operationId: getAllClosingReasons
+      summary: getAllClosingReasons
+      description: Get all Closing Reasons defined in the organization by default all Active.
       parameters:
-        - in: path
-          name: definitionId
+        - in: query
+          name: includeInactive
           schema:
-            type: string
-          required: true
-          description: ID of a workflow definition
-          example: fxcwfw
+            type: boolean
+          required: false
+          description: Filter Closing Reasons by status like active inactiv
+          example: true
       tags:
-        - Workflows
+        - Closing Reason
       responses:
         200:
-          description: Returns the entire catalog of closing reasons for a specific workflow
+          description: Returns the entire catalog of closing reasons per organization
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ClosingReasonsIds"
-    patch:
-      operationId: setWorkflowClosingReasons
-      summary: setWorkflowClosingReasons
-      description: Sets which closing reasons are defined for this workflow, based on the entire closing reasons catalog.
+                $ref: "#/components/schemas/ClosingReasons"
+    post:
+      operationId: createClosingReason
+      x-speakeasy-entity-operation: ClosingReason#create
+      summary: createClosingReason
+      description: A created Closing Reason is stored for the organization and will be displayed in the library of reasons.
       tags:
-        - Workflows
-      parameters:
-        - in: path
-          name: definitionId
-          schema:
-            type: string
-          required: true
-          description: ID of a workflow definition
-          example: 7889
+        - Closing Reason
       requestBody:
-        description: set all closing reasons for a specific definition
+        description: closing reason to store
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ClosingReasonsIds"
+              $ref: "#/components/schemas/ClosingReason"
+            example:
+              title: better offer
+              description: A customer closes the process because he found something better
       responses:
         201:
-          description: closing reasons are set for this workflow
+          description: closing reason is stored successfully in the repository
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClosingReason"
+
+  /v1/workflows/closing-reasons/{reasonId}:
+    get:
+      operationId: getClosingReason
+      x-speakeasy-entity-operation: ClosingReason#get
+      summary: getClosingReason
+      description: Get specific closing reason by id from the organisation.
+      tags:
+        - Closing Reason
+      parameters:
+        - in: path
+          name: reasonId
+          x-speakeasy-match: id
+          schema:
+            type: string
+          required: true
+          description: uuid to identify the closing reason.
+          example: -poOAPBa-jFZA_AWV3zN0
+      responses:
+        200:
+          description: Returns the closing reason
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClosingReason"
+              example:
+                id: -poOAPBa-jFZA_AWV3zN0
+                title: Closing due to example reason
+                status: "ACTIVE"
+                lastUpdateTime: "2021-08-04T21:13:50.373Z"
+                creationTime: "2021-08-04T21:13:50.373Z"
+        400:
+          description: Validation Errors
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResp"
+        404:
+          description: Closing reason not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClosingReasonNotFoundResp"
+        401:
+          description: Authentication Errors
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResp"
+        500:
+          description: Other errors
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResp"
+    patch:
+      operationId: changeReasonStatus
+      summary: changeReasonStatus
+      description: Change the status of a Closing Reason (eg. ACTIVE to INACTIVE).
+      tags:
+        - Closing Reason
+      parameters:
+        - in: path
+          name: reasonId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: change the status of a closing reason
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangeReasonStatusReq"
+
+      responses:
+        202:
+          description: The status change was accepted
+        400:
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResp"
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResp"
 
 components:
   securitySchemes:
@@ -808,3 +897,9 @@ components:
         - definitionId
         - type
         - condition
+
+    ClosingReasonNotFoundResp:
+      description: Closing reason could be not found
+      properties:
+        message:
+          type: string
