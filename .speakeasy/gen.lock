@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: 5a857039-7f4b-42d5-86fd-449767242ed2
 management:
-  docChecksum: 088d1c5acb62ad859574f77a4fa9cfe7
+  docChecksum: cbe462f4a20d4b2a1273895979390e09
   docVersion: 1.0.0
   speakeasyVersion: 1.346.0
   generationVersion: 2.379.3
-  releaseVersion: 0.12.0
-  configChecksum: c0d92b66a873af7e8a44f04f3d7ceed7
+  releaseVersion: 0.13.0
+  configChecksum: b0fe4d200caa906deca84fe07b9ca435
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-workflow.git
   repoSubDirectory: .
   published: true
@@ -25,7 +25,7 @@ features:
     deprecations: 2.81.1
     globalSecurity: 2.81.6
     globalServerURLs: 2.82.1
-    unions: 2.81.15
+    typeOverrides: 2.81.1
 generatedFiles:
   - internal/sdk/closingreason.go
   - internal/sdk/workflows.go
@@ -65,15 +65,7 @@ generatedFiles:
   - internal/sdk/models/shared/closingreasonnotfoundresp.go
   - internal/sdk/models/shared/workflowdefinition.go
   - internal/sdk/models/shared/updateentityattributes.go
-  - internal/sdk/models/shared/section.go
-  - internal/sdk/models/shared/itemtype.go
-  - internal/sdk/models/shared/step.go
-  - internal/sdk/models/shared/steprequirement.go
-  - internal/sdk/models/shared/stepjourney.go
-  - internal/sdk/models/shared/ecpdetails.go
-  - internal/sdk/models/shared/steptype.go
   - internal/sdk/models/shared/dynamicduedate.go
-  - internal/sdk/models/shared/stepdescription.go
   - internal/sdk/models/shared/closingreasonid.go
   - internal/sdk/models/shared/definitionnotfoundresp.go
   - internal/sdk/models/shared/maxallowedlimit.go
@@ -130,14 +122,6 @@ generatedFiles:
   - tools/tools.go
   - internal/provider/types/closing_reason_id.go
   - internal/provider/types/dynamic_due_date.go
-  - internal/provider/types/automation_config.go
-  - internal/provider/types/step_description.go
-  - internal/provider/types/step_journey.go
-  - internal/provider/types/ecp_details.go
-  - internal/provider/types/step_requirement.go
-  - internal/provider/types/step.go
-  - internal/provider/types/section.go
-  - internal/provider/types/flow.go
   - internal/provider/types/target.go
   - internal/provider/types/update_entity_attributes.go
   - USAGE.md

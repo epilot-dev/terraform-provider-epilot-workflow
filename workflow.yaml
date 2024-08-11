@@ -615,6 +615,7 @@ components:
           type: boolean
           description: Indicates whether this workflow is available for End Customer Portal or not. By default it's not.
         flow:
+          x-speakeasy-type-override: any
           type: array
           items:
             anyOf:
