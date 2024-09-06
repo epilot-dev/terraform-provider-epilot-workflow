@@ -3,10 +3,10 @@ id: 5a857039-7f4b-42d5-86fd-449767242ed2
 management:
   docChecksum: 8a2ff4be25db818a35891d602baa4a25
   docVersion: 1.0.0
-  speakeasyVersion: 1.368.0
-  generationVersion: 2.399.0
-  releaseVersion: 0.12.2
-  configChecksum: f1a47257049efe0c9785ee458ef348d9
+  speakeasyVersion: 1.390.7
+  generationVersion: 2.409.8
+  releaseVersion: 0.12.3
+  configChecksum: 457857b51253dbe2e7a87b1ee4b1000f
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-workflow.git
   repoSubDirectory: .
   published: true
@@ -21,7 +21,7 @@ features:
     unions: 2.85.0
   terraform:
     additionalDependencies: 0.1.0
-    core: 3.24.7
+    core: 3.24.8
     deprecations: 2.81.1
     envVarSecurityUsage: 0.1.0
     globalSecurity: 2.81.8

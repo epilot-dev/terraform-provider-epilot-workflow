@@ -51,6 +51,19 @@ TF_REATTACH_PROVIDERS=... terraform apply
 
 <!-- End SDK <no value> -->
 
+<!-- Start Summary [summary] -->
+## Summary
+
+Workflows Definitions: Service for Workflow Definitions for different processes inside of an Organization
+<!-- End Summary [summary] -->
+
+<!-- Start Table of Contents [toc] -->
+## Table of Contents
+
+* [SDK Installation](#sdk-installation)
+* [SDK Example Usage](#sdk-example-usage)
+<!-- End Table of Contents [toc] -->
+
 <!-- Start SDK Installation [installation] -->
 ## SDK Installation
 
@@ -61,7 +74,7 @@ terraform {
   required_providers {
     epilot-workflow = {
       source  = "epilot-dev/epilot-workflow"
-      version = "0.12.2"
+      version = "0.12.3"
     }
   }
 }
