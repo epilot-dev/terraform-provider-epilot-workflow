@@ -3,10 +3,10 @@ id: 5a857039-7f4b-42d5-86fd-449767242ed2
 management:
   docChecksum: 8a2ff4be25db818a35891d602baa4a25
   docVersion: 1.0.0
-  speakeasyVersion: 1.392.1
-  generationVersion: 2.411.9
-  releaseVersion: 0.12.4
-  configChecksum: 1b0bf925e4875d2eeae47fc18b3aef86
+  speakeasyVersion: 1.396.6
+  generationVersion: 2.415.6
+  releaseVersion: 0.12.5
+  configChecksum: 3ad4324d3313212551e7b1b88e88ae58
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-workflow.git
   repoSubDirectory: .
   published: true
@@ -21,7 +21,7 @@ features:
     unions: 2.85.0
   terraform:
     additionalDependencies: 0.1.0
-    core: 3.24.9
+    core: 3.24.11
     deprecations: 2.81.1
     envVarSecurityUsage: 0.1.0
     globalSecurity: 2.81.8
@@ -144,11 +144,17 @@ examples:
     "":
       requestBody:
         application/json: {"status": "ACTIVE", "title": "better offer"}
+      responses:
+        "201":
+          application/json: {"status": "ACTIVE", "title": "<value>"}
   getAllClosingReasons:
     "":
       parameters:
         query:
           includeInactive: true
+      responses:
+        "200":
+          application/json: {"reasons": []}
   createDefinition:
     "":
       requestBody:
