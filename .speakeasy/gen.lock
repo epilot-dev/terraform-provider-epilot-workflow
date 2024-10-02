@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: 5a857039-7f4b-42d5-86fd-449767242ed2
 management:
-  docChecksum: cbe462f4a20d4b2a1273895979390e09
+  docChecksum: 8a2ff4be25db818a35891d602baa4a25
   docVersion: 1.0.0
-  speakeasyVersion: 1.346.0
-  generationVersion: 2.379.3
-  releaseVersion: 0.13.0
-  configChecksum: b0fe4d200caa906deca84fe07b9ca435
+  speakeasyVersion: 1.405.6
+  generationVersion: 2.428.1
+  releaseVersion: 0.14.0
+  configChecksum: 0f2c61bde77ec5027b55ecafcd92ae7d
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-workflow.git
   repoSubDirectory: .
   published: true
@@ -21,62 +21,18 @@ features:
     unions: 2.85.0
   terraform:
     additionalDependencies: 0.1.0
-    core: 3.24.3
+    core: 3.24.15
     deprecations: 2.81.1
-    globalSecurity: 2.81.6
+    envVarSecurityUsage: 0.1.0
+    globalSecurity: 2.81.8
     globalServerURLs: 2.82.1
-    typeOverrides: 2.81.1
+    unions: 2.81.16
 generatedFiles:
-  - internal/sdk/closingreason.go
-  - internal/sdk/workflows.go
-  - internal/sdk/sdk.go
-  - internal/sdk/models/errors/sdkerror.go
-  - internal/sdk/retry/config.go
-  - internal/sdk/types/bigint.go
-  - internal/sdk/types/date.go
-  - internal/sdk/types/datetime.go
-  - internal/sdk/types/decimal.go
-  - internal/sdk/types/pointers.go
-  - internal/sdk/internal/utils/contenttype.go
-  - internal/sdk/internal/utils/form.go
-  - internal/sdk/internal/utils/headers.go
-  - internal/sdk/internal/utils/json.go
-  - internal/sdk/internal/utils/pathparams.go
-  - internal/sdk/internal/utils/queryparams.go
-  - internal/sdk/internal/utils/requestbody.go
-  - internal/sdk/internal/utils/retries.go
-  - internal/sdk/internal/utils/security.go
-  - internal/sdk/internal/utils/utils.go
-  - internal/sdk/models/operations/changereasonstatus.go
-  - internal/sdk/models/operations/createclosingreason.go
-  - internal/sdk/models/operations/getallclosingreasons.go
-  - internal/sdk/models/operations/getclosingreason.go
-  - internal/sdk/models/operations/createdefinition.go
-  - internal/sdk/models/operations/deletedefinition.go
-  - internal/sdk/models/operations/getdefinition.go
-  - internal/sdk/models/operations/getdefinitions.go
-  - internal/sdk/models/operations/getmaxallowedlimit.go
-  - internal/sdk/models/operations/updatedefinition.go
-  - internal/sdk/models/shared/errorresp.go
-  - internal/sdk/models/shared/changereasonstatusreq.go
-  - internal/sdk/models/shared/closingreasonsstatus.go
-  - internal/sdk/models/shared/closingreason.go
-  - internal/sdk/models/shared/closingreasons.go
-  - internal/sdk/models/shared/closingreasonnotfoundresp.go
-  - internal/sdk/models/shared/workflowdefinition.go
-  - internal/sdk/models/shared/updateentityattributes.go
-  - internal/sdk/models/shared/dynamicduedate.go
-  - internal/sdk/models/shared/closingreasonid.go
-  - internal/sdk/models/shared/definitionnotfoundresp.go
-  - internal/sdk/models/shared/maxallowedlimit.go
-  - internal/sdk/models/shared/security.go
-  - internal/sdk/.gitignore
-  - internal/sdk/models/operations/options.go
-  - internal/sdk/.gitattributes
-  - internal/sdk/internal/hooks/registration.go
-  - internal/sdk/internal/hooks/hooks.go
-  - internal/sdk/CONTRIBUTING.md
+  - .gitattributes
+  - CONTRIBUTING.md
+  - USAGE.md
   - examples/README.md
+  - examples/provider/provider.tf
   - go.mod
   - go.sum
   - internal/planmodifiers/boolplanmodifier/suppress_diff.go
@@ -89,6 +45,7 @@ generatedFiles:
   - internal/planmodifiers/setplanmodifier/suppress_diff.go
   - internal/planmodifiers/stringplanmodifier/suppress_diff.go
   - internal/planmodifiers/utils/state_check.go
+  - internal/provider/provider.go
   - internal/provider/reflect/diags.go
   - internal/provider/reflect/doc.go
   - internal/provider/reflect/generic_attr_value.go
@@ -104,6 +61,63 @@ generatedFiles:
   - internal/provider/reflect/slice.go
   - internal/provider/reflect/struct.go
   - internal/provider/utils.go
+  - internal/sdk/.gitattributes
+  - internal/sdk/.gitignore
+  - internal/sdk/CONTRIBUTING.md
+  - internal/sdk/closingreason.go
+  - internal/sdk/internal/hooks/hooks.go
+  - internal/sdk/internal/utils/contenttype.go
+  - internal/sdk/internal/utils/form.go
+  - internal/sdk/internal/utils/headers.go
+  - internal/sdk/internal/utils/json.go
+  - internal/sdk/internal/utils/pathparams.go
+  - internal/sdk/internal/utils/queryparams.go
+  - internal/sdk/internal/utils/requestbody.go
+  - internal/sdk/internal/utils/retries.go
+  - internal/sdk/internal/utils/security.go
+  - internal/sdk/internal/utils/utils.go
+  - internal/sdk/models/errors/sdkerror.go
+  - internal/sdk/models/operations/changereasonstatus.go
+  - internal/sdk/models/operations/createclosingreason.go
+  - internal/sdk/models/operations/createdefinition.go
+  - internal/sdk/models/operations/deletedefinition.go
+  - internal/sdk/models/operations/getallclosingreasons.go
+  - internal/sdk/models/operations/getdefinition.go
+  - internal/sdk/models/operations/getdefinitions.go
+  - internal/sdk/models/operations/getmaxallowedlimit.go
+  - internal/sdk/models/operations/getworkflowclosingreasons.go
+  - internal/sdk/models/operations/options.go
+  - internal/sdk/models/operations/setworkflowclosingreasons.go
+  - internal/sdk/models/operations/updatedefinition.go
+  - internal/sdk/models/shared/changereasonstatusreq.go
+  - internal/sdk/models/shared/closingreason.go
+  - internal/sdk/models/shared/closingreasonid.go
+  - internal/sdk/models/shared/closingreasons.go
+  - internal/sdk/models/shared/closingreasonsids.go
+  - internal/sdk/models/shared/closingreasonsstatus.go
+  - internal/sdk/models/shared/definitionnotfoundresp.go
+  - internal/sdk/models/shared/dynamicduedate.go
+  - internal/sdk/models/shared/ecpdetails.go
+  - internal/sdk/models/shared/errorresp.go
+  - internal/sdk/models/shared/itemtype.go
+  - internal/sdk/models/shared/maxallowedlimit.go
+  - internal/sdk/models/shared/section.go
+  - internal/sdk/models/shared/security.go
+  - internal/sdk/models/shared/step.go
+  - internal/sdk/models/shared/stepdescription.go
+  - internal/sdk/models/shared/stepjourney.go
+  - internal/sdk/models/shared/steprequirement.go
+  - internal/sdk/models/shared/steptype.go
+  - internal/sdk/models/shared/updateentityattributes.go
+  - internal/sdk/models/shared/workflowdefinition.go
+  - internal/sdk/retry/config.go
+  - internal/sdk/sdk.go
+  - internal/sdk/types/bigint.go
+  - internal/sdk/types/date.go
+  - internal/sdk/types/datetime.go
+  - internal/sdk/types/decimal.go
+  - internal/sdk/types/pointers.go
+  - internal/sdk/workflows.go
   - internal/validators/DateValidator.go
   - internal/validators/ExactlyOneChild.go
   - internal/validators/JSONParseValidator.go
@@ -120,26 +134,79 @@ generatedFiles:
   - main.go
   - terraform-registry-manifest.json
   - tools/tools.go
-  - internal/provider/types/closing_reason_id.go
-  - internal/provider/types/dynamic_due_date.go
-  - internal/provider/types/target.go
-  - internal/provider/types/update_entity_attributes.go
-  - USAGE.md
-  - internal/provider/provider.go
-  - examples/provider/provider.tf
-  - examples/resources/epilot-workflow_closing_reason/import.sh
-  - internal/provider/closingreason_resource.go
-  - internal/provider/closingreason_resource_sdk.go
-  - examples/resources/epilot-workflow_closing_reason/resource.tf
-  - examples/resources/epilot-workflow_workflow_definition/import.sh
-  - internal/provider/workflowdefinition_resource.go
-  - internal/provider/workflowdefinition_resource_sdk.go
-  - examples/resources/epilot-workflow_workflow_definition/resource.tf
-  - internal/provider/closingreason_data_source.go
-  - internal/provider/closingreason_data_source_sdk.go
-  - examples/data-sources/epilot-workflow_closing_reason/data-source.tf
-  - internal/provider/workflowdefinition_data_source.go
-  - internal/provider/workflowdefinition_data_source_sdk.go
-  - examples/data-sources/epilot-workflow_workflow_definition/data-source.tf
-  - .gitattributes
-  - CONTRIBUTING.md
+examples:
+  changeReasonStatus:
+    speakeasy-default-change-reason-status:
+      parameters:
+        path:
+          reasonId: "<id>"
+  createClosingReason:
+    "":
+      requestBody:
+        application/json: {"status": "ACTIVE", "title": "better offer"}
+      responses:
+        "201":
+          application/json: {"status": "INACTIVE", "title": "<value>"}
+  getAllClosingReasons:
+    "":
+      parameters:
+        query:
+          includeInactive: true
+      responses:
+        "200":
+          application/json: {"reasons": [{"status": "ACTIVE", "title": "<value>"}]}
+  createDefinition:
+    "":
+      requestBody:
+        application/json: {"assignedTo": ["952802", "80225"], "closingReasons": [{"id": "x739cew"}], "creationTime": "2021-04-27T12:01:13.000Z", "description": "Lead Qualification description", "dueDate": "2022-08-04T12:00:00.000Z", "flow": [{"name": "Initial Information Gathering", "order": 1, "steps": [{"assignedTo": ["123482"], "dueDate": "2021-04-27T12:00:00.000Z", "name": "Call client and confirm address and product", "order": 1, "type": "STEP"}, {"assignedTo": ["123482"], "dueDate": "2021-04-27T12:00:00.000Z", "name": "Check product availability", "order": 2, "type": "STEP"}, {"assignedTo": ["123482"], "dueDate": "2021-04-27T12:00:00.000Z", "name": "Send email confirming contact with the client", "order": 3, "type": "STEP"}], "type": "SECTION"}, {"assignedTo": ["123482"], "dueDate": "2021-04-27T12:00:00.000Z", "name": "Print and send catalog", "order": 2, "type": "STEP"}], "lastUpdateTime": "2021-04-27T12:01:13.000Z", "name": "Lead Qualification", "updateEntityAttributes": [{"source": "workflow_status", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}, {"source": "current_step", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}]}
+      responses:
+        "200":
+          application/json: {"assignedTo": ["952802", "80225"], "closingReasons": [{"id": "x739cew"}, {"id": "x739cew"}, {"id": "x739cew"}], "creationTime": "2021-08-04T21:13:50.373Z", "description": "Lead Qualification description", "dueDate": "2022-08-04T12:00:00.000Z", "flow": [{"id": "5892na2", "name": "Initial Information Gathering", "order": 1, "steps": [{"assignedTo": ["48829"], "dueDate": "2021-04-27T12:00:00.000Z", "id": "2hja82a", "name": "Call client and confirm address and product", "order": 1, "type": "STEP"}, {"assignedTo": ["45390"], "dueDate": "2021-04-27T12:00:00.000Z", "id": "ga92ha2", "name": "Check product availability", "order": 2, "type": "STEP"}, {"assignedTo": ["8230"], "dueDate": "2021-04-27T12:00:00.000Z", "id": "jga92ha", "name": "Send email confirming contact with the client", "order": 3, "type": "STEP"}], "type": "SECTION"}, {"assignedTo": ["8239"], "dueDate": "2021-04-27T12:00:00.000Z", "id": "0a7g22a", "name": "Print and send catalog", "order": 2, "type": "STEP"}], "id": "25n2k52ja", "lastUpdateTime": "2021-08-04T21:13:50.373Z", "name": "Lead Qualification", "updateEntityAttributes": []}
+  deleteDefinition:
+    "":
+      parameters:
+        path:
+          definitionId: "CustomerRequest"
+  getDefinition:
+    "":
+      parameters:
+        path:
+          definitionId: "7hj28a"
+      responses:
+        "200":
+          application/json: {"assignedTo": ["952802", "80225"], "closingReasons": [{"id": "ffoowef"}, {"id": "hebwoeu"}, {"id": "mbnoenq"}], "creationTime": "2021-08-04T21:13:50.373Z", "dueDate": "2022-08-04T12:00:00.000Z", "flow": [{"id": "5892na2", "name": "Initial Information Gathering", "order": 1, "steps": [{"assignedTo": ["923432"], "dueDate": "2021-04-27T12:00:00.000Z", "id": "2hja82a", "name": "Call client and confirm address and product", "order": 1, "type": "STEP"}, {"assignedTo": ["45488"], "dueDate": "2021-04-27T12:00:00.000Z", "id": "ga92ha2", "name": "Check product availability", "order": 2, "type": "STEP"}, {"assignedTo": ["45488"], "dueDate": "2021-04-27T12:00:00.000Z", "id": "jga92ha", "name": "Send email confirming contact with the client", "order": 3, "type": "STEP"}], "type": "SECTION"}, {"assignedTo": ["8988"], "dueDate": "2021-04-27T12:00:00.000Z", "id": "0a7g22a", "name": "Print and send catalog", "order": 2, "type": "STEP"}], "id": "25n2k52ja", "lastUpdateTime": "2021-08-04T21:13:50.373Z", "name": "Lead Qualification", "updateEntityAttributes": [{"source": "current_step", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}, {"source": "current_section", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}, {"source": "current_section", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}]}
+  getDefinitions:
+    "":
+      responses:
+        "200":
+          application/json: [{"assignedTo": ["18625", "90252"], "closingReasons": [{"id": "x739cew"}, {"id": "x739cew"}, {"id": "x739cew"}], "creationTime": "2021-08-04T21:13:50.373Z", "description": "Lead Qualification description", "dueDate": "2021-08-04T21:13:50.373Z", "flow": [{"id": "5892na2", "name": "Initial Information Gathering", "order": 1, "steps": [{"assignedTo": ["123482"], "dueDate": "2021-04-27T12:00:00.000Z", "id": "2hja82a", "name": "Call client and confirm address and product", "order": 1, "type": "STEP"}, {"assignedTo": ["123482"], "dueDate": "2021-04-27T12:00:00.000Z", "id": "ga92ha2", "name": "Check product availability", "order": 2, "type": "STEP"}, {"assignedTo": ["123482"], "dueDate": "2021-04-27T12:00:00.000Z", "id": "jga92ha", "name": "Send email confirming contact with the client", "order": 3, "type": "STEP"}], "type": "SECTION"}, {"assignedTo": ["123482"], "dueDate": "2021-04-27T12:00:00.000Z", "id": "0a7g22a", "name": "Print and send catalog", "order": 2, "type": "STEP"}], "id": "25n2k52ja", "lastUpdateTime": "2021-08-04T21:13:50.373Z", "name": "Lead Qualification", "updateEntityAttributes": []}]
+  getMaxAllowedLimit:
+    "":
+      responses:
+        "200":
+          application/json: {"currentNoOfWorkflows": 5, "maxAllowed": 7}
+  getWorkflowClosingReasons:
+    "":
+      parameters:
+        path:
+          definitionId: "fxcwfw"
+      responses:
+        "200":
+          application/json: {"reasons": [{"id": "x739cew"}, {"id": "x739cew"}, {"id": "x739cew"}]}
+  setWorkflowClosingReasons:
+    "":
+      parameters:
+        path:
+          definitionId: "7889"
+      requestBody:
+        application/json: {"reasons": [{"id": "x739cew"}]}
+  updateDefinition:
+    "":
+      parameters:
+        path:
+          definitionId: "7hj28a"
+      requestBody:
+        application/json: {"assignedTo": ["952802", "80225"], "closingReasons": [{"id": "x739cew"}], "creationTime": "2021-08-04T21:13:50.373Z", "dueDate": "2022-08-04T12:00:00.000Z", "flow": [{"id": "5892na2", "name": "Initial Information Gathering", "order": 1, "steps": [{"assignedTo": ["8988"], "dueDate": "2021-04-27T12:00:00.000Z", "id": "2hja82a", "name": "Call client and confirm address and product", "order": 1, "type": "STEP"}, {"assignedTo": ["8988"], "dueDate": "2021-04-27T12:00:00.000Z", "id": "ga92ha2", "name": "Check product availability", "order": 2, "type": "STEP"}, {"assignedTo": ["8988"], "dueDate": "2021-04-27T12:00:00.000Z", "id": "jga92ha", "name": "Send email confirming contact with the client", "order": 3, "type": "STEP"}], "type": "SECTION"}, {"assignedTo": ["8988"], "dueDate": "2021-04-27T12:00:00.000Z", "id": "0a7g22a", "name": "Print and send catalog", "order": 2, "type": "STEP"}], "id": "25n2k52ja", "lastUpdateTime": "2021-08-04T21:13:50.373Z", "name": "Lead Qualification", "updateEntityAttributes": [{"source": "workflow_status", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}, {"source": "current_step", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}, {"source": "current_section", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}]}
+      responses:
+        "200":
+          application/json: {"assignedTo": ["952802", "80225"], "closingReasons": [{"id": "x739cew"}, {"id": "x739cew"}, {"id": "x739cew"}], "creationTime": "2021-08-04T21:13:50.373Z", "dueDate": "2022-08-04T12:00:00.000Z", "flow": [{"id": "5892na2", "name": "Initial Information Gathering", "order": 1, "steps": [{"assignedTo": ["1"], "dueDate": "2021-04-27T12:00:00.000Z", "id": "2hja82a", "name": "Call client and confirm address and product", "order": 1, "type": "STEP"}, {"assignedTo": ["56645"], "dueDate": "2021-04-27T12:00:00.000Z", "id": "ga92ha2", "name": "Check product availability", "order": 2, "type": "STEP"}, {"assignedTo": ["949923"], "dueDate": "2021-04-27T12:00:00.000Z", "id": "jga92ha", "name": "Send email confirming contact with the client", "order": 3, "type": "STEP"}], "type": "SECTION"}, {"assignedTo": ["156645"], "dueDate": "2021-04-27T12:00:00.000Z", "id": "0a7g22a", "name": "Print and send catalog", "order": 2, "type": "STEP"}], "id": "25n2k52ja", "lastUpdateTime": "2021-08-04T21:13:50.373Z", "name": "Lead Qualification", "updateEntityAttributes": []}
