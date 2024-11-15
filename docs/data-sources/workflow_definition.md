@@ -14,7 +14,6 @@ WorkflowDefinition DataSource
 
 ```terraform
 data "epilot-workflow_workflow_definition" "my_workflowdefinition" {
-  definition_id = "7hj28a"
 }
 ```
 
@@ -30,10 +29,12 @@ data "epilot-workflow_workflow_definition" "my_workflowdefinition" {
 - `due_date` (String)
 - `dynamic_due_date` (Attributes) set a Duedate for a step then a specific (see [below for nested schema](#nestedatt--dynamic_due_date))
 - `enable_ecp_workflow` (Boolean) Indicates whether this workflow is available for End Customer Portal or not. By default it's not.
-- `flow` (Attributes List) (see [below for nested schema](#nestedatt--flow))
+- `enabled` (Boolean) Whether the workflow is enabled or not
+- `flow` (String) Parsed as JSON.
 - `id` (String) The ID of this resource.
 - `last_update_time` (String) ISO String Date & Time
 - `name` (String)
+- `taxonomies` (List of String) Taxonomy ids that are associated with this workflow and used for filtering
 - `update_entity_attributes` (Attributes List) (see [below for nested schema](#nestedatt--update_entity_attributes))
 - `user_ids` (List of Number) This field is deprecated. Please use assignedTo
 
@@ -50,255 +51,10 @@ Read-Only:
 
 Read-Only:
 
-- `action_type_condition` (String) must be one of ["WORKFLOW_STARTED", "STEP_CLOSED"]
+- `action_type_condition` (String)
 - `number_of_units` (Number)
 - `step_id` (String)
-- `time_period` (String) must be one of ["days", "weeks", "months"]
-
-
-<a id="nestedatt--flow"></a>
-### Nested Schema for `flow`
-
-Read-Only:
-
-- `section` (Attributes) A group of Steps that define the progress of the Workflow (see [below for nested schema](#nestedatt--flow--section))
-- `step` (Attributes) Action that needs to be done in a Workflow (see [below for nested schema](#nestedatt--flow--step))
-
-<a id="nestedatt--flow--section"></a>
-### Nested Schema for `flow.section`
-
-Read-Only:
-
-- `id` (String)
-- `name` (String)
-- `order` (Number)
-- `steps` (Attributes List) (see [below for nested schema](#nestedatt--flow--section--steps))
-- `type` (String) must be one of ["STEP", "SECTION"]
-
-<a id="nestedatt--flow--section--steps"></a>
-### Nested Schema for `flow.section.steps`
-
-Read-Only:
-
-- `assigned_to` (List of String)
-- `automation_config` (Attributes) (see [below for nested schema](#nestedatt--flow--section--steps--automation_config))
-- `description` (Attributes) Longer information regarding Task (see [below for nested schema](#nestedatt--flow--section--steps--description))
-- `due_date` (String)
-- `dynamic_due_date` (Attributes) set a Duedate for a step then a specific (see [below for nested schema](#nestedatt--flow--section--steps--dynamic_due_date))
-- `ecp` (Attributes) Details regarding ECP for the workflow step (see [below for nested schema](#nestedatt--flow--section--steps--ecp))
-- `execution_type` (String) must be one of ["MANUAL", "AUTOMATION"]
-- `id` (String)
-- `installer` (Attributes) Details regarding ECP for the workflow step (see [below for nested schema](#nestedatt--flow--section--steps--installer))
-- `journey` (Attributes) (see [below for nested schema](#nestedatt--flow--section--steps--journey))
-- `name` (String)
-- `order` (Number)
-- `requirements` (Attributes List) requirements that need to be fulfilled in order to enable the step execution (see [below for nested schema](#nestedatt--flow--section--steps--requirements))
-- `type` (String) must be one of ["STEP", "SECTION"]
-- `user_ids` (List of Number) This field is deprecated. Please use assignedTo
-
-<a id="nestedatt--flow--section--steps--automation_config"></a>
-### Nested Schema for `flow.section.steps.user_ids`
-
-Read-Only:
-
-- `flow_id` (String) Id of the configured automation to run
-
-
-<a id="nestedatt--flow--section--steps--description"></a>
-### Nested Schema for `flow.section.steps.user_ids`
-
-Read-Only:
-
-- `enabled` (Boolean)
-- `value` (String)
-
-
-<a id="nestedatt--flow--section--steps--dynamic_due_date"></a>
-### Nested Schema for `flow.section.steps.user_ids`
-
-Read-Only:
-
-- `action_type_condition` (String) must be one of ["WORKFLOW_STARTED", "STEP_CLOSED"]
-- `number_of_units` (Number)
-- `step_id` (String)
-- `time_period` (String) must be one of ["days", "weeks", "months"]
-
-
-<a id="nestedatt--flow--section--steps--ecp"></a>
-### Nested Schema for `flow.section.steps.user_ids`
-
-Read-Only:
-
-- `description` (String)
-- `enabled` (Boolean)
-- `journey` (Attributes) (see [below for nested schema](#nestedatt--flow--section--steps--user_ids--journey))
-- `label` (String)
-
-<a id="nestedatt--flow--section--steps--user_ids--journey"></a>
-### Nested Schema for `flow.section.steps.user_ids.journey`
-
-Read-Only:
-
-- `id` (String)
-- `journey_id` (String)
-- `name` (String)
-
-
-
-<a id="nestedatt--flow--section--steps--installer"></a>
-### Nested Schema for `flow.section.steps.user_ids`
-
-Read-Only:
-
-- `description` (String)
-- `enabled` (Boolean)
-- `journey` (Attributes) (see [below for nested schema](#nestedatt--flow--section--steps--user_ids--journey))
-- `label` (String)
-
-<a id="nestedatt--flow--section--steps--user_ids--journey"></a>
-### Nested Schema for `flow.section.steps.user_ids.journey`
-
-Read-Only:
-
-- `id` (String)
-- `journey_id` (String)
-- `name` (String)
-
-
-
-<a id="nestedatt--flow--section--steps--journey"></a>
-### Nested Schema for `flow.section.steps.user_ids`
-
-Read-Only:
-
-- `id` (String)
-- `journey_id` (String)
-- `name` (String)
-
-
-<a id="nestedatt--flow--section--steps--requirements"></a>
-### Nested Schema for `flow.section.steps.user_ids`
-
-Read-Only:
-
-- `condition` (String) must be one of ["CLOSED"]
-- `definition_id` (String)
-- `type` (String) must be one of ["STEP", "SECTION"]
-
-
-
-
-<a id="nestedatt--flow--step"></a>
-### Nested Schema for `flow.step`
-
-Read-Only:
-
-- `assigned_to` (List of String)
-- `automation_config` (Attributes) (see [below for nested schema](#nestedatt--flow--step--automation_config))
-- `description` (Attributes) Longer information regarding Task (see [below for nested schema](#nestedatt--flow--step--description))
-- `due_date` (String)
-- `dynamic_due_date` (Attributes) set a Duedate for a step then a specific (see [below for nested schema](#nestedatt--flow--step--dynamic_due_date))
-- `ecp` (Attributes) Details regarding ECP for the workflow step (see [below for nested schema](#nestedatt--flow--step--ecp))
-- `execution_type` (String) must be one of ["MANUAL", "AUTOMATION"]
-- `id` (String)
-- `installer` (Attributes) Details regarding ECP for the workflow step (see [below for nested schema](#nestedatt--flow--step--installer))
-- `journey` (Attributes) (see [below for nested schema](#nestedatt--flow--step--journey))
-- `name` (String)
-- `order` (Number)
-- `requirements` (Attributes List) requirements that need to be fulfilled in order to enable the step execution (see [below for nested schema](#nestedatt--flow--step--requirements))
-- `type` (String) must be one of ["STEP", "SECTION"]
-- `user_ids` (List of Number) This field is deprecated. Please use assignedTo
-
-<a id="nestedatt--flow--step--automation_config"></a>
-### Nested Schema for `flow.step.automation_config`
-
-Read-Only:
-
-- `flow_id` (String) Id of the configured automation to run
-
-
-<a id="nestedatt--flow--step--description"></a>
-### Nested Schema for `flow.step.description`
-
-Read-Only:
-
-- `enabled` (Boolean)
-- `value` (String)
-
-
-<a id="nestedatt--flow--step--dynamic_due_date"></a>
-### Nested Schema for `flow.step.dynamic_due_date`
-
-Read-Only:
-
-- `action_type_condition` (String) must be one of ["WORKFLOW_STARTED", "STEP_CLOSED"]
-- `number_of_units` (Number)
-- `step_id` (String)
-- `time_period` (String) must be one of ["days", "weeks", "months"]
-
-
-<a id="nestedatt--flow--step--ecp"></a>
-### Nested Schema for `flow.step.ecp`
-
-Read-Only:
-
-- `description` (String)
-- `enabled` (Boolean)
-- `journey` (Attributes) (see [below for nested schema](#nestedatt--flow--step--ecp--journey))
-- `label` (String)
-
-<a id="nestedatt--flow--step--ecp--journey"></a>
-### Nested Schema for `flow.step.ecp.label`
-
-Read-Only:
-
-- `id` (String)
-- `journey_id` (String)
-- `name` (String)
-
-
-
-<a id="nestedatt--flow--step--installer"></a>
-### Nested Schema for `flow.step.installer`
-
-Read-Only:
-
-- `description` (String)
-- `enabled` (Boolean)
-- `journey` (Attributes) (see [below for nested schema](#nestedatt--flow--step--installer--journey))
-- `label` (String)
-
-<a id="nestedatt--flow--step--installer--journey"></a>
-### Nested Schema for `flow.step.installer.label`
-
-Read-Only:
-
-- `id` (String)
-- `journey_id` (String)
-- `name` (String)
-
-
-
-<a id="nestedatt--flow--step--journey"></a>
-### Nested Schema for `flow.step.journey`
-
-Read-Only:
-
-- `id` (String)
-- `journey_id` (String)
-- `name` (String)
-
-
-<a id="nestedatt--flow--step--requirements"></a>
-### Nested Schema for `flow.step.requirements`
-
-Read-Only:
-
-- `condition` (String) must be one of ["CLOSED"]
-- `definition_id` (String)
-- `type` (String) must be one of ["STEP", "SECTION"]
-
-
+- `time_period` (String)
 
 
 <a id="nestedatt--update_entity_attributes"></a>
@@ -306,7 +62,7 @@ Read-Only:
 
 Read-Only:
 
-- `source` (String) must be one of ["workflow_status", "current_section", "current_step"]
+- `source` (String)
 - `target` (Attributes) (see [below for nested schema](#nestedatt--update_entity_attributes--target))
 
 <a id="nestedatt--update_entity_attributes--target"></a>
@@ -316,5 +72,3 @@ Read-Only:
 
 - `entity_attribute` (String)
 - `entity_schema` (String)
-
-

@@ -1,11 +1,40 @@
 resource "epilot-workflow_workflow_definition" "my_workflowdefinition" {
-  creation_time       = "2021-04-27T12:01:13.000Z"
-  definition_id       = "7hj28a"
-  description         = "...my_description..."
-  due_date            = "2021-04-27T12:00:00.000Z"
+  assigned_to = [
+    "..."
+  ]
+  closing_reasons = [
+    {
+      id = "x739cew"
+    }
+  ]
+  creation_time = "2021-04-27T12:01:13.000Z"
+  description   = "...my_description..."
+  due_date      = "2021-04-27T12:00:00.000Z"
+  dynamic_due_date = {
+    action_type_condition = "STEP_CLOSED"
+    number_of_units       = 0.36
+    step_id               = "...my_step_id..."
+    time_period           = "days"
+  }
   enable_ecp_workflow = false
+  enabled             = false
   flow                = "{ \"see\": \"documentation\" }"
-  id                  = "452e3f02-980e-44cf-845d-81d428f0e4f5"
+  id                  = "...my_id..."
   last_update_time    = "2021-04-27T12:01:13.000Z"
-  name                = "Luther Greenfelder"
+  name                = "...my_name..."
+  taxonomies = [
+    "..."
+  ]
+  update_entity_attributes = [
+    {
+      source = "current_step"
+      target = {
+        entity_attribute = "my_status"
+        entity_schema    = "opportunity"
+      }
+    }
+  ]
+  user_ids = [
+    5.93
+  ]
 }

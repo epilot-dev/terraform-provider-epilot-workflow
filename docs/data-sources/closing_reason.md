@@ -14,7 +14,6 @@ ClosingReason DataSource
 
 ```terraform
 data "epilot-workflow_closing_reason" "my_closingreason" {
-  reason_id = "-poOAPBa-jFZA_AWV3zN0"
 }
 ```
 
@@ -26,7 +25,5 @@ data "epilot-workflow_closing_reason" "my_closingreason" {
 - `creation_time` (String)
 - `id` (String) The ID of this resource.
 - `last_update_time` (String)
-- `status` (String) must be one of ["ACTIVE", "INACTIVE"]
+- `status` (String)
 - `title` (String)
-
-

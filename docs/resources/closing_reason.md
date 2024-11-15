@@ -15,11 +15,10 @@ ClosingReason Resource
 ```terraform
 resource "epilot-workflow_closing_reason" "my_closingreason" {
   creation_time    = "...my_creation_time..."
-  id               = "26c83797-1a10-4cbc-add8-4604abbab3cf"
+  id               = "...my_id..."
   last_update_time = "...my_last_update_time..."
-  reason_id        = "-poOAPBa-jFZA_AWV3zN0"
   status           = "INACTIVE"
-  title            = "Miss"
+  title            = "...my_title..."
 }
 ```
 
@@ -28,7 +27,7 @@ resource "epilot-workflow_closing_reason" "my_closingreason" {
 
 ### Required
 
-- `status` (String) Requires replacement if changed. ; must be one of ["ACTIVE", "INACTIVE"]
+- `status` (String) must be one of ["ACTIVE", "INACTIVE"]; Requires replacement if changed.
 - `title` (String) Requires replacement if changed.
 
 ### Optional
