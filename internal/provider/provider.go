@@ -76,10 +76,13 @@ func (p *EpilotWorkflowProvider) Configure(ctx context.Context, req provider.Con
 		BearerAuth: bearerAuth,
 	}
 
+	httpClient := http.DefaultClient
+	httpClient.Transport = NewLoggingHTTPTransport(http.DefaultTransport)
+
 	opts := []sdk.SDKOption{
 		sdk.WithServerURL(ServerURL),
 		sdk.WithSecurity(security),
-		sdk.WithClient(http.DefaultClient),
+		sdk.WithClient(httpClient),
 	}
 	client := sdk.New(opts...)
 
@@ -88,17 +91,11 @@ func (p *EpilotWorkflowProvider) Configure(ctx context.Context, req provider.Con
 }
 
 func (p *EpilotWorkflowProvider) Resources(ctx context.Context) []func() resource.Resource {
-	return []func() resource.Resource{
-		NewClosingReasonResource,
-		NewWorkflowDefinitionResource,
-	}
+	return []func() resource.Resource{}
 }
 
 func (p *EpilotWorkflowProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
-	return []func() datasource.DataSource{
-		NewClosingReasonDataSource,
-		NewWorkflowDefinitionDataSource,
-	}
+	return []func() datasource.DataSource{}
 }
 
 func New(version string) func() provider.Provider {
