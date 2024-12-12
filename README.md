@@ -61,7 +61,7 @@ terraform {
   required_providers {
     epilot-workflow = {
       source  = "epilot-dev/epilot-workflow"
-      version = "0.15.2"
+      version = "0.16.0"
     }
   }
 }
@@ -119,12 +119,7 @@ provider_installation {
 
 ### Resources
 
-* [epilot-workflow_closing_reason](docs/resources/closing_reason.md)
-* [epilot-workflow_workflow_definition](docs/resources/workflow_definition.md)
 ### Data Sources
-
-* [epilot-workflow_closing_reason](docs/data-sources/closing_reason.md)
-* [epilot-workflow_workflow_definition](docs/data-sources/workflow_definition.md)
 <!-- End Available Resources and Data Sources [operations] -->
 
 <!-- Start Summary [summary] -->
@@ -135,10 +130,12 @@ Workflows Definitions: Service for Workflow Definitions for different processes 
 
 <!-- Start Table of Contents [toc] -->
 ## Table of Contents
+<!-- $toc-max-depth=2 -->
+* [epilot-workflow](#epilot-workflow)
+  * [Installation](#installation)
+  * [Testing the provider locally](#testing-the-provider-locally)
+  * [Available Resources and Data Sources](#available-resources-and-data-sources)
 
-* [Installation](#installation)
-* [Available Resources and Data Sources](#available-resources-and-data-sources)
-* [Testing the provider locally](#testing-the-provider-locally)
 <!-- End Table of Contents [toc] -->
 
 <!-- Placeholder for Future Speakeasy SDK Sections -->
