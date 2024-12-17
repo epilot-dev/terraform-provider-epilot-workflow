@@ -21,7 +21,7 @@ type AutomationTask struct {
 	Description *StepDescription `json:"description,omitempty"`
 	DueDate     *string          `json:"due_date,omitempty"`
 	// Set due date for the task based on a dynamic condition
-	DynamicDueDate *DueDateConfig `json:"dynamic_due_date,omitempty"`
+	DueDateConfig *DueDateConfig `json:"due_date_config,omitempty"`
 	// Details regarding ECP for the workflow step
 	Ecp *ECPDetails `json:"ecp,omitempty"`
 	ID  string      `json:"id"`
@@ -65,11 +65,11 @@ func (o *AutomationTask) GetDueDate() *string {
 	return o.DueDate
 }
 
-func (o *AutomationTask) GetDynamicDueDate() *DueDateConfig {
+func (o *AutomationTask) GetDueDateConfig() *DueDateConfig {
 	if o == nil {
 		return nil
 	}
-	return o.DynamicDueDate
+	return o.DueDateConfig
 }
 
 func (o *AutomationTask) GetEcp() *ECPDetails {

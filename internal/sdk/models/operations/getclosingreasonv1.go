@@ -7,19 +7,19 @@ import (
 	"net/http"
 )
 
-type GetClosingReasonRequest struct {
-	// unique id to identify the closing reason.
+type GetClosingReasonV1Request struct {
+	// uuid to identify the closing reason.
 	ReasonID string `pathParam:"style=simple,explode=false,name=reasonId"`
 }
 
-func (o *GetClosingReasonRequest) GetReasonID() string {
+func (o *GetClosingReasonV1Request) GetReasonID() string {
 	if o == nil {
 		return ""
 	}
 	return o.ReasonID
 }
 
-type GetClosingReasonResponse struct {
+type GetClosingReasonV1Response struct {
 	// Returns the closing reason
 	ClosingReason *shared.ClosingReason
 	// Closing reason not found
@@ -34,42 +34,42 @@ type GetClosingReasonResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetClosingReasonResponse) GetClosingReason() *shared.ClosingReason {
+func (o *GetClosingReasonV1Response) GetClosingReason() *shared.ClosingReason {
 	if o == nil {
 		return nil
 	}
 	return o.ClosingReason
 }
 
-func (o *GetClosingReasonResponse) GetClosingReasonNotFoundResp() *shared.ClosingReasonNotFoundResp {
+func (o *GetClosingReasonV1Response) GetClosingReasonNotFoundResp() *shared.ClosingReasonNotFoundResp {
 	if o == nil {
 		return nil
 	}
 	return o.ClosingReasonNotFoundResp
 }
 
-func (o *GetClosingReasonResponse) GetContentType() string {
+func (o *GetClosingReasonV1Response) GetContentType() string {
 	if o == nil {
 		return ""
 	}
 	return o.ContentType
 }
 
-func (o *GetClosingReasonResponse) GetErrorResp() *shared.ErrorResp {
+func (o *GetClosingReasonV1Response) GetErrorResp() *shared.ErrorResp {
 	if o == nil {
 		return nil
 	}
 	return o.ErrorResp
 }
 
-func (o *GetClosingReasonResponse) GetStatusCode() int {
+func (o *GetClosingReasonV1Response) GetStatusCode() int {
 	if o == nil {
 		return 0
 	}
 	return o.StatusCode
 }
 
-func (o *GetClosingReasonResponse) GetRawResponse() *http.Response {
+func (o *GetClosingReasonV1Response) GetRawResponse() *http.Response {
 	if o == nil {
 		return nil
 	}

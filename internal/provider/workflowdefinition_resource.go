@@ -71,9 +71,6 @@ func (r *WorkflowDefinitionResource) Schema(ctx context.Context, req resource.Sc
 				Computed: true,
 				Optional: true,
 				NestedObject: schema.NestedAttributeObject{
-					Validators: []validator.Object{
-						speakeasy_objectvalidators.NotNull(),
-					},
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
 							Computed:    true,
@@ -185,9 +182,6 @@ func (r *WorkflowDefinitionResource) Schema(ctx context.Context, req resource.Sc
 				Computed: true,
 				Optional: true,
 				NestedObject: schema.NestedAttributeObject{
-					Validators: []validator.Object{
-						speakeasy_objectvalidators.NotNull(),
-					},
 					Attributes: map[string]schema.Attribute{
 						"source": schema.StringAttribute{
 							Computed:    true,

@@ -36,7 +36,8 @@ func (p *EpilotWorkflowProvider) Metadata(ctx context.Context, req provider.Meta
 
 func (p *EpilotWorkflowProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: `Workflows Definitions: Service for Workflow Definitions for different processes inside of an Organization`,
+		MarkdownDescription: `Workflows Definitions: Service for Workflow Definitions for different processes inside of an Organization` + "\n" +
+			``,
 		Attributes: map[string]schema.Attribute{
 			"server_url": schema.StringAttribute{
 				MarkdownDescription: "Server URL (defaults to https://workflows-definition.sls.epilot.io)",

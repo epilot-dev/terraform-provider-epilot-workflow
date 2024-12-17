@@ -7,26 +7,24 @@ import (
 	"net/http"
 )
 
-type GetClosingReasonRequest struct {
+type DeleteClosingReasonRequest struct {
 	// unique id to identify the closing reason.
 	ReasonID string `pathParam:"style=simple,explode=false,name=reasonId"`
 }
 
-func (o *GetClosingReasonRequest) GetReasonID() string {
+func (o *DeleteClosingReasonRequest) GetReasonID() string {
 	if o == nil {
 		return ""
 	}
 	return o.ReasonID
 }
 
-type GetClosingReasonResponse struct {
-	// Returns the closing reason
-	ClosingReason *shared.ClosingReason
+type DeleteClosingReasonResponse struct {
 	// Closing reason not found
 	ClosingReasonNotFoundResp *shared.ClosingReasonNotFoundResp
 	// HTTP response content type for this operation
 	ContentType string
-	// Validation Errors
+	// Forbidden
 	ErrorResp *shared.ErrorResp
 	// HTTP response status code for this operation
 	StatusCode int
@@ -34,42 +32,35 @@ type GetClosingReasonResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetClosingReasonResponse) GetClosingReason() *shared.ClosingReason {
-	if o == nil {
-		return nil
-	}
-	return o.ClosingReason
-}
-
-func (o *GetClosingReasonResponse) GetClosingReasonNotFoundResp() *shared.ClosingReasonNotFoundResp {
+func (o *DeleteClosingReasonResponse) GetClosingReasonNotFoundResp() *shared.ClosingReasonNotFoundResp {
 	if o == nil {
 		return nil
 	}
 	return o.ClosingReasonNotFoundResp
 }
 
-func (o *GetClosingReasonResponse) GetContentType() string {
+func (o *DeleteClosingReasonResponse) GetContentType() string {
 	if o == nil {
 		return ""
 	}
 	return o.ContentType
 }
 
-func (o *GetClosingReasonResponse) GetErrorResp() *shared.ErrorResp {
+func (o *DeleteClosingReasonResponse) GetErrorResp() *shared.ErrorResp {
 	if o == nil {
 		return nil
 	}
 	return o.ErrorResp
 }
 
-func (o *GetClosingReasonResponse) GetStatusCode() int {
+func (o *DeleteClosingReasonResponse) GetStatusCode() int {
 	if o == nil {
 		return 0
 	}
 	return o.StatusCode
 }
 
-func (o *GetClosingReasonResponse) GetRawResponse() *http.Response {
+func (o *DeleteClosingReasonResponse) GetRawResponse() *http.Response {
 	if o == nil {
 		return nil
 	}

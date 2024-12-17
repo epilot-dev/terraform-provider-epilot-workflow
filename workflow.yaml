@@ -645,10 +645,129 @@ paths:
               schema:
                 $ref: "#/components/schemas/ClosingReason"
 
+  /v2/workflows/closing-reasons/{reasonId}:
+    get:
+      operationId: getClosingReason 
+      summary: getClosingReason
+      description: Get specific closing reason by id from the organisation.
+      tags:
+        - Closing Reason
+      parameters:
+        - in: path
+          name: reasonId
+          schema:
+            type: string
+            example: "x739cew"
+          required: true
+          description: unique id to identify the closing reason.
+      responses:
+        200:
+          description: Returns the closing reason
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClosingReason"
+        400:
+          description: Validation Errors
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResp"
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResp"
+        404:
+          description: Closing reason not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClosingReasonNotFoundResp"
+
+    patch:
+      operationId: updateClosingReason
+      summary: updateClosingReason 
+      description: Update an existing closing reason
+      tags:
+        - Closing Reason
+      parameters:
+        - in: path
+          name: reasonId
+          schema:
+            type: string
+            example: "x739cew"
+          required: true
+          description: unique id to identify the closing reason.
+      requestBody:
+        description: Updated closing reason fields
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClosingReason"
+      responses:
+        200:
+          description: Closing reason updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClosingReason"
+        400:
+          description: Validation Errors
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResp"
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResp"
+        404:
+          description: Closing reason not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClosingReasonNotFoundResp"
+
+    delete:
+      operationId: deleteClosingReason
+      summary: deleteClosingReason
+      description: Permanently delete a closing reason (Using INACTIVE status is recommended instead)
+      tags:
+        - Closing Reason
+      parameters:
+        - in: path
+          name: reasonId
+          schema:
+            type: string
+            example: "x739cew"
+          required: true
+          description: unique id to identify the closing reason.
+      responses:
+        204:
+          description: Closing reason deleted successfully
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResp"
+        404:
+          description: Closing reason not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClosingReasonNotFoundResp"
+
   /v1/workflows/closing-reasons/{reasonId}:
     get:
-      operationId: getClosingReason
-      summary: getClosingReason
+      deprecated: true
+      operationId: getClosingReasonV1
+      summary: getClosingReasonV1
       description: Get specific closing reason by id from the organisation.
       tags:
         - Closing Reason
@@ -814,7 +933,7 @@ components:
         due_date:
           type: string
           example: "2021-04-27T12:00:00.000Z"
-        dynamic_due_date:
+        due_date_config:
           $ref: "#/components/schemas/DueDateConfig"
         assigned_to:
           type: array
@@ -921,7 +1040,7 @@ components:
         due_date:
           type: string
           example: "2021-04-27T12:00:00.000Z"
-        dynamic_due_date:
+        due_date_config:
           $ref: "#/components/schemas/DueDateConfig"
         requirements:
           type: array
@@ -961,7 +1080,7 @@ components:
         due_date:
           type: string
           example: "2021-04-27T12:00:00.000Z"
-        dynamic_due_date:
+        due_date_config:
           $ref: "#/components/schemas/DueDateConfig"
         assigned_to:
           type: array
@@ -1402,14 +1521,17 @@ components:
       properties:
         id:
           type: string
+          readOnly: true
         title:
           type: string
         status:
           $ref: "#/components/schemas/ClosingReasonsStatus"
         lastUpdateTime:
           type: string
+          readOnly: true
         creationTime:
           type: string
+          readOnly: true
 
     ClosingReasonsStatus:
       type: string

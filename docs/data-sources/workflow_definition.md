@@ -14,6 +14,7 @@ WorkflowDefinition DataSource
 
 ```terraform
 data "epilot-workflow_workflow_definition" "my_workflowdefinition" {
+  definition_id = "7hj28a"
 }
 ```
 
@@ -51,10 +52,10 @@ Read-Only:
 
 Read-Only:
 
-- `action_type_condition` (String)
+- `action_type_condition` (String) must be one of ["WORKFLOW_STARTED", "STEP_CLOSED"]
 - `number_of_units` (Number)
 - `step_id` (String)
-- `time_period` (String)
+- `time_period` (String) must be one of ["minutes", "hours", "days", "weeks", "months"]
 
 
 <a id="nestedatt--update_entity_attributes"></a>
@@ -62,7 +63,7 @@ Read-Only:
 
 Read-Only:
 
-- `source` (String)
+- `source` (String) must be one of ["workflow_status", "current_section", "current_step"]
 - `target` (Attributes) (see [below for nested schema](#nestedatt--update_entity_attributes--target))
 
 <a id="nestedatt--update_entity_attributes--target"></a>

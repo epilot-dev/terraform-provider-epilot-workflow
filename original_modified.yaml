@@ -1,17 +1,13 @@
 openapi: 3.0.0
-
 info:
   title: Workflows Definitions
   version: 1.0.0
   description: |
     Service for Workflow Definitions for different processes inside of an Organization
-
 servers:
   - url: https://workflows-definition.sls.epilot.io
-
 security:
   - BearerAuth: []
-
 paths:
   /v1/workflows/limits/max-allowed:
     get:
@@ -36,7 +32,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-
   /v1/workflows/definitions:
     get:
       operationId: getDefinitions
@@ -197,7 +192,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-
+      x-speakeasy-entity-operation: WorkflowDefinition#create
   /v2/flows/templates:
     get:
       operationId: listFlowTemplates
@@ -256,7 +251,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-
   /v2/flows/templates/{flowId}:
     get:
       operationId: getFlowTemplate
@@ -369,7 +363,6 @@ paths:
                 $ref: "#/components/schemas/ErrorResp"
         404:
           description: No definition found
-
   /v1/workflows/definitions/{definitionId}:
     get:
       operationId: getDefinition
@@ -385,6 +378,7 @@ paths:
           required: true
           description: Short uuid (length 8) to identify the Workflow Definition.
           example: 7hj28a
+          x-speakeasy-match: id
       responses:
         200:
           description: Returns the Workflow definition
@@ -427,12 +421,7 @@ paths:
                     type: STEP
                     order: 2
                     assignedTo: ["8988"]
-                closingReasons:
-                  [
-                    { id: ffoowef, title: test },
-                    { id: "hebwoeu", title: Closing because all },
-                    { id: "mbnoenq", title: Better offer },
-                  ]
+                closingReasons: [{id: ffoowef, title: test}, {id: "hebwoeu", title: Closing because all}, {id: "mbnoenq", title: Better offer}]
         400:
           description: Validation Errors
           content:
@@ -457,6 +446,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
+      x-speakeasy-entity-operation: WorkflowDefinition#get
     put:
       operationId: updateDefinition
       summary: updateDefinition
@@ -471,6 +461,7 @@ paths:
           required: true
           description: Short uuid (length 8) to identify the Workflow Definition.
           example: 7hj28a
+          x-speakeasy-match: id
       requestBody:
         description: Workflow Definition payload
         required: true
@@ -573,6 +564,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
+      x-speakeasy-entity-operation: WorkflowDefinition#update
     delete:
       operationId: deleteDefinition
       summary: deleteDefinition
@@ -587,6 +579,8 @@ paths:
           required: true
           description: Id of the definition to de deleted.
           example: CustomerRequest
+          x-speakeasy-match: id
+          # jsonencode workflows definiton flows due to type incompatibilities
       responses:
         204:
           description: Success - if the definition is deleted successfully
@@ -598,7 +592,7 @@ paths:
                 $ref: "#/components/schemas/ErrorResp"
         404:
           description: No definition found
-
+      x-speakeasy-entity-operation: WorkflowDefinition#delete
   /v1/workflows/closing-reasons:
     get:
       operationId: getAllClosingReasons
@@ -644,10 +638,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ClosingReason"
-
+      x-speakeasy-entity-operation: ClosingReason#create
   /v2/workflows/closing-reasons/{reasonId}:
     get:
-      operationId: getClosingReason 
+      operationId: getClosingReason
       summary: getClosingReason
       description: Get specific closing reason by id from the organisation.
       tags:
@@ -660,6 +654,7 @@ paths:
             example: "x739cew"
           required: true
           description: unique id to identify the closing reason.
+          x-speakeasy-match: id
       responses:
         200:
           description: Returns the closing reason
@@ -685,10 +680,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ClosingReasonNotFoundResp"
-
+      x-speakeasy-entity-operation: ClosingReason#get
     patch:
       operationId: updateClosingReason
-      summary: updateClosingReason 
+      summary: updateClosingReason
       description: Update an existing closing reason
       tags:
         - Closing Reason
@@ -700,6 +695,7 @@ paths:
             example: "x739cew"
           required: true
           description: unique id to identify the closing reason.
+          x-speakeasy-match: id
       requestBody:
         description: Updated closing reason fields
         required: true
@@ -732,7 +728,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ClosingReasonNotFoundResp"
-
+      x-speakeasy-entity-operation: ClosingReason#update
     delete:
       operationId: deleteClosingReason
       summary: deleteClosingReason
@@ -747,6 +743,7 @@ paths:
             example: "x739cew"
           required: true
           description: unique id to identify the closing reason.
+          x-speakeasy-match: id
       responses:
         204:
           description: Closing reason deleted successfully
@@ -762,7 +759,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ClosingReasonNotFoundResp"
-
+      x-speakeasy-entity-operation: ClosingReason#delete
   /v1/workflows/closing-reasons/{reasonId}:
     get:
       deprecated: true
@@ -834,7 +831,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/ChangeReasonStatusReq"
-
       responses:
         202:
           description: The status change was accepted
@@ -850,7 +846,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-
   /v1/workflows/definitions/{definitionId}/closing-reasons:
     get:
       operationId: getWorkflowClosingReasons
@@ -897,14 +892,12 @@ paths:
       responses:
         201:
           description: closing reasons are set for this workflow
-
 components:
   securitySchemes:
     BearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-
   schemas:
     # ------------------------- #
     #    V2 data structures
@@ -970,8 +963,7 @@ components:
       required:
         - name
         - tasks
-        - edges 
-   
+        - edges
     FlowTemplatesList:
       type: object
       properties:
@@ -981,22 +973,18 @@ components:
             $ref: "#/components/schemas/FlowTemplate"
       required:
         - results
-
     FlowTemplateId:
       type: string
       description: Short unique id (length 8) to identify the Flow Template.
       example: 7hj28akg
-
     Task:
       anyOf:
         - $ref: "#/components/schemas/ManualTask"
         - $ref: "#/components/schemas/AutomationTask"
         - $ref: "#/components/schemas/DecisionTask"
-
     ManualTask:
       allOf:
         - $ref: "#/components/schemas/TaskBase"
-       
     AutomationTask:
       allOf:
         - $ref: "#/components/schemas/TaskBase"
@@ -1004,15 +992,14 @@ components:
           required:
             - automation_config
           properties:
-              automation_config:
-                type: object
-                properties:
-                  flow_id:
-                    type: string
-                    description: Id of the configured automation to run
-                required:
-                  - flow_id
-
+            automation_config:
+              type: object
+              properties:
+                flow_id:
+                  type: string
+                  description: Id of the configured automation to run
+              required:
+                - flow_id
     DecisionTask:
       allOf:
         - $ref: "#/components/schemas/TaskBase"
@@ -1024,7 +1011,6 @@ components:
               type: array
               items:
                 $ref: "#/components/schemas/Condition"
-
     TaskBase:
       type: object
       properties:
@@ -1069,7 +1055,6 @@ components:
         - id
         - name
         - task_type
-
     Phase:
       type: object
       properties:
@@ -1094,8 +1079,7 @@ components:
       required:
         - id
         - name
-
-    TaskType:      
+    TaskType:
       type: string
       enum:
         - MANUAL
@@ -1116,7 +1100,6 @@ components:
         - id
         - from_id
         - to_id
-
     Condition:
       type: object
       properties:
@@ -1135,7 +1118,6 @@ components:
         - id
         - logical_operator
         - statements
-
     Statement:
       type: object
       properties:
@@ -1154,7 +1136,6 @@ components:
         - source
         - operator
         - values
-
     EvaluationSource:
       type: object
       properties:
@@ -1207,7 +1188,6 @@ components:
             - updated
             - added
             - deleted
-
     Operator:
       type: string
       enum:
@@ -1225,7 +1205,6 @@ components:
         - less_than_or_equals
         - is_empty
         - is_not_empty
-
     DueDateConfig:
       description: Set due date for the task based on a dynamic condition
       type: object
@@ -1251,7 +1230,6 @@ components:
         - duration
         - unit
         - type
-
     EnableRequirement:
       description: describe the requirement for a task to be enabled
       type: object
@@ -1267,11 +1245,9 @@ components:
             - PHASE_FINISHED
       required:
         - when
-
     # ------------------------- #
     #    V1 data structures
     # ------------------------- #
-
     WorkflowDefinition:
       type: object
       properties:
@@ -1317,6 +1293,7 @@ components:
             anyOf:
               - $ref: "#/components/schemas/Section"
               - $ref: "#/components/schemas/Step"
+          x-speakeasy-type-override: any
         closingReasons:
           type: array
           items:
@@ -1333,7 +1310,7 @@ components:
       required:
         - name
         - flow
-
+      x-speakeasy-entity: WorkflowDefinition
     Step:
       type: object
       description: Action that needs to be done in a Workflow
@@ -1393,7 +1370,6 @@ components:
         - name
         - order
         - type
-
     Section:
       type: object
       description: A group of Steps that define the progress of the Workflow
@@ -1429,19 +1405,16 @@ components:
         - order
         - type
         - steps
-
     ItemType:
       type: string
       enum:
         - STEP
         - SECTION
-    
     StepType:
       type: string
       enum:
         - MANUAL
         - AUTOMATION
-
     StepJourney:
       type: object
       properties:
@@ -1451,7 +1424,6 @@ components:
           type: string
         name:
           type: string
-
     ECPDetails:
       type: object
       description: Details regarding ECP for the workflow step
@@ -1464,7 +1436,6 @@ components:
           type: string
         journey:
           $ref: '#/components/schemas/StepJourney'
-
     StepDescription:
       type: object
       description: Longer information regarding Task
@@ -1473,7 +1444,6 @@ components:
           type: boolean
         value:
           type: string
-
     MaxAllowedLimit:
       type: object
       properties:
@@ -1481,19 +1451,16 @@ components:
           type: number
         maxAllowed:
           type: number
-
     DefinitionNotFoundResp:
       description: Definition could be not found
       properties:
         message:
           type: string
-
     ClosingReasonNotFoundResp:
       description: Closing reason could be not found
       properties:
         message:
           type: string
-
     ChangeReasonStatusReq:
       type: object
       properties:
@@ -1501,7 +1468,6 @@ components:
           $ref: "#/components/schemas/ClosingReasonsStatus"
       required:
         - status
-
     ClosingReasons:
       type: object
       properties:
@@ -1511,7 +1477,6 @@ components:
             $ref: "#/components/schemas/ClosingReason"
       required:
         - reasons
-
     ClosingReason:
       type: object
       description: One Closing reason for a workflow
@@ -1532,13 +1497,12 @@ components:
         creationTime:
           type: string
           readOnly: true
-
+      x-speakeasy-entity: ClosingReason
     ClosingReasonsStatus:
       type: string
       enum:
         - ACTIVE
         - INACTIVE
-
     ClosingReasonsIds:
       type: object
       properties:
@@ -1548,7 +1512,6 @@ components:
             $ref: "#/components/schemas/ClosingReasonId"
       required:
         - reasons
-
     ClosingReasonId:
       type: object
       properties:
@@ -1557,13 +1520,11 @@ components:
           example: "x739cew"
       required:
         - id
-
     ErrorResp:
       type: object
       properties:
         message:
           type: string
-
     UpdateEntityAttributes:
       type: object
       properties:
@@ -1590,7 +1551,6 @@ components:
       required:
         - source
         - target
-
     DynamicDueDate:
       description: set a Duedate for a step then a specific
       type: object
@@ -1616,7 +1576,6 @@ components:
         - numberOfUnits
         - timePeriod
         - actionTypeCondition
-
     StepRequirement:
       description: describe the requirement for step enablement
       type: object
@@ -1633,3 +1592,13 @@ components:
         - definitionId
         - type
         - condition
+x-speakeasy-retries:
+  strategy: backoff
+  backoff:
+    initialInterval: 5000 # 5 seconds
+    maxInterval: 60000 # 60 seconds
+    maxElapsedTime: 3600000 # 5 minutes
+    exponent: 1.5
+  statusCodes:
+    - 5XX
+  retryConnectionErrors: true

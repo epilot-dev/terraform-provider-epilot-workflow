@@ -16,8 +16,8 @@ type FlowTemplate struct {
 	Description *string `json:"description,omitempty"`
 	DueDate     *string `json:"due_date,omitempty"`
 	// Set due date for the task based on a dynamic condition
-	DynamicDueDate *DueDateConfig `json:"dynamic_due_date,omitempty"`
-	Edges          []Edge         `json:"edges"`
+	DueDateConfig *DueDateConfig `json:"due_date_config,omitempty"`
+	Edges         []Edge         `json:"edges"`
 	// Whether the workflow is enabled or not
 	Enabled *bool   `default:"true" json:"enabled"`
 	ID      *string `json:"id,omitempty"`
@@ -84,11 +84,11 @@ func (o *FlowTemplate) GetDueDate() *string {
 	return o.DueDate
 }
 
-func (o *FlowTemplate) GetDynamicDueDate() *DueDateConfig {
+func (o *FlowTemplate) GetDueDateConfig() *DueDateConfig {
 	if o == nil {
 		return nil
 	}
-	return o.DynamicDueDate
+	return o.DueDateConfig
 }
 
 func (o *FlowTemplate) GetEdges() []Edge {

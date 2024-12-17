@@ -14,11 +14,9 @@ ClosingReason Resource
 
 ```terraform
 resource "epilot-workflow_closing_reason" "my_closingreason" {
-  creation_time    = "...my_creation_time..."
-  id               = "...my_id..."
-  last_update_time = "...my_last_update_time..."
-  status           = "INACTIVE"
-  title            = "...my_title..."
+  reason_id = "x739cew"
+  status    = "ACTIVE"
+  title     = "Miss"
 }
 ```
 
@@ -27,14 +25,14 @@ resource "epilot-workflow_closing_reason" "my_closingreason" {
 
 ### Required
 
-- `status` (String) must be one of ["ACTIVE", "INACTIVE"]; Requires replacement if changed.
-- `title` (String) Requires replacement if changed.
+- `status` (String) must be one of ["ACTIVE", "INACTIVE"]
+- `title` (String)
 
-### Optional
+### Read-Only
 
-- `creation_time` (String) Requires replacement if changed.
-- `id` (String) Requires replacement if changed.
-- `last_update_time` (String) Requires replacement if changed.
+- `creation_time` (String)
+- `id` (String) The ID of this resource.
+- `last_update_time` (String)
 
 ## Import
 

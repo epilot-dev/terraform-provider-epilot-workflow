@@ -56,7 +56,8 @@ func (r *ClosingReasonDataSource) Schema(ctx context.Context, req datasource.Sch
 				Computed: true,
 			},
 			"status": schema.StringAttribute{
-				Computed: true,
+				Computed:    true,
+				Description: `must be one of ["ACTIVE", "INACTIVE"]`,
 			},
 			"title": schema.StringAttribute{
 				Computed: true,

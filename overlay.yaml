@@ -48,14 +48,26 @@ actions:
       x-speakeasy-type-override: any
 
 
-# Closing reasons
-  - target: $["paths"]["/v1/workflows/closing-reasons/{reasonId}"]["get"]
-    update:
-      x-speakeasy-entity-operation: ClosingReason#get
+  # Closing reasons
   - target: $["paths"]["/v1/workflows/closing-reasons"]["post"]
     update:
       x-speakeasy-entity-operation: ClosingReason#create
-  - target: $["paths"]["/v1/workflows/closing-reasons/{reasonId}"]["get"]["parameters"][0]
+  - target: $["paths"]["/v2/workflows/closing-reasons/{reasonId}"]["get"]
+    update:
+      x-speakeasy-entity-operation: ClosingReason#get
+  - target: $["paths"]["/v2/workflows/closing-reasons/{reasonId}"]["get"]["parameters"][0]
+    update:
+      x-speakeasy-match: id
+  - target: $["paths"]["/v2/workflows/closing-reasons/{reasonId}"]["patch"]
+    update:
+      x-speakeasy-entity-operation: ClosingReason#update
+  - target: $["paths"]["/v2/workflows/closing-reasons/{reasonId}"]["patch"]["parameters"][0]
+    update:
+      x-speakeasy-match: id
+  - target: $["paths"]["/v2/workflows/closing-reasons/{reasonId}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: ClosingReason#delete
+  - target: $["paths"]["/v2/workflows/closing-reasons/{reasonId}"]["delete"]["parameters"][0]
     update:
       x-speakeasy-match: id
   - target: $["components"]["schemas"]["ClosingReason"]

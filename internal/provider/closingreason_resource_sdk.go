@@ -7,35 +7,14 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-func (r *ClosingReasonResourceModel) ToSharedClosingReason() *shared.ClosingReason {
-	creationTime := new(string)
-	if !r.CreationTime.IsUnknown() && !r.CreationTime.IsNull() {
-		*creationTime = r.CreationTime.ValueString()
-	} else {
-		creationTime = nil
-	}
-	id := new(string)
-	if !r.ID.IsUnknown() && !r.ID.IsNull() {
-		*id = r.ID.ValueString()
-	} else {
-		id = nil
-	}
-	lastUpdateTime := new(string)
-	if !r.LastUpdateTime.IsUnknown() && !r.LastUpdateTime.IsNull() {
-		*lastUpdateTime = r.LastUpdateTime.ValueString()
-	} else {
-		lastUpdateTime = nil
-	}
+func (r *ClosingReasonResourceModel) ToSharedClosingReasonInput() *shared.ClosingReasonInput {
 	status := shared.ClosingReasonsStatus(r.Status.ValueString())
 	var title string
 	title = r.Title.ValueString()
 
-	out := shared.ClosingReason{
-		CreationTime:   creationTime,
-		ID:             id,
-		LastUpdateTime: lastUpdateTime,
-		Status:         status,
-		Title:          title,
+	out := shared.ClosingReasonInput{
+		Status: status,
+		Title:  title,
 	}
 	return &out
 }
