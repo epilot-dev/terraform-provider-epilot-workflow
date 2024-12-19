@@ -36,11 +36,9 @@ func (e *ActionTypeCondition) UnmarshalJSON(data []byte) error {
 type TimePeriod string
 
 const (
-	TimePeriodMinutes TimePeriod = "minutes"
-	TimePeriodHours   TimePeriod = "hours"
-	TimePeriodDays    TimePeriod = "days"
-	TimePeriodWeeks   TimePeriod = "weeks"
-	TimePeriodMonths  TimePeriod = "months"
+	TimePeriodDays   TimePeriod = "days"
+	TimePeriodWeeks  TimePeriod = "weeks"
+	TimePeriodMonths TimePeriod = "months"
 )
 
 func (e TimePeriod) ToPointer() *TimePeriod {
@@ -52,10 +50,6 @@ func (e *TimePeriod) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	switch v {
-	case "minutes":
-		fallthrough
-	case "hours":
-		fallthrough
 	case "days":
 		fallthrough
 	case "weeks":
