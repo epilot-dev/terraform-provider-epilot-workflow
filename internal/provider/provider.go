@@ -25,8 +25,8 @@ type EpilotWorkflowProvider struct {
 
 // EpilotWorkflowProviderModel describes the provider data model.
 type EpilotWorkflowProviderModel struct {
-	ServerURL  types.String `tfsdk:"server_url"`
 	BearerAuth types.String `tfsdk:"bearer_auth"`
+	ServerURL  types.String `tfsdk:"server_url"`
 }
 
 func (p *EpilotWorkflowProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -36,19 +36,17 @@ func (p *EpilotWorkflowProvider) Metadata(ctx context.Context, req provider.Meta
 
 func (p *EpilotWorkflowProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: `Workflows Definitions: Service for Workflow Definitions for different processes inside of an Organization` + "\n" +
-			``,
 		Attributes: map[string]schema.Attribute{
-			"server_url": schema.StringAttribute{
-				MarkdownDescription: "Server URL (defaults to https://workflows-definition.sls.epilot.io)",
-				Optional:            true,
-				Required:            false,
-			},
 			"bearer_auth": schema.StringAttribute{
-				Sensitive: true,
 				Optional:  true,
+				Sensitive: true,
+			},
+			"server_url": schema.StringAttribute{
+				Description: `Server URL (defaults to https://workflows-definition.sls.epilot.io)`,
+				Optional:    true,
 			},
 		},
+		MarkdownDescription: `Workflows Definitions: Service for Workflow Definitions for different processes inside of an Organization`,
 	}
 }
 
@@ -77,10 +75,18 @@ func (p *EpilotWorkflowProvider) Configure(ctx context.Context, req provider.Con
 		BearerAuth: bearerAuth,
 	}
 
+	providerHTTPTransportOpts := ProviderHTTPTransportOpts{
+		SetHeaders: make(map[string]string),
+		Transport:  http.DefaultTransport,
+	}
+
+	httpClient := http.DefaultClient
+	httpClient.Transport = NewProviderHTTPTransport(providerHTTPTransportOpts)
+
 	opts := []sdk.SDKOption{
 		sdk.WithServerURL(ServerURL),
 		sdk.WithSecurity(security),
-		sdk.WithClient(http.DefaultClient),
+		sdk.WithClient(httpClient),
 	}
 	client := sdk.New(opts...)
 
@@ -89,17 +95,11 @@ func (p *EpilotWorkflowProvider) Configure(ctx context.Context, req provider.Con
 }
 
 func (p *EpilotWorkflowProvider) Resources(ctx context.Context) []func() resource.Resource {
-	return []func() resource.Resource{
-		NewClosingReasonResource,
-		NewWorkflowDefinitionResource,
-	}
+	return []func() resource.Resource{}
 }
 
 func (p *EpilotWorkflowProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
-	return []func() datasource.DataSource{
-		NewClosingReasonDataSource,
-		NewWorkflowDefinitionDataSource,
-	}
+	return []func() datasource.DataSource{}
 }
 
 func New(version string) func() provider.Provider {
