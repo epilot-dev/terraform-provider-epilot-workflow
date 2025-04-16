@@ -85,18 +85,19 @@ func (r *WorkflowDefinitionDataSource) Schema(ctx context.Context, req datasourc
 				Computed: true,
 				Attributes: map[string]schema.Attribute{
 					"action_type_condition": schema.StringAttribute{
-						Computed:    true,
-						Description: `must be one of ["WORKFLOW_STARTED", "STEP_CLOSED"]`,
+						Computed: true,
 					},
 					"number_of_units": schema.NumberAttribute{
+						Computed: true,
+					},
+					"phase_id": schema.StringAttribute{
 						Computed: true,
 					},
 					"step_id": schema.StringAttribute{
 						Computed: true,
 					},
 					"time_period": schema.StringAttribute{
-						Computed:    true,
-						Description: `must be one of ["minutes", "hours", "days", "weeks", "months"]`,
+						Computed: true,
 					},
 				},
 				Description: `set a Duedate for a step then a specific`,
@@ -133,8 +134,7 @@ func (r *WorkflowDefinitionDataSource) Schema(ctx context.Context, req datasourc
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"source": schema.StringAttribute{
-							Computed:    true,
-							Description: `must be one of ["workflow_status", "current_section", "current_step"]`,
+							Computed: true,
 						},
 						"target": schema.SingleNestedAttribute{
 							Computed: true,

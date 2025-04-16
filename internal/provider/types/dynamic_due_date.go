@@ -7,6 +7,7 @@ import "github.com/hashicorp/terraform-plugin-framework/types"
 type DynamicDueDate struct {
 	ActionTypeCondition types.String `tfsdk:"action_type_condition"`
 	NumberOfUnits       types.Number `tfsdk:"number_of_units"`
+	PhaseID             types.String `tfsdk:"phase_id"`
 	StepID              types.String `tfsdk:"step_id"`
 	TimePeriod          types.String `tfsdk:"time_period"`
 }

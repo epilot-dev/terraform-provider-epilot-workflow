@@ -71,6 +71,9 @@ func (r *WorkflowDefinitionResource) Schema(ctx context.Context, req resource.Sc
 				Computed: true,
 				Optional: true,
 				NestedObject: schema.NestedAttributeObject{
+					Validators: []validator.Object{
+						speakeasy_objectvalidators.NotNull(),
+					},
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
 							Computed:    true,
@@ -103,12 +106,13 @@ func (r *WorkflowDefinitionResource) Schema(ctx context.Context, req resource.Sc
 					"action_type_condition": schema.StringAttribute{
 						Computed:    true,
 						Optional:    true,
-						Description: `Not Null; must be one of ["WORKFLOW_STARTED", "STEP_CLOSED"]`,
+						Description: `Not Null; must be one of ["WORKFLOW_STARTED", "STEP_CLOSED", "PHASE_FINISHED"]`,
 						Validators: []validator.String{
 							speakeasy_stringvalidators.NotNull(),
 							stringvalidator.OneOf(
 								"WORKFLOW_STARTED",
 								"STEP_CLOSED",
+								"PHASE_FINISHED",
 							),
 						},
 					},
@@ -119,6 +123,10 @@ func (r *WorkflowDefinitionResource) Schema(ctx context.Context, req resource.Sc
 						Validators: []validator.Number{
 							speakeasy_numbervalidators.NotNull(),
 						},
+					},
+					"phase_id": schema.StringAttribute{
+						Computed: true,
+						Optional: true,
 					},
 					"step_id": schema.StringAttribute{
 						Computed: true,
@@ -182,6 +190,9 @@ func (r *WorkflowDefinitionResource) Schema(ctx context.Context, req resource.Sc
 				Computed: true,
 				Optional: true,
 				NestedObject: schema.NestedAttributeObject{
+					Validators: []validator.Object{
+						speakeasy_objectvalidators.NotNull(),
+					},
 					Attributes: map[string]schema.Attribute{
 						"source": schema.StringAttribute{
 							Computed:    true,

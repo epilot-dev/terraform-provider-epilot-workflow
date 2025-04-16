@@ -2,20 +2,9 @@
 
 package shared
 
-type AutomationConfig struct {
-	// Id of the configured automation to run
-	FlowID string `json:"flow_id"`
-}
-
-func (o *AutomationConfig) GetFlowID() string {
-	if o == nil {
-		return ""
-	}
-	return o.FlowID
-}
-
 type AutomationTask struct {
-	AssignedTo       []string         `json:"assigned_to,omitempty"`
+	AssignedTo []string `json:"assigned_to,omitempty"`
+	// Configuration for automation execution to run
 	AutomationConfig AutomationConfig `json:"automation_config"`
 	// Longer information regarding Task
 	Description *StepDescription `json:"description,omitempty"`
@@ -32,9 +21,11 @@ type AutomationTask struct {
 	PhaseID   *string      `json:"phase_id,omitempty"`
 	// requirements that need to be fulfilled in order to enable the task while flow instances are running
 	Requirements []EnableRequirement `json:"requirements,omitempty"`
+	Schedule     *ActionSchedule     `json:"schedule,omitempty"`
 	TaskType     TaskType            `json:"task_type"`
 	// Taxonomy ids that are associated with this workflow and used for filtering
-	Taxonomies []string `json:"taxonomies,omitempty"`
+	Taxonomies  []string     `json:"taxonomies,omitempty"`
+	TriggerMode *TriggerMode `json:"trigger_mode,omitempty"`
 }
 
 func (o *AutomationTask) GetAssignedTo() []string {
@@ -121,6 +112,13 @@ func (o *AutomationTask) GetRequirements() []EnableRequirement {
 	return o.Requirements
 }
 
+func (o *AutomationTask) GetSchedule() *ActionSchedule {
+	if o == nil {
+		return nil
+	}
+	return o.Schedule
+}
+
 func (o *AutomationTask) GetTaskType() TaskType {
 	if o == nil {
 		return TaskType("")
@@ -133,4 +131,11 @@ func (o *AutomationTask) GetTaxonomies() []string {
 		return nil
 	}
 	return o.Taxonomies
+}
+
+func (o *AutomationTask) GetTriggerMode() *TriggerMode {
+	if o == nil {
+		return nil
+	}
+	return o.TriggerMode
 }

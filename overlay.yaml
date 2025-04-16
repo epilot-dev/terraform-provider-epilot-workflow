@@ -73,3 +73,28 @@ actions:
   - target: $["components"]["schemas"]["ClosingReason"]
     update:
       x-speakeasy-entity: ClosingReason
+
+  - target: $["paths"]["/v2/flows/templates/{flowId}"]["get"]
+    update:
+      x-speakeasy-entity-operation: FlowTemplate#get
+  - target: $["paths"]["/v2/flows/templates"]["post"]
+    update:
+      x-speakeasy-entity-operation: FlowTemplate#create
+  - target: $["paths"]["/v2/flows/templates/{flowId}"]["put"]
+    update:
+      x-speakeasy-entity-operation: FlowTemplate#update
+  - target: $["paths"]["/v2/flows/templates/{flowId}"]["delete"]
+    update:
+      x-speakeasy-entity-operation: FlowTemplate#delete
+  - target: $["paths"]["/v2/flows/templates/{flowId}"]["get"]["parameters"][0]
+    update:
+      x-speakeasy-match: id
+  - target: $["paths"]["/v2/flows/templates/{flowId}"]["put"]["parameters"][0]
+    update:
+      x-speakeasy-match: id
+  - target: $["paths"]["/v2/flows/templates/{flowId}"]["delete"]["parameters"][0]
+    update:
+      x-speakeasy-match: id
+  - target: $["components"]["schemas"]["FlowTemplate"]
+    update:
+      x-speakeasy-entity: FlowTemplate

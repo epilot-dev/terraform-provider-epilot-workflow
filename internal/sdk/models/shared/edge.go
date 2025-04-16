@@ -6,7 +6,9 @@ type Edge struct {
 	ConditionID *string `json:"condition_id,omitempty"`
 	FromID      string  `json:"from_id"`
 	ID          string  `json:"id"`
-	ToID        string  `json:"to_id"`
+	// Indicates a default case for a decision task. Only decision task edges can have this field and the flow advances using this edge if no conditions are met.
+	NoneMet *bool  `json:"none_met,omitempty"`
+	ToID    string `json:"to_id"`
 }
 
 func (o *Edge) GetConditionID() *string {
@@ -28,6 +30,13 @@ func (o *Edge) GetID() string {
 		return ""
 	}
 	return o.ID
+}
+
+func (o *Edge) GetNoneMet() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.NoneMet
 }
 
 func (o *Edge) GetToID() string {

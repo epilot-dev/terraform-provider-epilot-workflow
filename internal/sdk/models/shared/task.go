@@ -17,9 +17,9 @@ const (
 )
 
 type Task struct {
-	TaskBase       *TaskBase
-	AutomationTask *AutomationTask
-	DecisionTask   *DecisionTask
+	TaskBase       *TaskBase       `queryParam:"inline"`
+	AutomationTask *AutomationTask `queryParam:"inline"`
+	DecisionTask   *DecisionTask   `queryParam:"inline"`
 
 	Type TaskUnionType
 }
@@ -60,17 +60,17 @@ func (u *Task) UnmarshalJSON(data []byte) error {
 		return nil
 	}
 
-	var automationTask AutomationTask = AutomationTask{}
-	if err := utils.UnmarshalJSON(data, &automationTask, "", true, true); err == nil {
-		u.AutomationTask = &automationTask
-		u.Type = TaskUnionTypeAutomationTask
-		return nil
-	}
-
 	var decisionTask DecisionTask = DecisionTask{}
 	if err := utils.UnmarshalJSON(data, &decisionTask, "", true, true); err == nil {
 		u.DecisionTask = &decisionTask
 		u.Type = TaskUnionTypeDecisionTask
+		return nil
+	}
+
+	var automationTask AutomationTask = AutomationTask{}
+	if err := utils.UnmarshalJSON(data, &automationTask, "", true, true); err == nil {
+		u.AutomationTask = &automationTask
+		u.Type = TaskUnionTypeAutomationTask
 		return nil
 	}
 

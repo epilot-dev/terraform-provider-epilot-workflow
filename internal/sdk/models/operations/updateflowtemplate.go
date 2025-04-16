@@ -9,13 +9,13 @@ import (
 
 type UpdateFlowTemplateRequest struct {
 	// Flow Template payload
-	FlowTemplate shared.FlowTemplate `request:"mediaType=application/json"`
-	FlowID       string              `pathParam:"style=simple,explode=false,name=flowId"`
+	FlowTemplate shared.FlowTemplateInput `request:"mediaType=application/json"`
+	FlowID       string                   `pathParam:"style=simple,explode=false,name=flowId"`
 }
 
-func (o *UpdateFlowTemplateRequest) GetFlowTemplate() shared.FlowTemplate {
+func (o *UpdateFlowTemplateRequest) GetFlowTemplate() shared.FlowTemplateInput {
 	if o == nil {
-		return shared.FlowTemplate{}
+		return shared.FlowTemplateInput{}
 	}
 	return o.FlowTemplate
 }

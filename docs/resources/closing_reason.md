@@ -14,9 +14,8 @@ ClosingReason Resource
 
 ```terraform
 resource "epilot-workflow_closing_reason" "my_closingreason" {
-  reason_id = "x739cew"
-  status    = "ACTIVE"
-  title     = "Miss"
+  status = "INACTIVE"
+  title  = "...my_title..."
 }
 ```
 

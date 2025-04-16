@@ -38,6 +38,7 @@ func (r *WorkflowDefinitionDataSourceModel) RefreshFromSharedWorkflowDefinition(
 			r.DynamicDueDate = &tfTypes.DynamicDueDate{}
 			r.DynamicDueDate.ActionTypeCondition = types.StringValue(string(resp.DynamicDueDate.ActionTypeCondition))
 			r.DynamicDueDate.NumberOfUnits = types.NumberValue(big.NewFloat(float64(resp.DynamicDueDate.NumberOfUnits)))
+			r.DynamicDueDate.PhaseID = types.StringPointerValue(resp.DynamicDueDate.PhaseID)
 			r.DynamicDueDate.StepID = types.StringPointerValue(resp.DynamicDueDate.StepID)
 			r.DynamicDueDate.TimePeriod = types.StringValue(string(resp.DynamicDueDate.TimePeriod))
 		}

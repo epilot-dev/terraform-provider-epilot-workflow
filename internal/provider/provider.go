@@ -36,8 +36,7 @@ func (p *EpilotWorkflowProvider) Metadata(ctx context.Context, req provider.Meta
 
 func (p *EpilotWorkflowProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: `Workflows Definitions: Service for Workflow Definitions for different processes inside of an Organization` + "\n" +
-			``,
+		Description: `Workflows Definitions: Service for Workflow Definitions for different processes inside of an Organization`,
 		Attributes: map[string]schema.Attribute{
 			"server_url": schema.StringAttribute{
 				MarkdownDescription: "Server URL (defaults to https://workflows-definition.sls.epilot.io)",
@@ -77,10 +76,13 @@ func (p *EpilotWorkflowProvider) Configure(ctx context.Context, req provider.Con
 		BearerAuth: bearerAuth,
 	}
 
+	httpClient := http.DefaultClient
+	httpClient.Transport = NewLoggingHTTPTransport(http.DefaultTransport)
+
 	opts := []sdk.SDKOption{
 		sdk.WithServerURL(ServerURL),
 		sdk.WithSecurity(security),
-		sdk.WithClient(http.DefaultClient),
+		sdk.WithClient(httpClient),
 	}
 	client := sdk.New(opts...)
 
@@ -91,6 +93,7 @@ func (p *EpilotWorkflowProvider) Configure(ctx context.Context, req provider.Con
 func (p *EpilotWorkflowProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewClosingReasonResource,
+		NewFlowTemplateResource,
 		NewWorkflowDefinitionResource,
 	}
 }
@@ -98,6 +101,7 @@ func (p *EpilotWorkflowProvider) Resources(ctx context.Context) []func() resourc
 func (p *EpilotWorkflowProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		NewClosingReasonDataSource,
+		NewFlowTemplateDataSource,
 		NewWorkflowDefinitionDataSource,
 	}
 }

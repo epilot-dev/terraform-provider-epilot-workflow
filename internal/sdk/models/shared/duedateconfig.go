@@ -7,17 +7,18 @@ import (
 	"fmt"
 )
 
-type Type string
+type DueDateConfigType string
 
 const (
-	TypeWorkflowStarted Type = "WORKFLOW_STARTED"
-	TypeTaskFinished    Type = "TASK_FINISHED"
+	DueDateConfigTypeWorkflowStarted DueDateConfigType = "WORKFLOW_STARTED"
+	DueDateConfigTypeTaskFinished    DueDateConfigType = "TASK_FINISHED"
+	DueDateConfigTypePhaseFinished   DueDateConfigType = "PHASE_FINISHED"
 )
 
-func (e Type) ToPointer() *Type {
+func (e DueDateConfigType) ToPointer() *DueDateConfigType {
 	return &e
 }
-func (e *Type) UnmarshalJSON(data []byte) error {
+func (e *DueDateConfigType) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -26,54 +27,22 @@ func (e *Type) UnmarshalJSON(data []byte) error {
 	case "WORKFLOW_STARTED":
 		fallthrough
 	case "TASK_FINISHED":
-		*e = Type(v)
+		fallthrough
+	case "PHASE_FINISHED":
+		*e = DueDateConfigType(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for Type: %v", v)
-	}
-}
-
-type Unit string
-
-const (
-	UnitMinutes Unit = "minutes"
-	UnitHours   Unit = "hours"
-	UnitDays    Unit = "days"
-	UnitWeeks   Unit = "weeks"
-	UnitMonths  Unit = "months"
-)
-
-func (e Unit) ToPointer() *Unit {
-	return &e
-}
-func (e *Unit) UnmarshalJSON(data []byte) error {
-	var v string
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-	switch v {
-	case "minutes":
-		fallthrough
-	case "hours":
-		fallthrough
-	case "days":
-		fallthrough
-	case "weeks":
-		fallthrough
-	case "months":
-		*e = Unit(v)
-		return nil
-	default:
-		return fmt.Errorf("invalid value for Unit: %v", v)
+		return fmt.Errorf("invalid value for DueDateConfigType: %v", v)
 	}
 }
 
 // DueDateConfig - Set due date for the task based on a dynamic condition
 type DueDateConfig struct {
-	Duration float64 `json:"duration"`
-	TaskID   *string `json:"task_id,omitempty"`
-	Type     Type    `json:"type"`
-	Unit     Unit    `json:"unit"`
+	Duration float64           `json:"duration"`
+	PhaseID  *string           `json:"phase_id,omitempty"`
+	TaskID   *string           `json:"task_id,omitempty"`
+	Type     DueDateConfigType `json:"type"`
+	Unit     TimeUnit          `json:"unit"`
 }
 
 func (o *DueDateConfig) GetDuration() float64 {
@@ -83,6 +52,13 @@ func (o *DueDateConfig) GetDuration() float64 {
 	return o.Duration
 }
 
+func (o *DueDateConfig) GetPhaseID() *string {
+	if o == nil {
+		return nil
+	}
+	return o.PhaseID
+}
+
 func (o *DueDateConfig) GetTaskID() *string {
 	if o == nil {
 		return nil
@@ -90,16 +66,16 @@ func (o *DueDateConfig) GetTaskID() *string {
 	return o.TaskID
 }
 
-func (o *DueDateConfig) GetType() Type {
+func (o *DueDateConfig) GetType() DueDateConfigType {
 	if o == nil {
-		return Type("")
+		return DueDateConfigType("")
 	}
 	return o.Type
 }
 
-func (o *DueDateConfig) GetUnit() Unit {
+func (o *DueDateConfig) GetUnit() TimeUnit {
 	if o == nil {
-		return Unit("")
+		return TimeUnit("")
 	}
 	return o.Unit
 }

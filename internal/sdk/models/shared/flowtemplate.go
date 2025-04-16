@@ -9,8 +9,8 @@ import (
 type FlowTemplate struct {
 	AssignedTo []string `json:"assigned_to,omitempty"`
 	// Indicates whether this workflow is available for End Customer Portal or not. By default it's not.
-	AvailableInEcp *bool             `json:"available_in_ecp,omitempty"`
-	ClosingReasons []ClosingReasonID `json:"closing_reasons,omitempty"`
+	AvailableInEcp *bool           `json:"available_in_ecp,omitempty"`
+	ClosingReasons []ClosingReason `json:"closing_reasons,omitempty"`
 	// ISO String Date & Time
 	CreatedAt   *string `json:"created_at,omitempty"`
 	Description *string `json:"description,omitempty"`
@@ -21,11 +21,15 @@ type FlowTemplate struct {
 	// Whether the workflow is enabled or not
 	Enabled *bool   `default:"true" json:"enabled"`
 	ID      *string `json:"id,omitempty"`
-	Name    string  `json:"name"`
-	Phases  []Phase `json:"phases,omitempty"`
-	Tasks   []Task  `json:"tasks"`
+	// Whether the workflow is migrated from workflows to flows or not
+	IsFlowMigrated *bool   `default:"false" json:"is_flow_migrated"`
+	Name           string  `json:"name"`
+	OrgID          *string `json:"org_id,omitempty"`
+	Phases         []Phase `json:"phases,omitempty"`
+	Tasks          []Task  `json:"tasks"`
 	// Taxonomy ids that are associated with this workflow and used for filtering
 	Taxonomies             []string                 `json:"taxonomies,omitempty"`
+	Trigger                *Trigger                 `json:"trigger,omitempty"`
 	UpdateEntityAttributes []UpdateEntityAttributes `json:"update_entity_attributes,omitempty"`
 	// ISO String Date & Time
 	UpdatedAt *string `json:"updated_at,omitempty"`
@@ -56,7 +60,7 @@ func (o *FlowTemplate) GetAvailableInEcp() *bool {
 	return o.AvailableInEcp
 }
 
-func (o *FlowTemplate) GetClosingReasons() []ClosingReasonID {
+func (o *FlowTemplate) GetClosingReasons() []ClosingReason {
 	if o == nil {
 		return nil
 	}
@@ -112,11 +116,25 @@ func (o *FlowTemplate) GetID() *string {
 	return o.ID
 }
 
+func (o *FlowTemplate) GetIsFlowMigrated() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.IsFlowMigrated
+}
+
 func (o *FlowTemplate) GetName() string {
 	if o == nil {
 		return ""
 	}
 	return o.Name
+}
+
+func (o *FlowTemplate) GetOrgID() *string {
+	if o == nil {
+		return nil
+	}
+	return o.OrgID
 }
 
 func (o *FlowTemplate) GetPhases() []Phase {
@@ -138,6 +156,13 @@ func (o *FlowTemplate) GetTaxonomies() []string {
 		return nil
 	}
 	return o.Taxonomies
+}
+
+func (o *FlowTemplate) GetTrigger() *Trigger {
+	if o == nil {
+		return nil
+	}
+	return o.Trigger
 }
 
 func (o *FlowTemplate) GetUpdateEntityAttributes() []UpdateEntityAttributes {

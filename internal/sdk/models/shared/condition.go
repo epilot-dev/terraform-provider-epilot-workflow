@@ -34,9 +34,18 @@ func (e *LogicalOperator) UnmarshalJSON(data []byte) error {
 }
 
 type Condition struct {
+	// The name of the branch
+	BranchName      string          `json:"branch_name"`
 	ID              string          `json:"id"`
 	LogicalOperator LogicalOperator `json:"logical_operator"`
 	Statements      []Statement     `json:"statements"`
+}
+
+func (o *Condition) GetBranchName() string {
+	if o == nil {
+		return ""
+	}
+	return o.BranchName
 }
 
 func (o *Condition) GetID() string {

@@ -21,7 +21,7 @@ paths:
       tags:
         - Workflows
       responses:
-        200:
+        '200':
           description: A combo of current number of workflows, and the max allowed number of workflows.
           content:
             application/json:
@@ -30,7 +30,7 @@ paths:
               example:
                 currentNoOfWorkflows: 5
                 maxAllowed: 7
-        500:
+        '500':
           description: Other errors
           content:
             application/json:
@@ -45,7 +45,7 @@ paths:
       tags:
         - Workflows
       responses:
-        200:
+        '200':
           description: Success - definitions loaded with success. Empty array if org has no definitions.
           content:
             application/json:
@@ -89,7 +89,7 @@ paths:
                       type: STEP
                       order: 2
                       assignedTo: ["123482"]
-        500:
+        '500':
           description: Other errors
           content:
             application/json:
@@ -137,7 +137,7 @@ paths:
                   order: 2
                   assignedTo: ["123482"]
       responses:
-        201:
+        '201':
           description: Success - if the definition is created successfully
           content:
             application/json:
@@ -179,19 +179,19 @@ paths:
                     type: STEP
                     order: 2
                     assignedTo: ["8239"]
-        400:
+        '400':
           description: Validation Errors
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-        401:
+        '401':
           description: Authentication Errors
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-        500:
+        '500':
           description: Other errors
           content:
             application/json:
@@ -206,13 +206,13 @@ paths:
       tags:
         - Flows V2
       responses:
-        200:
+        '200':
           description: Success - flow templates loaded with success. Empty array if customer has no flows defined.
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/FlowTemplatesList"
-        500:
+        '500':
           description: Other errors
           content:
             application/json:
@@ -230,27 +230,27 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/FlowTemplate"
+              $ref: "#/components/schemas/CreateFlowTemplate"
       responses:
-        201:
+        '201':
           description: Success - if the flow template is created successfully
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/FlowTemplate"
-        400:
+        '400':
           description: Validation Errors
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-        401:
+        '401':
           description: Authentication Errors
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-        500:
+        '500':
           description: Other errors
           content:
             application/json:
@@ -271,31 +271,31 @@ paths:
             $ref: "#/components/schemas/FlowTemplateId"
           required: true
       responses:
-        200:
+        '200':
           description: Returns the Flow Template
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/FlowTemplate"
-        400:
+        '400':
           description: Validation Errors
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-        404:
+        '404':
           description: Definition Not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/DefinitionNotFoundResp"
-        401:
+        '401':
           description: Authentication Errors
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-        500:
+        '500':
           description: Other errors
           content:
             application/json:
@@ -321,25 +321,25 @@ paths:
             schema:
               $ref: "#/components/schemas/FlowTemplate"
       responses:
-        200:
+        '200':
           description: Flow template has been updated successfully
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/FlowTemplate"
-        400:
+        '400':
           description: Validation Errors
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-        401:
+        '401':
           description: Authentication Errors
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-        500:
+        '500':
           description: Other errors
           content:
             application/json:
@@ -359,15 +359,15 @@ paths:
           required: true
           description: Id of the flow template to de deleted.
       responses:
-        204:
+        '204':
           description: Flow template has been deleted successfully
-        401:
+        '401':
           description: Failed to authenticate
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-        404:
+        '404':
           description: No definition found
 
   /v1/workflows/definitions/{definitionId}:
@@ -386,7 +386,7 @@ paths:
           description: Short uuid (length 8) to identify the Workflow Definition.
           example: 7hj28a
       responses:
-        200:
+        '200':
           description: Returns the Workflow definition
           content:
             application/json:
@@ -433,25 +433,25 @@ paths:
                     { id: "hebwoeu", title: Closing because all },
                     { id: "mbnoenq", title: Better offer },
                   ]
-        400:
+        '400':
           description: Validation Errors
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-        404:
+        '404':
           description: Definition Not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/DefinitionNotFoundResp"
-        401:
+        '401':
           description: Authentication Errors
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-        500:
+        '500':
           description: Other errors
           content:
             application/json:
@@ -514,7 +514,7 @@ paths:
                   order: 2
                   assignedTo: ["8988"]
       responses:
-        200:
+        '200':
           description: Success - if the definition is updated successfully
           content:
             application/json:
@@ -555,19 +555,19 @@ paths:
                     type: STEP
                     order: 2
                     assignedTo: ["156645"]
-        400:
+        '400':
           description: Validation Errors
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-        401:
+        '401':
           description: Authentication Errors
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-        500:
+        '500':
           description: Other errors
           content:
             application/json:
@@ -588,15 +588,15 @@ paths:
           description: Id of the definition to de deleted.
           example: CustomerRequest
       responses:
-        204:
+        '204':
           description: Success - if the definition is deleted successfully
-        401:
+        '401':
           description: Failed to authenticate
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-        404:
+        '404':
           description: No definition found
 
   /v1/workflows/closing-reasons:
@@ -615,7 +615,7 @@ paths:
       tags:
         - Closing Reason
       responses:
-        200:
+        '200':
           description: Returns the entire catalog of closing reasons per organization
           content:
             application/json:
@@ -638,7 +638,7 @@ paths:
               title: better offer
               description: A customer closes the process because he found something better
       responses:
-        201:
+        '201':
           description: closing reason is stored successfully in the repository
           content:
             application/json:
@@ -647,7 +647,7 @@ paths:
 
   /v2/workflows/closing-reasons/{reasonId}:
     get:
-      operationId: getClosingReason 
+      operationId: getClosingReason
       summary: getClosingReason
       description: Get specific closing reason by id from the organisation.
       tags:
@@ -661,25 +661,25 @@ paths:
           required: true
           description: unique id to identify the closing reason.
       responses:
-        200:
+        '200':
           description: Returns the closing reason
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ClosingReason"
-        400:
+        '400':
           description: Validation Errors
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-        403:
+        '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-        404:
+        '404':
           description: Closing reason not found
           content:
             application/json:
@@ -688,7 +688,7 @@ paths:
 
     patch:
       operationId: updateClosingReason
-      summary: updateClosingReason 
+      summary: updateClosingReason
       description: Update an existing closing reason
       tags:
         - Closing Reason
@@ -708,25 +708,25 @@ paths:
             schema:
               $ref: "#/components/schemas/ClosingReason"
       responses:
-        200:
+        '200':
           description: Closing reason updated successfully
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ClosingReason"
-        400:
+        '400':
           description: Validation Errors
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-        403:
+        '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-        404:
+        '404':
           description: Closing reason not found
           content:
             application/json:
@@ -748,15 +748,15 @@ paths:
           required: true
           description: unique id to identify the closing reason.
       responses:
-        204:
+        '204':
           description: Closing reason deleted successfully
-        403:
+        '403':
           description: Forbidden
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-        404:
+        '404':
           description: Closing reason not found
           content:
             application/json:
@@ -780,7 +780,7 @@ paths:
           description: uuid to identify the closing reason.
           example: -poOAPBa-jFZA_AWV3zN0
       responses:
-        200:
+        '200':
           description: Returns the closing reason
           content:
             application/json:
@@ -792,25 +792,25 @@ paths:
                 status: "ACTIVE"
                 lastUpdateTime: "2021-08-04T21:13:50.373Z"
                 creationTime: "2021-08-04T21:13:50.373Z"
-        400:
+        '400':
           description: Validation Errors
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-        404:
+        '404':
           description: Closing reason not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ClosingReasonNotFoundResp"
-        401:
+        '401':
           description: Authentication Errors
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-        500:
+        '500':
           description: Other errors
           content:
             application/json:
@@ -836,15 +836,15 @@ paths:
               $ref: "#/components/schemas/ChangeReasonStatusReq"
 
       responses:
-        202:
+        '202':
           description: The status change was accepted
-        400:
+        '400':
           description: bad request
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-        500:
+        '500':
           description: Internal server error
           content:
             application/json:
@@ -867,7 +867,7 @@ paths:
       tags:
         - Workflows
       responses:
-        200:
+        '200':
           description: Returns the entire catalog of closing reasons for a specific workflow
           content:
             application/json:
@@ -886,7 +886,7 @@ paths:
             type: string
           required: true
           description: ID of a workflow definition
-          example: 7889
+          example: '7889'
       requestBody:
         description: set all closing reasons for a specific definition
         required: true
@@ -895,7 +895,7 @@ paths:
             schema:
               $ref: "#/components/schemas/ClosingReasonsIds"
       responses:
-        201:
+        '201':
           description: closing reasons are set for this workflow
 
 components:
@@ -911,21 +911,33 @@ components:
     # ------------------------- #
     FlowTemplate:
       type: object
+      required:
+        - name
+        - tasks
+        - edges
       properties:
         id:
+          type: string
+        org_id:
           type: string
         name:
           type: string
         description:
           type: string
-        created_at:
-          type: string
-          description: ISO String Date & Time
-          example: "2021-04-27T12:01:13.000Z"
+        trigger:
+          $ref: "#/components/schemas/Trigger"
         enabled:
           type: boolean
           description: Whether the workflow is enabled or not
           default: true
+        is_flow_migrated:
+          type: boolean
+          description: Whether the workflow is migrated from workflows to flows or not
+          default: false
+        created_at:
+          type: string
+          description: ISO String Date & Time
+          example: "2021-04-27T12:01:13.000Z"
         updated_at:
           type: string
           description: ISO String Date & Time
@@ -957,7 +969,7 @@ components:
         closing_reasons:
           type: array
           items:
-            $ref: "#/components/schemas/ClosingReasonId"
+            $ref: "#/components/schemas/ClosingReason"
         update_entity_attributes:
           type: array
           items:
@@ -966,12 +978,75 @@ components:
           type: array
           items:
             type: string
-          description: Taxonomy ids that are associated with this workflow and used for filtering
+          description: Taxonomy ids that are associated with this workflow and used for filtering    
+
+    Trigger:
+      anyOf:
+        - $ref: "#/components/schemas/ManualTrigger"
+        - $ref: "#/components/schemas/AutomationTrigger"
+        - $ref: '#/components/schemas/JourneySubmissionTrigger'
+      example:
+            type: automation
+            automation_id: g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg
+
+    ManualTrigger:
+      type: object
       required:
-        - name
-        - tasks
-        - edges 
-   
+        - type
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+            - manual
+        entity_schema:
+          type: string
+
+    AutomationTrigger:
+      type: object
+      required:
+        - type
+        - automation_id
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+            - automation
+        automation_id:
+          type: string
+          description: Id of the automation config that triggers this workflow
+
+    JourneySubmissionTrigger:
+      type: object
+      required:
+        - type
+        - journey_id
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+            - journey_submission
+        journey_id:
+          type: string
+          description: ID of the journey that will trigger this flow
+        automation_id:
+          type: string
+
+    CreateFlowTemplate:
+      allOf:
+        - $ref: "#/components/schemas/FlowTemplate"
+        - type: object
+          properties:
+            closing_reasons:
+              type: array
+              items:
+                $ref: "#/components/schemas/ClosingReasonId"
+
     FlowTemplatesList:
       type: object
       properties:
@@ -996,22 +1071,106 @@ components:
     ManualTask:
       allOf:
         - $ref: "#/components/schemas/TaskBase"
-       
+
     AutomationTask:
+      required:
+        - automation_config
+      properties:
+        automation_config:
+          $ref: "#/components/schemas/AutomationConfig"
+        trigger_mode:
+          $ref: "#/components/schemas/TriggerMode"
+        schedule:
+          $ref: "#/components/schemas/ActionSchedule"
       allOf:
         - $ref: "#/components/schemas/TaskBase"
-        - type: object
+
+    AutomationConfig:
+      type: object
+      description: Configuration for automation execution to run
+      required:
+        - flow_id
+      properties:
+        flow_id:
+          type: string
+          description: Id of the configured automation to run
+
+    TriggerMode:
+      type: string
+      enum:
+        - manual
+        - automatic
+
+    ActionSchedule:
+      anyOf:
+        - $ref: "#/components/schemas/ImmediateSchedule"
+        - $ref: "#/components/schemas/DelayedSchedule"
+        - $ref: "#/components/schemas/RelativeSchedule"
+
+    ImmediateSchedule:
+      type: object
+      properties:
+        mode:
+          enum:
+            - immediate
+
+    DelayedSchedule:
+      type: object
+      required:
+        - mode
+        - duration
+        - unit
+      properties:
+        mode:
+          enum:
+            - delayed
+        duration:
+          type: number
+        unit:
+          $ref: "#/components/schemas/TimeUnit"
+
+    RelativeSchedule:
+      type: object
+      properties:
+        mode:
+          enum:
+            - relative
+        direction:
+          type: string
+          enum:
+            - before
+            - after
+        duration:
+          type: number
+        unit:
+          $ref: "#/components/schemas/TimeUnit"
+        reference:
+          type: object
           required:
-            - automation_config
+            - id
+            - origin
           properties:
-              automation_config:
-                type: object
-                properties:
-                  flow_id:
-                    type: string
-                    description: Id of the configured automation to run
-                required:
-                  - flow_id
+            id:
+              type: string
+              description: The id of the entity / workflow / task, based on the origin of the schedule
+            origin:
+              type: string
+              enum:
+                - flow_started
+                - task_completed
+                - trigger_entity_attribute
+            schema:
+              type: string
+              description: The schema of the entity
+            attribute:
+              type: string
+              description: An entity attribute that identifies a date / datetime
+      required:
+        - mode
+        - direction
+        - duration
+        - unit
+        - reference
 
     DecisionTask:
       allOf:
@@ -1024,6 +1183,10 @@ components:
               type: array
               items:
                 $ref: "#/components/schemas/Condition"
+            schedule:
+              anyOf:
+                - $ref: "#/components/schemas/DelayedSchedule"
+                - $ref: "#/components/schemas/RelativeSchedule"
 
     TaskBase:
       type: object
@@ -1036,7 +1199,7 @@ components:
         description:
           $ref: "#/components/schemas/StepDescription"
         journey:
-          $ref: '#/components/schemas/StepJourney'
+          $ref: "#/components/schemas/StepJourney"
         due_date:
           type: string
           example: "2021-04-27T12:00:00.000Z"
@@ -1095,12 +1258,13 @@ components:
         - id
         - name
 
-    TaskType:      
+    TaskType:
       type: string
       enum:
         - MANUAL
         - AUTOMATION
         - DECISION
+
     Edge:
       type: object
       properties:
@@ -1112,6 +1276,9 @@ components:
           type: string
         condition_id:
           type: string
+        none_met:
+          type: boolean
+          description: Indicates a default case for a decision task. Only decision task edges can have this field and the flow advances using this edge if no conditions are met.
       required:
         - id
         - from_id
@@ -1122,6 +1289,11 @@ components:
       properties:
         id:
           type: string
+        branch_name:
+          type: string
+          description: The name of the branch
+          maxLength: 255
+          example: Branch 1
         logical_operator:
           type: string
           enum:
@@ -1133,6 +1305,7 @@ components:
             $ref: "#/components/schemas/Statement"
       required:
         - id
+        - branch_name
         - logical_operator
         - statements
 
@@ -1233,24 +1406,30 @@ components:
         duration:
           type: number
         unit:
-          type: string
-          enum:
-            - minutes
-            - hours
-            - days
-            - weeks
-            - months
+          $ref: "#/components/schemas/TimeUnit"
         type:
           type: string
           enum:
             - WORKFLOW_STARTED
             - TASK_FINISHED
+            - PHASE_FINISHED
         task_id:
+          type: string
+        phase_id:
           type: string
       required:
         - duration
         - unit
         - type
+
+    TimeUnit:
+      type: string
+      enum:
+        - minutes
+        - hours
+        - days
+        - weeks
+        - months
 
     EnableRequirement:
       description: describe the requirement for a task to be enabled
@@ -1343,9 +1522,9 @@ components:
         name:
           type: string
         description:
-          $ref: '#/components/schemas/StepDescription'
+          $ref: "#/components/schemas/StepDescription"
         executionType:
-          $ref: '#/components/schemas/StepType'
+          $ref: "#/components/schemas/StepType"
         automationConfig:
           type: object
           properties:
@@ -1355,7 +1534,7 @@ components:
           required:
             - flowId
         journey:
-          $ref: '#/components/schemas/StepJourney'
+          $ref: "#/components/schemas/StepJourney"
         order:
           type: number
         dueDate:
@@ -1430,12 +1609,18 @@ components:
         - type
         - steps
 
+    TriggerType:
+      type: string
+      enum:
+        - MANUAL
+        - AUTOMATIC
+
     ItemType:
       type: string
       enum:
         - STEP
         - SECTION
-    
+
     StepType:
       type: string
       enum:
@@ -1463,7 +1648,7 @@ components:
         description:
           type: string
         journey:
-          $ref: '#/components/schemas/StepJourney'
+          $ref: "#/components/schemas/StepJourney"
 
     StepDescription:
       type: object
@@ -1598,19 +1783,16 @@ components:
         numberOfUnits:
           type: number
         timePeriod:
-          type: string
-          enum:
-            - minutes
-            - hours
-            - days
-            - weeks
-            - months
+          $ref: "#/components/schemas/TimeUnit"
         actionTypeCondition:
           type: string
           enum:
             - WORKFLOW_STARTED
             - STEP_CLOSED
+            - PHASE_FINISHED
         stepId:
+          type: string
+        phaseId:
           type: string
       required:
         - numberOfUnits
