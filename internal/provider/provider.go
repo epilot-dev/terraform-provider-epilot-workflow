@@ -7,6 +7,7 @@ import (
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/models/shared"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
+	"github.com/hashicorp/terraform-plugin-framework/ephemeral"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -14,7 +15,8 @@ import (
 	"net/http"
 )
 
-var _ provider.Provider = &EpilotWorkflowProvider{}
+var _ provider.Provider = (*EpilotWorkflowProvider)(nil)
+var _ provider.ProviderWithEphemeralResources = (*EpilotWorkflowProvider)(nil)
 
 type EpilotWorkflowProvider struct {
 	// version is set to the provider version on release, "dev" when the
@@ -25,8 +27,8 @@ type EpilotWorkflowProvider struct {
 
 // EpilotWorkflowProviderModel describes the provider data model.
 type EpilotWorkflowProviderModel struct {
-	ServerURL  types.String `tfsdk:"server_url"`
 	BearerAuth types.String `tfsdk:"bearer_auth"`
+	ServerURL  types.String `tfsdk:"server_url"`
 }
 
 func (p *EpilotWorkflowProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -36,18 +38,17 @@ func (p *EpilotWorkflowProvider) Metadata(ctx context.Context, req provider.Meta
 
 func (p *EpilotWorkflowProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: `Workflows Definitions: Service for Workflow Definitions for different processes inside of an Organization`,
 		Attributes: map[string]schema.Attribute{
-			"server_url": schema.StringAttribute{
-				MarkdownDescription: "Server URL (defaults to https://workflows-definition.sls.epilot.io)",
-				Optional:            true,
-				Required:            false,
-			},
 			"bearer_auth": schema.StringAttribute{
+				Required:  true,
 				Sensitive: true,
-				Optional:  true,
+			},
+			"server_url": schema.StringAttribute{
+				Description: `Server URL (defaults to https://workflows-definition.sls.epilot.io)`,
+				Optional:    true,
 			},
 		},
+		MarkdownDescription: `Workflows Definitions: Service for Workflow Definitions for different processes inside of an Organization`,
 	}
 }
 
@@ -66,18 +67,26 @@ func (p *EpilotWorkflowProvider) Configure(ctx context.Context, req provider.Con
 		ServerURL = "https://workflows-definition.sls.epilot.io"
 	}
 
-	bearerAuth := new(string)
-	if !data.BearerAuth.IsUnknown() && !data.BearerAuth.IsNull() {
-		*bearerAuth = data.BearerAuth.ValueString()
-	} else {
-		bearerAuth = nil
+	security := shared.Security{}
+
+	if !data.BearerAuth.IsUnknown() {
+		security.BearerAuth = data.BearerAuth.ValueString()
 	}
-	security := shared.Security{
-		BearerAuth: bearerAuth,
+
+	if security.BearerAuth == "" {
+		resp.Diagnostics.AddError(
+			"Missing Provider Security Configuration",
+			"Provider configuration bearer_auth attribute must be configured.",
+		)
+	}
+
+	providerHTTPTransportOpts := ProviderHTTPTransportOpts{
+		SetHeaders: make(map[string]string),
+		Transport:  http.DefaultTransport,
 	}
 
 	httpClient := http.DefaultClient
-	httpClient.Transport = NewLoggingHTTPTransport(http.DefaultTransport)
+	httpClient.Transport = NewProviderHTTPTransport(providerHTTPTransportOpts)
 
 	opts := []sdk.SDKOption{
 		sdk.WithServerURL(ServerURL),
@@ -87,23 +96,20 @@ func (p *EpilotWorkflowProvider) Configure(ctx context.Context, req provider.Con
 	client := sdk.New(opts...)
 
 	resp.DataSourceData = client
+	resp.EphemeralResourceData = client
 	resp.ResourceData = client
 }
 
 func (p *EpilotWorkflowProvider) Resources(ctx context.Context) []func() resource.Resource {
-	return []func() resource.Resource{
-		NewClosingReasonResource,
-		NewFlowTemplateResource,
-		NewWorkflowDefinitionResource,
-	}
+	return []func() resource.Resource{}
 }
 
 func (p *EpilotWorkflowProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
-	return []func() datasource.DataSource{
-		NewClosingReasonDataSource,
-		NewFlowTemplateDataSource,
-		NewWorkflowDefinitionDataSource,
-	}
+	return []func() datasource.DataSource{}
+}
+
+func (p *EpilotWorkflowProvider) EphemeralResources(ctx context.Context) []func() ephemeral.EphemeralResource {
+	return []func() ephemeral.EphemeralResource{}
 }
 
 func New(version string) func() provider.Provider {
