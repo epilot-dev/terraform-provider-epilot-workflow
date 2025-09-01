@@ -3,19 +3,132 @@
 package provider
 
 import (
+	"context"
 	"encoding/json"
 	tfTypes "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/provider/types"
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/models/operations"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/models/shared"
+	"github.com/hashicorp/terraform-plugin-framework-jsontypes/jsontypes"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"math/big"
 )
 
-func (r *WorkflowDefinitionResourceModel) ToSharedWorkflowDefinition() *shared.WorkflowDefinition {
-	var assignedTo []string = []string{}
+func (r *WorkflowDefinitionResourceModel) RefreshFromSharedWorkflowDefinition(ctx context.Context, resp *shared.WorkflowDefinition) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		r.AssignedTo = make([]types.String, 0, len(resp.AssignedTo))
+		for _, v := range resp.AssignedTo {
+			r.AssignedTo = append(r.AssignedTo, types.StringValue(v))
+		}
+		r.ClosingReasons = []tfTypes.ClosingReasonID{}
+
+		for _, closingReasonsItem := range resp.ClosingReasons {
+			var closingReasons tfTypes.ClosingReasonID
+
+			closingReasons.ID = types.StringValue(closingReasonsItem.ID)
+
+			r.ClosingReasons = append(r.ClosingReasons, closingReasons)
+		}
+		r.CreationTime = types.StringPointerValue(resp.CreationTime)
+		r.Description = types.StringPointerValue(resp.Description)
+		r.DueDate = types.StringPointerValue(resp.DueDate)
+		if resp.DynamicDueDate == nil {
+			r.DynamicDueDate = nil
+		} else {
+			r.DynamicDueDate = &tfTypes.DynamicDueDate{}
+			r.DynamicDueDate.ActionTypeCondition = types.StringValue(string(resp.DynamicDueDate.ActionTypeCondition))
+			r.DynamicDueDate.NumberOfUnits = types.Float64Value(resp.DynamicDueDate.NumberOfUnits)
+			r.DynamicDueDate.PhaseID = types.StringPointerValue(resp.DynamicDueDate.PhaseID)
+			r.DynamicDueDate.StepID = types.StringPointerValue(resp.DynamicDueDate.StepID)
+			r.DynamicDueDate.TimePeriod = types.StringValue(string(resp.DynamicDueDate.TimePeriod))
+		}
+		r.Enabled = types.BoolPointerValue(resp.Enabled)
+		r.EnableECPWorkflow = types.BoolPointerValue(resp.EnableECPWorkflow)
+		flowResult, _ := json.Marshal(resp.Flow)
+		r.Flow = jsontypes.NewNormalizedValue(string(flowResult))
+		r.ID = types.StringPointerValue(resp.ID)
+		r.LastUpdateTime = types.StringPointerValue(resp.LastUpdateTime)
+		r.Name = types.StringValue(resp.Name)
+		r.Taxonomies = make([]types.String, 0, len(resp.Taxonomies))
+		for _, v := range resp.Taxonomies {
+			r.Taxonomies = append(r.Taxonomies, types.StringValue(v))
+		}
+		r.UpdateEntityAttributes = []tfTypes.UpdateEntityAttributes{}
+
+		for _, updateEntityAttributesItem := range resp.UpdateEntityAttributes {
+			var updateEntityAttributes tfTypes.UpdateEntityAttributes
+
+			updateEntityAttributes.Source = types.StringValue(string(updateEntityAttributesItem.Source))
+			updateEntityAttributes.Target.EntityAttribute = types.StringValue(updateEntityAttributesItem.Target.EntityAttribute)
+			updateEntityAttributes.Target.EntitySchema = types.StringValue(updateEntityAttributesItem.Target.EntitySchema)
+
+			r.UpdateEntityAttributes = append(r.UpdateEntityAttributes, updateEntityAttributes)
+		}
+		r.UserIds = make([]types.Float64, 0, len(resp.UserIds))
+		for _, v := range resp.UserIds {
+			r.UserIds = append(r.UserIds, types.Float64Value(v))
+		}
+	}
+
+	return diags
+}
+
+func (r *WorkflowDefinitionResourceModel) ToOperationsDeleteDefinitionRequest(ctx context.Context) (*operations.DeleteDefinitionRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var definitionID string
+	definitionID = r.ID.ValueString()
+
+	out := operations.DeleteDefinitionRequest{
+		DefinitionID: definitionID,
+	}
+
+	return &out, diags
+}
+
+func (r *WorkflowDefinitionResourceModel) ToOperationsGetDefinitionRequest(ctx context.Context) (*operations.GetDefinitionRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var definitionID string
+	definitionID = r.ID.ValueString()
+
+	out := operations.GetDefinitionRequest{
+		DefinitionID: definitionID,
+	}
+
+	return &out, diags
+}
+
+func (r *WorkflowDefinitionResourceModel) ToOperationsUpdateDefinitionRequest(ctx context.Context) (*operations.UpdateDefinitionRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	workflowDefinition, workflowDefinitionDiags := r.ToSharedWorkflowDefinition(ctx)
+	diags.Append(workflowDefinitionDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	var definitionID string
+	definitionID = r.ID.ValueString()
+
+	out := operations.UpdateDefinitionRequest{
+		WorkflowDefinition: *workflowDefinition,
+		DefinitionID:       definitionID,
+	}
+
+	return &out, diags
+}
+
+func (r *WorkflowDefinitionResourceModel) ToSharedWorkflowDefinition(ctx context.Context) (*shared.WorkflowDefinition, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	assignedTo := make([]string, 0, len(r.AssignedTo))
 	for _, assignedToItem := range r.AssignedTo {
 		assignedTo = append(assignedTo, assignedToItem.ValueString())
 	}
-	var closingReasons []shared.ClosingReasonID = []shared.ClosingReasonID{}
+	closingReasons := make([]shared.ClosingReasonID, 0, len(r.ClosingReasons))
 	for _, closingReasonsItem := range r.ClosingReasons {
 		var id string
 		id = closingReasonsItem.ID.ValueString()
@@ -46,7 +159,7 @@ func (r *WorkflowDefinitionResourceModel) ToSharedWorkflowDefinition() *shared.W
 	if r.DynamicDueDate != nil {
 		actionTypeCondition := shared.ActionTypeCondition(r.DynamicDueDate.ActionTypeCondition.ValueString())
 		var numberOfUnits float64
-		numberOfUnits, _ = r.DynamicDueDate.NumberOfUnits.ValueBigFloat().Float64()
+		numberOfUnits = r.DynamicDueDate.NumberOfUnits.ValueFloat64()
 
 		phaseID := new(string)
 		if !r.DynamicDueDate.PhaseID.IsUnknown() && !r.DynamicDueDate.PhaseID.IsNull() {
@@ -98,11 +211,11 @@ func (r *WorkflowDefinitionResourceModel) ToSharedWorkflowDefinition() *shared.W
 	var name string
 	name = r.Name.ValueString()
 
-	var taxonomies []string = []string{}
+	taxonomies := make([]string, 0, len(r.Taxonomies))
 	for _, taxonomiesItem := range r.Taxonomies {
 		taxonomies = append(taxonomies, taxonomiesItem.ValueString())
 	}
-	var updateEntityAttributes []shared.UpdateEntityAttributes = []shared.UpdateEntityAttributes{}
+	updateEntityAttributes := make([]shared.UpdateEntityAttributes, 0, len(r.UpdateEntityAttributes))
 	for _, updateEntityAttributesItem := range r.UpdateEntityAttributes {
 		source := shared.Source(updateEntityAttributesItem.Source.ValueString())
 		var entityAttribute string
@@ -120,10 +233,9 @@ func (r *WorkflowDefinitionResourceModel) ToSharedWorkflowDefinition() *shared.W
 			Target: target,
 		})
 	}
-	var userIds []float64 = []float64{}
+	userIds := make([]float64, 0, len(r.UserIds))
 	for _, userIdsItem := range r.UserIds {
-		userIdsTmp, _ := userIdsItem.ValueBigFloat().Float64()
-		userIds = append(userIds, userIdsTmp)
+		userIds = append(userIds, userIdsItem.ValueFloat64())
 	}
 	out := shared.WorkflowDefinition{
 		AssignedTo:             assignedTo,
@@ -142,71 +254,6 @@ func (r *WorkflowDefinitionResourceModel) ToSharedWorkflowDefinition() *shared.W
 		UpdateEntityAttributes: updateEntityAttributes,
 		UserIds:                userIds,
 	}
-	return &out
-}
 
-func (r *WorkflowDefinitionResourceModel) RefreshFromSharedWorkflowDefinition(resp *shared.WorkflowDefinition) {
-	if resp != nil {
-		r.AssignedTo = []types.String{}
-		for _, v := range resp.AssignedTo {
-			r.AssignedTo = append(r.AssignedTo, types.StringValue(v))
-		}
-		r.ClosingReasons = []tfTypes.ClosingReasonID{}
-		if len(r.ClosingReasons) > len(resp.ClosingReasons) {
-			r.ClosingReasons = r.ClosingReasons[:len(resp.ClosingReasons)]
-		}
-		for closingReasonsCount, closingReasonsItem := range resp.ClosingReasons {
-			var closingReasons1 tfTypes.ClosingReasonID
-			closingReasons1.ID = types.StringValue(closingReasonsItem.ID)
-			if closingReasonsCount+1 > len(r.ClosingReasons) {
-				r.ClosingReasons = append(r.ClosingReasons, closingReasons1)
-			} else {
-				r.ClosingReasons[closingReasonsCount].ID = closingReasons1.ID
-			}
-		}
-		r.CreationTime = types.StringPointerValue(resp.CreationTime)
-		r.Description = types.StringPointerValue(resp.Description)
-		r.DueDate = types.StringPointerValue(resp.DueDate)
-		if resp.DynamicDueDate == nil {
-			r.DynamicDueDate = nil
-		} else {
-			r.DynamicDueDate = &tfTypes.DynamicDueDate{}
-			r.DynamicDueDate.ActionTypeCondition = types.StringValue(string(resp.DynamicDueDate.ActionTypeCondition))
-			r.DynamicDueDate.NumberOfUnits = types.NumberValue(big.NewFloat(float64(resp.DynamicDueDate.NumberOfUnits)))
-			r.DynamicDueDate.PhaseID = types.StringPointerValue(resp.DynamicDueDate.PhaseID)
-			r.DynamicDueDate.StepID = types.StringPointerValue(resp.DynamicDueDate.StepID)
-			r.DynamicDueDate.TimePeriod = types.StringValue(string(resp.DynamicDueDate.TimePeriod))
-		}
-		r.Enabled = types.BoolPointerValue(resp.Enabled)
-		r.EnableECPWorkflow = types.BoolPointerValue(resp.EnableECPWorkflow)
-		flowResult, _ := json.Marshal(resp.Flow)
-		r.Flow = types.StringValue(string(flowResult))
-		r.ID = types.StringPointerValue(resp.ID)
-		r.LastUpdateTime = types.StringPointerValue(resp.LastUpdateTime)
-		r.Name = types.StringValue(resp.Name)
-		r.Taxonomies = []types.String{}
-		for _, v := range resp.Taxonomies {
-			r.Taxonomies = append(r.Taxonomies, types.StringValue(v))
-		}
-		r.UpdateEntityAttributes = []tfTypes.UpdateEntityAttributes{}
-		if len(r.UpdateEntityAttributes) > len(resp.UpdateEntityAttributes) {
-			r.UpdateEntityAttributes = r.UpdateEntityAttributes[:len(resp.UpdateEntityAttributes)]
-		}
-		for updateEntityAttributesCount, updateEntityAttributesItem := range resp.UpdateEntityAttributes {
-			var updateEntityAttributes1 tfTypes.UpdateEntityAttributes
-			updateEntityAttributes1.Source = types.StringValue(string(updateEntityAttributesItem.Source))
-			updateEntityAttributes1.Target.EntityAttribute = types.StringValue(updateEntityAttributesItem.Target.EntityAttribute)
-			updateEntityAttributes1.Target.EntitySchema = types.StringValue(updateEntityAttributesItem.Target.EntitySchema)
-			if updateEntityAttributesCount+1 > len(r.UpdateEntityAttributes) {
-				r.UpdateEntityAttributes = append(r.UpdateEntityAttributes, updateEntityAttributes1)
-			} else {
-				r.UpdateEntityAttributes[updateEntityAttributesCount].Source = updateEntityAttributes1.Source
-				r.UpdateEntityAttributes[updateEntityAttributesCount].Target = updateEntityAttributes1.Target
-			}
-		}
-		r.UserIds = []types.Number{}
-		for _, v := range resp.UserIds {
-			r.UserIds = append(r.UserIds, types.NumberValue(big.NewFloat(float64(v))))
-		}
-	}
+	return &out, diags
 }

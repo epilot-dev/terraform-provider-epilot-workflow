@@ -2,6 +2,10 @@
 
 package shared
 
+import (
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
+)
+
 type TaskBase struct {
 	AssignedTo []string `json:"assigned_to,omitempty"`
 	// Longer information regarding Task
@@ -22,6 +26,17 @@ type TaskBase struct {
 	TaskType     TaskType            `json:"task_type"`
 	// Taxonomy ids that are associated with this workflow and used for filtering
 	Taxonomies []string `json:"taxonomies,omitempty"`
+}
+
+func (t TaskBase) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(t, "", false)
+}
+
+func (t *TaskBase) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &t, "", false, []string{"id", "name", "task_type"}); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *TaskBase) GetAssignedTo() []string {

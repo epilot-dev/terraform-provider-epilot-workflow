@@ -42,17 +42,17 @@ func CreateScheduleRelativeSchedule(relativeSchedule RelativeSchedule) Schedule 
 
 func (u *Schedule) UnmarshalJSON(data []byte) error {
 
-	var delayedSchedule DelayedSchedule = DelayedSchedule{}
-	if err := utils.UnmarshalJSON(data, &delayedSchedule, "", true, true); err == nil {
-		u.DelayedSchedule = &delayedSchedule
-		u.Type = ScheduleTypeDelayedSchedule
+	var relativeSchedule RelativeSchedule = RelativeSchedule{}
+	if err := utils.UnmarshalJSON(data, &relativeSchedule, "", true, nil); err == nil {
+		u.RelativeSchedule = &relativeSchedule
+		u.Type = ScheduleTypeRelativeSchedule
 		return nil
 	}
 
-	var relativeSchedule RelativeSchedule = RelativeSchedule{}
-	if err := utils.UnmarshalJSON(data, &relativeSchedule, "", true, true); err == nil {
-		u.RelativeSchedule = &relativeSchedule
-		u.Type = ScheduleTypeRelativeSchedule
+	var delayedSchedule DelayedSchedule = DelayedSchedule{}
+	if err := utils.UnmarshalJSON(data, &delayedSchedule, "", true, nil); err == nil {
+		u.DelayedSchedule = &delayedSchedule
+		u.Type = ScheduleTypeDelayedSchedule
 		return nil
 	}
 
@@ -93,6 +93,17 @@ type DecisionTask struct {
 	TaskType     TaskType            `json:"task_type"`
 	// Taxonomy ids that are associated with this workflow and used for filtering
 	Taxonomies []string `json:"taxonomies,omitempty"`
+}
+
+func (d DecisionTask) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(d, "", false)
+}
+
+func (d *DecisionTask) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &d, "", false, []string{"conditions", "id", "name", "task_type"}); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *DecisionTask) GetAssignedTo() []string {

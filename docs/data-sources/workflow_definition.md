@@ -36,7 +36,7 @@ data "epilot-workflow_workflow_definition" "my_workflowdefinition" {
 - `name` (String)
 - `taxonomies` (List of String) Taxonomy ids that are associated with this workflow and used for filtering
 - `update_entity_attributes` (Attributes List) (see [below for nested schema](#nestedatt--update_entity_attributes))
-- `user_ids` (List of Number) This field is deprecated. Please use assignedTo
+- `user_ids` (List of Number, Deprecated) This field is deprecated. Please use assignedTo
 
 <a id="nestedatt--closing_reasons"></a>
 ### Nested Schema for `closing_reasons`

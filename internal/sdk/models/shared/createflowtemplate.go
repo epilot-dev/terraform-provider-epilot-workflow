@@ -40,7 +40,7 @@ func (c CreateFlowTemplate) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreateFlowTemplate) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &c, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &c, "", false, []string{"edges", "name", "tasks"}); err != nil {
 		return err
 	}
 	return nil

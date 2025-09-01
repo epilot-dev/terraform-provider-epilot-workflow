@@ -38,7 +38,7 @@ func (w WorkflowDefinition) MarshalJSON() ([]byte, error) {
 }
 
 func (w *WorkflowDefinition) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &w, "", false, false); err != nil {
+	if err := utils.UnmarshalJSON(data, &w, "", false, []string{"flow", "name"}); err != nil {
 		return err
 	}
 	return nil

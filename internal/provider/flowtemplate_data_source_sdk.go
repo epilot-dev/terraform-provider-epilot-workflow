@@ -3,39 +3,35 @@
 package provider
 
 import (
+	"context"
 	tfTypes "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/provider/types"
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/models/operations"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/models/shared"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"math/big"
 )
 
-func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(resp *shared.FlowTemplate) {
+func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.Context, resp *shared.FlowTemplate) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
-		r.AssignedTo = []types.String{}
+		r.AssignedTo = make([]types.String, 0, len(resp.AssignedTo))
 		for _, v := range resp.AssignedTo {
 			r.AssignedTo = append(r.AssignedTo, types.StringValue(v))
 		}
 		r.AvailableInEcp = types.BoolPointerValue(resp.AvailableInEcp)
 		r.ClosingReasons = []tfTypes.ClosingReason1{}
-		if len(r.ClosingReasons) > len(resp.ClosingReasons) {
-			r.ClosingReasons = r.ClosingReasons[:len(resp.ClosingReasons)]
-		}
-		for closingReasonsCount, closingReasonsItem := range resp.ClosingReasons {
-			var closingReasons1 tfTypes.ClosingReason1
-			closingReasons1.CreationTime = types.StringPointerValue(closingReasonsItem.CreationTime)
-			closingReasons1.ID = types.StringPointerValue(closingReasonsItem.ID)
-			closingReasons1.LastUpdateTime = types.StringPointerValue(closingReasonsItem.LastUpdateTime)
-			closingReasons1.Status = types.StringValue(string(closingReasonsItem.Status))
-			closingReasons1.Title = types.StringValue(closingReasonsItem.Title)
-			if closingReasonsCount+1 > len(r.ClosingReasons) {
-				r.ClosingReasons = append(r.ClosingReasons, closingReasons1)
-			} else {
-				r.ClosingReasons[closingReasonsCount].CreationTime = closingReasons1.CreationTime
-				r.ClosingReasons[closingReasonsCount].ID = closingReasons1.ID
-				r.ClosingReasons[closingReasonsCount].LastUpdateTime = closingReasons1.LastUpdateTime
-				r.ClosingReasons[closingReasonsCount].Status = closingReasons1.Status
-				r.ClosingReasons[closingReasonsCount].Title = closingReasons1.Title
-			}
+
+		for _, closingReasonsItem := range resp.ClosingReasons {
+			var closingReasons tfTypes.ClosingReason1
+
+			closingReasons.CreationTime = types.StringPointerValue(closingReasonsItem.CreationTime)
+			closingReasons.ID = types.StringPointerValue(closingReasonsItem.ID)
+			closingReasons.LastUpdateTime = types.StringPointerValue(closingReasonsItem.LastUpdateTime)
+			closingReasons.Status = types.StringValue(string(closingReasonsItem.Status))
+			closingReasons.Title = types.StringValue(closingReasonsItem.Title)
+
+			r.ClosingReasons = append(r.ClosingReasons, closingReasons)
 		}
 		r.CreatedAt = types.StringPointerValue(resp.CreatedAt)
 		r.Description = types.StringPointerValue(resp.Description)
@@ -44,32 +40,24 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(resp *shared
 			r.DueDateConfig = nil
 		} else {
 			r.DueDateConfig = &tfTypes.DueDateConfig{}
-			r.DueDateConfig.Duration = types.NumberValue(big.NewFloat(float64(resp.DueDateConfig.Duration)))
+			r.DueDateConfig.Duration = types.Float64Value(resp.DueDateConfig.Duration)
 			r.DueDateConfig.PhaseID = types.StringPointerValue(resp.DueDateConfig.PhaseID)
 			r.DueDateConfig.TaskID = types.StringPointerValue(resp.DueDateConfig.TaskID)
 			r.DueDateConfig.Type = types.StringValue(string(resp.DueDateConfig.Type))
 			r.DueDateConfig.Unit = types.StringValue(string(resp.DueDateConfig.Unit))
 		}
 		r.Edges = []tfTypes.Edge{}
-		if len(r.Edges) > len(resp.Edges) {
-			r.Edges = r.Edges[:len(resp.Edges)]
-		}
-		for edgesCount, edgesItem := range resp.Edges {
-			var edges1 tfTypes.Edge
-			edges1.ConditionID = types.StringPointerValue(edgesItem.ConditionID)
-			edges1.FromID = types.StringValue(edgesItem.FromID)
-			edges1.ID = types.StringValue(edgesItem.ID)
-			edges1.NoneMet = types.BoolPointerValue(edgesItem.NoneMet)
-			edges1.ToID = types.StringValue(edgesItem.ToID)
-			if edgesCount+1 > len(r.Edges) {
-				r.Edges = append(r.Edges, edges1)
-			} else {
-				r.Edges[edgesCount].ConditionID = edges1.ConditionID
-				r.Edges[edgesCount].FromID = edges1.FromID
-				r.Edges[edgesCount].ID = edges1.ID
-				r.Edges[edgesCount].NoneMet = edges1.NoneMet
-				r.Edges[edgesCount].ToID = edges1.ToID
-			}
+
+		for _, edgesItem := range resp.Edges {
+			var edges tfTypes.Edge
+
+			edges.ConditionID = types.StringPointerValue(edgesItem.ConditionID)
+			edges.FromID = types.StringValue(edgesItem.FromID)
+			edges.ID = types.StringValue(edgesItem.ID)
+			edges.NoneMet = types.BoolPointerValue(edgesItem.NoneMet)
+			edges.ToID = types.StringValue(edgesItem.ToID)
+
+			r.Edges = append(r.Edges, edges)
 		}
 		r.Enabled = types.BoolPointerValue(resp.Enabled)
 		r.ID = types.StringPointerValue(resp.ID)
@@ -77,440 +65,402 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(resp *shared
 		r.Name = types.StringValue(resp.Name)
 		r.OrgID = types.StringPointerValue(resp.OrgID)
 		r.Phases = []tfTypes.Phase{}
-		if len(r.Phases) > len(resp.Phases) {
-			r.Phases = r.Phases[:len(resp.Phases)]
-		}
-		for phasesCount, phasesItem := range resp.Phases {
-			var phases1 tfTypes.Phase
-			phases1.AssignedTo = []types.String{}
+
+		for _, phasesItem := range resp.Phases {
+			var phases tfTypes.Phase
+
+			phases.AssignedTo = make([]types.String, 0, len(phasesItem.AssignedTo))
 			for _, v := range phasesItem.AssignedTo {
-				phases1.AssignedTo = append(phases1.AssignedTo, types.StringValue(v))
+				phases.AssignedTo = append(phases.AssignedTo, types.StringValue(v))
 			}
-			phases1.DueDate = types.StringPointerValue(phasesItem.DueDate)
+			phases.DueDate = types.StringPointerValue(phasesItem.DueDate)
 			if phasesItem.DueDateConfig == nil {
-				phases1.DueDateConfig = nil
+				phases.DueDateConfig = nil
 			} else {
-				phases1.DueDateConfig = &tfTypes.DueDateConfig{}
-				phases1.DueDateConfig.Duration = types.NumberValue(big.NewFloat(float64(phasesItem.DueDateConfig.Duration)))
-				phases1.DueDateConfig.PhaseID = types.StringPointerValue(phasesItem.DueDateConfig.PhaseID)
-				phases1.DueDateConfig.TaskID = types.StringPointerValue(phasesItem.DueDateConfig.TaskID)
-				phases1.DueDateConfig.Type = types.StringValue(string(phasesItem.DueDateConfig.Type))
-				phases1.DueDateConfig.Unit = types.StringValue(string(phasesItem.DueDateConfig.Unit))
+				phases.DueDateConfig = &tfTypes.DueDateConfig{}
+				phases.DueDateConfig.Duration = types.Float64Value(phasesItem.DueDateConfig.Duration)
+				phases.DueDateConfig.PhaseID = types.StringPointerValue(phasesItem.DueDateConfig.PhaseID)
+				phases.DueDateConfig.TaskID = types.StringPointerValue(phasesItem.DueDateConfig.TaskID)
+				phases.DueDateConfig.Type = types.StringValue(string(phasesItem.DueDateConfig.Type))
+				phases.DueDateConfig.Unit = types.StringValue(string(phasesItem.DueDateConfig.Unit))
 			}
-			phases1.ID = types.StringValue(phasesItem.ID)
-			phases1.Name = types.StringValue(phasesItem.Name)
-			phases1.Taxonomies = []types.String{}
+			phases.ID = types.StringValue(phasesItem.ID)
+			phases.Name = types.StringValue(phasesItem.Name)
+			phases.Taxonomies = make([]types.String, 0, len(phasesItem.Taxonomies))
 			for _, v := range phasesItem.Taxonomies {
-				phases1.Taxonomies = append(phases1.Taxonomies, types.StringValue(v))
+				phases.Taxonomies = append(phases.Taxonomies, types.StringValue(v))
 			}
-			if phasesCount+1 > len(r.Phases) {
-				r.Phases = append(r.Phases, phases1)
-			} else {
-				r.Phases[phasesCount].AssignedTo = phases1.AssignedTo
-				r.Phases[phasesCount].DueDate = phases1.DueDate
-				r.Phases[phasesCount].DueDateConfig = phases1.DueDateConfig
-				r.Phases[phasesCount].ID = phases1.ID
-				r.Phases[phasesCount].Name = phases1.Name
-				r.Phases[phasesCount].Taxonomies = phases1.Taxonomies
-			}
+
+			r.Phases = append(r.Phases, phases)
 		}
 		r.Tasks = []tfTypes.Task{}
-		if len(r.Tasks) > len(resp.Tasks) {
-			r.Tasks = r.Tasks[:len(resp.Tasks)]
-		}
-		for tasksCount, tasksItem := range resp.Tasks {
-			var tasks1 tfTypes.Task
+
+		for _, tasksItem := range resp.Tasks {
+			var tasks tfTypes.Task
+
 			if tasksItem.AutomationTask != nil {
-				tasks1.AutomationTask = &tfTypes.AutomationTask{}
-				tasks1.AutomationTask.AssignedTo = []types.String{}
+				tasks.AutomationTask = &tfTypes.AutomationTask{}
+				tasks.AutomationTask.AssignedTo = make([]types.String, 0, len(tasksItem.AutomationTask.AssignedTo))
 				for _, v := range tasksItem.AutomationTask.AssignedTo {
-					tasks1.AutomationTask.AssignedTo = append(tasks1.AutomationTask.AssignedTo, types.StringValue(v))
+					tasks.AutomationTask.AssignedTo = append(tasks.AutomationTask.AssignedTo, types.StringValue(v))
 				}
-				tasks1.AutomationTask.AutomationConfig.FlowID = types.StringValue(tasksItem.AutomationTask.AutomationConfig.FlowID)
+				tasks.AutomationTask.AutomationConfig.FlowID = types.StringValue(tasksItem.AutomationTask.AutomationConfig.FlowID)
 				if tasksItem.AutomationTask.Description == nil {
-					tasks1.AutomationTask.Description = nil
+					tasks.AutomationTask.Description = nil
 				} else {
-					tasks1.AutomationTask.Description = &tfTypes.StepDescription{}
-					tasks1.AutomationTask.Description.Enabled = types.BoolPointerValue(tasksItem.AutomationTask.Description.Enabled)
-					tasks1.AutomationTask.Description.Value = types.StringPointerValue(tasksItem.AutomationTask.Description.Value)
+					tasks.AutomationTask.Description = &tfTypes.StepDescription{}
+					tasks.AutomationTask.Description.Enabled = types.BoolPointerValue(tasksItem.AutomationTask.Description.Enabled)
+					tasks.AutomationTask.Description.Value = types.StringPointerValue(tasksItem.AutomationTask.Description.Value)
 				}
-				tasks1.AutomationTask.DueDate = types.StringPointerValue(tasksItem.AutomationTask.DueDate)
+				tasks.AutomationTask.DueDate = types.StringPointerValue(tasksItem.AutomationTask.DueDate)
 				if tasksItem.AutomationTask.DueDateConfig == nil {
-					tasks1.AutomationTask.DueDateConfig = nil
+					tasks.AutomationTask.DueDateConfig = nil
 				} else {
-					tasks1.AutomationTask.DueDateConfig = &tfTypes.DueDateConfig{}
-					tasks1.AutomationTask.DueDateConfig.Duration = types.NumberValue(big.NewFloat(float64(tasksItem.AutomationTask.DueDateConfig.Duration)))
-					tasks1.AutomationTask.DueDateConfig.PhaseID = types.StringPointerValue(tasksItem.AutomationTask.DueDateConfig.PhaseID)
-					tasks1.AutomationTask.DueDateConfig.TaskID = types.StringPointerValue(tasksItem.AutomationTask.DueDateConfig.TaskID)
-					tasks1.AutomationTask.DueDateConfig.Type = types.StringValue(string(tasksItem.AutomationTask.DueDateConfig.Type))
-					tasks1.AutomationTask.DueDateConfig.Unit = types.StringValue(string(tasksItem.AutomationTask.DueDateConfig.Unit))
+					tasks.AutomationTask.DueDateConfig = &tfTypes.DueDateConfig{}
+					tasks.AutomationTask.DueDateConfig.Duration = types.Float64Value(tasksItem.AutomationTask.DueDateConfig.Duration)
+					tasks.AutomationTask.DueDateConfig.PhaseID = types.StringPointerValue(tasksItem.AutomationTask.DueDateConfig.PhaseID)
+					tasks.AutomationTask.DueDateConfig.TaskID = types.StringPointerValue(tasksItem.AutomationTask.DueDateConfig.TaskID)
+					tasks.AutomationTask.DueDateConfig.Type = types.StringValue(string(tasksItem.AutomationTask.DueDateConfig.Type))
+					tasks.AutomationTask.DueDateConfig.Unit = types.StringValue(string(tasksItem.AutomationTask.DueDateConfig.Unit))
 				}
 				if tasksItem.AutomationTask.Ecp == nil {
-					tasks1.AutomationTask.Ecp = nil
+					tasks.AutomationTask.Ecp = nil
 				} else {
-					tasks1.AutomationTask.Ecp = &tfTypes.ECPDetails{}
-					tasks1.AutomationTask.Ecp.Description = types.StringPointerValue(tasksItem.AutomationTask.Ecp.Description)
-					tasks1.AutomationTask.Ecp.Enabled = types.BoolPointerValue(tasksItem.AutomationTask.Ecp.Enabled)
+					tasks.AutomationTask.Ecp = &tfTypes.ECPDetails{}
+					tasks.AutomationTask.Ecp.Description = types.StringPointerValue(tasksItem.AutomationTask.Ecp.Description)
+					tasks.AutomationTask.Ecp.Enabled = types.BoolPointerValue(tasksItem.AutomationTask.Ecp.Enabled)
 					if tasksItem.AutomationTask.Ecp.Journey == nil {
-						tasks1.AutomationTask.Ecp.Journey = nil
+						tasks.AutomationTask.Ecp.Journey = nil
 					} else {
-						tasks1.AutomationTask.Ecp.Journey = &tfTypes.StepJourney{}
-						tasks1.AutomationTask.Ecp.Journey.ID = types.StringPointerValue(tasksItem.AutomationTask.Ecp.Journey.ID)
-						tasks1.AutomationTask.Ecp.Journey.JourneyID = types.StringPointerValue(tasksItem.AutomationTask.Ecp.Journey.JourneyID)
-						tasks1.AutomationTask.Ecp.Journey.Name = types.StringPointerValue(tasksItem.AutomationTask.Ecp.Journey.Name)
+						tasks.AutomationTask.Ecp.Journey = &tfTypes.StepJourney{}
+						tasks.AutomationTask.Ecp.Journey.ID = types.StringPointerValue(tasksItem.AutomationTask.Ecp.Journey.ID)
+						tasks.AutomationTask.Ecp.Journey.JourneyID = types.StringPointerValue(tasksItem.AutomationTask.Ecp.Journey.JourneyID)
+						tasks.AutomationTask.Ecp.Journey.Name = types.StringPointerValue(tasksItem.AutomationTask.Ecp.Journey.Name)
 					}
-					tasks1.AutomationTask.Ecp.Label = types.StringPointerValue(tasksItem.AutomationTask.Ecp.Label)
+					tasks.AutomationTask.Ecp.Label = types.StringPointerValue(tasksItem.AutomationTask.Ecp.Label)
 				}
-				tasks1.AutomationTask.ID = types.StringValue(tasksItem.AutomationTask.ID)
+				tasks.AutomationTask.ID = types.StringValue(tasksItem.AutomationTask.ID)
 				if tasksItem.AutomationTask.Installer == nil {
-					tasks1.AutomationTask.Installer = nil
+					tasks.AutomationTask.Installer = nil
 				} else {
-					tasks1.AutomationTask.Installer = &tfTypes.ECPDetails{}
-					tasks1.AutomationTask.Installer.Description = types.StringPointerValue(tasksItem.AutomationTask.Installer.Description)
-					tasks1.AutomationTask.Installer.Enabled = types.BoolPointerValue(tasksItem.AutomationTask.Installer.Enabled)
+					tasks.AutomationTask.Installer = &tfTypes.ECPDetails{}
+					tasks.AutomationTask.Installer.Description = types.StringPointerValue(tasksItem.AutomationTask.Installer.Description)
+					tasks.AutomationTask.Installer.Enabled = types.BoolPointerValue(tasksItem.AutomationTask.Installer.Enabled)
 					if tasksItem.AutomationTask.Installer.Journey == nil {
-						tasks1.AutomationTask.Installer.Journey = nil
+						tasks.AutomationTask.Installer.Journey = nil
 					} else {
-						tasks1.AutomationTask.Installer.Journey = &tfTypes.StepJourney{}
-						tasks1.AutomationTask.Installer.Journey.ID = types.StringPointerValue(tasksItem.AutomationTask.Installer.Journey.ID)
-						tasks1.AutomationTask.Installer.Journey.JourneyID = types.StringPointerValue(tasksItem.AutomationTask.Installer.Journey.JourneyID)
-						tasks1.AutomationTask.Installer.Journey.Name = types.StringPointerValue(tasksItem.AutomationTask.Installer.Journey.Name)
+						tasks.AutomationTask.Installer.Journey = &tfTypes.StepJourney{}
+						tasks.AutomationTask.Installer.Journey.ID = types.StringPointerValue(tasksItem.AutomationTask.Installer.Journey.ID)
+						tasks.AutomationTask.Installer.Journey.JourneyID = types.StringPointerValue(tasksItem.AutomationTask.Installer.Journey.JourneyID)
+						tasks.AutomationTask.Installer.Journey.Name = types.StringPointerValue(tasksItem.AutomationTask.Installer.Journey.Name)
 					}
-					tasks1.AutomationTask.Installer.Label = types.StringPointerValue(tasksItem.AutomationTask.Installer.Label)
+					tasks.AutomationTask.Installer.Label = types.StringPointerValue(tasksItem.AutomationTask.Installer.Label)
 				}
 				if tasksItem.AutomationTask.Journey == nil {
-					tasks1.AutomationTask.Journey = nil
+					tasks.AutomationTask.Journey = nil
 				} else {
-					tasks1.AutomationTask.Journey = &tfTypes.StepJourney{}
-					tasks1.AutomationTask.Journey.ID = types.StringPointerValue(tasksItem.AutomationTask.Journey.ID)
-					tasks1.AutomationTask.Journey.JourneyID = types.StringPointerValue(tasksItem.AutomationTask.Journey.JourneyID)
-					tasks1.AutomationTask.Journey.Name = types.StringPointerValue(tasksItem.AutomationTask.Journey.Name)
+					tasks.AutomationTask.Journey = &tfTypes.StepJourney{}
+					tasks.AutomationTask.Journey.ID = types.StringPointerValue(tasksItem.AutomationTask.Journey.ID)
+					tasks.AutomationTask.Journey.JourneyID = types.StringPointerValue(tasksItem.AutomationTask.Journey.JourneyID)
+					tasks.AutomationTask.Journey.Name = types.StringPointerValue(tasksItem.AutomationTask.Journey.Name)
 				}
-				tasks1.AutomationTask.Name = types.StringValue(tasksItem.AutomationTask.Name)
-				tasks1.AutomationTask.PhaseID = types.StringPointerValue(tasksItem.AutomationTask.PhaseID)
-				tasks1.AutomationTask.Requirements = []tfTypes.EnableRequirement{}
-				for requirementsCount, requirementsItem := range tasksItem.AutomationTask.Requirements {
-					var requirements1 tfTypes.EnableRequirement
-					requirements1.PhaseID = types.StringPointerValue(requirementsItem.PhaseID)
-					requirements1.TaskID = types.StringPointerValue(requirementsItem.TaskID)
-					requirements1.When = types.StringValue(string(requirementsItem.When))
-					if requirementsCount+1 > len(tasks1.AutomationTask.Requirements) {
-						tasks1.AutomationTask.Requirements = append(tasks1.AutomationTask.Requirements, requirements1)
-					} else {
-						tasks1.AutomationTask.Requirements[requirementsCount].PhaseID = requirements1.PhaseID
-						tasks1.AutomationTask.Requirements[requirementsCount].TaskID = requirements1.TaskID
-						tasks1.AutomationTask.Requirements[requirementsCount].When = requirements1.When
-					}
+				tasks.AutomationTask.Name = types.StringValue(tasksItem.AutomationTask.Name)
+				tasks.AutomationTask.PhaseID = types.StringPointerValue(tasksItem.AutomationTask.PhaseID)
+				tasks.AutomationTask.Requirements = []tfTypes.EnableRequirement{}
+
+				for _, requirementsItem := range tasksItem.AutomationTask.Requirements {
+					var requirements tfTypes.EnableRequirement
+
+					requirements.PhaseID = types.StringPointerValue(requirementsItem.PhaseID)
+					requirements.TaskID = types.StringPointerValue(requirementsItem.TaskID)
+					requirements.When = types.StringValue(string(requirementsItem.When))
+
+					tasks.AutomationTask.Requirements = append(tasks.AutomationTask.Requirements, requirements)
 				}
-				if tasksItem.AutomationTask.Schedule == nil {
-					tasks1.AutomationTask.Schedule = nil
-				} else {
-					tasks1.AutomationTask.Schedule = &tfTypes.ActionSchedule{}
+				if tasksItem.AutomationTask.Schedule != nil {
+					tasks.AutomationTask.Schedule = &tfTypes.ActionSchedule{}
 					if tasksItem.AutomationTask.Schedule.DelayedSchedule != nil {
-						tasks1.AutomationTask.Schedule.DelayedSchedule = &tfTypes.DelayedSchedule{}
-						tasks1.AutomationTask.Schedule.DelayedSchedule.Duration = types.NumberValue(big.NewFloat(float64(tasksItem.AutomationTask.Schedule.DelayedSchedule.Duration)))
-						tasks1.AutomationTask.Schedule.DelayedSchedule.Mode = types.StringValue(string(tasksItem.AutomationTask.Schedule.DelayedSchedule.Mode))
-						tasks1.AutomationTask.Schedule.DelayedSchedule.Unit = types.StringValue(string(tasksItem.AutomationTask.Schedule.DelayedSchedule.Unit))
+						tasks.AutomationTask.Schedule.DelayedSchedule = &tfTypes.DelayedSchedule{}
+						tasks.AutomationTask.Schedule.DelayedSchedule.Duration = types.Float64Value(tasksItem.AutomationTask.Schedule.DelayedSchedule.Duration)
+						tasks.AutomationTask.Schedule.DelayedSchedule.Mode = types.StringValue(string(tasksItem.AutomationTask.Schedule.DelayedSchedule.Mode))
+						tasks.AutomationTask.Schedule.DelayedSchedule.Unit = types.StringValue(string(tasksItem.AutomationTask.Schedule.DelayedSchedule.Unit))
 					}
 					if tasksItem.AutomationTask.Schedule.ImmediateSchedule != nil {
-						tasks1.AutomationTask.Schedule.ImmediateSchedule = &tfTypes.ImmediateSchedule{}
+						tasks.AutomationTask.Schedule.ImmediateSchedule = &tfTypes.ImmediateSchedule{}
 						if tasksItem.AutomationTask.Schedule.ImmediateSchedule.Mode != nil {
-							tasks1.AutomationTask.Schedule.ImmediateSchedule.Mode = types.StringValue(string(*tasksItem.AutomationTask.Schedule.ImmediateSchedule.Mode))
+							tasks.AutomationTask.Schedule.ImmediateSchedule.Mode = types.StringValue(string(*tasksItem.AutomationTask.Schedule.ImmediateSchedule.Mode))
 						} else {
-							tasks1.AutomationTask.Schedule.ImmediateSchedule.Mode = types.StringNull()
+							tasks.AutomationTask.Schedule.ImmediateSchedule.Mode = types.StringNull()
 						}
 					}
 					if tasksItem.AutomationTask.Schedule.RelativeSchedule != nil {
-						tasks1.AutomationTask.Schedule.RelativeSchedule = &tfTypes.RelativeSchedule{}
-						tasks1.AutomationTask.Schedule.RelativeSchedule.Direction = types.StringValue(string(tasksItem.AutomationTask.Schedule.RelativeSchedule.Direction))
-						tasks1.AutomationTask.Schedule.RelativeSchedule.Duration = types.NumberValue(big.NewFloat(float64(tasksItem.AutomationTask.Schedule.RelativeSchedule.Duration)))
-						tasks1.AutomationTask.Schedule.RelativeSchedule.Mode = types.StringValue(string(tasksItem.AutomationTask.Schedule.RelativeSchedule.Mode))
-						tasks1.AutomationTask.Schedule.RelativeSchedule.Reference.Attribute = types.StringPointerValue(tasksItem.AutomationTask.Schedule.RelativeSchedule.Reference.Attribute)
-						tasks1.AutomationTask.Schedule.RelativeSchedule.Reference.ID = types.StringValue(tasksItem.AutomationTask.Schedule.RelativeSchedule.Reference.ID)
-						tasks1.AutomationTask.Schedule.RelativeSchedule.Reference.Origin = types.StringValue(string(tasksItem.AutomationTask.Schedule.RelativeSchedule.Reference.Origin))
-						tasks1.AutomationTask.Schedule.RelativeSchedule.Reference.Schema = types.StringPointerValue(tasksItem.AutomationTask.Schedule.RelativeSchedule.Reference.Schema)
-						tasks1.AutomationTask.Schedule.RelativeSchedule.Unit = types.StringValue(string(tasksItem.AutomationTask.Schedule.RelativeSchedule.Unit))
+						tasks.AutomationTask.Schedule.RelativeSchedule = &tfTypes.RelativeSchedule{}
+						tasks.AutomationTask.Schedule.RelativeSchedule.Direction = types.StringValue(string(tasksItem.AutomationTask.Schedule.RelativeSchedule.Direction))
+						tasks.AutomationTask.Schedule.RelativeSchedule.Duration = types.Float64Value(tasksItem.AutomationTask.Schedule.RelativeSchedule.Duration)
+						tasks.AutomationTask.Schedule.RelativeSchedule.Mode = types.StringValue(string(tasksItem.AutomationTask.Schedule.RelativeSchedule.Mode))
+						tasks.AutomationTask.Schedule.RelativeSchedule.Reference.Attribute = types.StringPointerValue(tasksItem.AutomationTask.Schedule.RelativeSchedule.Reference.Attribute)
+						tasks.AutomationTask.Schedule.RelativeSchedule.Reference.ID = types.StringValue(tasksItem.AutomationTask.Schedule.RelativeSchedule.Reference.ID)
+						tasks.AutomationTask.Schedule.RelativeSchedule.Reference.Origin = types.StringValue(string(tasksItem.AutomationTask.Schedule.RelativeSchedule.Reference.Origin))
+						tasks.AutomationTask.Schedule.RelativeSchedule.Reference.Schema = types.StringPointerValue(tasksItem.AutomationTask.Schedule.RelativeSchedule.Reference.Schema)
+						tasks.AutomationTask.Schedule.RelativeSchedule.Unit = types.StringValue(string(tasksItem.AutomationTask.Schedule.RelativeSchedule.Unit))
 					}
 				}
-				tasks1.AutomationTask.TaskType = types.StringValue(string(tasksItem.AutomationTask.TaskType))
-				tasks1.AutomationTask.Taxonomies = []types.String{}
+				tasks.AutomationTask.TaskType = types.StringValue(string(tasksItem.AutomationTask.TaskType))
+				tasks.AutomationTask.Taxonomies = make([]types.String, 0, len(tasksItem.AutomationTask.Taxonomies))
 				for _, v := range tasksItem.AutomationTask.Taxonomies {
-					tasks1.AutomationTask.Taxonomies = append(tasks1.AutomationTask.Taxonomies, types.StringValue(v))
+					tasks.AutomationTask.Taxonomies = append(tasks.AutomationTask.Taxonomies, types.StringValue(v))
 				}
 				if tasksItem.AutomationTask.TriggerMode != nil {
-					tasks1.AutomationTask.TriggerMode = types.StringValue(string(*tasksItem.AutomationTask.TriggerMode))
+					tasks.AutomationTask.TriggerMode = types.StringValue(string(*tasksItem.AutomationTask.TriggerMode))
 				} else {
-					tasks1.AutomationTask.TriggerMode = types.StringNull()
+					tasks.AutomationTask.TriggerMode = types.StringNull()
 				}
 			}
 			if tasksItem.DecisionTask != nil {
-				tasks1.DecisionTask = &tfTypes.DecisionTask{}
-				tasks1.DecisionTask.AssignedTo = []types.String{}
+				tasks.DecisionTask = &tfTypes.DecisionTask{}
+				tasks.DecisionTask.AssignedTo = make([]types.String, 0, len(tasksItem.DecisionTask.AssignedTo))
 				for _, v := range tasksItem.DecisionTask.AssignedTo {
-					tasks1.DecisionTask.AssignedTo = append(tasks1.DecisionTask.AssignedTo, types.StringValue(v))
+					tasks.DecisionTask.AssignedTo = append(tasks.DecisionTask.AssignedTo, types.StringValue(v))
 				}
-				tasks1.DecisionTask.Conditions = []tfTypes.Condition{}
-				for conditionsCount, conditionsItem := range tasksItem.DecisionTask.Conditions {
-					var conditions1 tfTypes.Condition
-					conditions1.BranchName = types.StringValue(conditionsItem.BranchName)
-					conditions1.ID = types.StringValue(conditionsItem.ID)
-					conditions1.LogicalOperator = types.StringValue(string(conditionsItem.LogicalOperator))
-					conditions1.Statements = []tfTypes.Statement{}
-					for statementsCount, statementsItem := range conditionsItem.Statements {
-						var statements1 tfTypes.Statement
-						statements1.ID = types.StringValue(statementsItem.ID)
-						statements1.Operator = types.StringValue(string(statementsItem.Operator))
-						statements1.Source.Attribute = types.StringPointerValue(statementsItem.Source.Attribute)
+				tasks.DecisionTask.Conditions = []tfTypes.Condition{}
+
+				for _, conditionsItem := range tasksItem.DecisionTask.Conditions {
+					var conditions tfTypes.Condition
+
+					conditions.BranchName = types.StringValue(conditionsItem.BranchName)
+					conditions.ID = types.StringValue(conditionsItem.ID)
+					conditions.LogicalOperator = types.StringValue(string(conditionsItem.LogicalOperator))
+					conditions.Statements = []tfTypes.Statement{}
+
+					for _, statementsItem := range conditionsItem.Statements {
+						var statements tfTypes.Statement
+
+						statements.ID = types.StringValue(statementsItem.ID)
+						statements.Operator = types.StringValue(string(statementsItem.Operator))
+						statements.Source.Attribute = types.StringPointerValue(statementsItem.Source.Attribute)
 						if statementsItem.Source.AttributeOperation != nil {
-							statements1.Source.AttributeOperation = types.StringValue(string(*statementsItem.Source.AttributeOperation))
+							statements.Source.AttributeOperation = types.StringValue(string(*statementsItem.Source.AttributeOperation))
 						} else {
-							statements1.Source.AttributeOperation = types.StringNull()
+							statements.Source.AttributeOperation = types.StringNull()
 						}
-						statements1.Source.AttributeRepeatable = types.BoolPointerValue(statementsItem.Source.AttributeRepeatable)
+						statements.Source.AttributeRepeatable = types.BoolPointerValue(statementsItem.Source.AttributeRepeatable)
 						if statementsItem.Source.AttributeType != nil {
-							statements1.Source.AttributeType = types.StringValue(string(*statementsItem.Source.AttributeType))
+							statements.Source.AttributeType = types.StringValue(string(*statementsItem.Source.AttributeType))
 						} else {
-							statements1.Source.AttributeType = types.StringNull()
+							statements.Source.AttributeType = types.StringNull()
 						}
-						statements1.Source.ID = types.StringPointerValue(statementsItem.Source.ID)
+						statements.Source.ID = types.StringPointerValue(statementsItem.Source.ID)
 						if statementsItem.Source.Origin != nil {
-							statements1.Source.Origin = types.StringValue(string(*statementsItem.Source.Origin))
+							statements.Source.Origin = types.StringValue(string(*statementsItem.Source.Origin))
 						} else {
-							statements1.Source.Origin = types.StringNull()
+							statements.Source.Origin = types.StringNull()
 						}
 						if statementsItem.Source.OriginType != nil {
-							statements1.Source.OriginType = types.StringValue(string(*statementsItem.Source.OriginType))
+							statements.Source.OriginType = types.StringValue(string(*statementsItem.Source.OriginType))
 						} else {
-							statements1.Source.OriginType = types.StringNull()
+							statements.Source.OriginType = types.StringNull()
 						}
-						statements1.Source.Schema = types.StringPointerValue(statementsItem.Source.Schema)
-						statements1.Values = []types.String{}
+						statements.Source.Schema = types.StringPointerValue(statementsItem.Source.Schema)
+						statements.Values = make([]types.String, 0, len(statementsItem.Values))
 						for _, v := range statementsItem.Values {
-							statements1.Values = append(statements1.Values, types.StringValue(v))
+							statements.Values = append(statements.Values, types.StringValue(v))
 						}
-						if statementsCount+1 > len(conditions1.Statements) {
-							conditions1.Statements = append(conditions1.Statements, statements1)
-						} else {
-							conditions1.Statements[statementsCount].ID = statements1.ID
-							conditions1.Statements[statementsCount].Operator = statements1.Operator
-							conditions1.Statements[statementsCount].Source = statements1.Source
-							conditions1.Statements[statementsCount].Values = statements1.Values
-						}
+
+						conditions.Statements = append(conditions.Statements, statements)
 					}
-					if conditionsCount+1 > len(tasks1.DecisionTask.Conditions) {
-						tasks1.DecisionTask.Conditions = append(tasks1.DecisionTask.Conditions, conditions1)
-					} else {
-						tasks1.DecisionTask.Conditions[conditionsCount].BranchName = conditions1.BranchName
-						tasks1.DecisionTask.Conditions[conditionsCount].ID = conditions1.ID
-						tasks1.DecisionTask.Conditions[conditionsCount].LogicalOperator = conditions1.LogicalOperator
-						tasks1.DecisionTask.Conditions[conditionsCount].Statements = conditions1.Statements
-					}
+
+					tasks.DecisionTask.Conditions = append(tasks.DecisionTask.Conditions, conditions)
 				}
 				if tasksItem.DecisionTask.Description == nil {
-					tasks1.DecisionTask.Description = nil
+					tasks.DecisionTask.Description = nil
 				} else {
-					tasks1.DecisionTask.Description = &tfTypes.StepDescription{}
-					tasks1.DecisionTask.Description.Enabled = types.BoolPointerValue(tasksItem.DecisionTask.Description.Enabled)
-					tasks1.DecisionTask.Description.Value = types.StringPointerValue(tasksItem.DecisionTask.Description.Value)
+					tasks.DecisionTask.Description = &tfTypes.StepDescription{}
+					tasks.DecisionTask.Description.Enabled = types.BoolPointerValue(tasksItem.DecisionTask.Description.Enabled)
+					tasks.DecisionTask.Description.Value = types.StringPointerValue(tasksItem.DecisionTask.Description.Value)
 				}
-				tasks1.DecisionTask.DueDate = types.StringPointerValue(tasksItem.DecisionTask.DueDate)
+				tasks.DecisionTask.DueDate = types.StringPointerValue(tasksItem.DecisionTask.DueDate)
 				if tasksItem.DecisionTask.DueDateConfig == nil {
-					tasks1.DecisionTask.DueDateConfig = nil
+					tasks.DecisionTask.DueDateConfig = nil
 				} else {
-					tasks1.DecisionTask.DueDateConfig = &tfTypes.DueDateConfig{}
-					tasks1.DecisionTask.DueDateConfig.Duration = types.NumberValue(big.NewFloat(float64(tasksItem.DecisionTask.DueDateConfig.Duration)))
-					tasks1.DecisionTask.DueDateConfig.PhaseID = types.StringPointerValue(tasksItem.DecisionTask.DueDateConfig.PhaseID)
-					tasks1.DecisionTask.DueDateConfig.TaskID = types.StringPointerValue(tasksItem.DecisionTask.DueDateConfig.TaskID)
-					tasks1.DecisionTask.DueDateConfig.Type = types.StringValue(string(tasksItem.DecisionTask.DueDateConfig.Type))
-					tasks1.DecisionTask.DueDateConfig.Unit = types.StringValue(string(tasksItem.DecisionTask.DueDateConfig.Unit))
+					tasks.DecisionTask.DueDateConfig = &tfTypes.DueDateConfig{}
+					tasks.DecisionTask.DueDateConfig.Duration = types.Float64Value(tasksItem.DecisionTask.DueDateConfig.Duration)
+					tasks.DecisionTask.DueDateConfig.PhaseID = types.StringPointerValue(tasksItem.DecisionTask.DueDateConfig.PhaseID)
+					tasks.DecisionTask.DueDateConfig.TaskID = types.StringPointerValue(tasksItem.DecisionTask.DueDateConfig.TaskID)
+					tasks.DecisionTask.DueDateConfig.Type = types.StringValue(string(tasksItem.DecisionTask.DueDateConfig.Type))
+					tasks.DecisionTask.DueDateConfig.Unit = types.StringValue(string(tasksItem.DecisionTask.DueDateConfig.Unit))
 				}
 				if tasksItem.DecisionTask.Ecp == nil {
-					tasks1.DecisionTask.Ecp = nil
+					tasks.DecisionTask.Ecp = nil
 				} else {
-					tasks1.DecisionTask.Ecp = &tfTypes.ECPDetails{}
-					tasks1.DecisionTask.Ecp.Description = types.StringPointerValue(tasksItem.DecisionTask.Ecp.Description)
-					tasks1.DecisionTask.Ecp.Enabled = types.BoolPointerValue(tasksItem.DecisionTask.Ecp.Enabled)
+					tasks.DecisionTask.Ecp = &tfTypes.ECPDetails{}
+					tasks.DecisionTask.Ecp.Description = types.StringPointerValue(tasksItem.DecisionTask.Ecp.Description)
+					tasks.DecisionTask.Ecp.Enabled = types.BoolPointerValue(tasksItem.DecisionTask.Ecp.Enabled)
 					if tasksItem.DecisionTask.Ecp.Journey == nil {
-						tasks1.DecisionTask.Ecp.Journey = nil
+						tasks.DecisionTask.Ecp.Journey = nil
 					} else {
-						tasks1.DecisionTask.Ecp.Journey = &tfTypes.StepJourney{}
-						tasks1.DecisionTask.Ecp.Journey.ID = types.StringPointerValue(tasksItem.DecisionTask.Ecp.Journey.ID)
-						tasks1.DecisionTask.Ecp.Journey.JourneyID = types.StringPointerValue(tasksItem.DecisionTask.Ecp.Journey.JourneyID)
-						tasks1.DecisionTask.Ecp.Journey.Name = types.StringPointerValue(tasksItem.DecisionTask.Ecp.Journey.Name)
+						tasks.DecisionTask.Ecp.Journey = &tfTypes.StepJourney{}
+						tasks.DecisionTask.Ecp.Journey.ID = types.StringPointerValue(tasksItem.DecisionTask.Ecp.Journey.ID)
+						tasks.DecisionTask.Ecp.Journey.JourneyID = types.StringPointerValue(tasksItem.DecisionTask.Ecp.Journey.JourneyID)
+						tasks.DecisionTask.Ecp.Journey.Name = types.StringPointerValue(tasksItem.DecisionTask.Ecp.Journey.Name)
 					}
-					tasks1.DecisionTask.Ecp.Label = types.StringPointerValue(tasksItem.DecisionTask.Ecp.Label)
+					tasks.DecisionTask.Ecp.Label = types.StringPointerValue(tasksItem.DecisionTask.Ecp.Label)
 				}
-				tasks1.DecisionTask.ID = types.StringValue(tasksItem.DecisionTask.ID)
+				tasks.DecisionTask.ID = types.StringValue(tasksItem.DecisionTask.ID)
 				if tasksItem.DecisionTask.Installer == nil {
-					tasks1.DecisionTask.Installer = nil
+					tasks.DecisionTask.Installer = nil
 				} else {
-					tasks1.DecisionTask.Installer = &tfTypes.ECPDetails{}
-					tasks1.DecisionTask.Installer.Description = types.StringPointerValue(tasksItem.DecisionTask.Installer.Description)
-					tasks1.DecisionTask.Installer.Enabled = types.BoolPointerValue(tasksItem.DecisionTask.Installer.Enabled)
+					tasks.DecisionTask.Installer = &tfTypes.ECPDetails{}
+					tasks.DecisionTask.Installer.Description = types.StringPointerValue(tasksItem.DecisionTask.Installer.Description)
+					tasks.DecisionTask.Installer.Enabled = types.BoolPointerValue(tasksItem.DecisionTask.Installer.Enabled)
 					if tasksItem.DecisionTask.Installer.Journey == nil {
-						tasks1.DecisionTask.Installer.Journey = nil
+						tasks.DecisionTask.Installer.Journey = nil
 					} else {
-						tasks1.DecisionTask.Installer.Journey = &tfTypes.StepJourney{}
-						tasks1.DecisionTask.Installer.Journey.ID = types.StringPointerValue(tasksItem.DecisionTask.Installer.Journey.ID)
-						tasks1.DecisionTask.Installer.Journey.JourneyID = types.StringPointerValue(tasksItem.DecisionTask.Installer.Journey.JourneyID)
-						tasks1.DecisionTask.Installer.Journey.Name = types.StringPointerValue(tasksItem.DecisionTask.Installer.Journey.Name)
+						tasks.DecisionTask.Installer.Journey = &tfTypes.StepJourney{}
+						tasks.DecisionTask.Installer.Journey.ID = types.StringPointerValue(tasksItem.DecisionTask.Installer.Journey.ID)
+						tasks.DecisionTask.Installer.Journey.JourneyID = types.StringPointerValue(tasksItem.DecisionTask.Installer.Journey.JourneyID)
+						tasks.DecisionTask.Installer.Journey.Name = types.StringPointerValue(tasksItem.DecisionTask.Installer.Journey.Name)
 					}
-					tasks1.DecisionTask.Installer.Label = types.StringPointerValue(tasksItem.DecisionTask.Installer.Label)
+					tasks.DecisionTask.Installer.Label = types.StringPointerValue(tasksItem.DecisionTask.Installer.Label)
 				}
 				if tasksItem.DecisionTask.Journey == nil {
-					tasks1.DecisionTask.Journey = nil
+					tasks.DecisionTask.Journey = nil
 				} else {
-					tasks1.DecisionTask.Journey = &tfTypes.StepJourney{}
-					tasks1.DecisionTask.Journey.ID = types.StringPointerValue(tasksItem.DecisionTask.Journey.ID)
-					tasks1.DecisionTask.Journey.JourneyID = types.StringPointerValue(tasksItem.DecisionTask.Journey.JourneyID)
-					tasks1.DecisionTask.Journey.Name = types.StringPointerValue(tasksItem.DecisionTask.Journey.Name)
+					tasks.DecisionTask.Journey = &tfTypes.StepJourney{}
+					tasks.DecisionTask.Journey.ID = types.StringPointerValue(tasksItem.DecisionTask.Journey.ID)
+					tasks.DecisionTask.Journey.JourneyID = types.StringPointerValue(tasksItem.DecisionTask.Journey.JourneyID)
+					tasks.DecisionTask.Journey.Name = types.StringPointerValue(tasksItem.DecisionTask.Journey.Name)
 				}
-				tasks1.DecisionTask.Name = types.StringValue(tasksItem.DecisionTask.Name)
-				tasks1.DecisionTask.PhaseID = types.StringPointerValue(tasksItem.DecisionTask.PhaseID)
-				tasks1.DecisionTask.Requirements = []tfTypes.EnableRequirement{}
-				for requirementsCount1, requirementsItem1 := range tasksItem.DecisionTask.Requirements {
-					var requirements3 tfTypes.EnableRequirement
-					requirements3.PhaseID = types.StringPointerValue(requirementsItem1.PhaseID)
-					requirements3.TaskID = types.StringPointerValue(requirementsItem1.TaskID)
-					requirements3.When = types.StringValue(string(requirementsItem1.When))
-					if requirementsCount1+1 > len(tasks1.DecisionTask.Requirements) {
-						tasks1.DecisionTask.Requirements = append(tasks1.DecisionTask.Requirements, requirements3)
-					} else {
-						tasks1.DecisionTask.Requirements[requirementsCount1].PhaseID = requirements3.PhaseID
-						tasks1.DecisionTask.Requirements[requirementsCount1].TaskID = requirements3.TaskID
-						tasks1.DecisionTask.Requirements[requirementsCount1].When = requirements3.When
-					}
+				tasks.DecisionTask.Name = types.StringValue(tasksItem.DecisionTask.Name)
+				tasks.DecisionTask.PhaseID = types.StringPointerValue(tasksItem.DecisionTask.PhaseID)
+				tasks.DecisionTask.Requirements = []tfTypes.EnableRequirement{}
+
+				for _, requirementsItem1 := range tasksItem.DecisionTask.Requirements {
+					var requirements1 tfTypes.EnableRequirement
+
+					requirements1.PhaseID = types.StringPointerValue(requirementsItem1.PhaseID)
+					requirements1.TaskID = types.StringPointerValue(requirementsItem1.TaskID)
+					requirements1.When = types.StringValue(string(requirementsItem1.When))
+
+					tasks.DecisionTask.Requirements = append(tasks.DecisionTask.Requirements, requirements1)
 				}
-				if tasksItem.DecisionTask.Schedule == nil {
-					tasks1.DecisionTask.Schedule = nil
-				} else {
-					tasks1.DecisionTask.Schedule = &tfTypes.Schedule{}
+				if tasksItem.DecisionTask.Schedule != nil {
+					tasks.DecisionTask.Schedule = &tfTypes.Schedule{}
 					if tasksItem.DecisionTask.Schedule.DelayedSchedule != nil {
-						tasks1.DecisionTask.Schedule.DelayedSchedule = &tfTypes.DelayedSchedule{}
-						tasks1.DecisionTask.Schedule.DelayedSchedule.Duration = types.NumberValue(big.NewFloat(float64(tasksItem.DecisionTask.Schedule.DelayedSchedule.Duration)))
-						tasks1.DecisionTask.Schedule.DelayedSchedule.Mode = types.StringValue(string(tasksItem.DecisionTask.Schedule.DelayedSchedule.Mode))
-						tasks1.DecisionTask.Schedule.DelayedSchedule.Unit = types.StringValue(string(tasksItem.DecisionTask.Schedule.DelayedSchedule.Unit))
+						tasks.DecisionTask.Schedule.DelayedSchedule = &tfTypes.DelayedSchedule{}
+						tasks.DecisionTask.Schedule.DelayedSchedule.Duration = types.Float64Value(tasksItem.DecisionTask.Schedule.DelayedSchedule.Duration)
+						tasks.DecisionTask.Schedule.DelayedSchedule.Mode = types.StringValue(string(tasksItem.DecisionTask.Schedule.DelayedSchedule.Mode))
+						tasks.DecisionTask.Schedule.DelayedSchedule.Unit = types.StringValue(string(tasksItem.DecisionTask.Schedule.DelayedSchedule.Unit))
 					}
 					if tasksItem.DecisionTask.Schedule.RelativeSchedule != nil {
-						tasks1.DecisionTask.Schedule.RelativeSchedule = &tfTypes.RelativeSchedule{}
-						tasks1.DecisionTask.Schedule.RelativeSchedule.Direction = types.StringValue(string(tasksItem.DecisionTask.Schedule.RelativeSchedule.Direction))
-						tasks1.DecisionTask.Schedule.RelativeSchedule.Duration = types.NumberValue(big.NewFloat(float64(tasksItem.DecisionTask.Schedule.RelativeSchedule.Duration)))
-						tasks1.DecisionTask.Schedule.RelativeSchedule.Mode = types.StringValue(string(tasksItem.DecisionTask.Schedule.RelativeSchedule.Mode))
-						tasks1.DecisionTask.Schedule.RelativeSchedule.Reference.Attribute = types.StringPointerValue(tasksItem.DecisionTask.Schedule.RelativeSchedule.Reference.Attribute)
-						tasks1.DecisionTask.Schedule.RelativeSchedule.Reference.ID = types.StringValue(tasksItem.DecisionTask.Schedule.RelativeSchedule.Reference.ID)
-						tasks1.DecisionTask.Schedule.RelativeSchedule.Reference.Origin = types.StringValue(string(tasksItem.DecisionTask.Schedule.RelativeSchedule.Reference.Origin))
-						tasks1.DecisionTask.Schedule.RelativeSchedule.Reference.Schema = types.StringPointerValue(tasksItem.DecisionTask.Schedule.RelativeSchedule.Reference.Schema)
-						tasks1.DecisionTask.Schedule.RelativeSchedule.Unit = types.StringValue(string(tasksItem.DecisionTask.Schedule.RelativeSchedule.Unit))
+						tasks.DecisionTask.Schedule.RelativeSchedule = &tfTypes.RelativeSchedule{}
+						tasks.DecisionTask.Schedule.RelativeSchedule.Direction = types.StringValue(string(tasksItem.DecisionTask.Schedule.RelativeSchedule.Direction))
+						tasks.DecisionTask.Schedule.RelativeSchedule.Duration = types.Float64Value(tasksItem.DecisionTask.Schedule.RelativeSchedule.Duration)
+						tasks.DecisionTask.Schedule.RelativeSchedule.Mode = types.StringValue(string(tasksItem.DecisionTask.Schedule.RelativeSchedule.Mode))
+						tasks.DecisionTask.Schedule.RelativeSchedule.Reference.Attribute = types.StringPointerValue(tasksItem.DecisionTask.Schedule.RelativeSchedule.Reference.Attribute)
+						tasks.DecisionTask.Schedule.RelativeSchedule.Reference.ID = types.StringValue(tasksItem.DecisionTask.Schedule.RelativeSchedule.Reference.ID)
+						tasks.DecisionTask.Schedule.RelativeSchedule.Reference.Origin = types.StringValue(string(tasksItem.DecisionTask.Schedule.RelativeSchedule.Reference.Origin))
+						tasks.DecisionTask.Schedule.RelativeSchedule.Reference.Schema = types.StringPointerValue(tasksItem.DecisionTask.Schedule.RelativeSchedule.Reference.Schema)
+						tasks.DecisionTask.Schedule.RelativeSchedule.Unit = types.StringValue(string(tasksItem.DecisionTask.Schedule.RelativeSchedule.Unit))
 					}
 				}
-				tasks1.DecisionTask.TaskType = types.StringValue(string(tasksItem.DecisionTask.TaskType))
-				tasks1.DecisionTask.Taxonomies = []types.String{}
+				tasks.DecisionTask.TaskType = types.StringValue(string(tasksItem.DecisionTask.TaskType))
+				tasks.DecisionTask.Taxonomies = make([]types.String, 0, len(tasksItem.DecisionTask.Taxonomies))
 				for _, v := range tasksItem.DecisionTask.Taxonomies {
-					tasks1.DecisionTask.Taxonomies = append(tasks1.DecisionTask.Taxonomies, types.StringValue(v))
+					tasks.DecisionTask.Taxonomies = append(tasks.DecisionTask.Taxonomies, types.StringValue(v))
 				}
 			}
 			if tasksItem.TaskBase != nil {
-				tasks1.TaskBase = &tfTypes.TaskBase{}
-				tasks1.TaskBase.AssignedTo = []types.String{}
+				tasks.TaskBase = &tfTypes.TaskBase{}
+				tasks.TaskBase.AssignedTo = make([]types.String, 0, len(tasksItem.TaskBase.AssignedTo))
 				for _, v := range tasksItem.TaskBase.AssignedTo {
-					tasks1.TaskBase.AssignedTo = append(tasks1.TaskBase.AssignedTo, types.StringValue(v))
+					tasks.TaskBase.AssignedTo = append(tasks.TaskBase.AssignedTo, types.StringValue(v))
 				}
 				if tasksItem.TaskBase.Description == nil {
-					tasks1.TaskBase.Description = nil
+					tasks.TaskBase.Description = nil
 				} else {
-					tasks1.TaskBase.Description = &tfTypes.StepDescription{}
-					tasks1.TaskBase.Description.Enabled = types.BoolPointerValue(tasksItem.TaskBase.Description.Enabled)
-					tasks1.TaskBase.Description.Value = types.StringPointerValue(tasksItem.TaskBase.Description.Value)
+					tasks.TaskBase.Description = &tfTypes.StepDescription{}
+					tasks.TaskBase.Description.Enabled = types.BoolPointerValue(tasksItem.TaskBase.Description.Enabled)
+					tasks.TaskBase.Description.Value = types.StringPointerValue(tasksItem.TaskBase.Description.Value)
 				}
-				tasks1.TaskBase.DueDate = types.StringPointerValue(tasksItem.TaskBase.DueDate)
+				tasks.TaskBase.DueDate = types.StringPointerValue(tasksItem.TaskBase.DueDate)
 				if tasksItem.TaskBase.DueDateConfig == nil {
-					tasks1.TaskBase.DueDateConfig = nil
+					tasks.TaskBase.DueDateConfig = nil
 				} else {
-					tasks1.TaskBase.DueDateConfig = &tfTypes.DueDateConfig{}
-					tasks1.TaskBase.DueDateConfig.Duration = types.NumberValue(big.NewFloat(float64(tasksItem.TaskBase.DueDateConfig.Duration)))
-					tasks1.TaskBase.DueDateConfig.PhaseID = types.StringPointerValue(tasksItem.TaskBase.DueDateConfig.PhaseID)
-					tasks1.TaskBase.DueDateConfig.TaskID = types.StringPointerValue(tasksItem.TaskBase.DueDateConfig.TaskID)
-					tasks1.TaskBase.DueDateConfig.Type = types.StringValue(string(tasksItem.TaskBase.DueDateConfig.Type))
-					tasks1.TaskBase.DueDateConfig.Unit = types.StringValue(string(tasksItem.TaskBase.DueDateConfig.Unit))
+					tasks.TaskBase.DueDateConfig = &tfTypes.DueDateConfig{}
+					tasks.TaskBase.DueDateConfig.Duration = types.Float64Value(tasksItem.TaskBase.DueDateConfig.Duration)
+					tasks.TaskBase.DueDateConfig.PhaseID = types.StringPointerValue(tasksItem.TaskBase.DueDateConfig.PhaseID)
+					tasks.TaskBase.DueDateConfig.TaskID = types.StringPointerValue(tasksItem.TaskBase.DueDateConfig.TaskID)
+					tasks.TaskBase.DueDateConfig.Type = types.StringValue(string(tasksItem.TaskBase.DueDateConfig.Type))
+					tasks.TaskBase.DueDateConfig.Unit = types.StringValue(string(tasksItem.TaskBase.DueDateConfig.Unit))
 				}
 				if tasksItem.TaskBase.Ecp == nil {
-					tasks1.TaskBase.Ecp = nil
+					tasks.TaskBase.Ecp = nil
 				} else {
-					tasks1.TaskBase.Ecp = &tfTypes.ECPDetails{}
-					tasks1.TaskBase.Ecp.Description = types.StringPointerValue(tasksItem.TaskBase.Ecp.Description)
-					tasks1.TaskBase.Ecp.Enabled = types.BoolPointerValue(tasksItem.TaskBase.Ecp.Enabled)
+					tasks.TaskBase.Ecp = &tfTypes.ECPDetails{}
+					tasks.TaskBase.Ecp.Description = types.StringPointerValue(tasksItem.TaskBase.Ecp.Description)
+					tasks.TaskBase.Ecp.Enabled = types.BoolPointerValue(tasksItem.TaskBase.Ecp.Enabled)
 					if tasksItem.TaskBase.Ecp.Journey == nil {
-						tasks1.TaskBase.Ecp.Journey = nil
+						tasks.TaskBase.Ecp.Journey = nil
 					} else {
-						tasks1.TaskBase.Ecp.Journey = &tfTypes.StepJourney{}
-						tasks1.TaskBase.Ecp.Journey.ID = types.StringPointerValue(tasksItem.TaskBase.Ecp.Journey.ID)
-						tasks1.TaskBase.Ecp.Journey.JourneyID = types.StringPointerValue(tasksItem.TaskBase.Ecp.Journey.JourneyID)
-						tasks1.TaskBase.Ecp.Journey.Name = types.StringPointerValue(tasksItem.TaskBase.Ecp.Journey.Name)
+						tasks.TaskBase.Ecp.Journey = &tfTypes.StepJourney{}
+						tasks.TaskBase.Ecp.Journey.ID = types.StringPointerValue(tasksItem.TaskBase.Ecp.Journey.ID)
+						tasks.TaskBase.Ecp.Journey.JourneyID = types.StringPointerValue(tasksItem.TaskBase.Ecp.Journey.JourneyID)
+						tasks.TaskBase.Ecp.Journey.Name = types.StringPointerValue(tasksItem.TaskBase.Ecp.Journey.Name)
 					}
-					tasks1.TaskBase.Ecp.Label = types.StringPointerValue(tasksItem.TaskBase.Ecp.Label)
+					tasks.TaskBase.Ecp.Label = types.StringPointerValue(tasksItem.TaskBase.Ecp.Label)
 				}
-				tasks1.TaskBase.ID = types.StringValue(tasksItem.TaskBase.ID)
+				tasks.TaskBase.ID = types.StringValue(tasksItem.TaskBase.ID)
 				if tasksItem.TaskBase.Installer == nil {
-					tasks1.TaskBase.Installer = nil
+					tasks.TaskBase.Installer = nil
 				} else {
-					tasks1.TaskBase.Installer = &tfTypes.ECPDetails{}
-					tasks1.TaskBase.Installer.Description = types.StringPointerValue(tasksItem.TaskBase.Installer.Description)
-					tasks1.TaskBase.Installer.Enabled = types.BoolPointerValue(tasksItem.TaskBase.Installer.Enabled)
+					tasks.TaskBase.Installer = &tfTypes.ECPDetails{}
+					tasks.TaskBase.Installer.Description = types.StringPointerValue(tasksItem.TaskBase.Installer.Description)
+					tasks.TaskBase.Installer.Enabled = types.BoolPointerValue(tasksItem.TaskBase.Installer.Enabled)
 					if tasksItem.TaskBase.Installer.Journey == nil {
-						tasks1.TaskBase.Installer.Journey = nil
+						tasks.TaskBase.Installer.Journey = nil
 					} else {
-						tasks1.TaskBase.Installer.Journey = &tfTypes.StepJourney{}
-						tasks1.TaskBase.Installer.Journey.ID = types.StringPointerValue(tasksItem.TaskBase.Installer.Journey.ID)
-						tasks1.TaskBase.Installer.Journey.JourneyID = types.StringPointerValue(tasksItem.TaskBase.Installer.Journey.JourneyID)
-						tasks1.TaskBase.Installer.Journey.Name = types.StringPointerValue(tasksItem.TaskBase.Installer.Journey.Name)
+						tasks.TaskBase.Installer.Journey = &tfTypes.StepJourney{}
+						tasks.TaskBase.Installer.Journey.ID = types.StringPointerValue(tasksItem.TaskBase.Installer.Journey.ID)
+						tasks.TaskBase.Installer.Journey.JourneyID = types.StringPointerValue(tasksItem.TaskBase.Installer.Journey.JourneyID)
+						tasks.TaskBase.Installer.Journey.Name = types.StringPointerValue(tasksItem.TaskBase.Installer.Journey.Name)
 					}
-					tasks1.TaskBase.Installer.Label = types.StringPointerValue(tasksItem.TaskBase.Installer.Label)
+					tasks.TaskBase.Installer.Label = types.StringPointerValue(tasksItem.TaskBase.Installer.Label)
 				}
 				if tasksItem.TaskBase.Journey == nil {
-					tasks1.TaskBase.Journey = nil
+					tasks.TaskBase.Journey = nil
 				} else {
-					tasks1.TaskBase.Journey = &tfTypes.StepJourney{}
-					tasks1.TaskBase.Journey.ID = types.StringPointerValue(tasksItem.TaskBase.Journey.ID)
-					tasks1.TaskBase.Journey.JourneyID = types.StringPointerValue(tasksItem.TaskBase.Journey.JourneyID)
-					tasks1.TaskBase.Journey.Name = types.StringPointerValue(tasksItem.TaskBase.Journey.Name)
+					tasks.TaskBase.Journey = &tfTypes.StepJourney{}
+					tasks.TaskBase.Journey.ID = types.StringPointerValue(tasksItem.TaskBase.Journey.ID)
+					tasks.TaskBase.Journey.JourneyID = types.StringPointerValue(tasksItem.TaskBase.Journey.JourneyID)
+					tasks.TaskBase.Journey.Name = types.StringPointerValue(tasksItem.TaskBase.Journey.Name)
 				}
-				tasks1.TaskBase.Name = types.StringValue(tasksItem.TaskBase.Name)
-				tasks1.TaskBase.PhaseID = types.StringPointerValue(tasksItem.TaskBase.PhaseID)
-				tasks1.TaskBase.Requirements = []tfTypes.EnableRequirement{}
-				for requirementsCount2, requirementsItem2 := range tasksItem.TaskBase.Requirements {
-					var requirements5 tfTypes.EnableRequirement
-					requirements5.PhaseID = types.StringPointerValue(requirementsItem2.PhaseID)
-					requirements5.TaskID = types.StringPointerValue(requirementsItem2.TaskID)
-					requirements5.When = types.StringValue(string(requirementsItem2.When))
-					if requirementsCount2+1 > len(tasks1.TaskBase.Requirements) {
-						tasks1.TaskBase.Requirements = append(tasks1.TaskBase.Requirements, requirements5)
-					} else {
-						tasks1.TaskBase.Requirements[requirementsCount2].PhaseID = requirements5.PhaseID
-						tasks1.TaskBase.Requirements[requirementsCount2].TaskID = requirements5.TaskID
-						tasks1.TaskBase.Requirements[requirementsCount2].When = requirements5.When
-					}
+				tasks.TaskBase.Name = types.StringValue(tasksItem.TaskBase.Name)
+				tasks.TaskBase.PhaseID = types.StringPointerValue(tasksItem.TaskBase.PhaseID)
+				tasks.TaskBase.Requirements = []tfTypes.EnableRequirement{}
+
+				for _, requirementsItem2 := range tasksItem.TaskBase.Requirements {
+					var requirements2 tfTypes.EnableRequirement
+
+					requirements2.PhaseID = types.StringPointerValue(requirementsItem2.PhaseID)
+					requirements2.TaskID = types.StringPointerValue(requirementsItem2.TaskID)
+					requirements2.When = types.StringValue(string(requirementsItem2.When))
+
+					tasks.TaskBase.Requirements = append(tasks.TaskBase.Requirements, requirements2)
 				}
-				tasks1.TaskBase.TaskType = types.StringValue(string(tasksItem.TaskBase.TaskType))
-				tasks1.TaskBase.Taxonomies = []types.String{}
+				tasks.TaskBase.TaskType = types.StringValue(string(tasksItem.TaskBase.TaskType))
+				tasks.TaskBase.Taxonomies = make([]types.String, 0, len(tasksItem.TaskBase.Taxonomies))
 				for _, v := range tasksItem.TaskBase.Taxonomies {
-					tasks1.TaskBase.Taxonomies = append(tasks1.TaskBase.Taxonomies, types.StringValue(v))
+					tasks.TaskBase.Taxonomies = append(tasks.TaskBase.Taxonomies, types.StringValue(v))
 				}
 			}
-			if tasksCount+1 > len(r.Tasks) {
-				r.Tasks = append(r.Tasks, tasks1)
-			} else {
-				r.Tasks[tasksCount].AutomationTask = tasks1.AutomationTask
-				r.Tasks[tasksCount].DecisionTask = tasks1.DecisionTask
-				r.Tasks[tasksCount].TaskBase = tasks1.TaskBase
-			}
+
+			r.Tasks = append(r.Tasks, tasks)
 		}
-		r.Taxonomies = []types.String{}
+		r.Taxonomies = make([]types.String, 0, len(resp.Taxonomies))
 		for _, v := range resp.Taxonomies {
 			r.Taxonomies = append(r.Taxonomies, types.StringValue(v))
 		}
-		if resp.Trigger == nil {
-			r.Trigger = nil
-		} else {
+		if resp.Trigger != nil {
 			r.Trigger = &tfTypes.Trigger{}
 			if resp.Trigger.AutomationTrigger != nil {
 				r.Trigger.AutomationTrigger = &tfTypes.AutomationTrigger{}
@@ -533,21 +483,31 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(resp *shared
 			}
 		}
 		r.UpdateEntityAttributes = []tfTypes.UpdateEntityAttributes{}
-		if len(r.UpdateEntityAttributes) > len(resp.UpdateEntityAttributes) {
-			r.UpdateEntityAttributes = r.UpdateEntityAttributes[:len(resp.UpdateEntityAttributes)]
-		}
-		for updateEntityAttributesCount, updateEntityAttributesItem := range resp.UpdateEntityAttributes {
-			var updateEntityAttributes1 tfTypes.UpdateEntityAttributes
-			updateEntityAttributes1.Source = types.StringValue(string(updateEntityAttributesItem.Source))
-			updateEntityAttributes1.Target.EntityAttribute = types.StringValue(updateEntityAttributesItem.Target.EntityAttribute)
-			updateEntityAttributes1.Target.EntitySchema = types.StringValue(updateEntityAttributesItem.Target.EntitySchema)
-			if updateEntityAttributesCount+1 > len(r.UpdateEntityAttributes) {
-				r.UpdateEntityAttributes = append(r.UpdateEntityAttributes, updateEntityAttributes1)
-			} else {
-				r.UpdateEntityAttributes[updateEntityAttributesCount].Source = updateEntityAttributes1.Source
-				r.UpdateEntityAttributes[updateEntityAttributesCount].Target = updateEntityAttributes1.Target
-			}
+
+		for _, updateEntityAttributesItem := range resp.UpdateEntityAttributes {
+			var updateEntityAttributes tfTypes.UpdateEntityAttributes
+
+			updateEntityAttributes.Source = types.StringValue(string(updateEntityAttributesItem.Source))
+			updateEntityAttributes.Target.EntityAttribute = types.StringValue(updateEntityAttributesItem.Target.EntityAttribute)
+			updateEntityAttributes.Target.EntitySchema = types.StringValue(updateEntityAttributesItem.Target.EntitySchema)
+
+			r.UpdateEntityAttributes = append(r.UpdateEntityAttributes, updateEntityAttributes)
 		}
 		r.UpdatedAt = types.StringPointerValue(resp.UpdatedAt)
 	}
+
+	return diags
+}
+
+func (r *FlowTemplateDataSourceModel) ToOperationsGetFlowTemplateRequest(ctx context.Context) (*operations.GetFlowTemplateRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var flowID string
+	flowID = r.ID.ValueString()
+
+	out := operations.GetFlowTemplateRequest{
+		FlowID: flowID,
+	}
+
+	return &out, diags
 }

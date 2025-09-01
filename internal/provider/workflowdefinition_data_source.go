@@ -7,7 +7,7 @@ import (
 	"fmt"
 	tfTypes "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/provider/types"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk"
-	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/models/operations"
+	"github.com/hashicorp/terraform-plugin-framework-jsontypes/jsontypes"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -24,6 +24,7 @@ func NewWorkflowDefinitionDataSource() datasource.DataSource {
 
 // WorkflowDefinitionDataSource is the data source implementation.
 type WorkflowDefinitionDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.SDK
 }
 
@@ -37,13 +38,13 @@ type WorkflowDefinitionDataSourceModel struct {
 	DynamicDueDate         *tfTypes.DynamicDueDate          `tfsdk:"dynamic_due_date"`
 	EnableECPWorkflow      types.Bool                       `tfsdk:"enable_ecp_workflow"`
 	Enabled                types.Bool                       `tfsdk:"enabled"`
-	Flow                   types.String                     `tfsdk:"flow"`
+	Flow                   jsontypes.Normalized             `tfsdk:"flow"`
 	ID                     types.String                     `tfsdk:"id"`
 	LastUpdateTime         types.String                     `tfsdk:"last_update_time"`
 	Name                   types.String                     `tfsdk:"name"`
 	Taxonomies             []types.String                   `tfsdk:"taxonomies"`
 	UpdateEntityAttributes []tfTypes.UpdateEntityAttributes `tfsdk:"update_entity_attributes"`
-	UserIds                []types.Number                   `tfsdk:"user_ids"`
+	UserIds                []types.Float64                  `tfsdk:"user_ids"`
 }
 
 // Metadata returns the data source type name.
@@ -87,7 +88,7 @@ func (r *WorkflowDefinitionDataSource) Schema(ctx context.Context, req datasourc
 					"action_type_condition": schema.StringAttribute{
 						Computed: true,
 					},
-					"number_of_units": schema.NumberAttribute{
+					"number_of_units": schema.Float64Attribute{
 						Computed: true,
 					},
 					"phase_id": schema.StringAttribute{
@@ -111,6 +112,7 @@ func (r *WorkflowDefinitionDataSource) Schema(ctx context.Context, req datasourc
 				Description: `Whether the workflow is enabled or not`,
 			},
 			"flow": schema.StringAttribute{
+				CustomType:  jsontypes.NormalizedType{},
 				Computed:    true,
 				Description: `Parsed as JSON.`,
 			},
@@ -151,9 +153,10 @@ func (r *WorkflowDefinitionDataSource) Schema(ctx context.Context, req datasourc
 				},
 			},
 			"user_ids": schema.ListAttribute{
-				Computed:    true,
-				ElementType: types.NumberType,
-				Description: `This field is deprecated. Please use assignedTo`,
+				Computed:           true,
+				ElementType:        types.Float64Type,
+				DeprecationMessage: `This will be removed in a future release, please migrate away from it as soon as possible`,
+				Description:        `This field is deprecated. Please use assignedTo`,
 			},
 		},
 	}
@@ -197,13 +200,13 @@ func (r *WorkflowDefinitionDataSource) Read(ctx context.Context, req datasource.
 		return
 	}
 
-	var definitionID string
-	definitionID = data.ID.ValueString()
+	request, requestDiags := data.ToOperationsGetDefinitionRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetDefinitionRequest{
-		DefinitionID: definitionID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Workflows.GetDefinition(ctx, request)
+	res, err := r.client.Workflows.GetDefinition(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -215,10 +218,6 @@ func (r *WorkflowDefinitionDataSource) Read(ctx context.Context, req datasource.
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
-		return
-	}
 	if res.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
@@ -227,7 +226,11 @@ func (r *WorkflowDefinitionDataSource) Read(ctx context.Context, req datasource.
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedWorkflowDefinition(res.WorkflowDefinition)
+	resp.Diagnostics.Append(data.RefreshFromSharedWorkflowDefinition(ctx, res.WorkflowDefinition)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

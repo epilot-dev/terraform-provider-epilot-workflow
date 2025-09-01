@@ -5,6 +5,7 @@ package shared
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
 )
 
 type AttributeOperation string
@@ -184,6 +185,17 @@ type EvaluationSource struct {
 	Origin     *Origin     `json:"origin,omitempty"`
 	OriginType *OriginType `json:"origin_type,omitempty"`
 	Schema     *string     `json:"schema,omitempty"`
+}
+
+func (e EvaluationSource) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(e, "", false)
+}
+
+func (e *EvaluationSource) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &e, "", false, nil); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *EvaluationSource) GetAttribute() *string {

@@ -3,11 +3,16 @@
 package provider
 
 import (
+	"context"
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/models/operations"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/models/shared"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-func (r *ClosingReasonDataSourceModel) RefreshFromSharedClosingReason(resp *shared.ClosingReason) {
+func (r *ClosingReasonDataSourceModel) RefreshFromSharedClosingReason(ctx context.Context, resp *shared.ClosingReason) diag.Diagnostics {
+	var diags diag.Diagnostics
+
 	if resp != nil {
 		r.CreationTime = types.StringPointerValue(resp.CreationTime)
 		r.ID = types.StringPointerValue(resp.ID)
@@ -15,4 +20,19 @@ func (r *ClosingReasonDataSourceModel) RefreshFromSharedClosingReason(resp *shar
 		r.Status = types.StringValue(string(resp.Status))
 		r.Title = types.StringValue(resp.Title)
 	}
+
+	return diags
+}
+
+func (r *ClosingReasonDataSourceModel) ToOperationsGetClosingReasonRequest(ctx context.Context) (*operations.GetClosingReasonRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var reasonID string
+	reasonID = r.ID.ValueString()
+
+	out := operations.GetClosingReasonRequest{
+		ReasonID: reasonID,
+	}
+
+	return &out, diags
 }

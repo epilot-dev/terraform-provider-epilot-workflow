@@ -77,7 +77,7 @@ resource "epilot-workflow_workflow_definition" "my_workflowdefinition" {
 - `last_update_time` (String) ISO String Date & Time
 - `taxonomies` (List of String) Taxonomy ids that are associated with this workflow and used for filtering
 - `update_entity_attributes` (Attributes List) (see [below for nested schema](#nestedatt--update_entity_attributes))
-- `user_ids` (List of Number) This field is deprecated. Please use assignedTo
+- `user_ids` (List of Number, Deprecated) This field is deprecated. Please use assignedTo
 
 ### Read-Only
 
@@ -123,6 +123,17 @@ Optional:
 
 Import is supported using the following syntax:
 
+In Terraform v1.5.0 and later, the [`import` block](https://developer.hashicorp.com/terraform/language/import) can be used with the `id` attribute, for example:
+
+```terraform
+import {
+  to = epilot-workflow_workflow_definition.my_epilot-workflow_workflow_definition
+  id = "..."
+}
+```
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
+
 ```shell
-terraform import epilot-workflow_workflow_definition.my_epilot-workflow_workflow_definition ""
+terraform import epilot-workflow_workflow_definition.my_epilot-workflow_workflow_definition "..."
 ```

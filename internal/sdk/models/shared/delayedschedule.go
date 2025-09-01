@@ -5,6 +5,7 @@ package shared
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
 )
 
 type Mode string
@@ -34,6 +35,17 @@ type DelayedSchedule struct {
 	Duration float64  `json:"duration"`
 	Mode     Mode     `json:"mode"`
 	Unit     TimeUnit `json:"unit"`
+}
+
+func (d DelayedSchedule) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(d, "", false)
+}
+
+func (d *DelayedSchedule) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &d, "", false, []string{"duration", "mode", "unit"}); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *DelayedSchedule) GetDuration() float64 {

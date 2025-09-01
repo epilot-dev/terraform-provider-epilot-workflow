@@ -53,24 +53,24 @@ func CreateTriggerJourneySubmissionTrigger(journeySubmissionTrigger JourneySubmi
 
 func (u *Trigger) UnmarshalJSON(data []byte) error {
 
-	var manualTrigger ManualTrigger = ManualTrigger{}
-	if err := utils.UnmarshalJSON(data, &manualTrigger, "", true, true); err == nil {
-		u.ManualTrigger = &manualTrigger
-		u.Type = TriggerTypeManualTrigger
-		return nil
-	}
-
 	var automationTrigger AutomationTrigger = AutomationTrigger{}
-	if err := utils.UnmarshalJSON(data, &automationTrigger, "", true, true); err == nil {
+	if err := utils.UnmarshalJSON(data, &automationTrigger, "", true, nil); err == nil {
 		u.AutomationTrigger = &automationTrigger
 		u.Type = TriggerTypeAutomationTrigger
 		return nil
 	}
 
 	var journeySubmissionTrigger JourneySubmissionTrigger = JourneySubmissionTrigger{}
-	if err := utils.UnmarshalJSON(data, &journeySubmissionTrigger, "", true, true); err == nil {
+	if err := utils.UnmarshalJSON(data, &journeySubmissionTrigger, "", true, nil); err == nil {
 		u.JourneySubmissionTrigger = &journeySubmissionTrigger
 		u.Type = TriggerTypeJourneySubmissionTrigger
+		return nil
+	}
+
+	var manualTrigger ManualTrigger = ManualTrigger{}
+	if err := utils.UnmarshalJSON(data, &manualTrigger, "", true, nil); err == nil {
+		u.ManualTrigger = &manualTrigger
+		u.Type = TriggerTypeManualTrigger
 		return nil
 	}
 

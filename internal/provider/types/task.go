@@ -3,7 +3,7 @@
 package types
 
 type Task struct {
-	AutomationTask *AutomationTask `tfsdk:"automation_task" tfPlanOnly:"true"`
-	DecisionTask   *DecisionTask   `tfsdk:"decision_task" tfPlanOnly:"true"`
-	TaskBase       *TaskBase       `tfsdk:"task_base" tfPlanOnly:"true"`
+	AutomationTask *AutomationTask `queryParam:"inline" tfsdk:"automation_task" tfPlanOnly:"true"`
+	DecisionTask   *DecisionTask   `queryParam:"inline" tfsdk:"decision_task" tfPlanOnly:"true"`
+	TaskBase       *TaskBase       `queryParam:"inline" tfsdk:"task_base" tfPlanOnly:"true"`
 }

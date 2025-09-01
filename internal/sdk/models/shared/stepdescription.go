@@ -2,10 +2,25 @@
 
 package shared
 
+import (
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
+)
+
 // StepDescription - Longer information regarding Task
 type StepDescription struct {
 	Enabled *bool   `json:"enabled,omitempty"`
 	Value   *string `json:"value,omitempty"`
+}
+
+func (s StepDescription) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(s, "", false)
+}
+
+func (s *StepDescription) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &s, "", false, nil); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *StepDescription) GetEnabled() *bool {

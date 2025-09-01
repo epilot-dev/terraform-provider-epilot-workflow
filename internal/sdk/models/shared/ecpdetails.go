@@ -2,12 +2,27 @@
 
 package shared
 
+import (
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
+)
+
 // ECPDetails - Details regarding ECP for the workflow step
 type ECPDetails struct {
 	Description *string      `json:"description,omitempty"`
 	Enabled     *bool        `json:"enabled,omitempty"`
 	Journey     *StepJourney `json:"journey,omitempty"`
 	Label       *string      `json:"label,omitempty"`
+}
+
+func (e ECPDetails) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(e, "", false)
+}
+
+func (e *ECPDetails) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &e, "", false, nil); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *ECPDetails) GetDescription() *string {

@@ -6,7 +6,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk"
-	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/models/operations"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -23,6 +22,7 @@ func NewClosingReasonDataSource() datasource.DataSource {
 
 // ClosingReasonDataSource is the data source implementation.
 type ClosingReasonDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.SDK
 }
 
@@ -103,13 +103,13 @@ func (r *ClosingReasonDataSource) Read(ctx context.Context, req datasource.ReadR
 		return
 	}
 
-	var reasonID string
-	reasonID = data.ID.ValueString()
+	request, requestDiags := data.ToOperationsGetClosingReasonRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetClosingReasonRequest{
-		ReasonID: reasonID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.ClosingReason.GetClosingReason(ctx, request)
+	res, err := r.client.ClosingReason.GetClosingReason(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -121,10 +121,6 @@ func (r *ClosingReasonDataSource) Read(ctx context.Context, req datasource.ReadR
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
-		return
-	}
 	if res.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
@@ -133,7 +129,11 @@ func (r *ClosingReasonDataSource) Read(ctx context.Context, req datasource.ReadR
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedClosingReason(res.ClosingReason)
+	resp.Diagnostics.Append(data.RefreshFromSharedClosingReason(ctx, res.ClosingReason)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

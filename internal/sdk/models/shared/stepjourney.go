@@ -2,10 +2,25 @@
 
 package shared
 
+import (
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
+)
+
 type StepJourney struct {
 	ID        *string `json:"id,omitempty"`
 	JourneyID *string `json:"journeyId,omitempty"`
 	Name      *string `json:"name,omitempty"`
+}
+
+func (s StepJourney) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(s, "", false)
+}
+
+func (s *StepJourney) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &s, "", false, nil); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *StepJourney) GetID() *string {

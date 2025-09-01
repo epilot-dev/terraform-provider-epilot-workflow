@@ -5,6 +5,7 @@ package shared
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
 )
 
 type ManualTriggerType string
@@ -34,6 +35,17 @@ type ManualTrigger struct {
 	EntitySchema *string           `json:"entity_schema,omitempty"`
 	ID           *string           `json:"id,omitempty"`
 	Type         ManualTriggerType `json:"type"`
+}
+
+func (m ManualTrigger) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(m, "", false)
+}
+
+func (m *ManualTrigger) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &m, "", false, []string{"type"}); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *ManualTrigger) GetEntitySchema() *string {

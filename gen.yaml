@@ -3,13 +3,20 @@ generation:
   sdkClassName: SDK
   usageSnippets:
     optionalPropertyRendering: withExample
+    sdkInitStyle: constructor
   fixes:
-    nameResolutionDec2023: false
+    nameResolutionFeb2025: false
     parameterOrderingFeb2024: false
     requestResponseComponentNamesFeb2024: false
+    securityFeb2025: false
+    sharedErrorComponentsApr2025: false
   auth:
     oAuth2ClientCredentialsEnabled: false
     oAuth2PasswordEnabled: false
+  tests:
+    generateTests: true
+    generateNewTests: false
+    skipResponseBodyAssertions: false
   telemetryEnabled: false
 go:
   version: 0.0.1
@@ -28,12 +35,17 @@ go:
   outputModelSuffix: output
   packageName: openapi
 terraform:
-  version: 0.17.0
+  version: 0.19.0
   additionalDataSources: []
   additionalDependencies: {}
+  additionalEphemeralResources: []
+  additionalProviderAttributes:
+    httpHeaders: ""
+    tlsSkipVerify: ""
   additionalResources: []
   allowUnknownFieldsInWeakUnions: false
   author: epilot-dev
+  baseErrorName: SDKBaseError
   defaultErrorName: SDKError
   enableTypeDeduplication: true
   environmentVariables: []

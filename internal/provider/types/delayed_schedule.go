@@ -2,10 +2,12 @@
 
 package types
 
-import "github.com/hashicorp/terraform-plugin-framework/types"
+import (
+	"github.com/hashicorp/terraform-plugin-framework/types"
+)
 
 type DelayedSchedule struct {
-	Duration types.Number `tfsdk:"duration"`
-	Mode     types.String `tfsdk:"mode"`
-	Unit     types.String `tfsdk:"unit"`
+	Duration types.Float64 `tfsdk:"duration"`
+	Mode     types.String  `tfsdk:"mode"`
+	Unit     types.String  `tfsdk:"unit"`
 }

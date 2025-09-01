@@ -2,10 +2,25 @@
 
 package shared
 
+import (
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
+)
+
 // AutomationConfig - Configuration for automation execution to run
 type AutomationConfig struct {
 	// Id of the configured automation to run
 	FlowID string `json:"flow_id"`
+}
+
+func (a AutomationConfig) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(a, "", false)
+}
+
+func (a *AutomationConfig) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &a, "", false, []string{"flow_id"}); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *AutomationConfig) GetFlowID() string {

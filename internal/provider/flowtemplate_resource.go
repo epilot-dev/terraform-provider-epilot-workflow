@@ -8,9 +8,8 @@ import (
 	speakeasy_stringplanmodifier "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/provider/types"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk"
-	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/models/operations"
+	speakeasy_float64validators "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/validators/float64validators"
 	speakeasy_listvalidators "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/validators/listvalidators"
-	speakeasy_numbervalidators "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/validators/numbervalidators"
 	speakeasy_objectvalidators "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/validators/objectvalidators"
 	speakeasy_stringvalidators "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/validators/stringvalidators"
 	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
@@ -36,6 +35,7 @@ func NewFlowTemplateResource() resource.Resource {
 
 // FlowTemplateResource defines the resource implementation.
 type FlowTemplateResource struct {
+	// Provider configured SDK client.
 	client *sdk.SDK
 }
 
@@ -139,12 +139,12 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 				Computed: true,
 				Optional: true,
 				Attributes: map[string]schema.Attribute{
-					"duration": schema.NumberAttribute{
+					"duration": schema.Float64Attribute{
 						Computed:    true,
 						Optional:    true,
 						Description: `Not Null`,
-						Validators: []validator.Number{
-							speakeasy_numbervalidators.NotNull(),
+						Validators: []validator.Float64{
+							speakeasy_float64validators.NotNull(),
 						},
 					},
 					"phase_id": schema.StringAttribute{
@@ -273,12 +273,12 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 							Computed: true,
 							Optional: true,
 							Attributes: map[string]schema.Attribute{
-								"duration": schema.NumberAttribute{
+								"duration": schema.Float64Attribute{
 									Computed:    true,
 									Optional:    true,
 									Description: `Not Null`,
-									Validators: []validator.Number{
-										speakeasy_numbervalidators.NotNull(),
+									Validators: []validator.Float64{
+										speakeasy_float64validators.NotNull(),
 									},
 								},
 								"phase_id": schema.StringAttribute{
@@ -402,12 +402,12 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 									Computed: true,
 									Optional: true,
 									Attributes: map[string]schema.Attribute{
-										"duration": schema.NumberAttribute{
+										"duration": schema.Float64Attribute{
 											Computed:    true,
 											Optional:    true,
 											Description: `Not Null`,
-											Validators: []validator.Number{
-												speakeasy_numbervalidators.NotNull(),
+											Validators: []validator.Float64{
+												speakeasy_float64validators.NotNull(),
 											},
 										},
 										"phase_id": schema.StringAttribute{
@@ -601,12 +601,12 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 											Computed: true,
 											Optional: true,
 											Attributes: map[string]schema.Attribute{
-												"duration": schema.NumberAttribute{
+												"duration": schema.Float64Attribute{
 													Computed:    true,
 													Optional:    true,
 													Description: `Not Null`,
-													Validators: []validator.Number{
-														speakeasy_numbervalidators.NotNull(),
+													Validators: []validator.Float64{
+														speakeasy_float64validators.NotNull(),
 													},
 												},
 												"mode": schema.StringAttribute{
@@ -679,12 +679,12 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 														),
 													},
 												},
-												"duration": schema.NumberAttribute{
+												"duration": schema.Float64Attribute{
 													Computed:    true,
 													Optional:    true,
 													Description: `Not Null`,
-													Validators: []validator.Number{
-														speakeasy_numbervalidators.NotNull(),
+													Validators: []validator.Float64{
+														speakeasy_float64validators.NotNull(),
 													},
 												},
 												"mode": schema.StringAttribute{
@@ -1024,12 +1024,12 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 									Computed: true,
 									Optional: true,
 									Attributes: map[string]schema.Attribute{
-										"duration": schema.NumberAttribute{
+										"duration": schema.Float64Attribute{
 											Computed:    true,
 											Optional:    true,
 											Description: `Not Null`,
-											Validators: []validator.Number{
-												speakeasy_numbervalidators.NotNull(),
+											Validators: []validator.Float64{
+												speakeasy_float64validators.NotNull(),
 											},
 										},
 										"phase_id": schema.StringAttribute{
@@ -1223,12 +1223,12 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 											Computed: true,
 											Optional: true,
 											Attributes: map[string]schema.Attribute{
-												"duration": schema.NumberAttribute{
+												"duration": schema.Float64Attribute{
 													Computed:    true,
 													Optional:    true,
 													Description: `Not Null`,
-													Validators: []validator.Number{
-														speakeasy_numbervalidators.NotNull(),
+													Validators: []validator.Float64{
+														speakeasy_float64validators.NotNull(),
 													},
 												},
 												"mode": schema.StringAttribute{
@@ -1278,12 +1278,12 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 														),
 													},
 												},
-												"duration": schema.NumberAttribute{
+												"duration": schema.Float64Attribute{
 													Computed:    true,
 													Optional:    true,
 													Description: `Not Null`,
-													Validators: []validator.Number{
-														speakeasy_numbervalidators.NotNull(),
+													Validators: []validator.Float64{
+														speakeasy_float64validators.NotNull(),
 													},
 												},
 												"mode": schema.StringAttribute{
@@ -1419,12 +1419,12 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 									Computed: true,
 									Optional: true,
 									Attributes: map[string]schema.Attribute{
-										"duration": schema.NumberAttribute{
+										"duration": schema.Float64Attribute{
 											Computed:    true,
 											Optional:    true,
 											Description: `Not Null`,
-											Validators: []validator.Number{
-												speakeasy_numbervalidators.NotNull(),
+											Validators: []validator.Float64{
+												speakeasy_float64validators.NotNull(),
 											},
 										},
 										"phase_id": schema.StringAttribute{
@@ -1852,8 +1852,13 @@ func (r *FlowTemplateResource) Create(ctx context.Context, req resource.CreateRe
 		return
 	}
 
-	request := *data.ToSharedCreateFlowTemplate()
-	res, err := r.client.FlowsV2.CreateFlowTemplate(ctx, request)
+	request, requestDiags := data.ToSharedCreateFlowTemplate(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res, err := r.client.FlowsV2.CreateFlowTemplate(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -1873,8 +1878,17 @@ func (r *FlowTemplateResource) Create(ctx context.Context, req resource.CreateRe
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedFlowTemplate(res.FlowTemplate)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedFlowTemplate(ctx, res.FlowTemplate)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -1898,13 +1912,13 @@ func (r *FlowTemplateResource) Read(ctx context.Context, req resource.ReadReques
 		return
 	}
 
-	var flowID string
-	flowID = data.ID.ValueString()
+	request, requestDiags := data.ToOperationsGetFlowTemplateRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetFlowTemplateRequest{
-		FlowID: flowID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.FlowsV2.GetFlowTemplate(ctx, request)
+	res, err := r.client.FlowsV2.GetFlowTemplate(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -1928,7 +1942,11 @@ func (r *FlowTemplateResource) Read(ctx context.Context, req resource.ReadReques
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedFlowTemplate(res.FlowTemplate)
+	resp.Diagnostics.Append(data.RefreshFromSharedFlowTemplate(ctx, res.FlowTemplate)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -1948,15 +1966,13 @@ func (r *FlowTemplateResource) Update(ctx context.Context, req resource.UpdateRe
 		return
 	}
 
-	flowTemplate := *data.ToSharedFlowTemplateInput()
-	var flowID string
-	flowID = data.ID.ValueString()
+	request, requestDiags := data.ToOperationsUpdateFlowTemplateRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.UpdateFlowTemplateRequest{
-		FlowTemplate: flowTemplate,
-		FlowID:       flowID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.FlowsV2.UpdateFlowTemplate(ctx, request)
+	res, err := r.client.FlowsV2.UpdateFlowTemplate(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -1976,8 +1992,17 @@ func (r *FlowTemplateResource) Update(ctx context.Context, req resource.UpdateRe
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedFlowTemplate(res.FlowTemplate)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedFlowTemplate(ctx, res.FlowTemplate)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -2001,13 +2026,13 @@ func (r *FlowTemplateResource) Delete(ctx context.Context, req resource.DeleteRe
 		return
 	}
 
-	var flowID string
-	flowID = data.ID.ValueString()
+	request, requestDiags := data.ToOperationsDeleteFlowTemplateRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.DeleteFlowTemplateRequest{
-		FlowID: flowID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.FlowsV2.DeleteFlowTemplate(ctx, request)
+	res, err := r.client.FlowsV2.DeleteFlowTemplate(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

@@ -5,6 +5,7 @@ package shared
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
 )
 
 type Type string
@@ -35,6 +36,17 @@ type AutomationTrigger struct {
 	AutomationID string  `json:"automation_id"`
 	ID           *string `json:"id,omitempty"`
 	Type         Type    `json:"type"`
+}
+
+func (a AutomationTrigger) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(a, "", false)
+}
+
+func (a *AutomationTrigger) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &a, "", false, []string{"automation_id", "type"}); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *AutomationTrigger) GetAutomationID() string {

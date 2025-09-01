@@ -5,6 +5,7 @@ package shared
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
 )
 
 type Direction string
@@ -95,6 +96,17 @@ type Reference struct {
 	Schema *string `json:"schema,omitempty"`
 }
 
+func (r Reference) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(r, "", false)
+}
+
+func (r *Reference) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &r, "", false, []string{"id", "origin"}); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (o *Reference) GetAttribute() *string {
 	if o == nil {
 		return nil
@@ -129,6 +141,17 @@ type RelativeSchedule struct {
 	Mode      RelativeScheduleMode `json:"mode"`
 	Reference Reference            `json:"reference"`
 	Unit      TimeUnit             `json:"unit"`
+}
+
+func (r RelativeSchedule) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(r, "", false)
+}
+
+func (r *RelativeSchedule) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &r, "", false, []string{"direction", "duration", "mode", "reference", "unit"}); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *RelativeSchedule) GetDirection() Direction {

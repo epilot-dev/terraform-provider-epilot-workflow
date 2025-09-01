@@ -53,24 +53,24 @@ func CreateTaskDecisionTask(decisionTask DecisionTask) Task {
 
 func (u *Task) UnmarshalJSON(data []byte) error {
 
-	var taskBase TaskBase = TaskBase{}
-	if err := utils.UnmarshalJSON(data, &taskBase, "", true, true); err == nil {
-		u.TaskBase = &taskBase
-		u.Type = TaskUnionTypeTaskBase
+	var automationTask AutomationTask = AutomationTask{}
+	if err := utils.UnmarshalJSON(data, &automationTask, "", true, nil); err == nil {
+		u.AutomationTask = &automationTask
+		u.Type = TaskUnionTypeAutomationTask
 		return nil
 	}
 
 	var decisionTask DecisionTask = DecisionTask{}
-	if err := utils.UnmarshalJSON(data, &decisionTask, "", true, true); err == nil {
+	if err := utils.UnmarshalJSON(data, &decisionTask, "", true, nil); err == nil {
 		u.DecisionTask = &decisionTask
 		u.Type = TaskUnionTypeDecisionTask
 		return nil
 	}
 
-	var automationTask AutomationTask = AutomationTask{}
-	if err := utils.UnmarshalJSON(data, &automationTask, "", true, true); err == nil {
-		u.AutomationTask = &automationTask
-		u.Type = TaskUnionTypeAutomationTask
+	var taskBase TaskBase = TaskBase{}
+	if err := utils.UnmarshalJSON(data, &taskBase, "", true, nil); err == nil {
+		u.TaskBase = &taskBase
+		u.Type = TaskUnionTypeTaskBase
 		return nil
 	}
 

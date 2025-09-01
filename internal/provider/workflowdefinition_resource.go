@@ -7,11 +7,10 @@ import (
 	"fmt"
 	tfTypes "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/provider/types"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk"
-	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/models/operations"
-	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/validators"
-	speakeasy_numbervalidators "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/validators/numbervalidators"
+	speakeasy_float64validators "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/validators/float64validators"
 	speakeasy_objectvalidators "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/validators/objectvalidators"
 	speakeasy_stringvalidators "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/validators/stringvalidators"
+	"github.com/hashicorp/terraform-plugin-framework-jsontypes/jsontypes"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -32,6 +31,7 @@ func NewWorkflowDefinitionResource() resource.Resource {
 
 // WorkflowDefinitionResource defines the resource implementation.
 type WorkflowDefinitionResource struct {
+	// Provider configured SDK client.
 	client *sdk.SDK
 }
 
@@ -45,13 +45,13 @@ type WorkflowDefinitionResourceModel struct {
 	DynamicDueDate         *tfTypes.DynamicDueDate          `tfsdk:"dynamic_due_date"`
 	EnableECPWorkflow      types.Bool                       `tfsdk:"enable_ecp_workflow"`
 	Enabled                types.Bool                       `tfsdk:"enabled"`
-	Flow                   types.String                     `tfsdk:"flow"`
+	Flow                   jsontypes.Normalized             `tfsdk:"flow"`
 	ID                     types.String                     `tfsdk:"id"`
 	LastUpdateTime         types.String                     `tfsdk:"last_update_time"`
 	Name                   types.String                     `tfsdk:"name"`
 	Taxonomies             []types.String                   `tfsdk:"taxonomies"`
 	UpdateEntityAttributes []tfTypes.UpdateEntityAttributes `tfsdk:"update_entity_attributes"`
-	UserIds                []types.Number                   `tfsdk:"user_ids"`
+	UserIds                []types.Float64                  `tfsdk:"user_ids"`
 }
 
 func (r *WorkflowDefinitionResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -116,12 +116,12 @@ func (r *WorkflowDefinitionResource) Schema(ctx context.Context, req resource.Sc
 							),
 						},
 					},
-					"number_of_units": schema.NumberAttribute{
+					"number_of_units": schema.Float64Attribute{
 						Computed:    true,
 						Optional:    true,
 						Description: `Not Null`,
-						Validators: []validator.Number{
-							speakeasy_numbervalidators.NotNull(),
+						Validators: []validator.Float64{
+							speakeasy_float64validators.NotNull(),
 						},
 					},
 					"phase_id": schema.StringAttribute{
@@ -162,11 +162,9 @@ func (r *WorkflowDefinitionResource) Schema(ctx context.Context, req resource.Sc
 				Description: `Whether the workflow is enabled or not. Default: true`,
 			},
 			"flow": schema.StringAttribute{
+				CustomType:  jsontypes.NormalizedType{},
 				Required:    true,
 				Description: `Parsed as JSON.`,
-				Validators: []validator.String{
-					validators.IsValidJSON(),
-				},
 			},
 			"id": schema.StringAttribute{
 				Computed: true,
@@ -237,10 +235,11 @@ func (r *WorkflowDefinitionResource) Schema(ctx context.Context, req resource.Sc
 				},
 			},
 			"user_ids": schema.ListAttribute{
-				Computed:    true,
-				Optional:    true,
-				ElementType: types.NumberType,
-				Description: `This field is deprecated. Please use assignedTo`,
+				Computed:           true,
+				Optional:           true,
+				ElementType:        types.Float64Type,
+				DeprecationMessage: `This will be removed in a future release, please migrate away from it as soon as possible`,
+				Description:        `This field is deprecated. Please use assignedTo`,
 			},
 		},
 	}
@@ -284,8 +283,13 @@ func (r *WorkflowDefinitionResource) Create(ctx context.Context, req resource.Cr
 		return
 	}
 
-	request := *data.ToSharedWorkflowDefinition()
-	res, err := r.client.Workflows.CreateDefinition(ctx, request)
+	request, requestDiags := data.ToSharedWorkflowDefinition(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res, err := r.client.Workflows.CreateDefinition(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -305,8 +309,17 @@ func (r *WorkflowDefinitionResource) Create(ctx context.Context, req resource.Cr
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedWorkflowDefinition(res.WorkflowDefinition)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedWorkflowDefinition(ctx, res.WorkflowDefinition)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -330,13 +343,13 @@ func (r *WorkflowDefinitionResource) Read(ctx context.Context, req resource.Read
 		return
 	}
 
-	var definitionID string
-	definitionID = data.ID.ValueString()
+	request, requestDiags := data.ToOperationsGetDefinitionRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetDefinitionRequest{
-		DefinitionID: definitionID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Workflows.GetDefinition(ctx, request)
+	res, err := r.client.Workflows.GetDefinition(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -360,7 +373,11 @@ func (r *WorkflowDefinitionResource) Read(ctx context.Context, req resource.Read
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedWorkflowDefinition(res.WorkflowDefinition)
+	resp.Diagnostics.Append(data.RefreshFromSharedWorkflowDefinition(ctx, res.WorkflowDefinition)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -380,15 +397,13 @@ func (r *WorkflowDefinitionResource) Update(ctx context.Context, req resource.Up
 		return
 	}
 
-	workflowDefinition := *data.ToSharedWorkflowDefinition()
-	var definitionID string
-	definitionID = data.ID.ValueString()
+	request, requestDiags := data.ToOperationsUpdateDefinitionRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.UpdateDefinitionRequest{
-		WorkflowDefinition: workflowDefinition,
-		DefinitionID:       definitionID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Workflows.UpdateDefinition(ctx, request)
+	res, err := r.client.Workflows.UpdateDefinition(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -408,8 +423,17 @@ func (r *WorkflowDefinitionResource) Update(ctx context.Context, req resource.Up
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedWorkflowDefinition(res.WorkflowDefinition)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedWorkflowDefinition(ctx, res.WorkflowDefinition)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -433,13 +457,13 @@ func (r *WorkflowDefinitionResource) Delete(ctx context.Context, req resource.De
 		return
 	}
 
-	var definitionID string
-	definitionID = data.ID.ValueString()
+	request, requestDiags := data.ToOperationsDeleteDefinitionRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.DeleteDefinitionRequest{
-		DefinitionID: definitionID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.Workflows.DeleteDefinition(ctx, request)
+	res, err := r.client.Workflows.DeleteDefinition(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

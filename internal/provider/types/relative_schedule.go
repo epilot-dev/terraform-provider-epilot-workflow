@@ -2,12 +2,14 @@
 
 package types
 
-import "github.com/hashicorp/terraform-plugin-framework/types"
+import (
+	"github.com/hashicorp/terraform-plugin-framework/types"
+)
 
 type RelativeSchedule struct {
-	Direction types.String `tfsdk:"direction"`
-	Duration  types.Number `tfsdk:"duration"`
-	Mode      types.String `tfsdk:"mode"`
-	Reference Reference    `tfsdk:"reference"`
-	Unit      types.String `tfsdk:"unit"`
+	Direction types.String  `tfsdk:"direction"`
+	Duration  types.Float64 `tfsdk:"duration"`
+	Mode      types.String  `tfsdk:"mode"`
+	Reference Reference     `tfsdk:"reference"`
+	Unit      types.String  `tfsdk:"unit"`
 }

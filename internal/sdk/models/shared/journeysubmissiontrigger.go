@@ -5,6 +5,7 @@ package shared
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
 )
 
 type JourneySubmissionTriggerType string
@@ -36,6 +37,17 @@ type JourneySubmissionTrigger struct {
 	// ID of the journey that will trigger this flow
 	JourneyID string                       `json:"journey_id"`
 	Type      JourneySubmissionTriggerType `json:"type"`
+}
+
+func (j JourneySubmissionTrigger) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(j, "", false)
+}
+
+func (j *JourneySubmissionTrigger) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &j, "", false, []string{"journey_id", "type"}); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *JourneySubmissionTrigger) GetAutomationID() *string {

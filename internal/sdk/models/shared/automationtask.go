@@ -2,6 +2,10 @@
 
 package shared
 
+import (
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
+)
+
 type AutomationTask struct {
 	AssignedTo []string `json:"assigned_to,omitempty"`
 	// Configuration for automation execution to run
@@ -26,6 +30,17 @@ type AutomationTask struct {
 	// Taxonomy ids that are associated with this workflow and used for filtering
 	Taxonomies  []string     `json:"taxonomies,omitempty"`
 	TriggerMode *TriggerMode `json:"trigger_mode,omitempty"`
+}
+
+func (a AutomationTask) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(a, "", false)
+}
+
+func (a *AutomationTask) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &a, "", false, []string{"automation_config", "id", "name", "task_type"}); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *AutomationTask) GetAssignedTo() []string {

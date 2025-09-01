@@ -7,7 +7,6 @@ import (
 	"fmt"
 	tfTypes "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/provider/types"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk"
-	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/models/operations"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -24,6 +23,7 @@ func NewFlowTemplateDataSource() datasource.DataSource {
 
 // FlowTemplateDataSource is the data source implementation.
 type FlowTemplateDataSource struct {
+	// Provider configured SDK client.
 	client *sdk.SDK
 }
 
@@ -104,7 +104,7 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 			"due_date_config": schema.SingleNestedAttribute{
 				Computed: true,
 				Attributes: map[string]schema.Attribute{
-					"duration": schema.NumberAttribute{
+					"duration": schema.Float64Attribute{
 						Computed: true,
 					},
 					"phase_id": schema.StringAttribute{
@@ -176,7 +176,7 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 						"due_date_config": schema.SingleNestedAttribute{
 							Computed: true,
 							Attributes: map[string]schema.Attribute{
-								"duration": schema.NumberAttribute{
+								"duration": schema.Float64Attribute{
 									Computed: true,
 								},
 								"phase_id": schema.StringAttribute{
@@ -247,7 +247,7 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 								"due_date_config": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
-										"duration": schema.NumberAttribute{
+										"duration": schema.Float64Attribute{
 											Computed: true,
 										},
 										"phase_id": schema.StringAttribute{
@@ -369,7 +369,7 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 										"delayed_schedule": schema.SingleNestedAttribute{
 											Computed: true,
 											Attributes: map[string]schema.Attribute{
-												"duration": schema.NumberAttribute{
+												"duration": schema.Float64Attribute{
 													Computed: true,
 												},
 												"mode": schema.StringAttribute{
@@ -394,7 +394,7 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 												"direction": schema.StringAttribute{
 													Computed: true,
 												},
-												"duration": schema.NumberAttribute{
+												"duration": schema.Float64Attribute{
 													Computed: true,
 												},
 												"mode": schema.StringAttribute{
@@ -529,7 +529,7 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 								"due_date_config": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
-										"duration": schema.NumberAttribute{
+										"duration": schema.Float64Attribute{
 											Computed: true,
 										},
 										"phase_id": schema.StringAttribute{
@@ -651,7 +651,7 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 										"delayed_schedule": schema.SingleNestedAttribute{
 											Computed: true,
 											Attributes: map[string]schema.Attribute{
-												"duration": schema.NumberAttribute{
+												"duration": schema.Float64Attribute{
 													Computed: true,
 												},
 												"mode": schema.StringAttribute{
@@ -668,7 +668,7 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 												"direction": schema.StringAttribute{
 													Computed: true,
 												},
-												"duration": schema.NumberAttribute{
+												"duration": schema.Float64Attribute{
 													Computed: true,
 												},
 												"mode": schema.StringAttribute{
@@ -736,7 +736,7 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 								"due_date_config": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
-										"duration": schema.NumberAttribute{
+										"duration": schema.Float64Attribute{
 											Computed: true,
 										},
 										"phase_id": schema.StringAttribute{
@@ -989,13 +989,13 @@ func (r *FlowTemplateDataSource) Read(ctx context.Context, req datasource.ReadRe
 		return
 	}
 
-	var flowID string
-	flowID = data.ID.ValueString()
+	request, requestDiags := data.ToOperationsGetFlowTemplateRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetFlowTemplateRequest{
-		FlowID: flowID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.FlowsV2.GetFlowTemplate(ctx, request)
+	res, err := r.client.FlowsV2.GetFlowTemplate(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -1007,10 +1007,6 @@ func (r *FlowTemplateDataSource) Read(ctx context.Context, req datasource.ReadRe
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
-	if res.StatusCode == 404 {
-		resp.State.RemoveResource(ctx)
-		return
-	}
 	if res.StatusCode != 200 {
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
@@ -1019,7 +1015,11 @@ func (r *FlowTemplateDataSource) Read(ctx context.Context, req datasource.ReadRe
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedFlowTemplate(res.FlowTemplate)
+	resp.Diagnostics.Append(data.RefreshFromSharedFlowTemplate(ctx, res.FlowTemplate)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)

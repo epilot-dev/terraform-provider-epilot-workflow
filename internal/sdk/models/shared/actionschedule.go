@@ -53,24 +53,24 @@ func CreateActionScheduleRelativeSchedule(relativeSchedule RelativeSchedule) Act
 
 func (u *ActionSchedule) UnmarshalJSON(data []byte) error {
 
-	var immediateSchedule ImmediateSchedule = ImmediateSchedule{}
-	if err := utils.UnmarshalJSON(data, &immediateSchedule, "", true, true); err == nil {
-		u.ImmediateSchedule = &immediateSchedule
-		u.Type = ActionScheduleTypeImmediateSchedule
+	var relativeSchedule RelativeSchedule = RelativeSchedule{}
+	if err := utils.UnmarshalJSON(data, &relativeSchedule, "", true, nil); err == nil {
+		u.RelativeSchedule = &relativeSchedule
+		u.Type = ActionScheduleTypeRelativeSchedule
 		return nil
 	}
 
 	var delayedSchedule DelayedSchedule = DelayedSchedule{}
-	if err := utils.UnmarshalJSON(data, &delayedSchedule, "", true, true); err == nil {
+	if err := utils.UnmarshalJSON(data, &delayedSchedule, "", true, nil); err == nil {
 		u.DelayedSchedule = &delayedSchedule
 		u.Type = ActionScheduleTypeDelayedSchedule
 		return nil
 	}
 
-	var relativeSchedule RelativeSchedule = RelativeSchedule{}
-	if err := utils.UnmarshalJSON(data, &relativeSchedule, "", true, true); err == nil {
-		u.RelativeSchedule = &relativeSchedule
-		u.Type = ActionScheduleTypeRelativeSchedule
+	var immediateSchedule ImmediateSchedule = ImmediateSchedule{}
+	if err := utils.UnmarshalJSON(data, &immediateSchedule, "", true, nil); err == nil {
+		u.ImmediateSchedule = &immediateSchedule
+		u.Type = ActionScheduleTypeImmediateSchedule
 		return nil
 	}
 

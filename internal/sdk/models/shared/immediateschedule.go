@@ -5,6 +5,7 @@ package shared
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
 )
 
 type ImmediateScheduleMode string
@@ -32,6 +33,17 @@ func (e *ImmediateScheduleMode) UnmarshalJSON(data []byte) error {
 
 type ImmediateSchedule struct {
 	Mode *ImmediateScheduleMode `json:"mode,omitempty"`
+}
+
+func (i ImmediateSchedule) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(i, "", false)
+}
+
+func (i *ImmediateSchedule) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &i, "", false, nil); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *ImmediateSchedule) GetMode() *ImmediateScheduleMode {

@@ -5,6 +5,7 @@ package shared
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
 )
 
 type When string
@@ -38,6 +39,17 @@ type EnableRequirement struct {
 	PhaseID *string `json:"phase_id,omitempty"`
 	TaskID  *string `json:"task_id,omitempty"`
 	When    When    `json:"when"`
+}
+
+func (e EnableRequirement) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(e, "", false)
+}
+
+func (e *EnableRequirement) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &e, "", false, []string{"when"}); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *EnableRequirement) GetPhaseID() *string {

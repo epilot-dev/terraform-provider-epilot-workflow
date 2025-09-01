@@ -6,7 +6,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk"
-	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/models/operations"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -26,6 +25,7 @@ func NewClosingReasonResource() resource.Resource {
 
 // ClosingReasonResource defines the resource implementation.
 type ClosingReasonResource struct {
+	// Provider configured SDK client.
 	client *sdk.SDK
 }
 
@@ -110,8 +110,13 @@ func (r *ClosingReasonResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 
-	request := *data.ToSharedClosingReasonInput()
-	res, err := r.client.ClosingReason.CreateClosingReason(ctx, request)
+	request, requestDiags := data.ToSharedClosingReasonInput(ctx)
+	resp.Diagnostics.Append(requestDiags...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	res, err := r.client.ClosingReason.CreateClosingReason(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -131,8 +136,17 @@ func (r *ClosingReasonResource) Create(ctx context.Context, req resource.CreateR
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedClosingReason(res.ClosingReason)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedClosingReason(ctx, res.ClosingReason)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -156,13 +170,13 @@ func (r *ClosingReasonResource) Read(ctx context.Context, req resource.ReadReque
 		return
 	}
 
-	var reasonID string
-	reasonID = data.ID.ValueString()
+	request, requestDiags := data.ToOperationsGetClosingReasonRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.GetClosingReasonRequest{
-		ReasonID: reasonID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.ClosingReason.GetClosingReason(ctx, request)
+	res, err := r.client.ClosingReason.GetClosingReason(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -186,7 +200,11 @@ func (r *ClosingReasonResource) Read(ctx context.Context, req resource.ReadReque
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedClosingReason(res.ClosingReason)
+	resp.Diagnostics.Append(data.RefreshFromSharedClosingReason(ctx, res.ClosingReason)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -206,15 +224,13 @@ func (r *ClosingReasonResource) Update(ctx context.Context, req resource.UpdateR
 		return
 	}
 
-	closingReason := *data.ToSharedClosingReasonInput()
-	var reasonID string
-	reasonID = data.ID.ValueString()
+	request, requestDiags := data.ToOperationsUpdateClosingReasonRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.UpdateClosingReasonRequest{
-		ClosingReason: closingReason,
-		ReasonID:      reasonID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.ClosingReason.UpdateClosingReason(ctx, request)
+	res, err := r.client.ClosingReason.UpdateClosingReason(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {
@@ -234,8 +250,17 @@ func (r *ClosingReasonResource) Update(ctx context.Context, req resource.UpdateR
 		resp.Diagnostics.AddError("unexpected response from API. Got an unexpected response body", debugResponse(res.RawResponse))
 		return
 	}
-	data.RefreshFromSharedClosingReason(res.ClosingReason)
-	refreshPlan(ctx, plan, &data, resp.Diagnostics)
+	resp.Diagnostics.Append(data.RefreshFromSharedClosingReason(ctx, res.ClosingReason)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(refreshPlan(ctx, plan, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	// Save updated data into Terraform state
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
@@ -259,13 +284,13 @@ func (r *ClosingReasonResource) Delete(ctx context.Context, req resource.DeleteR
 		return
 	}
 
-	var reasonID string
-	reasonID = data.ID.ValueString()
+	request, requestDiags := data.ToOperationsDeleteClosingReasonRequest(ctx)
+	resp.Diagnostics.Append(requestDiags...)
 
-	request := operations.DeleteClosingReasonRequest{
-		ReasonID: reasonID,
+	if resp.Diagnostics.HasError() {
+		return
 	}
-	res, err := r.client.ClosingReason.DeleteClosingReason(ctx, request)
+	res, err := r.client.ClosingReason.DeleteClosingReason(ctx, *request)
 	if err != nil {
 		resp.Diagnostics.AddError("failure to invoke API", err.Error())
 		if res != nil && res.RawResponse != nil {

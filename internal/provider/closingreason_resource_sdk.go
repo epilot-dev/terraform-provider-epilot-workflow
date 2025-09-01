@@ -3,11 +3,77 @@
 package provider
 
 import (
+	"context"
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/models/operations"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/models/shared"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-func (r *ClosingReasonResourceModel) ToSharedClosingReasonInput() *shared.ClosingReasonInput {
+func (r *ClosingReasonResourceModel) RefreshFromSharedClosingReason(ctx context.Context, resp *shared.ClosingReason) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	if resp != nil {
+		r.CreationTime = types.StringPointerValue(resp.CreationTime)
+		r.ID = types.StringPointerValue(resp.ID)
+		r.LastUpdateTime = types.StringPointerValue(resp.LastUpdateTime)
+		r.Status = types.StringValue(string(resp.Status))
+		r.Title = types.StringValue(resp.Title)
+	}
+
+	return diags
+}
+
+func (r *ClosingReasonResourceModel) ToOperationsDeleteClosingReasonRequest(ctx context.Context) (*operations.DeleteClosingReasonRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var reasonID string
+	reasonID = r.ID.ValueString()
+
+	out := operations.DeleteClosingReasonRequest{
+		ReasonID: reasonID,
+	}
+
+	return &out, diags
+}
+
+func (r *ClosingReasonResourceModel) ToOperationsGetClosingReasonRequest(ctx context.Context) (*operations.GetClosingReasonRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	var reasonID string
+	reasonID = r.ID.ValueString()
+
+	out := operations.GetClosingReasonRequest{
+		ReasonID: reasonID,
+	}
+
+	return &out, diags
+}
+
+func (r *ClosingReasonResourceModel) ToOperationsUpdateClosingReasonRequest(ctx context.Context) (*operations.UpdateClosingReasonRequest, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	closingReason, closingReasonDiags := r.ToSharedClosingReasonInput(ctx)
+	diags.Append(closingReasonDiags...)
+
+	if diags.HasError() {
+		return nil, diags
+	}
+
+	var reasonID string
+	reasonID = r.ID.ValueString()
+
+	out := operations.UpdateClosingReasonRequest{
+		ClosingReason: *closingReason,
+		ReasonID:      reasonID,
+	}
+
+	return &out, diags
+}
+
+func (r *ClosingReasonResourceModel) ToSharedClosingReasonInput(ctx context.Context) (*shared.ClosingReasonInput, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
 	status := shared.ClosingReasonsStatus(r.Status.ValueString())
 	var title string
 	title = r.Title.ValueString()
@@ -16,15 +82,6 @@ func (r *ClosingReasonResourceModel) ToSharedClosingReasonInput() *shared.Closin
 		Status: status,
 		Title:  title,
 	}
-	return &out
-}
 
-func (r *ClosingReasonResourceModel) RefreshFromSharedClosingReason(resp *shared.ClosingReason) {
-	if resp != nil {
-		r.CreationTime = types.StringPointerValue(resp.CreationTime)
-		r.ID = types.StringPointerValue(resp.ID)
-		r.LastUpdateTime = types.StringPointerValue(resp.LastUpdateTime)
-		r.Status = types.StringValue(string(resp.Status))
-		r.Title = types.StringValue(resp.Title)
-	}
+	return &out, diags
 }

@@ -5,6 +5,7 @@ package shared
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
 )
 
 type LogicalOperator string
@@ -39,6 +40,17 @@ type Condition struct {
 	ID              string          `json:"id"`
 	LogicalOperator LogicalOperator `json:"logical_operator"`
 	Statements      []Statement     `json:"statements"`
+}
+
+func (c Condition) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(c, "", false)
+}
+
+func (c *Condition) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &c, "", false, []string{"branch_name", "id", "logical_operator", "statements"}); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *Condition) GetBranchName() string {

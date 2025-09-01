@@ -2,11 +2,26 @@
 
 package shared
 
+import (
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
+)
+
 type Statement struct {
 	ID       string           `json:"id"`
 	Operator Operator         `json:"operator"`
 	Source   EvaluationSource `json:"source"`
 	Values   []string         `json:"values"`
+}
+
+func (s Statement) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(s, "", false)
+}
+
+func (s *Statement) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &s, "", false, []string{"id", "operator", "source", "values"}); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (o *Statement) GetID() string {

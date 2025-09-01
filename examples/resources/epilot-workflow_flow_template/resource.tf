@@ -109,14 +109,6 @@ resource "epilot-workflow_flow_template" "my_flowtemplate" {
           }
         ]
         schedule = {
-          delayed_schedule = {
-            duration = 9.44
-            mode     = "delayed"
-            unit     = "months"
-          }
-          immediate_schedule = {
-            mode = "immediate"
-          }
           relative_schedule = {
             direction = "before"
             duration  = 3.2
@@ -136,180 +128,12 @@ resource "epilot-workflow_flow_template" "my_flowtemplate" {
         ]
         trigger_mode = "automatic"
       }
-      decision_task = {
-        assigned_to = [
-          "..."
-        ]
-        conditions = [
-          {
-            branch_name      = "Branch 1"
-            id               = "...my_id..."
-            logical_operator = "OR"
-            statements = [
-              {
-                id       = "...my_id..."
-                operator = "is_empty"
-                source = {
-                  attribute            = "...my_attribute..."
-                  attribute_operation  = "deleted"
-                  attribute_repeatable = false
-                  attribute_type       = "boolean"
-                  id                   = "...my_id..."
-                  origin               = "action"
-                  origin_type          = "journey_block"
-                  schema               = "...my_schema..."
-                }
-                values = [
-                  "..."
-                ]
-              }
-            ]
-          }
-        ]
-        description = {
-          enabled = false
-          value   = "...my_value..."
-        }
-        due_date = "2021-04-27T12:00:00.000Z"
-        due_date_config = {
-          duration = 8.34
-          phase_id = "...my_phase_id..."
-          task_id  = "...my_task_id..."
-          type     = "WORKFLOW_STARTED"
-          unit     = "days"
-        }
-        ecp = {
-          description = "...my_description..."
-          enabled     = true
-          journey = {
-            id         = "...my_id..."
-            journey_id = "...my_journey_id..."
-            name       = "...my_name..."
-          }
-          label = "...my_label..."
-        }
-        id = "...my_id..."
-        installer = {
-          description = "...my_description..."
-          enabled     = true
-          journey = {
-            id         = "...my_id..."
-            journey_id = "...my_journey_id..."
-            name       = "...my_name..."
-          }
-          label = "...my_label..."
-        }
-        journey = {
-          id         = "...my_id..."
-          journey_id = "...my_journey_id..."
-          name       = "...my_name..."
-        }
-        name     = "...my_name..."
-        phase_id = "...my_phase_id..."
-        requirements = [
-          {
-            phase_id = "...my_phase_id..."
-            task_id  = "...my_task_id..."
-            when     = "PHASE_FINISHED"
-          }
-        ]
-        schedule = {
-          delayed_schedule = {
-            duration = 0.87
-            mode     = "delayed"
-            unit     = "days"
-          }
-          relative_schedule = {
-            direction = "after"
-            duration  = 7.2
-            mode      = "relative"
-            reference = {
-              attribute = "...my_attribute..."
-              id        = "...my_id..."
-              origin    = "flow_started"
-              schema    = "...my_schema..."
-            }
-            unit = "weeks"
-          }
-        }
-        task_type = "MANUAL"
-        taxonomies = [
-          "..."
-        ]
-      }
-      task_base = {
-        assigned_to = [
-          "..."
-        ]
-        description = {
-          enabled = true
-          value   = "...my_value..."
-        }
-        due_date = "2021-04-27T12:00:00.000Z"
-        due_date_config = {
-          duration = 9.32
-          phase_id = "...my_phase_id..."
-          task_id  = "...my_task_id..."
-          type     = "TASK_FINISHED"
-          unit     = "hours"
-        }
-        ecp = {
-          description = "...my_description..."
-          enabled     = true
-          journey = {
-            id         = "...my_id..."
-            journey_id = "...my_journey_id..."
-            name       = "...my_name..."
-          }
-          label = "...my_label..."
-        }
-        id = "...my_id..."
-        installer = {
-          description = "...my_description..."
-          enabled     = true
-          journey = {
-            id         = "...my_id..."
-            journey_id = "...my_journey_id..."
-            name       = "...my_name..."
-          }
-          label = "...my_label..."
-        }
-        journey = {
-          id         = "...my_id..."
-          journey_id = "...my_journey_id..."
-          name       = "...my_name..."
-        }
-        name     = "...my_name..."
-        phase_id = "...my_phase_id..."
-        requirements = [
-          {
-            phase_id = "...my_phase_id..."
-            task_id  = "...my_task_id..."
-            when     = "PHASE_FINISHED"
-          }
-        ]
-        task_type = "MANUAL"
-        taxonomies = [
-          "..."
-        ]
-      }
     }
   ]
   taxonomies = [
     "..."
   ]
   trigger = {
-    automation_trigger = {
-      automation_id = "...my_automation_id..."
-      id            = "...my_id..."
-      type          = "automation"
-    }
-    journey_submission_trigger = {
-      automation_id = "...my_automation_id..."
-      id            = "...my_id..."
-      journey_id    = "...my_journey_id..."
-      type          = "journey_submission"
-    }
     manual_trigger = {
       entity_schema = "...my_entity_schema..."
       id            = "...my_id..."

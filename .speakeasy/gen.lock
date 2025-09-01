@@ -3,10 +3,10 @@ id: 5a857039-7f4b-42d5-86fd-449767242ed2
 management:
   docChecksum: 3c59c274c95b2722d9a88a6882f4b520
   docVersion: 1.0.0
-  speakeasyVersion: 1.477.0
-  generationVersion: 2.497.0
-  releaseVersion: 0.17.0
-  configChecksum: 1d514357e5b57e5c61c905d7e9caa121
+  speakeasyVersion: 1.606.10
+  generationVersion: 2.687.13
+  releaseVersion: 0.19.0
+  configChecksum: e5de877598a12627f8640da593540a00
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-workflow.git
   repoSubDirectory: .
   published: true
@@ -21,14 +21,13 @@ features:
     unions: 2.85.0
   terraform:
     additionalDependencies: 0.1.0
-    constsAndDefaults: 0.2.0
-    core: 3.29.0
-    deprecations: 2.81.1
-    envVarSecurityUsage: 0.1.0
-    globalSecurity: 2.81.9
-    globalServerURLs: 2.82.1
+    constsAndDefaults: 0.2.1
+    core: 3.44.1
+    deprecations: 2.82.0
+    globalSecurity: 2.81.12
+    globalServerURLs: 2.83.0
     inputOutputModels: 2.83.0
-    retries: 2.81.2
+    retries: 2.81.4
     typeOverrides: 2.81.1
     unions: 2.81.17
 generatedFiles:
@@ -39,16 +38,21 @@ generatedFiles:
   - examples/data-sources/epilot-workflow_flow_template/data-source.tf
   - examples/data-sources/epilot-workflow_workflow_definition/data-source.tf
   - examples/provider/provider.tf
+  - examples/resources/epilot-workflow_closing_reason/import-by-string-id.tf
   - examples/resources/epilot-workflow_closing_reason/import.sh
   - examples/resources/epilot-workflow_closing_reason/resource.tf
+  - examples/resources/epilot-workflow_flow_template/import-by-string-id.tf
   - examples/resources/epilot-workflow_flow_template/import.sh
   - examples/resources/epilot-workflow_flow_template/resource.tf
+  - examples/resources/epilot-workflow_workflow_definition/import-by-string-id.tf
   - examples/resources/epilot-workflow_workflow_definition/import.sh
   - examples/resources/epilot-workflow_workflow_definition/resource.tf
   - go.mod
   - go.sum
   - internal/planmodifiers/boolplanmodifier/suppress_diff.go
+  - internal/planmodifiers/float32planmodifier/suppress_diff.go
   - internal/planmodifiers/float64planmodifier/suppress_diff.go
+  - internal/planmodifiers/int32planmodifier/suppress_diff.go
   - internal/planmodifiers/int64planmodifier/suppress_diff.go
   - internal/planmodifiers/listplanmodifier/suppress_diff.go
   - internal/planmodifiers/mapplanmodifier/suppress_diff.go
@@ -80,6 +84,9 @@ generatedFiles:
   - internal/provider/reflect/primitive.go
   - internal/provider/reflect/slice.go
   - internal/provider/reflect/struct.go
+  - internal/provider/typeconvert/date.go
+  - internal/provider/typeconvert/datetime.go
+  - internal/provider/typeconvert/int.go
   - internal/provider/types/action_schedule.go
   - internal/provider/types/automation_config.go
   - internal/provider/types/automation_task.go
@@ -118,7 +125,9 @@ generatedFiles:
   - internal/provider/workflowdefinition_resource_sdk.go
   - internal/sdk/.gitattributes
   - internal/sdk/closingreason.go
+  - internal/sdk/docs/models/operations/option.md
   - internal/sdk/flowsv2.go
+  - internal/sdk/internal/config/sdkconfiguration.go
   - internal/sdk/internal/hooks/hooks.go
   - internal/sdk/internal/utils/contenttype.go
   - internal/sdk/internal/utils/env.go
@@ -212,7 +221,9 @@ generatedFiles:
   - internal/validators/JSONParseValidator.go
   - internal/validators/RFC3339Validator.go
   - internal/validators/boolvalidators/not_null.go
+  - internal/validators/float32validators/not_null.go
   - internal/validators/float64validators/not_null.go
+  - internal/validators/int32validators/not_null.go
   - internal/validators/int64validators/not_null.go
   - internal/validators/listvalidators/not_null.go
   - internal/validators/mapvalidators/not_null.go
@@ -235,12 +246,98 @@ examples:
         "500":
           application/json: {}
   createClosingReason:
-    "":
+    speakeasy-default-create-closing-reason:
       requestBody:
-        application/json: {"status": "ACTIVE", "title": "better offer"}
+        application/json: {"status": "INACTIVE", "title": "<value>"}
       responses:
         "201":
-          application/json: {"status": "INACTIVE", "title": "<value>"}
+          application/json: {"status": "ACTIVE", "title": "<value>"}
+  getAllClosingReasons:
+    speakeasy-default-get-all-closing-reasons:
+      parameters:
+        query:
+          includeInactive: true
+      responses:
+        "200":
+          application/json: {"reasons": [{"status": "INACTIVE", "title": "<value>"}]}
+  createDefinition:
+    speakeasy-default-create-definition:
+      requestBody:
+        application/json: {"closingReasons": [{"id": "x739cew"}], "creationTime": "2021-04-27T12:01:13.000Z", "dueDate": "2021-04-27T12:00:00.000Z", "enabled": true, "flow": [{"name": "<value>", "order": 8572.72, "steps": [], "type": "STEP"}], "lastUpdateTime": "2021-04-27T12:01:13.000Z", "name": "<value>", "updateEntityAttributes": [{"source": "workflow_status", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}]}
+      responses:
+        "200":
+          application/json: {"closingReasons": [{"id": "x739cew"}], "creationTime": "2021-04-27T12:01:13.000Z", "dueDate": "2021-04-27T12:00:00.000Z", "flow": [{"dueDate": "2021-04-27T12:00:00.000Z", "name": "<value>", "order": 1357.28, "type": "STEP"}], "lastUpdateTime": "2021-04-27T12:01:13.000Z", "name": "<value>", "updateEntityAttributes": [{"source": "workflow_status", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}]}
+        "400":
+          application/json: {}
+        "500":
+          application/json: {}
+        "201":
+          application/json: {"closingReasons": [{"id": "x739cew"}], "creationTime": "2021-04-27T12:01:13.000Z", "dueDate": "2021-04-27T12:00:00.000Z", "enabled": true, "flow": "<value>", "lastUpdateTime": "2021-04-27T12:01:13.000Z", "name": "<value>", "updateEntityAttributes": [{"source": "current_section", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}]}
+  deleteDefinition:
+    speakeasy-default-delete-definition:
+      parameters:
+        path:
+          definitionId: "CustomerRequest"
+      responses:
+        "401":
+          application/json: {}
+  getDefinition:
+    speakeasy-default-get-definition:
+      parameters:
+        path:
+          definitionId: "7hj28a"
+      responses:
+        "200":
+          application/json: {"closingReasons": [{"id": "x739cew"}], "creationTime": "2021-04-27T12:01:13.000Z", "dueDate": "2021-04-27T12:00:00.000Z", "enabled": true, "flow": [{"dueDate": "2021-04-27T12:00:00.000Z", "name": "<value>", "order": 9658.5, "type": "SECTION"}], "lastUpdateTime": "2021-04-27T12:01:13.000Z", "name": "<value>", "updateEntityAttributes": [{"source": "current_step", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}]}
+        "400":
+          application/json: {}
+        "404":
+          application/json: {}
+        "500":
+          application/json: {}
+  getDefinitions:
+    speakeasy-default-get-definitions:
+      responses:
+        "200":
+          application/json: [{"closingReasons": [{"id": "x739cew"}], "creationTime": "2021-04-27T12:01:13.000Z", "dueDate": "2021-04-27T12:00:00.000Z", "enabled": true, "flow": [{"dueDate": "2021-04-27T12:00:00.000Z", "name": "<value>", "order": 5464.53, "type": "STEP"}], "lastUpdateTime": "2021-04-27T12:01:13.000Z", "name": "<value>", "updateEntityAttributes": [{"source": "current_step", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}]}]
+        "500":
+          application/json: {}
+  getMaxAllowedLimit:
+    speakeasy-default-get-max-allowed-limit:
+      responses:
+        "200":
+          application/json: {}
+        "500":
+          application/json: {}
+  getWorkflowClosingReasons:
+    speakeasy-default-get-workflow-closing-reasons:
+      parameters:
+        path:
+          definitionId: "fxcwfw"
+      responses:
+        "200":
+          application/json: {"reasons": []}
+  setWorkflowClosingReasons:
+    speakeasy-default-set-workflow-closing-reasons:
+      parameters:
+        path:
+          definitionId: "7889"
+      requestBody:
+        application/json: {"reasons": []}
+  updateDefinition:
+    speakeasy-default-update-definition:
+      parameters:
+        path:
+          definitionId: "7hj28a"
+      requestBody:
+        application/json: {"closingReasons": [{"id": "x739cew"}], "creationTime": "2021-04-27T12:01:13.000Z", "dueDate": "2021-04-27T12:00:00.000Z", "enabled": true, "flow": [{"name": "<value>", "order": 1405.75, "steps": [{"dueDate": "2021-04-27T12:00:00.000Z", "name": "<value>", "order": 3983.37, "type": "STEP"}], "type": "STEP"}], "lastUpdateTime": "2021-04-27T12:01:13.000Z", "name": "<value>", "updateEntityAttributes": [{"source": "current_section", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}]}
+      responses:
+        "200":
+          application/json: {"closingReasons": [{"id": "x739cew"}], "creationTime": "2021-04-27T12:01:13.000Z", "dueDate": "2021-04-27T12:00:00.000Z", "enabled": true, "flow": [], "lastUpdateTime": "2021-04-27T12:01:13.000Z", "name": "<value>", "updateEntityAttributes": [{"source": "current_section", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}]}
+        "400":
+          application/json: {}
+        "500":
+          application/json: {}
   deleteClosingReason:
     speakeasy-default-delete-closing-reason:
       parameters:
@@ -251,14 +348,6 @@ examples:
           application/json: {}
         "404":
           application/json: {}
-  getAllClosingReasons:
-    "":
-      parameters:
-        query:
-          includeInactive: true
-      responses:
-        "200":
-          application/json: {"reasons": [{"status": "ACTIVE", "title": "<value>"}]}
   getClosingReason:
     speakeasy-default-get-closing-reason:
       parameters:
@@ -266,19 +355,25 @@ examples:
           reasonId: "x739cew"
       responses:
         "200":
-          application/json: {"status": "INACTIVE", "title": "<value>"}
+          application/json: {"status": "ACTIVE", "title": "<value>"}
         "400":
           application/json: {}
         "404":
           application/json: {}
   getClosingReasonV1:
-    "":
+    speakeasy-default-get-closing-reason-v1:
       parameters:
         path:
           reasonId: "-poOAPBa-jFZA_AWV3zN0"
       responses:
         "200":
-          application/json: {"creationTime": "2021-08-04T21:13:50.373Z", "id": "-poOAPBa-jFZA_AWV3zN0", "lastUpdateTime": "2021-08-04T21:13:50.373Z", "status": "ACTIVE", "title": "Closing due to example reason"}
+          application/json: {"status": "INACTIVE", "title": "<value>"}
+        "400":
+          application/json: {}
+        "404":
+          application/json: {}
+        "500":
+          application/json: {}
   updateClosingReason:
     speakeasy-default-update-closing-reason:
       parameters:
@@ -293,68 +388,13 @@ examples:
           application/json: {}
         "404":
           application/json: {}
-  createDefinition:
-    "":
-      requestBody:
-        application/json: {"assignedTo": ["952802", "80225"], "description": "Lead Qualification description", "dueDate": "2022-08-04T12:00:00.000Z", "enabled": true, "flow": [{"name": "Initial Information Gathering", "order": 1, "type": "SECTION", "steps": [{"name": "Call client and confirm address and product", "type": "STEP", "order": 1, "assignedTo": ["123482"]}, {"name": "Check product availability", "type": "STEP", "order": 2, "assignedTo": ["123482"]}, {"name": "Send email confirming contact with the client", "type": "STEP", "order": 3, "assignedTo": ["123482"]}]}, {"name": "Print and send catalog", "type": "STEP", "order": 2, "assignedTo": ["123482"]}], "name": "Lead Qualification"}
-      responses:
-        "201":
-          application/json: {"assignedTo": ["952802", "80225"], "creationTime": "2021-08-04T21:13:50.373Z", "description": "Lead Qualification description", "dueDate": "2022-08-04T12:00:00.000Z", "enabled": true, "flow": [{"id": "5892na2", "name": "Initial Information Gathering", "order": 1, "type": "SECTION", "steps": [{"id": "2hja82a", "name": "Call client and confirm address and product", "type": "STEP", "order": 1, "assignedTo": ["48829"]}, {"id": "ga92ha2", "name": "Check product availability", "type": "STEP", "order": 2, "assignedTo": ["45390"]}, {"id": "jga92ha", "name": "Send email confirming contact with the client", "type": "STEP", "order": 3, "assignedTo": ["8230"]}]}, {"id": "0a7g22a", "name": "Print and send catalog", "type": "STEP", "order": 2, "assignedTo": ["8239"]}], "id": "25n2k52ja", "lastUpdateTime": "2021-08-04T21:13:50.373Z", "name": "Lead Qualification"}
-  deleteDefinition:
-    "":
-      parameters:
-        path:
-          definitionId: "CustomerRequest"
-  getDefinition:
-    "":
-      parameters:
-        path:
-          definitionId: "7hj28a"
-      responses:
-        "200":
-          application/json: {"assignedTo": ["952802", "80225"], "closingReasons": [{"id": "ffoowef"}, {"id": "hebwoeu"}, {"id": "mbnoenq"}], "creationTime": "2021-08-04T21:13:50.373Z", "dueDate": "2022-08-04T12:00:00.000Z", "enabled": true, "flow": [{"id": "5892na2", "name": "Initial Information Gathering", "order": 1, "type": "SECTION", "steps": [{"id": "2hja82a", "name": "Call client and confirm address and product", "type": "STEP", "order": 1, "assignedTo": ["923432"]}, {"id": "ga92ha2", "name": "Check product availability", "type": "STEP", "order": 2, "assignedTo": ["45488"]}, {"id": "jga92ha", "name": "Send email confirming contact with the client", "type": "STEP", "order": 3, "assignedTo": ["45488"]}]}, {"id": "0a7g22a", "name": "Print and send catalog", "type": "STEP", "order": 2, "assignedTo": ["8988"]}], "id": "25n2k52ja", "lastUpdateTime": "2021-08-04T21:13:50.373Z", "name": "Lead Qualification"}
-  getDefinitions:
-    "":
-      responses:
-        "200":
-          application/json: [{"assignedTo": ["18625", "90252"], "creationTime": "2021-08-04T21:13:50.373Z", "description": "Lead Qualification description", "dueDate": "2021-08-04T21:13:50.373Z", "enabled": true, "flow": [{"id": "5892na2", "name": "Initial Information Gathering", "order": 1, "type": "SECTION", "steps": [{"id": "2hja82a", "name": "Call client and confirm address and product", "type": "STEP", "order": 1, "assignedTo": ["123482"]}, {"id": "ga92ha2", "name": "Check product availability", "type": "STEP", "order": 2, "assignedTo": ["123482"]}, {"id": "jga92ha", "name": "Send email confirming contact with the client", "type": "STEP", "order": 3, "assignedTo": ["123482"]}]}, {"id": "0a7g22a", "name": "Print and send catalog", "type": "STEP", "order": 2, "assignedTo": ["123482"]}], "id": "25n2k52ja", "lastUpdateTime": "2021-08-04T21:13:50.373Z", "name": "Lead Qualification"}]
-  getMaxAllowedLimit:
-    "":
-      responses:
-        "200":
-          application/json: {"currentNoOfWorkflows": 5, "maxAllowed": 7}
-  getWorkflowClosingReasons:
-    "":
-      parameters:
-        path:
-          definitionId: "fxcwfw"
-      responses:
-        "200":
-          application/json: {"reasons": [{"id": "x739cew"}, {"id": "x739cew"}, {"id": "x739cew"}]}
-  setWorkflowClosingReasons:
-    "":
-      parameters:
-        path:
-          definitionId: "7889"
-      requestBody:
-        application/json: {"reasons": [{"id": "x739cew"}]}
-  updateDefinition:
-    "":
-      parameters:
-        path:
-          definitionId: "7hj28a"
-      requestBody:
-        application/json: {"assignedTo": ["952802", "80225"], "creationTime": "2021-08-04T21:13:50.373Z", "dueDate": "2022-08-04T12:00:00.000Z", "enabled": true, "flow": [{"id": "5892na2", "name": "Initial Information Gathering", "order": 1, "type": "SECTION", "steps": [{"id": "2hja82a", "name": "Call client and confirm address and product", "type": "STEP", "order": 1, "assignedTo": ["8988"]}, {"id": "ga92ha2", "name": "Check product availability", "type": "STEP", "order": 2, "assignedTo": ["8988"]}, {"id": "jga92ha", "name": "Send email confirming contact with the client", "type": "STEP", "order": 3, "assignedTo": ["8988"]}]}, {"id": "0a7g22a", "name": "Print and send catalog", "type": "STEP", "order": 2, "assignedTo": ["8988"]}], "id": "25n2k52ja", "lastUpdateTime": "2021-08-04T21:13:50.373Z", "name": "Lead Qualification"}
-      responses:
-        "200":
-          application/json: {"assignedTo": ["952802", "80225"], "creationTime": "2021-08-04T21:13:50.373Z", "dueDate": "2022-08-04T12:00:00.000Z", "enabled": true, "flow": [{"id": "5892na2", "name": "Initial Information Gathering", "order": 1, "type": "SECTION", "steps": [{"id": "2hja82a", "name": "Call client and confirm address and product", "type": "STEP", "order": 1, "assignedTo": ["1"]}, {"id": "ga92ha2", "name": "Check product availability", "type": "STEP", "order": 2, "assignedTo": ["56645"]}, {"id": "jga92ha", "name": "Send email confirming contact with the client", "type": "STEP", "order": 3, "assignedTo": ["949923"]}]}, {"id": "0a7g22a", "name": "Print and send catalog", "type": "STEP", "order": 2, "assignedTo": ["156645"]}], "id": "25n2k52ja", "lastUpdateTime": "2021-08-04T21:13:50.373Z", "name": "Lead Qualification"}
   createFlowTemplate:
     speakeasy-default-create-flow-template:
       requestBody:
-        application/json: {"closing_reasons": [{"id": "x739cew"}, {"id": "x739cew"}, {"id": "x739cew"}], "created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [{"from_id": "<id>", "id": "<id>", "to_id": "<id>"}, {"from_id": "<id>", "id": "<id>", "to_id": "<id>"}], "enabled": true, "is_flow_migrated": false, "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}, {"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"conditions": [{"branch_name": "Branch 1", "id": "<id>", "logical_operator": "OR", "statements": []}, {"branch_name": "Branch 1", "id": "<id>", "logical_operator": "AND", "statements": [{"id": "<id>", "operator": "less_than", "source": {}, "values": ["<value>", "<value>", "<value>"]}, {"id": "<id>", "operator": "greater_than_or_equals", "source": {}, "values": ["<value>", "<value>", "<value>"]}]}, {"branch_name": "Branch 1", "id": "<id>", "logical_operator": "AND", "statements": []}], "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "AUTOMATION"}, {"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "MANUAL"}, {"automation_config": {"flow_id": "<id>"}, "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "MANUAL"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "update_entity_attributes": [{"source": "current_section", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}, {"source": "current_section", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}], "updated_at": "2021-04-27T12:01:13.000Z"}
+        application/json: {"closing_reasons": [{"id": "x739cew"}], "created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [], "enabled": true, "is_flow_migrated": false, "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"conditions": [], "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "MANUAL"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "update_entity_attributes": [{"source": "workflow_status", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}], "updated_at": "2021-04-27T12:01:13.000Z"}
       responses:
         "201":
-          application/json: {"created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [{"from_id": "<id>", "id": "<id>", "to_id": "<id>"}], "enabled": true, "is_flow_migrated": false, "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "update_entity_attributes": [{"source": "current_section", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}, {"source": "current_step", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}], "updated_at": "2021-04-27T12:01:13.000Z"}
+          application/json: {"created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [{"from_id": "<id>", "id": "<id>", "to_id": "<id>"}], "enabled": true, "is_flow_migrated": false, "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"automation_config": {"flow_id": "<id>"}, "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "MANUAL"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "update_entity_attributes": [{"source": "workflow_status", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}], "updated_at": "2021-04-27T12:01:13.000Z"}
         "400":
           application/json: {}
         "500":
@@ -374,7 +414,7 @@ examples:
           flowId: "7hj28akg"
       responses:
         "200":
-          application/json: {"created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [{"from_id": "<id>", "id": "<id>", "to_id": "<id>"}, {"from_id": "<id>", "id": "<id>", "to_id": "<id>"}, {"from_id": "<id>", "id": "<id>", "to_id": "<id>"}], "enabled": true, "is_flow_migrated": false, "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "update_entity_attributes": [{"source": "workflow_status", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}], "updated_at": "2021-04-27T12:01:13.000Z"}
+          application/json: {"created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [], "enabled": true, "is_flow_migrated": false, "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"automation_config": {"flow_id": "<id>"}, "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "MANUAL"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "update_entity_attributes": [{"source": "current_section", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}], "updated_at": "2021-04-27T12:01:13.000Z"}
         "400":
           application/json: {}
         "404":
@@ -385,7 +425,7 @@ examples:
     speakeasy-default-list-flow-templates:
       responses:
         "200":
-          application/json: {"results": [{"created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [{"from_id": "<id>", "id": "<id>", "to_id": "<id>"}, {"from_id": "<id>", "id": "<id>", "to_id": "<id>"}], "enabled": true, "is_flow_migrated": false, "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}, {"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}, {"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"conditions": [], "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "DECISION"}, {"conditions": [{"branch_name": "Branch 1", "id": "<id>", "logical_operator": "OR", "statements": [{"id": "<id>", "operator": "less_than_or_equals", "source": {}, "values": ["<value>", "<value>", "<value>"]}, {"id": "<id>", "operator": "greater_than", "source": {}, "values": ["<value>"]}]}, {"branch_name": "Branch 1", "id": "<id>", "logical_operator": "AND", "statements": [{"id": "<id>", "operator": "ends_with", "source": {}, "values": []}, {"id": "<id>", "operator": "ends_with", "source": {}, "values": ["<value>", "<value>"]}, {"id": "<id>", "operator": "not_equals", "source": {}, "values": ["<value>"]}]}], "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "MANUAL"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "update_entity_attributes": [{"source": "workflow_status", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}, {"source": "current_section", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}, {"source": "current_step", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}], "updated_at": "2021-04-27T12:01:13.000Z"}]}
+          application/json: {"results": []}
         "500":
           application/json: {}
   updateFlowTemplate:
@@ -394,13 +434,13 @@ examples:
         path:
           flowId: "7hj28akg"
       requestBody:
-        application/json: {"created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [{"from_id": "<id>", "id": "<id>", "to_id": "<id>"}, {"from_id": "<id>", "id": "<id>", "to_id": "<id>"}, {"from_id": "<id>", "id": "<id>", "to_id": "<id>"}], "enabled": true, "is_flow_migrated": false, "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}, {"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "MANUAL"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "update_entity_attributes": [{"source": "workflow_status", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}], "updated_at": "2021-04-27T12:01:13.000Z"}
+        application/json: {"created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [], "enabled": true, "is_flow_migrated": false, "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"automation_config": {"flow_id": "<id>"}, "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "DECISION"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "update_entity_attributes": [{"source": "current_section", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}], "updated_at": "2021-04-27T12:01:13.000Z"}
       responses:
         "200":
-          application/json: {"created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [{"from_id": "<id>", "id": "<id>", "to_id": "<id>"}, {"from_id": "<id>", "id": "<id>", "to_id": "<id>"}, {"from_id": "<id>", "id": "<id>", "to_id": "<id>"}], "enabled": true, "is_flow_migrated": false, "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}, {"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}, {"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"conditions": [{"branch_name": "Branch 1", "id": "<id>", "logical_operator": "AND", "statements": [{"id": "<id>", "operator": "less_than", "source": {}, "values": ["<value>", "<value>"]}, {"id": "<id>", "operator": "greater_than", "source": {}, "values": ["<value>"]}]}, {"branch_name": "Branch 1", "id": "<id>", "logical_operator": "OR", "statements": []}, {"branch_name": "Branch 1", "id": "<id>", "logical_operator": "OR", "statements": [{"id": "<id>", "operator": "is_not_empty", "source": {}, "values": ["<value>", "<value>"]}, {"id": "<id>", "operator": "less_than_or_equals", "source": {}, "values": ["<value>", "<value>"]}, {"id": "<id>", "operator": "ends_with", "source": {}, "values": []}]}], "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "AUTOMATION"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "update_entity_attributes": [{"source": "current_step", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}, {"source": "current_step", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}, {"source": "workflow_status", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}], "updated_at": "2021-04-27T12:01:13.000Z"}
+          application/json: {"created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [{"from_id": "<id>", "id": "<id>", "to_id": "<id>"}], "enabled": true, "is_flow_migrated": false, "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "MANUAL"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "update_entity_attributes": [{"source": "current_section", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}], "updated_at": "2021-04-27T12:01:13.000Z"}
         "400":
           application/json: {}
         "500":
           application/json: {}
-examplesVersion: 1.0.0
+examplesVersion: 1.0.2
 generatedTests: {}
