@@ -61,7 +61,7 @@ terraform {
   required_providers {
     epilot-workflow = {
       source  = "epilot-dev/epilot-workflow"
-      version = "0.19.0"
+      version = "0.20.0"
     }
   }
 }
@@ -114,19 +114,24 @@ provider_installation {
 ```
 <!-- End Testing the provider locally [usage] -->
 
+<!-- Start Authentication [security] -->
+## Authentication
+
+This provider supports authentication configuration via provider configuration.
+
+Available configuration:
+
+| Provider Attribute | Description |
+|---|---|
+| `bearer_auth` | HTTP Bearer. |
+<!-- End Authentication [security] -->
+
 <!-- Start Available Resources and Data Sources [operations] -->
 ## Available Resources and Data Sources
 
 ### Resources
 
-* [epilot-workflow_closing_reason](docs/resources/closing_reason.md)
-* [epilot-workflow_flow_template](docs/resources/flow_template.md)
-* [epilot-workflow_workflow_definition](docs/resources/workflow_definition.md)
 ### Data Sources
-
-* [epilot-workflow_closing_reason](docs/data-sources/closing_reason.md)
-* [epilot-workflow_flow_template](docs/data-sources/flow_template.md)
-* [epilot-workflow_workflow_definition](docs/data-sources/workflow_definition.md)
 <!-- End Available Resources and Data Sources [operations] -->
 
 <!-- Start Summary [summary] -->
@@ -141,6 +146,7 @@ Workflows Definitions: Service for Workflow Definitions for different processes 
 * [epilot-workflow](#epilot-workflow)
   * [Installation](#installation)
   * [Testing the provider locally](#testing-the-provider-locally)
+  * [Authentication](#authentication)
   * [Available Resources and Data Sources](#available-resources-and-data-sources)
 
 <!-- End Table of Contents [toc] -->
