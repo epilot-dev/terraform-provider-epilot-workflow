@@ -11,37 +11,37 @@ type ClosingReason struct {
 	Title          string               `json:"title"`
 }
 
-func (o *ClosingReason) GetCreationTime() *string {
-	if o == nil {
+func (c *ClosingReason) GetCreationTime() *string {
+	if c == nil {
 		return nil
 	}
-	return o.CreationTime
+	return c.CreationTime
 }
 
-func (o *ClosingReason) GetID() *string {
-	if o == nil {
+func (c *ClosingReason) GetID() *string {
+	if c == nil {
 		return nil
 	}
-	return o.ID
+	return c.ID
 }
 
-func (o *ClosingReason) GetLastUpdateTime() *string {
-	if o == nil {
+func (c *ClosingReason) GetLastUpdateTime() *string {
+	if c == nil {
 		return nil
 	}
-	return o.LastUpdateTime
+	return c.LastUpdateTime
 }
 
-func (o *ClosingReason) GetStatus() ClosingReasonsStatus {
-	if o == nil {
+func (c *ClosingReason) GetStatus() ClosingReasonsStatus {
+	if c == nil {
 		return ClosingReasonsStatus("")
 	}
-	return o.Status
+	return c.Status
 }
 
-func (o *ClosingReason) GetTitle() string {
-	if o == nil {
+func (c *ClosingReason) GetTitle() string {
+	if c == nil {
 		return ""
 	}
-	return o.Title
+	return c.Title
 }

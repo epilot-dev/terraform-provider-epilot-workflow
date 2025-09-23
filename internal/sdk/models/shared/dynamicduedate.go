@@ -12,7 +12,6 @@ type ActionTypeCondition string
 const (
 	ActionTypeConditionWorkflowStarted ActionTypeCondition = "WORKFLOW_STARTED"
 	ActionTypeConditionStepClosed      ActionTypeCondition = "STEP_CLOSED"
-	ActionTypeConditionPhaseFinished   ActionTypeCondition = "PHASE_FINISHED"
 )
 
 func (e ActionTypeCondition) ToPointer() *ActionTypeCondition {
@@ -27,8 +26,6 @@ func (e *ActionTypeCondition) UnmarshalJSON(data []byte) error {
 	case "WORKFLOW_STARTED":
 		fallthrough
 	case "STEP_CLOSED":
-		fallthrough
-	case "PHASE_FINISHED":
 		*e = ActionTypeCondition(v)
 		return nil
 	default:
@@ -36,46 +33,67 @@ func (e *ActionTypeCondition) UnmarshalJSON(data []byte) error {
 	}
 }
 
+type TimePeriod string
+
+const (
+	TimePeriodDays   TimePeriod = "days"
+	TimePeriodWeeks  TimePeriod = "weeks"
+	TimePeriodMonths TimePeriod = "months"
+)
+
+func (e TimePeriod) ToPointer() *TimePeriod {
+	return &e
+}
+func (e *TimePeriod) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "days":
+		fallthrough
+	case "weeks":
+		fallthrough
+	case "months":
+		*e = TimePeriod(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for TimePeriod: %v", v)
+	}
+}
+
 // DynamicDueDate - set a Duedate for a step then a specific
 type DynamicDueDate struct {
 	ActionTypeCondition ActionTypeCondition `json:"actionTypeCondition"`
 	NumberOfUnits       float64             `json:"numberOfUnits"`
-	PhaseID             *string             `json:"phaseId,omitempty"`
 	StepID              *string             `json:"stepId,omitempty"`
-	TimePeriod          TimeUnit            `json:"timePeriod"`
+	TimePeriod          TimePeriod          `json:"timePeriod"`
 }
 
-func (o *DynamicDueDate) GetActionTypeCondition() ActionTypeCondition {
-	if o == nil {
+func (d *DynamicDueDate) GetActionTypeCondition() ActionTypeCondition {
+	if d == nil {
 		return ActionTypeCondition("")
 	}
-	return o.ActionTypeCondition
+	return d.ActionTypeCondition
 }
 
-func (o *DynamicDueDate) GetNumberOfUnits() float64 {
-	if o == nil {
+func (d *DynamicDueDate) GetNumberOfUnits() float64 {
+	if d == nil {
 		return 0.0
 	}
-	return o.NumberOfUnits
+	return d.NumberOfUnits
 }
 
-func (o *DynamicDueDate) GetPhaseID() *string {
-	if o == nil {
+func (d *DynamicDueDate) GetStepID() *string {
+	if d == nil {
 		return nil
 	}
-	return o.PhaseID
+	return d.StepID
 }
 
-func (o *DynamicDueDate) GetStepID() *string {
-	if o == nil {
-		return nil
+func (d *DynamicDueDate) GetTimePeriod() TimePeriod {
+	if d == nil {
+		return TimePeriod("")
 	}
-	return o.StepID
-}
-
-func (o *DynamicDueDate) GetTimePeriod() TimeUnit {
-	if o == nil {
-		return TimeUnit("")
-	}
-	return o.TimePeriod
+	return d.TimePeriod
 }

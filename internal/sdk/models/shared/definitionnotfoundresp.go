@@ -7,9 +7,9 @@ type DefinitionNotFoundResp struct {
 	Message *string `json:"message,omitempty"`
 }
 
-func (o *DefinitionNotFoundResp) GetMessage() *string {
-	if o == nil {
+func (d *DefinitionNotFoundResp) GetMessage() *string {
+	if d == nil {
 		return nil
 	}
-	return o.Message
+	return d.Message
 }

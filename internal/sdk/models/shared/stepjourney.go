@@ -23,23 +23,23 @@ func (s *StepJourney) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *StepJourney) GetID() *string {
-	if o == nil {
+func (s *StepJourney) GetID() *string {
+	if s == nil {
 		return nil
 	}
-	return o.ID
+	return s.ID
 }
 
-func (o *StepJourney) GetJourneyID() *string {
-	if o == nil {
+func (s *StepJourney) GetJourneyID() *string {
+	if s == nil {
 		return nil
 	}
-	return o.JourneyID
+	return s.JourneyID
 }
 
-func (o *StepJourney) GetName() *string {
-	if o == nil {
+func (s *StepJourney) GetName() *string {
+	if s == nil {
 		return nil
 	}
-	return o.Name
+	return s.Name
 }

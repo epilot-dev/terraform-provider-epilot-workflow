@@ -6,9 +6,9 @@ type ClosingReasonID struct {
 	ID string `json:"id"`
 }
 
-func (o *ClosingReasonID) GetID() string {
-	if o == nil {
+func (c *ClosingReasonID) GetID() string {
+	if c == nil {
 		return ""
 	}
-	return o.ID
+	return c.ID
 }

@@ -2,7 +2,7 @@
 
 package sdk
 
-// Generated from OpenAPI doc version 1.0.0 and generator version 2.687.13
+// Generated from OpenAPI doc version 1.0.0 and generator version 2.709.0
 
 import (
 	"context"
@@ -52,7 +52,6 @@ type SDK struct {
 	SDKVersion    string
 	ClosingReason *ClosingReason
 	Workflows     *Workflows
-	FlowsV2       *FlowsV2
 
 	sdkConfiguration config.SDKConfiguration
 	hooks            *hooks.Hooks
@@ -128,9 +127,9 @@ func WithTimeout(timeout time.Duration) SDKOption {
 // New creates a new instance of the SDK with the provided options
 func New(opts ...SDKOption) *SDK {
 	sdk := &SDK{
-		SDKVersion: "0.19.0",
+		SDKVersion: "0.20.0",
 		sdkConfiguration: config.SDKConfiguration{
-			UserAgent:  "speakeasy-sdk/terraform 0.19.0 2.687.13 1.0.0 github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk",
+			UserAgent:  "speakeasy-sdk/terraform 0.20.0 2.709.0 1.0.0 github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk",
 			ServerList: ServerList,
 		},
 		hooks: hooks.New(),
@@ -153,7 +152,6 @@ func New(opts ...SDKOption) *SDK {
 
 	sdk.ClosingReason = newClosingReason(sdk, sdk.sdkConfiguration, sdk.hooks)
 	sdk.Workflows = newWorkflows(sdk, sdk.sdkConfiguration, sdk.hooks)
-	sdk.FlowsV2 = newFlowsV2(sdk, sdk.sdkConfiguration, sdk.hooks)
 
 	return sdk
 }

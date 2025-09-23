@@ -41,18 +41,18 @@ type Target struct {
 	EntitySchema    string `json:"entitySchema"`
 }
 
-func (o *Target) GetEntityAttribute() string {
-	if o == nil {
+func (t *Target) GetEntityAttribute() string {
+	if t == nil {
 		return ""
 	}
-	return o.EntityAttribute
+	return t.EntityAttribute
 }
 
-func (o *Target) GetEntitySchema() string {
-	if o == nil {
+func (t *Target) GetEntitySchema() string {
+	if t == nil {
 		return ""
 	}
-	return o.EntitySchema
+	return t.EntitySchema
 }
 
 type UpdateEntityAttributes struct {
@@ -60,16 +60,16 @@ type UpdateEntityAttributes struct {
 	Target Target `json:"target"`
 }
 
-func (o *UpdateEntityAttributes) GetSource() Source {
-	if o == nil {
+func (u *UpdateEntityAttributes) GetSource() Source {
+	if u == nil {
 		return Source("")
 	}
-	return o.Source
+	return u.Source
 }
 
-func (o *UpdateEntityAttributes) GetTarget() Target {
-	if o == nil {
+func (u *UpdateEntityAttributes) GetTarget() Target {
+	if u == nil {
 		return Target{}
 	}
-	return o.Target
+	return u.Target
 }

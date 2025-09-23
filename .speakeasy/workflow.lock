@@ -1,4 +1,4 @@
-speakeasyVersion: 1.606.10
+speakeasyVersion: 1.622.1
 sources:
     my-source:
         sourceNamespace: my-source
@@ -6,6 +6,7 @@ sources:
         sourceBlobDigest: sha256:ca57c9f570036cc2e6be6bc717859bdf514add526b696920bca75f1801c7cace
         tags:
             - latest
+            - speakeasy-sdk-regen-1750552738
             - 1.0.0
 targets:
     terraform:

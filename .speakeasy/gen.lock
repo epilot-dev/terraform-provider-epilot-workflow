@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: 5a857039-7f4b-42d5-86fd-449767242ed2
 management:
-  docChecksum: 3c59c274c95b2722d9a88a6882f4b520
+  docChecksum: 8a2ff4be25db818a35891d602baa4a25
   docVersion: 1.0.0
-  speakeasyVersion: 1.606.10
-  generationVersion: 2.687.13
-  releaseVersion: 0.19.0
-  configChecksum: e5de877598a12627f8640da593540a00
+  speakeasyVersion: 1.622.1
+  generationVersion: 2.709.0
+  releaseVersion: 0.20.0
+  configChecksum: d1b46ac194280bd04e0b8db4c86328a3
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-workflow.git
   repoSubDirectory: .
   published: true
@@ -21,32 +21,15 @@ features:
     unions: 2.85.0
   terraform:
     additionalDependencies: 0.1.0
-    constsAndDefaults: 0.2.1
-    core: 3.44.1
+    core: 3.45.0
     deprecations: 2.82.0
-    globalSecurity: 2.81.12
+    globalSecurity: 2.82.1
     globalServerURLs: 2.83.0
-    inputOutputModels: 2.83.0
-    retries: 2.81.4
-    typeOverrides: 2.81.1
     unions: 2.81.17
 generatedFiles:
   - .gitattributes
   - USAGE.md
-  - examples/README.md
-  - examples/data-sources/epilot-workflow_closing_reason/data-source.tf
-  - examples/data-sources/epilot-workflow_flow_template/data-source.tf
-  - examples/data-sources/epilot-workflow_workflow_definition/data-source.tf
   - examples/provider/provider.tf
-  - examples/resources/epilot-workflow_closing_reason/import-by-string-id.tf
-  - examples/resources/epilot-workflow_closing_reason/import.sh
-  - examples/resources/epilot-workflow_closing_reason/resource.tf
-  - examples/resources/epilot-workflow_flow_template/import-by-string-id.tf
-  - examples/resources/epilot-workflow_flow_template/import.sh
-  - examples/resources/epilot-workflow_flow_template/resource.tf
-  - examples/resources/epilot-workflow_workflow_definition/import-by-string-id.tf
-  - examples/resources/epilot-workflow_workflow_definition/import.sh
-  - examples/resources/epilot-workflow_workflow_definition/resource.tf
   - go.mod
   - go.sum
   - internal/planmodifiers/boolplanmodifier/suppress_diff.go
@@ -61,14 +44,6 @@ generatedFiles:
   - internal/planmodifiers/setplanmodifier/suppress_diff.go
   - internal/planmodifiers/stringplanmodifier/suppress_diff.go
   - internal/planmodifiers/utils/state_check.go
-  - internal/provider/closingreason_data_source.go
-  - internal/provider/closingreason_data_source_sdk.go
-  - internal/provider/closingreason_resource.go
-  - internal/provider/closingreason_resource_sdk.go
-  - internal/provider/flowtemplate_data_source.go
-  - internal/provider/flowtemplate_data_source_sdk.go
-  - internal/provider/flowtemplate_resource.go
-  - internal/provider/flowtemplate_resource_sdk.go
   - internal/provider/provider.go
   - internal/provider/reflect/diags.go
   - internal/provider/reflect/doc.go
@@ -87,46 +62,9 @@ generatedFiles:
   - internal/provider/typeconvert/date.go
   - internal/provider/typeconvert/datetime.go
   - internal/provider/typeconvert/int.go
-  - internal/provider/types/action_schedule.go
-  - internal/provider/types/automation_config.go
-  - internal/provider/types/automation_task.go
-  - internal/provider/types/automation_trigger.go
-  - internal/provider/types/closing_reason.go
-  - internal/provider/types/closing_reason1.go
-  - internal/provider/types/closing_reason_id.go
-  - internal/provider/types/condition.go
-  - internal/provider/types/decision_task.go
-  - internal/provider/types/delayed_schedule.go
-  - internal/provider/types/due_date_config.go
-  - internal/provider/types/dynamic_due_date.go
-  - internal/provider/types/ecp_details.go
-  - internal/provider/types/edge.go
-  - internal/provider/types/enable_requirement.go
-  - internal/provider/types/evaluation_source.go
-  - internal/provider/types/immediate_schedule.go
-  - internal/provider/types/journey_submission_trigger.go
-  - internal/provider/types/manual_trigger.go
-  - internal/provider/types/phase.go
-  - internal/provider/types/reference.go
-  - internal/provider/types/relative_schedule.go
-  - internal/provider/types/schedule.go
-  - internal/provider/types/statement.go
-  - internal/provider/types/step_description.go
-  - internal/provider/types/step_journey.go
-  - internal/provider/types/target.go
-  - internal/provider/types/task.go
-  - internal/provider/types/task_base.go
-  - internal/provider/types/trigger.go
-  - internal/provider/types/update_entity_attributes.go
   - internal/provider/utils.go
-  - internal/provider/workflowdefinition_data_source.go
-  - internal/provider/workflowdefinition_data_source_sdk.go
-  - internal/provider/workflowdefinition_resource.go
-  - internal/provider/workflowdefinition_resource_sdk.go
   - internal/sdk/.gitattributes
   - internal/sdk/closingreason.go
-  - internal/sdk/docs/models/operations/option.md
-  - internal/sdk/flowsv2.go
   - internal/sdk/internal/config/sdkconfiguration.go
   - internal/sdk/internal/hooks/hooks.go
   - internal/sdk/internal/utils/contenttype.go
@@ -144,70 +82,38 @@ generatedFiles:
   - internal/sdk/models/operations/changereasonstatus.go
   - internal/sdk/models/operations/createclosingreason.go
   - internal/sdk/models/operations/createdefinition.go
-  - internal/sdk/models/operations/createflowtemplate.go
-  - internal/sdk/models/operations/deleteclosingreason.go
   - internal/sdk/models/operations/deletedefinition.go
-  - internal/sdk/models/operations/deleteflowtemplate.go
   - internal/sdk/models/operations/getallclosingreasons.go
-  - internal/sdk/models/operations/getclosingreason.go
-  - internal/sdk/models/operations/getclosingreasonv1.go
   - internal/sdk/models/operations/getdefinition.go
   - internal/sdk/models/operations/getdefinitions.go
-  - internal/sdk/models/operations/getflowtemplate.go
   - internal/sdk/models/operations/getmaxallowedlimit.go
   - internal/sdk/models/operations/getworkflowclosingreasons.go
-  - internal/sdk/models/operations/listflowtemplates.go
   - internal/sdk/models/operations/options.go
   - internal/sdk/models/operations/setworkflowclosingreasons.go
-  - internal/sdk/models/operations/updateclosingreason.go
   - internal/sdk/models/operations/updatedefinition.go
-  - internal/sdk/models/operations/updateflowtemplate.go
-  - internal/sdk/models/shared/actionschedule.go
-  - internal/sdk/models/shared/automationconfig.go
-  - internal/sdk/models/shared/automationtask.go
-  - internal/sdk/models/shared/automationtrigger.go
   - internal/sdk/models/shared/changereasonstatusreq.go
   - internal/sdk/models/shared/closingreason.go
   - internal/sdk/models/shared/closingreasonid.go
-  - internal/sdk/models/shared/closingreasoninput.go
-  - internal/sdk/models/shared/closingreasonnotfoundresp.go
   - internal/sdk/models/shared/closingreasons.go
   - internal/sdk/models/shared/closingreasonsids.go
   - internal/sdk/models/shared/closingreasonsstatus.go
-  - internal/sdk/models/shared/condition.go
-  - internal/sdk/models/shared/createflowtemplate.go
-  - internal/sdk/models/shared/decisiontask.go
   - internal/sdk/models/shared/definitionnotfoundresp.go
-  - internal/sdk/models/shared/delayedschedule.go
-  - internal/sdk/models/shared/duedateconfig.go
   - internal/sdk/models/shared/dynamicduedate.go
   - internal/sdk/models/shared/ecpdetails.go
-  - internal/sdk/models/shared/edge.go
-  - internal/sdk/models/shared/enablerequirement.go
   - internal/sdk/models/shared/errorresp.go
-  - internal/sdk/models/shared/evaluationsource.go
-  - internal/sdk/models/shared/flowtemplate.go
-  - internal/sdk/models/shared/flowtemplateinput.go
-  - internal/sdk/models/shared/flowtemplateslist.go
-  - internal/sdk/models/shared/immediateschedule.go
-  - internal/sdk/models/shared/journeysubmissiontrigger.go
-  - internal/sdk/models/shared/manualtrigger.go
+  - internal/sdk/models/shared/itemtype.go
   - internal/sdk/models/shared/maxallowedlimit.go
-  - internal/sdk/models/shared/operator.go
-  - internal/sdk/models/shared/phase.go
-  - internal/sdk/models/shared/relativeschedule.go
+  - internal/sdk/models/shared/section.go
   - internal/sdk/models/shared/security.go
-  - internal/sdk/models/shared/statement.go
+  - internal/sdk/models/shared/step.go
   - internal/sdk/models/shared/stepdescription.go
   - internal/sdk/models/shared/stepjourney.go
-  - internal/sdk/models/shared/task.go
-  - internal/sdk/models/shared/taskbase.go
-  - internal/sdk/models/shared/tasktype.go
-  - internal/sdk/models/shared/timeunit.go
-  - internal/sdk/models/shared/trigger.go
-  - internal/sdk/models/shared/triggermode.go
+  - internal/sdk/models/shared/steprequirement.go
+  - internal/sdk/models/shared/steptype.go
   - internal/sdk/models/shared/updateentityattributes.go
   - internal/sdk/models/shared/workflowdefinition.go
+  - internal/sdk/optionalnullable/optionalnullable.go
+  - internal/sdk/optionalnullable/optionalnullable_test.go
   - internal/sdk/retry/config.go
   - internal/sdk/sdk.go
   - internal/sdk/types/bigint.go
@@ -263,7 +169,7 @@ examples:
   createDefinition:
     speakeasy-default-create-definition:
       requestBody:
-        application/json: {"closingReasons": [{"id": "x739cew"}], "creationTime": "2021-04-27T12:01:13.000Z", "dueDate": "2021-04-27T12:00:00.000Z", "enabled": true, "flow": [{"name": "<value>", "order": 8572.72, "steps": [], "type": "STEP"}], "lastUpdateTime": "2021-04-27T12:01:13.000Z", "name": "<value>", "updateEntityAttributes": [{"source": "workflow_status", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}]}
+        application/json: {"closingReasons": [{"id": "x739cew"}], "creationTime": "2021-04-27T12:01:13.000Z", "dueDate": "2021-04-27T12:00:00.000Z", "flow": [{"name": "<value>", "order": 8572.72, "steps": [], "type": "STEP"}], "lastUpdateTime": "2021-04-27T12:01:13.000Z", "name": "<value>", "updateEntityAttributes": [{"source": "workflow_status", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}]}
       responses:
         "200":
           application/json: {"closingReasons": [{"id": "x739cew"}], "creationTime": "2021-04-27T12:01:13.000Z", "dueDate": "2021-04-27T12:00:00.000Z", "flow": [{"dueDate": "2021-04-27T12:00:00.000Z", "name": "<value>", "order": 1357.28, "type": "STEP"}], "lastUpdateTime": "2021-04-27T12:01:13.000Z", "name": "<value>", "updateEntityAttributes": [{"source": "workflow_status", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}]}
@@ -288,7 +194,7 @@ examples:
           definitionId: "7hj28a"
       responses:
         "200":
-          application/json: {"closingReasons": [{"id": "x739cew"}], "creationTime": "2021-04-27T12:01:13.000Z", "dueDate": "2021-04-27T12:00:00.000Z", "enabled": true, "flow": [{"dueDate": "2021-04-27T12:00:00.000Z", "name": "<value>", "order": 9658.5, "type": "SECTION"}], "lastUpdateTime": "2021-04-27T12:01:13.000Z", "name": "<value>", "updateEntityAttributes": [{"source": "current_step", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}]}
+          application/json: {"closingReasons": [{"id": "x739cew"}], "creationTime": "2021-04-27T12:01:13.000Z", "dueDate": "2021-04-27T12:00:00.000Z", "flow": [{"dueDate": "2021-04-27T12:00:00.000Z", "name": "<value>", "order": 9658.5, "type": "SECTION"}], "lastUpdateTime": "2021-04-27T12:01:13.000Z", "name": "<value>", "updateEntityAttributes": [{"source": "current_step", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}]}
         "400":
           application/json: {}
         "404":
@@ -299,7 +205,7 @@ examples:
     speakeasy-default-get-definitions:
       responses:
         "200":
-          application/json: [{"closingReasons": [{"id": "x739cew"}], "creationTime": "2021-04-27T12:01:13.000Z", "dueDate": "2021-04-27T12:00:00.000Z", "enabled": true, "flow": [{"dueDate": "2021-04-27T12:00:00.000Z", "name": "<value>", "order": 5464.53, "type": "STEP"}], "lastUpdateTime": "2021-04-27T12:01:13.000Z", "name": "<value>", "updateEntityAttributes": [{"source": "current_step", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}]}]
+          application/json: [{"closingReasons": [{"id": "x739cew"}], "creationTime": "2021-04-27T12:01:13.000Z", "dueDate": "2021-04-27T12:00:00.000Z", "flow": [{"dueDate": "2021-04-27T12:00:00.000Z", "name": "<value>", "order": 5464.53, "type": "STEP"}], "lastUpdateTime": "2021-04-27T12:01:13.000Z", "name": "<value>", "updateEntityAttributes": [{"source": "current_step", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}]}]
         "500":
           application/json: {}
   getMaxAllowedLimit:
@@ -330,10 +236,10 @@ examples:
         path:
           definitionId: "7hj28a"
       requestBody:
-        application/json: {"closingReasons": [{"id": "x739cew"}], "creationTime": "2021-04-27T12:01:13.000Z", "dueDate": "2021-04-27T12:00:00.000Z", "enabled": true, "flow": [{"name": "<value>", "order": 1405.75, "steps": [{"dueDate": "2021-04-27T12:00:00.000Z", "name": "<value>", "order": 3983.37, "type": "STEP"}], "type": "STEP"}], "lastUpdateTime": "2021-04-27T12:01:13.000Z", "name": "<value>", "updateEntityAttributes": [{"source": "current_section", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}]}
+        application/json: {"closingReasons": [{"id": "x739cew"}], "creationTime": "2021-04-27T12:01:13.000Z", "dueDate": "2021-04-27T12:00:00.000Z", "flow": [{"name": "<value>", "order": 1405.75, "steps": [{"dueDate": "2021-04-27T12:00:00.000Z", "name": "<value>", "order": 3983.37, "type": "STEP"}], "type": "STEP"}], "lastUpdateTime": "2021-04-27T12:01:13.000Z", "name": "<value>", "updateEntityAttributes": [{"source": "current_section", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}]}
       responses:
         "200":
-          application/json: {"closingReasons": [{"id": "x739cew"}], "creationTime": "2021-04-27T12:01:13.000Z", "dueDate": "2021-04-27T12:00:00.000Z", "enabled": true, "flow": [], "lastUpdateTime": "2021-04-27T12:01:13.000Z", "name": "<value>", "updateEntityAttributes": [{"source": "current_section", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}]}
+          application/json: {"closingReasons": [{"id": "x739cew"}], "creationTime": "2021-04-27T12:01:13.000Z", "dueDate": "2021-04-27T12:00:00.000Z", "flow": [], "lastUpdateTime": "2021-04-27T12:01:13.000Z", "name": "<value>", "updateEntityAttributes": [{"source": "current_section", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}]}
         "400":
           application/json: {}
         "500":
