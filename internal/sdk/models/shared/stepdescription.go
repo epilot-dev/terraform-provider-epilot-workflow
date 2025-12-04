@@ -23,16 +23,16 @@ func (s *StepDescription) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *StepDescription) GetEnabled() *bool {
-	if o == nil {
+func (s *StepDescription) GetEnabled() *bool {
+	if s == nil {
 		return nil
 	}
-	return o.Enabled
+	return s.Enabled
 }
 
-func (o *StepDescription) GetValue() *string {
-	if o == nil {
+func (s *StepDescription) GetValue() *string {
+	if s == nil {
 		return nil
 	}
-	return o.Value
+	return s.Value
 }

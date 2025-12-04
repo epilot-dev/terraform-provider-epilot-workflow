@@ -14,18 +14,18 @@ type UpdateClosingReasonRequest struct {
 	ReasonID string `pathParam:"style=simple,explode=false,name=reasonId"`
 }
 
-func (o *UpdateClosingReasonRequest) GetClosingReason() shared.ClosingReasonInput {
-	if o == nil {
+func (u *UpdateClosingReasonRequest) GetClosingReason() shared.ClosingReasonInput {
+	if u == nil {
 		return shared.ClosingReasonInput{}
 	}
-	return o.ClosingReason
+	return u.ClosingReason
 }
 
-func (o *UpdateClosingReasonRequest) GetReasonID() string {
-	if o == nil {
+func (u *UpdateClosingReasonRequest) GetReasonID() string {
+	if u == nil {
 		return ""
 	}
-	return o.ReasonID
+	return u.ReasonID
 }
 
 type UpdateClosingReasonResponse struct {
@@ -43,44 +43,44 @@ type UpdateClosingReasonResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *UpdateClosingReasonResponse) GetClosingReason() *shared.ClosingReason {
-	if o == nil {
+func (u *UpdateClosingReasonResponse) GetClosingReason() *shared.ClosingReason {
+	if u == nil {
 		return nil
 	}
-	return o.ClosingReason
+	return u.ClosingReason
 }
 
-func (o *UpdateClosingReasonResponse) GetClosingReasonNotFoundResp() *shared.ClosingReasonNotFoundResp {
-	if o == nil {
+func (u *UpdateClosingReasonResponse) GetClosingReasonNotFoundResp() *shared.ClosingReasonNotFoundResp {
+	if u == nil {
 		return nil
 	}
-	return o.ClosingReasonNotFoundResp
+	return u.ClosingReasonNotFoundResp
 }
 
-func (o *UpdateClosingReasonResponse) GetContentType() string {
-	if o == nil {
+func (u *UpdateClosingReasonResponse) GetContentType() string {
+	if u == nil {
 		return ""
 	}
-	return o.ContentType
+	return u.ContentType
 }
 
-func (o *UpdateClosingReasonResponse) GetErrorResp() *shared.ErrorResp {
-	if o == nil {
+func (u *UpdateClosingReasonResponse) GetErrorResp() *shared.ErrorResp {
+	if u == nil {
 		return nil
 	}
-	return o.ErrorResp
+	return u.ErrorResp
 }
 
-func (o *UpdateClosingReasonResponse) GetStatusCode() int {
-	if o == nil {
+func (u *UpdateClosingReasonResponse) GetStatusCode() int {
+	if u == nil {
 		return 0
 	}
-	return o.StatusCode
+	return u.StatusCode
 }
 
-func (o *UpdateClosingReasonResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (u *UpdateClosingReasonResponse) GetRawResponse() *http.Response {
+	if u == nil {
 		return nil
 	}
-	return o.RawResponse
+	return u.RawResponse
 }

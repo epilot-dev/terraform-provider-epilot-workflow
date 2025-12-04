@@ -48,23 +48,23 @@ func (d *DelayedSchedule) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *DelayedSchedule) GetDuration() float64 {
-	if o == nil {
+func (d *DelayedSchedule) GetDuration() float64 {
+	if d == nil {
 		return 0.0
 	}
-	return o.Duration
+	return d.Duration
 }
 
-func (o *DelayedSchedule) GetMode() Mode {
-	if o == nil {
+func (d *DelayedSchedule) GetMode() Mode {
+	if d == nil {
 		return Mode("")
 	}
-	return o.Mode
+	return d.Mode
 }
 
-func (o *DelayedSchedule) GetUnit() TimeUnit {
-	if o == nil {
+func (d *DelayedSchedule) GetUnit() TimeUnit {
+	if d == nil {
 		return TimeUnit("")
 	}
-	return o.Unit
+	return d.Unit
 }

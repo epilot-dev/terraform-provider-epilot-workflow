@@ -10,6 +10,8 @@ type AutomationTask struct {
 	AssignedTo []string `json:"assigned_to,omitempty"`
 	// Configuration for automation execution to run
 	AutomationConfig AutomationConfig `json:"automation_config"`
+	// Indicates whether this task was created automatically by journeys or manually by an user
+	CreatedAutomatically *bool `default:"false" json:"created_automatically"`
 	// Longer information regarding Task
 	Description *StepDescription `json:"description,omitempty"`
 	DueDate     *string          `json:"due_date,omitempty"`
@@ -43,114 +45,121 @@ func (a *AutomationTask) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *AutomationTask) GetAssignedTo() []string {
-	if o == nil {
+func (a *AutomationTask) GetAssignedTo() []string {
+	if a == nil {
 		return nil
 	}
-	return o.AssignedTo
+	return a.AssignedTo
 }
 
-func (o *AutomationTask) GetAutomationConfig() AutomationConfig {
-	if o == nil {
+func (a *AutomationTask) GetAutomationConfig() AutomationConfig {
+	if a == nil {
 		return AutomationConfig{}
 	}
-	return o.AutomationConfig
+	return a.AutomationConfig
 }
 
-func (o *AutomationTask) GetDescription() *StepDescription {
-	if o == nil {
+func (a *AutomationTask) GetCreatedAutomatically() *bool {
+	if a == nil {
 		return nil
 	}
-	return o.Description
+	return a.CreatedAutomatically
 }
 
-func (o *AutomationTask) GetDueDate() *string {
-	if o == nil {
+func (a *AutomationTask) GetDescription() *StepDescription {
+	if a == nil {
 		return nil
 	}
-	return o.DueDate
+	return a.Description
 }
 
-func (o *AutomationTask) GetDueDateConfig() *DueDateConfig {
-	if o == nil {
+func (a *AutomationTask) GetDueDate() *string {
+	if a == nil {
 		return nil
 	}
-	return o.DueDateConfig
+	return a.DueDate
 }
 
-func (o *AutomationTask) GetEcp() *ECPDetails {
-	if o == nil {
+func (a *AutomationTask) GetDueDateConfig() *DueDateConfig {
+	if a == nil {
 		return nil
 	}
-	return o.Ecp
+	return a.DueDateConfig
 }
 
-func (o *AutomationTask) GetID() string {
-	if o == nil {
+func (a *AutomationTask) GetEcp() *ECPDetails {
+	if a == nil {
+		return nil
+	}
+	return a.Ecp
+}
+
+func (a *AutomationTask) GetID() string {
+	if a == nil {
 		return ""
 	}
-	return o.ID
+	return a.ID
 }
 
-func (o *AutomationTask) GetInstaller() *ECPDetails {
-	if o == nil {
+func (a *AutomationTask) GetInstaller() *ECPDetails {
+	if a == nil {
 		return nil
 	}
-	return o.Installer
+	return a.Installer
 }
 
-func (o *AutomationTask) GetJourney() *StepJourney {
-	if o == nil {
+func (a *AutomationTask) GetJourney() *StepJourney {
+	if a == nil {
 		return nil
 	}
-	return o.Journey
+	return a.Journey
 }
 
-func (o *AutomationTask) GetName() string {
-	if o == nil {
+func (a *AutomationTask) GetName() string {
+	if a == nil {
 		return ""
 	}
-	return o.Name
+	return a.Name
 }
 
-func (o *AutomationTask) GetPhaseID() *string {
-	if o == nil {
+func (a *AutomationTask) GetPhaseID() *string {
+	if a == nil {
 		return nil
 	}
-	return o.PhaseID
+	return a.PhaseID
 }
 
-func (o *AutomationTask) GetRequirements() []EnableRequirement {
-	if o == nil {
+func (a *AutomationTask) GetRequirements() []EnableRequirement {
+	if a == nil {
 		return nil
 	}
-	return o.Requirements
+	return a.Requirements
 }
 
-func (o *AutomationTask) GetSchedule() *ActionSchedule {
-	if o == nil {
+func (a *AutomationTask) GetSchedule() *ActionSchedule {
+	if a == nil {
 		return nil
 	}
-	return o.Schedule
+	return a.Schedule
 }
 
-func (o *AutomationTask) GetTaskType() TaskType {
-	if o == nil {
+func (a *AutomationTask) GetTaskType() TaskType {
+	if a == nil {
 		return TaskType("")
 	}
-	return o.TaskType
+	return a.TaskType
 }
 
-func (o *AutomationTask) GetTaxonomies() []string {
-	if o == nil {
+func (a *AutomationTask) GetTaxonomies() []string {
+	if a == nil {
 		return nil
 	}
-	return o.Taxonomies
+	return a.Taxonomies
 }
 
-func (o *AutomationTask) GetTriggerMode() *TriggerMode {
-	if o == nil {
+func (a *AutomationTask) GetTriggerMode() *TriggerMode {
+	if a == nil {
 		return nil
 	}
-	return o.TriggerMode
+	return a.TriggerMode
 }

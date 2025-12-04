@@ -13,18 +13,18 @@ type UpdateFlowTemplateRequest struct {
 	FlowID       string                   `pathParam:"style=simple,explode=false,name=flowId"`
 }
 
-func (o *UpdateFlowTemplateRequest) GetFlowTemplate() shared.FlowTemplateInput {
-	if o == nil {
+func (u *UpdateFlowTemplateRequest) GetFlowTemplate() shared.FlowTemplateInput {
+	if u == nil {
 		return shared.FlowTemplateInput{}
 	}
-	return o.FlowTemplate
+	return u.FlowTemplate
 }
 
-func (o *UpdateFlowTemplateRequest) GetFlowID() string {
-	if o == nil {
+func (u *UpdateFlowTemplateRequest) GetFlowID() string {
+	if u == nil {
 		return ""
 	}
-	return o.FlowID
+	return u.FlowID
 }
 
 type UpdateFlowTemplateResponse struct {
@@ -40,37 +40,37 @@ type UpdateFlowTemplateResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *UpdateFlowTemplateResponse) GetContentType() string {
-	if o == nil {
+func (u *UpdateFlowTemplateResponse) GetContentType() string {
+	if u == nil {
 		return ""
 	}
-	return o.ContentType
+	return u.ContentType
 }
 
-func (o *UpdateFlowTemplateResponse) GetErrorResp() *shared.ErrorResp {
-	if o == nil {
+func (u *UpdateFlowTemplateResponse) GetErrorResp() *shared.ErrorResp {
+	if u == nil {
 		return nil
 	}
-	return o.ErrorResp
+	return u.ErrorResp
 }
 
-func (o *UpdateFlowTemplateResponse) GetFlowTemplate() *shared.FlowTemplate {
-	if o == nil {
+func (u *UpdateFlowTemplateResponse) GetFlowTemplate() *shared.FlowTemplate {
+	if u == nil {
 		return nil
 	}
-	return o.FlowTemplate
+	return u.FlowTemplate
 }
 
-func (o *UpdateFlowTemplateResponse) GetStatusCode() int {
-	if o == nil {
+func (u *UpdateFlowTemplateResponse) GetStatusCode() int {
+	if u == nil {
 		return 0
 	}
-	return o.StatusCode
+	return u.StatusCode
 }
 
-func (o *UpdateFlowTemplateResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (u *UpdateFlowTemplateResponse) GetRawResponse() *http.Response {
+	if u == nil {
 		return nil
 	}
-	return o.RawResponse
+	return u.RawResponse
 }

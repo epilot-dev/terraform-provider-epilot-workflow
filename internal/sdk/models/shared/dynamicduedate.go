@@ -45,37 +45,37 @@ type DynamicDueDate struct {
 	TimePeriod          TimeUnit            `json:"timePeriod"`
 }
 
-func (o *DynamicDueDate) GetActionTypeCondition() ActionTypeCondition {
-	if o == nil {
+func (d *DynamicDueDate) GetActionTypeCondition() ActionTypeCondition {
+	if d == nil {
 		return ActionTypeCondition("")
 	}
-	return o.ActionTypeCondition
+	return d.ActionTypeCondition
 }
 
-func (o *DynamicDueDate) GetNumberOfUnits() float64 {
-	if o == nil {
+func (d *DynamicDueDate) GetNumberOfUnits() float64 {
+	if d == nil {
 		return 0.0
 	}
-	return o.NumberOfUnits
+	return d.NumberOfUnits
 }
 
-func (o *DynamicDueDate) GetPhaseID() *string {
-	if o == nil {
+func (d *DynamicDueDate) GetPhaseID() *string {
+	if d == nil {
 		return nil
 	}
-	return o.PhaseID
+	return d.PhaseID
 }
 
-func (o *DynamicDueDate) GetStepID() *string {
-	if o == nil {
+func (d *DynamicDueDate) GetStepID() *string {
+	if d == nil {
 		return nil
 	}
-	return o.StepID
+	return d.StepID
 }
 
-func (o *DynamicDueDate) GetTimePeriod() TimeUnit {
-	if o == nil {
+func (d *DynamicDueDate) GetTimePeriod() TimeUnit {
+	if d == nil {
 		return TimeUnit("")
 	}
-	return o.TimePeriod
+	return d.TimePeriod
 }

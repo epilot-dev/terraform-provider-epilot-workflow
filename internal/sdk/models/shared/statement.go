@@ -24,30 +24,30 @@ func (s *Statement) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *Statement) GetID() string {
-	if o == nil {
+func (s *Statement) GetID() string {
+	if s == nil {
 		return ""
 	}
-	return o.ID
+	return s.ID
 }
 
-func (o *Statement) GetOperator() Operator {
-	if o == nil {
+func (s *Statement) GetOperator() Operator {
+	if s == nil {
 		return Operator("")
 	}
-	return o.Operator
+	return s.Operator
 }
 
-func (o *Statement) GetSource() EvaluationSource {
-	if o == nil {
+func (s *Statement) GetSource() EvaluationSource {
+	if s == nil {
 		return EvaluationSource{}
 	}
-	return o.Source
+	return s.Source
 }
 
-func (o *Statement) GetValues() []string {
-	if o == nil {
+func (s *Statement) GetValues() []string {
+	if s == nil {
 		return []string{}
 	}
-	return o.Values
+	return s.Values
 }

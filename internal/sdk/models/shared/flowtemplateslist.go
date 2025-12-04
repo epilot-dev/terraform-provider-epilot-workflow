@@ -6,9 +6,9 @@ type FlowTemplatesList struct {
 	Results []FlowTemplate `json:"results"`
 }
 
-func (o *FlowTemplatesList) GetResults() []FlowTemplate {
-	if o == nil {
+func (f *FlowTemplatesList) GetResults() []FlowTemplate {
+	if f == nil {
 		return []FlowTemplate{}
 	}
-	return o.Results
+	return f.Results
 }

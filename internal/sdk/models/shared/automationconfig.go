@@ -23,9 +23,9 @@ func (a *AutomationConfig) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *AutomationConfig) GetFlowID() string {
-	if o == nil {
+func (a *AutomationConfig) GetFlowID() string {
+	if a == nil {
 		return ""
 	}
-	return o.FlowID
+	return a.FlowID
 }

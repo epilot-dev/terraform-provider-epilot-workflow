@@ -12,11 +12,11 @@ type DeleteDefinitionRequest struct {
 	DefinitionID string `pathParam:"style=simple,explode=false,name=definitionId"`
 }
 
-func (o *DeleteDefinitionRequest) GetDefinitionID() string {
-	if o == nil {
+func (d *DeleteDefinitionRequest) GetDefinitionID() string {
+	if d == nil {
 		return ""
 	}
-	return o.DefinitionID
+	return d.DefinitionID
 }
 
 type DeleteDefinitionResponse struct {
@@ -30,30 +30,30 @@ type DeleteDefinitionResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *DeleteDefinitionResponse) GetContentType() string {
-	if o == nil {
+func (d *DeleteDefinitionResponse) GetContentType() string {
+	if d == nil {
 		return ""
 	}
-	return o.ContentType
+	return d.ContentType
 }
 
-func (o *DeleteDefinitionResponse) GetErrorResp() *shared.ErrorResp {
-	if o == nil {
+func (d *DeleteDefinitionResponse) GetErrorResp() *shared.ErrorResp {
+	if d == nil {
 		return nil
 	}
-	return o.ErrorResp
+	return d.ErrorResp
 }
 
-func (o *DeleteDefinitionResponse) GetStatusCode() int {
-	if o == nil {
+func (d *DeleteDefinitionResponse) GetStatusCode() int {
+	if d == nil {
 		return 0
 	}
-	return o.StatusCode
+	return d.StatusCode
 }
 
-func (o *DeleteDefinitionResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (d *DeleteDefinitionResponse) GetRawResponse() *http.Response {
+	if d == nil {
 		return nil
 	}
-	return o.RawResponse
+	return d.RawResponse
 }

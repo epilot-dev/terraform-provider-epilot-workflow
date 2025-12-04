@@ -13,44 +13,44 @@ type Phase struct {
 	Taxonomies []string `json:"taxonomies,omitempty"`
 }
 
-func (o *Phase) GetAssignedTo() []string {
-	if o == nil {
+func (p *Phase) GetAssignedTo() []string {
+	if p == nil {
 		return nil
 	}
-	return o.AssignedTo
+	return p.AssignedTo
 }
 
-func (o *Phase) GetDueDate() *string {
-	if o == nil {
+func (p *Phase) GetDueDate() *string {
+	if p == nil {
 		return nil
 	}
-	return o.DueDate
+	return p.DueDate
 }
 
-func (o *Phase) GetDueDateConfig() *DueDateConfig {
-	if o == nil {
+func (p *Phase) GetDueDateConfig() *DueDateConfig {
+	if p == nil {
 		return nil
 	}
-	return o.DueDateConfig
+	return p.DueDateConfig
 }
 
-func (o *Phase) GetID() string {
-	if o == nil {
+func (p *Phase) GetID() string {
+	if p == nil {
 		return ""
 	}
-	return o.ID
+	return p.ID
 }
 
-func (o *Phase) GetName() string {
-	if o == nil {
+func (p *Phase) GetName() string {
+	if p == nil {
 		return ""
 	}
-	return o.Name
+	return p.Name
 }
 
-func (o *Phase) GetTaxonomies() []string {
-	if o == nil {
+func (p *Phase) GetTaxonomies() []string {
+	if p == nil {
 		return nil
 	}
-	return o.Taxonomies
+	return p.Taxonomies
 }

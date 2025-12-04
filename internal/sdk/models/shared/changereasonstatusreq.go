@@ -6,9 +6,9 @@ type ChangeReasonStatusReq struct {
 	Status ClosingReasonsStatus `json:"status"`
 }
 
-func (o *ChangeReasonStatusReq) GetStatus() ClosingReasonsStatus {
-	if o == nil {
+func (c *ChangeReasonStatusReq) GetStatus() ClosingReasonsStatus {
+	if c == nil {
 		return ClosingReasonsStatus("")
 	}
-	return o.Status
+	return c.Status
 }

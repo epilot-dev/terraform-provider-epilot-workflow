@@ -20,37 +20,37 @@ type CreateDefinitionResponse struct {
 	WorkflowDefinition *shared.WorkflowDefinition
 }
 
-func (o *CreateDefinitionResponse) GetContentType() string {
-	if o == nil {
+func (c *CreateDefinitionResponse) GetContentType() string {
+	if c == nil {
 		return ""
 	}
-	return o.ContentType
+	return c.ContentType
 }
 
-func (o *CreateDefinitionResponse) GetErrorResp() *shared.ErrorResp {
-	if o == nil {
+func (c *CreateDefinitionResponse) GetErrorResp() *shared.ErrorResp {
+	if c == nil {
 		return nil
 	}
-	return o.ErrorResp
+	return c.ErrorResp
 }
 
-func (o *CreateDefinitionResponse) GetStatusCode() int {
-	if o == nil {
+func (c *CreateDefinitionResponse) GetStatusCode() int {
+	if c == nil {
 		return 0
 	}
-	return o.StatusCode
+	return c.StatusCode
 }
 
-func (o *CreateDefinitionResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (c *CreateDefinitionResponse) GetRawResponse() *http.Response {
+	if c == nil {
 		return nil
 	}
-	return o.RawResponse
+	return c.RawResponse
 }
 
-func (o *CreateDefinitionResponse) GetWorkflowDefinition() *shared.WorkflowDefinition {
-	if o == nil {
+func (c *CreateDefinitionResponse) GetWorkflowDefinition() *shared.WorkflowDefinition {
+	if c == nil {
 		return nil
 	}
-	return o.WorkflowDefinition
+	return c.WorkflowDefinition
 }

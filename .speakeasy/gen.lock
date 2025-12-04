@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: 5a857039-7f4b-42d5-86fd-449767242ed2
 management:
-  docChecksum: 3c59c274c95b2722d9a88a6882f4b520
+  docChecksum: 01ff353533ede00a87de472b88e8e10a
   docVersion: 1.0.0
-  speakeasyVersion: 1.606.10
-  generationVersion: 2.687.13
-  releaseVersion: 0.19.0
-  configChecksum: e5de877598a12627f8640da593540a00
+  speakeasyVersion: 1.668.0
+  generationVersion: 2.770.0
+  releaseVersion: 0.20.0
+  configChecksum: 43f8dabdffb56c384cca2deb6324fbd4
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-workflow.git
   repoSubDirectory: .
   published: true
@@ -21,32 +21,17 @@ features:
     unions: 2.85.0
   terraform:
     additionalDependencies: 0.1.0
-    constsAndDefaults: 0.2.1
-    core: 3.44.1
+    constsAndDefaults: 0.3.0
+    core: 3.46.20
     deprecations: 2.82.0
-    globalSecurity: 2.81.12
+    globalSecurity: 2.82.1
     globalServerURLs: 2.83.0
     inputOutputModels: 2.83.0
-    retries: 2.81.4
-    typeOverrides: 2.81.1
-    unions: 2.81.17
+    unions: 2.82.5
 generatedFiles:
   - .gitattributes
   - USAGE.md
-  - examples/README.md
-  - examples/data-sources/epilot-workflow_closing_reason/data-source.tf
-  - examples/data-sources/epilot-workflow_flow_template/data-source.tf
-  - examples/data-sources/epilot-workflow_workflow_definition/data-source.tf
   - examples/provider/provider.tf
-  - examples/resources/epilot-workflow_closing_reason/import-by-string-id.tf
-  - examples/resources/epilot-workflow_closing_reason/import.sh
-  - examples/resources/epilot-workflow_closing_reason/resource.tf
-  - examples/resources/epilot-workflow_flow_template/import-by-string-id.tf
-  - examples/resources/epilot-workflow_flow_template/import.sh
-  - examples/resources/epilot-workflow_flow_template/resource.tf
-  - examples/resources/epilot-workflow_workflow_definition/import-by-string-id.tf
-  - examples/resources/epilot-workflow_workflow_definition/import.sh
-  - examples/resources/epilot-workflow_workflow_definition/resource.tf
   - go.mod
   - go.sum
   - internal/planmodifiers/boolplanmodifier/suppress_diff.go
@@ -61,14 +46,6 @@ generatedFiles:
   - internal/planmodifiers/setplanmodifier/suppress_diff.go
   - internal/planmodifiers/stringplanmodifier/suppress_diff.go
   - internal/planmodifiers/utils/state_check.go
-  - internal/provider/closingreason_data_source.go
-  - internal/provider/closingreason_data_source_sdk.go
-  - internal/provider/closingreason_resource.go
-  - internal/provider/closingreason_resource_sdk.go
-  - internal/provider/flowtemplate_data_source.go
-  - internal/provider/flowtemplate_data_source_sdk.go
-  - internal/provider/flowtemplate_resource.go
-  - internal/provider/flowtemplate_resource_sdk.go
   - internal/provider/provider.go
   - internal/provider/reflect/diags.go
   - internal/provider/reflect/doc.go
@@ -87,45 +64,9 @@ generatedFiles:
   - internal/provider/typeconvert/date.go
   - internal/provider/typeconvert/datetime.go
   - internal/provider/typeconvert/int.go
-  - internal/provider/types/action_schedule.go
-  - internal/provider/types/automation_config.go
-  - internal/provider/types/automation_task.go
-  - internal/provider/types/automation_trigger.go
-  - internal/provider/types/closing_reason.go
-  - internal/provider/types/closing_reason1.go
-  - internal/provider/types/closing_reason_id.go
-  - internal/provider/types/condition.go
-  - internal/provider/types/decision_task.go
-  - internal/provider/types/delayed_schedule.go
-  - internal/provider/types/due_date_config.go
-  - internal/provider/types/dynamic_due_date.go
-  - internal/provider/types/ecp_details.go
-  - internal/provider/types/edge.go
-  - internal/provider/types/enable_requirement.go
-  - internal/provider/types/evaluation_source.go
-  - internal/provider/types/immediate_schedule.go
-  - internal/provider/types/journey_submission_trigger.go
-  - internal/provider/types/manual_trigger.go
-  - internal/provider/types/phase.go
-  - internal/provider/types/reference.go
-  - internal/provider/types/relative_schedule.go
-  - internal/provider/types/schedule.go
-  - internal/provider/types/statement.go
-  - internal/provider/types/step_description.go
-  - internal/provider/types/step_journey.go
-  - internal/provider/types/target.go
-  - internal/provider/types/task.go
-  - internal/provider/types/task_base.go
-  - internal/provider/types/trigger.go
-  - internal/provider/types/update_entity_attributes.go
   - internal/provider/utils.go
-  - internal/provider/workflowdefinition_data_source.go
-  - internal/provider/workflowdefinition_data_source_sdk.go
-  - internal/provider/workflowdefinition_resource.go
-  - internal/provider/workflowdefinition_resource_sdk.go
   - internal/sdk/.gitattributes
   - internal/sdk/closingreason.go
-  - internal/sdk/docs/models/operations/option.md
   - internal/sdk/flowsv2.go
   - internal/sdk/internal/config/sdkconfiguration.go
   - internal/sdk/internal/hooks/hooks.go
@@ -148,6 +89,7 @@ generatedFiles:
   - internal/sdk/models/operations/deleteclosingreason.go
   - internal/sdk/models/operations/deletedefinition.go
   - internal/sdk/models/operations/deleteflowtemplate.go
+  - internal/sdk/models/operations/duplicateflowtemplate.go
   - internal/sdk/models/operations/getallclosingreasons.go
   - internal/sdk/models/operations/getclosingreason.go
   - internal/sdk/models/operations/getclosingreasonv1.go
@@ -158,6 +100,7 @@ generatedFiles:
   - internal/sdk/models/operations/getworkflowclosingreasons.go
   - internal/sdk/models/operations/listflowtemplates.go
   - internal/sdk/models/operations/options.go
+  - internal/sdk/models/operations/searchflowtemplates.go
   - internal/sdk/models/operations/setworkflowclosingreasons.go
   - internal/sdk/models/operations/updateclosingreason.go
   - internal/sdk/models/operations/updatedefinition.go
@@ -184,22 +127,30 @@ generatedFiles:
   - internal/sdk/models/shared/ecpdetails.go
   - internal/sdk/models/shared/edge.go
   - internal/sdk/models/shared/enablerequirement.go
+  - internal/sdk/models/shared/entitysync.go
   - internal/sdk/models/shared/errorresp.go
   - internal/sdk/models/shared/evaluationsource.go
   - internal/sdk/models/shared/flowtemplate.go
   - internal/sdk/models/shared/flowtemplateinput.go
   - internal/sdk/models/shared/flowtemplateslist.go
   - internal/sdk/models/shared/immediateschedule.go
+  - internal/sdk/models/shared/itemtype.go
+  - internal/sdk/models/shared/journeyautomationtrigger.go
   - internal/sdk/models/shared/journeysubmissiontrigger.go
   - internal/sdk/models/shared/manualtrigger.go
   - internal/sdk/models/shared/maxallowedlimit.go
   - internal/sdk/models/shared/operator.go
   - internal/sdk/models/shared/phase.go
   - internal/sdk/models/shared/relativeschedule.go
+  - internal/sdk/models/shared/searchflowtemplates.go
+  - internal/sdk/models/shared/section.go
   - internal/sdk/models/shared/security.go
   - internal/sdk/models/shared/statement.go
+  - internal/sdk/models/shared/step.go
   - internal/sdk/models/shared/stepdescription.go
   - internal/sdk/models/shared/stepjourney.go
+  - internal/sdk/models/shared/steprequirement.go
+  - internal/sdk/models/shared/steptype.go
   - internal/sdk/models/shared/task.go
   - internal/sdk/models/shared/taskbase.go
   - internal/sdk/models/shared/tasktype.go
@@ -207,13 +158,15 @@ generatedFiles:
   - internal/sdk/models/shared/trigger.go
   - internal/sdk/models/shared/triggermode.go
   - internal/sdk/models/shared/updateentityattributes.go
+  - internal/sdk/models/shared/version.go
   - internal/sdk/models/shared/workflowdefinition.go
+  - internal/sdk/optionalnullable/optionalnullable.go
+  - internal/sdk/optionalnullable/optionalnullable_test.go
   - internal/sdk/retry/config.go
   - internal/sdk/sdk.go
   - internal/sdk/types/bigint.go
   - internal/sdk/types/date.go
   - internal/sdk/types/datetime.go
-  - internal/sdk/types/decimal.go
   - internal/sdk/types/pointers.go
   - internal/sdk/workflows.go
   - internal/validators/DateValidator.go
@@ -272,7 +225,7 @@ examples:
         "500":
           application/json: {}
         "201":
-          application/json: {"closingReasons": [{"id": "x739cew"}], "creationTime": "2021-04-27T12:01:13.000Z", "dueDate": "2021-04-27T12:00:00.000Z", "enabled": true, "flow": "<value>", "lastUpdateTime": "2021-04-27T12:01:13.000Z", "name": "<value>", "updateEntityAttributes": [{"source": "current_section", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}]}
+          application/json: {"closingReasons": [{"id": "x739cew"}], "creationTime": "2021-04-27T12:01:13.000Z", "dueDate": "2021-04-27T12:00:00.000Z", "enabled": true, "flow": [{"dueDate": "2021-04-27T12:00:00.000Z", "name": "<value>", "order": 3330.41, "type": "SECTION"}], "lastUpdateTime": "2021-04-27T12:01:13.000Z", "name": "<value>", "updateEntityAttributes": [{"source": "current_section", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}]}
   deleteDefinition:
     speakeasy-default-delete-definition:
       parameters:
@@ -391,10 +344,10 @@ examples:
   createFlowTemplate:
     speakeasy-default-create-flow-template:
       requestBody:
-        application/json: {"closing_reasons": [{"id": "x739cew"}], "created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [], "enabled": true, "is_flow_migrated": false, "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"conditions": [], "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "MANUAL"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "update_entity_attributes": [{"source": "workflow_status", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}], "updated_at": "2021-04-27T12:01:13.000Z"}
+        application/json: {"created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [], "enabled": true, "entity_sync": [{"target": {"entityAttribute": "title", "entitySchema": "opportunity"}, "trigger": {"event": "FlowStarted"}, "value": {"source": "workflow_name"}}], "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"automation_config": {"flow_id": "<id>"}, "created_automatically": false, "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "DECISION"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "updated_at": "2021-04-27T12:01:13.000Z", "version": "v3"}
       responses:
         "201":
-          application/json: {"created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [{"from_id": "<id>", "id": "<id>", "to_id": "<id>"}], "enabled": true, "is_flow_migrated": false, "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"automation_config": {"flow_id": "<id>"}, "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "MANUAL"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "update_entity_attributes": [{"source": "workflow_status", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}], "updated_at": "2021-04-27T12:01:13.000Z"}
+          application/json: {"created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [{"from_id": "<id>", "id": "<id>", "to_id": "<id>"}], "enabled": true, "entity_sync": [{"target": {"entityAttribute": "title", "entitySchema": "opportunity"}, "trigger": {"event": "FlowStarted"}, "value": {"source": "workflow_name"}}], "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"automation_config": {"flow_id": "<id>"}, "created_automatically": false, "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "MANUAL"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "updated_at": "2021-04-27T12:01:13.000Z", "version": "v1"}
         "400":
           application/json: {}
         "500":
@@ -414,7 +367,7 @@ examples:
           flowId: "7hj28akg"
       responses:
         "200":
-          application/json: {"created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [], "enabled": true, "is_flow_migrated": false, "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"automation_config": {"flow_id": "<id>"}, "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "MANUAL"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "update_entity_attributes": [{"source": "current_section", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}], "updated_at": "2021-04-27T12:01:13.000Z"}
+          application/json: {"created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [], "enabled": true, "entity_sync": [{"target": {"entityAttribute": "title", "entitySchema": "opportunity"}, "trigger": {"event": "FlowStarted"}, "value": {"source": "workflow_name"}}], "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"automation_config": {"flow_id": "<id>"}, "created_automatically": false, "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "MANUAL"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "updated_at": "2021-04-27T12:01:13.000Z", "version": "v1"}
         "400":
           application/json: {}
         "404":
@@ -423,6 +376,11 @@ examples:
           application/json: {}
   listFlowTemplates:
     speakeasy-default-list-flow-templates:
+      parameters:
+        query:
+          trigger_type: "journey_submission"
+          trigger_source_id: "j208g0aj-08g9agajggak-g9aug9-892kgl1m"
+          trigger_schema: "opportunity"
       responses:
         "200":
           application/json: {"results": []}
@@ -434,13 +392,35 @@ examples:
         path:
           flowId: "7hj28akg"
       requestBody:
-        application/json: {"created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [], "enabled": true, "is_flow_migrated": false, "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"automation_config": {"flow_id": "<id>"}, "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "DECISION"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "update_entity_attributes": [{"source": "current_section", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}], "updated_at": "2021-04-27T12:01:13.000Z"}
+        application/json: {"created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [], "enabled": true, "entity_sync": [{"target": {"entityAttribute": "title", "entitySchema": "opportunity"}, "trigger": {"event": "FlowStarted"}, "value": {"source": "workflow_name"}}], "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"automation_config": {"flow_id": "<id>"}, "created_automatically": false, "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "DECISION"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "updated_at": "2021-04-27T12:01:13.000Z", "version": "v2"}
       responses:
         "200":
-          application/json: {"created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [{"from_id": "<id>", "id": "<id>", "to_id": "<id>"}], "enabled": true, "is_flow_migrated": false, "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "MANUAL"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "update_entity_attributes": [{"source": "current_section", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}], "updated_at": "2021-04-27T12:01:13.000Z"}
+          application/json: {"created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [{"from_id": "<id>", "id": "<id>", "to_id": "<id>"}], "enabled": true, "entity_sync": [{"target": {"entityAttribute": "title", "entitySchema": "opportunity"}, "trigger": {"event": "FlowStarted"}, "value": {"source": "workflow_name"}}], "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "MANUAL"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "updated_at": "2021-04-27T12:01:13.000Z", "version": "v3"}
         "400":
           application/json: {}
         "500":
           application/json: {}
+  duplicateFlowTemplate:
+    speakeasy-default-duplicate-flow-template:
+      parameters:
+        path:
+          flowId: "7hj28akg"
+      responses:
+        "201":
+          application/json: {"created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [], "enabled": true, "entity_sync": [{"target": {"entityAttribute": "title", "entitySchema": "opportunity"}, "trigger": {"event": "FlowStarted"}, "value": {"source": "workflow_name"}}], "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "updated_at": "2021-04-27T12:01:13.000Z", "version": "v1"}
+        "400":
+          application/json: {}
+        "500":
+          application/json: {}
+  searchFlowTemplates:
+    speakeasy-default-search-flow-templates:
+      requestBody:
+        application/json: {"sort_by": "updated_at", "sort_order": "desc"}
+      responses:
+        "200":
+          application/json: {"results": [{"created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [{"from_id": "<id>", "id": "<id>", "to_id": "<id>"}], "enabled": true, "entity_sync": [{"target": {"entityAttribute": "title", "entitySchema": "opportunity"}, "trigger": {"event": "FlowStarted"}, "value": {"source": "workflow_name"}}], "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "updated_at": "2021-04-27T12:01:13.000Z", "version": "v2"}]}
+        "500":
+          application/json: {}
 examplesVersion: 1.0.2
 generatedTests: {}
+releaseNotes: "## Terraform SDK Changes:\n* `SDK.Closing Reason.createClosingReason()`:  `request` **Changed** **Breaking** :warning:\n* `SDK.Workflows.createDefinition()`: \n  *  `request` **Changed**\n  *  `response` **Changed** **Breaking** :warning:\n* `SDK.Flows V2.createFlowTemplate()`: **Added**\n* `SDK.Flows V2.searchFlowTemplates()`: **Added**\n* `SDK.Closing Reason.deleteClosingReason()`: **Added**\n* `SDK.Flows V2.deleteFlowTemplate()`: **Added**\n* `SDK.Flows V2.duplicateFlowTemplate()`: **Added**\n* `SDK.Flows V2.getFlowTemplate()`: **Added**\n* `SDK.Flows V2.listFlowTemplates()`: **Added**\n* `SDK.Closing Reason.updateClosingReason()`: **Added**\n* `SDK.Flows V2.updateFlowTemplate()`: **Added**\n* `SDK.Closing Reason.getClosingReasonV1()`: **Added**\n* `SDK.Closing Reason.getClosingReason()`: **Added**\n* `SDK.Workflows.getDefinition()`:  `response` **Changed**\n* `SDK.Workflows.getDefinitions()`:  `response.[]` **Changed**\n* `SDK.Workflows.updateDefinition()`: \n  *  `request.WorkflowDefinition` **Changed**\n  *  `response` **Changed**\n"

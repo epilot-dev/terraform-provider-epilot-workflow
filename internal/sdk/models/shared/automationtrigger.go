@@ -49,23 +49,23 @@ func (a *AutomationTrigger) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *AutomationTrigger) GetAutomationID() string {
-	if o == nil {
+func (a *AutomationTrigger) GetAutomationID() string {
+	if a == nil {
 		return ""
 	}
-	return o.AutomationID
+	return a.AutomationID
 }
 
-func (o *AutomationTrigger) GetID() *string {
-	if o == nil {
+func (a *AutomationTrigger) GetID() *string {
+	if a == nil {
 		return nil
 	}
-	return o.ID
+	return a.ID
 }
 
-func (o *AutomationTrigger) GetType() Type {
-	if o == nil {
+func (a *AutomationTrigger) GetType() Type {
+	if a == nil {
 		return Type("")
 	}
-	return o.Type
+	return a.Type
 }

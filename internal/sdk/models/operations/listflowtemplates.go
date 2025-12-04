@@ -3,9 +3,76 @@
 package operations
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/models/shared"
 	"net/http"
 )
+
+// TriggerType - Type of trigger for whom to filter flow templates
+type TriggerType string
+
+const (
+	TriggerTypeAutomation        TriggerType = "automation"
+	TriggerTypeManual            TriggerType = "manual"
+	TriggerTypeJourneySubmission TriggerType = "journey_submission"
+)
+
+func (e TriggerType) ToPointer() *TriggerType {
+	return &e
+}
+func (e *TriggerType) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "automation":
+		fallthrough
+	case "manual":
+		fallthrough
+	case "journey_submission":
+		*e = TriggerType(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for TriggerType: %v", v)
+	}
+}
+
+type ListFlowTemplatesRequest struct {
+	// Schema of the trigger source to filter flow templates. This parameter only makes sense when **trigger_type** is `manual`
+	//
+	TriggerSchema *string `queryParam:"style=form,explode=true,name=trigger_schema"`
+	// Id of the trigger source to filter flow templates. Interpretation depends on **trigger_type**:
+	// - **automation**: use an `{automation_flow_id}` value
+	// - **journey_submission**: use a `{journey_id}` value
+	// - **manual**: this parameter is ignored; you can optionally filter by `{trigger_schema}`
+	//
+	TriggerSourceID *string `queryParam:"style=form,explode=true,name=trigger_source_id"`
+	// Type of trigger for whom to filter flow templates
+	TriggerType *TriggerType `queryParam:"style=form,explode=true,name=trigger_type"`
+}
+
+func (l *ListFlowTemplatesRequest) GetTriggerSchema() *string {
+	if l == nil {
+		return nil
+	}
+	return l.TriggerSchema
+}
+
+func (l *ListFlowTemplatesRequest) GetTriggerSourceID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.TriggerSourceID
+}
+
+func (l *ListFlowTemplatesRequest) GetTriggerType() *TriggerType {
+	if l == nil {
+		return nil
+	}
+	return l.TriggerType
+}
 
 type ListFlowTemplatesResponse struct {
 	// HTTP response content type for this operation
@@ -20,37 +87,37 @@ type ListFlowTemplatesResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *ListFlowTemplatesResponse) GetContentType() string {
-	if o == nil {
+func (l *ListFlowTemplatesResponse) GetContentType() string {
+	if l == nil {
 		return ""
 	}
-	return o.ContentType
+	return l.ContentType
 }
 
-func (o *ListFlowTemplatesResponse) GetErrorResp() *shared.ErrorResp {
-	if o == nil {
+func (l *ListFlowTemplatesResponse) GetErrorResp() *shared.ErrorResp {
+	if l == nil {
 		return nil
 	}
-	return o.ErrorResp
+	return l.ErrorResp
 }
 
-func (o *ListFlowTemplatesResponse) GetFlowTemplatesList() *shared.FlowTemplatesList {
-	if o == nil {
+func (l *ListFlowTemplatesResponse) GetFlowTemplatesList() *shared.FlowTemplatesList {
+	if l == nil {
 		return nil
 	}
-	return o.FlowTemplatesList
+	return l.FlowTemplatesList
 }
 
-func (o *ListFlowTemplatesResponse) GetStatusCode() int {
-	if o == nil {
+func (l *ListFlowTemplatesResponse) GetStatusCode() int {
+	if l == nil {
 		return 0
 	}
-	return o.StatusCode
+	return l.StatusCode
 }
 
-func (o *ListFlowTemplatesResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (l *ListFlowTemplatesResponse) GetRawResponse() *http.Response {
+	if l == nil {
 		return nil
 	}
-	return o.RawResponse
+	return l.RawResponse
 }

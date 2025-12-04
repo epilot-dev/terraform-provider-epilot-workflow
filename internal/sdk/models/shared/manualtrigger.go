@@ -48,23 +48,23 @@ func (m *ManualTrigger) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *ManualTrigger) GetEntitySchema() *string {
-	if o == nil {
+func (m *ManualTrigger) GetEntitySchema() *string {
+	if m == nil {
 		return nil
 	}
-	return o.EntitySchema
+	return m.EntitySchema
 }
 
-func (o *ManualTrigger) GetID() *string {
-	if o == nil {
+func (m *ManualTrigger) GetID() *string {
+	if m == nil {
 		return nil
 	}
-	return o.ID
+	return m.ID
 }
 
-func (o *ManualTrigger) GetType() ManualTriggerType {
-	if o == nil {
+func (m *ManualTrigger) GetType() ManualTriggerType {
+	if m == nil {
 		return ManualTriggerType("")
 	}
-	return o.Type
+	return m.Type
 }

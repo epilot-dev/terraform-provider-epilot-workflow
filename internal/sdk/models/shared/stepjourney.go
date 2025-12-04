@@ -7,9 +7,11 @@ import (
 )
 
 type StepJourney struct {
-	ID        *string `json:"id,omitempty"`
-	JourneyID *string `json:"journeyId,omitempty"`
-	Name      *string `json:"name,omitempty"`
+	// If true, the task be auto completed when the journey is completed. By default it is true.
+	CompleteTaskAutomatically *bool   `default:"true" json:"complete_task_automatically"`
+	ID                        *string `json:"id,omitempty"`
+	JourneyID                 *string `json:"journeyId,omitempty"`
+	Name                      *string `json:"name,omitempty"`
 }
 
 func (s StepJourney) MarshalJSON() ([]byte, error) {
@@ -23,23 +25,30 @@ func (s *StepJourney) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *StepJourney) GetID() *string {
-	if o == nil {
+func (s *StepJourney) GetCompleteTaskAutomatically() *bool {
+	if s == nil {
 		return nil
 	}
-	return o.ID
+	return s.CompleteTaskAutomatically
 }
 
-func (o *StepJourney) GetJourneyID() *string {
-	if o == nil {
+func (s *StepJourney) GetID() *string {
+	if s == nil {
 		return nil
 	}
-	return o.JourneyID
+	return s.ID
 }
 
-func (o *StepJourney) GetName() *string {
-	if o == nil {
+func (s *StepJourney) GetJourneyID() *string {
+	if s == nil {
 		return nil
 	}
-	return o.Name
+	return s.JourneyID
+}
+
+func (s *StepJourney) GetName() *string {
+	if s == nil {
+		return nil
+	}
+	return s.Name
 }

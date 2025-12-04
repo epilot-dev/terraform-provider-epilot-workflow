@@ -8,24 +8,26 @@ import (
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
 )
 
-type TriggerType string
+type TriggerUnionType string
 
 const (
-	TriggerTypeManualTrigger            TriggerType = "ManualTrigger"
-	TriggerTypeAutomationTrigger        TriggerType = "AutomationTrigger"
-	TriggerTypeJourneySubmissionTrigger TriggerType = "JourneySubmissionTrigger"
+	TriggerUnionTypeManualTrigger            TriggerUnionType = "ManualTrigger"
+	TriggerUnionTypeAutomationTrigger        TriggerUnionType = "AutomationTrigger"
+	TriggerUnionTypeJourneySubmissionTrigger TriggerUnionType = "JourneySubmissionTrigger"
+	TriggerUnionTypeJourneyAutomationTrigger TriggerUnionType = "JourneyAutomationTrigger"
 )
 
 type Trigger struct {
-	ManualTrigger            *ManualTrigger            `queryParam:"inline"`
-	AutomationTrigger        *AutomationTrigger        `queryParam:"inline"`
-	JourneySubmissionTrigger *JourneySubmissionTrigger `queryParam:"inline"`
+	ManualTrigger            *ManualTrigger            `queryParam:"inline,name=Trigger"`
+	AutomationTrigger        *AutomationTrigger        `queryParam:"inline,name=Trigger"`
+	JourneySubmissionTrigger *JourneySubmissionTrigger `queryParam:"inline,name=Trigger"`
+	JourneyAutomationTrigger *JourneyAutomationTrigger `queryParam:"inline,name=Trigger"`
 
-	Type TriggerType
+	Type TriggerUnionType
 }
 
 func CreateTriggerManualTrigger(manualTrigger ManualTrigger) Trigger {
-	typ := TriggerTypeManualTrigger
+	typ := TriggerUnionTypeManualTrigger
 
 	return Trigger{
 		ManualTrigger: &manualTrigger,
@@ -34,7 +36,7 @@ func CreateTriggerManualTrigger(manualTrigger ManualTrigger) Trigger {
 }
 
 func CreateTriggerAutomationTrigger(automationTrigger AutomationTrigger) Trigger {
-	typ := TriggerTypeAutomationTrigger
+	typ := TriggerUnionTypeAutomationTrigger
 
 	return Trigger{
 		AutomationTrigger: &automationTrigger,
@@ -43,7 +45,7 @@ func CreateTriggerAutomationTrigger(automationTrigger AutomationTrigger) Trigger
 }
 
 func CreateTriggerJourneySubmissionTrigger(journeySubmissionTrigger JourneySubmissionTrigger) Trigger {
-	typ := TriggerTypeJourneySubmissionTrigger
+	typ := TriggerUnionTypeJourneySubmissionTrigger
 
 	return Trigger{
 		JourneySubmissionTrigger: &journeySubmissionTrigger,
@@ -51,26 +53,76 @@ func CreateTriggerJourneySubmissionTrigger(journeySubmissionTrigger JourneySubmi
 	}
 }
 
+func CreateTriggerJourneyAutomationTrigger(journeyAutomationTrigger JourneyAutomationTrigger) Trigger {
+	typ := TriggerUnionTypeJourneyAutomationTrigger
+
+	return Trigger{
+		JourneyAutomationTrigger: &journeyAutomationTrigger,
+		Type:                     typ,
+	}
+}
+
 func (u *Trigger) UnmarshalJSON(data []byte) error {
 
+	var candidates []utils.UnionCandidate
+
+	// Collect all valid candidates
 	var automationTrigger AutomationTrigger = AutomationTrigger{}
 	if err := utils.UnmarshalJSON(data, &automationTrigger, "", true, nil); err == nil {
-		u.AutomationTrigger = &automationTrigger
-		u.Type = TriggerTypeAutomationTrigger
-		return nil
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  TriggerUnionTypeAutomationTrigger,
+			Value: &automationTrigger,
+		})
 	}
 
 	var journeySubmissionTrigger JourneySubmissionTrigger = JourneySubmissionTrigger{}
 	if err := utils.UnmarshalJSON(data, &journeySubmissionTrigger, "", true, nil); err == nil {
-		u.JourneySubmissionTrigger = &journeySubmissionTrigger
-		u.Type = TriggerTypeJourneySubmissionTrigger
-		return nil
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  TriggerUnionTypeJourneySubmissionTrigger,
+			Value: &journeySubmissionTrigger,
+		})
 	}
 
 	var manualTrigger ManualTrigger = ManualTrigger{}
 	if err := utils.UnmarshalJSON(data, &manualTrigger, "", true, nil); err == nil {
-		u.ManualTrigger = &manualTrigger
-		u.Type = TriggerTypeManualTrigger
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  TriggerUnionTypeManualTrigger,
+			Value: &manualTrigger,
+		})
+	}
+
+	var journeyAutomationTrigger JourneyAutomationTrigger = JourneyAutomationTrigger{}
+	if err := utils.UnmarshalJSON(data, &journeyAutomationTrigger, "", true, nil); err == nil {
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  TriggerUnionTypeJourneyAutomationTrigger,
+			Value: &journeyAutomationTrigger,
+		})
+	}
+
+	if len(candidates) == 0 {
+		return fmt.Errorf("could not unmarshal `%s` into any supported union types for Trigger", string(data))
+	}
+
+	// Pick the best candidate using multi-stage filtering
+	best := utils.PickBestCandidate(candidates)
+	if best == nil {
+		return fmt.Errorf("could not unmarshal `%s` into any supported union types for Trigger", string(data))
+	}
+
+	// Set the union type and value based on the best candidate
+	u.Type = best.Type.(TriggerUnionType)
+	switch best.Type {
+	case TriggerUnionTypeAutomationTrigger:
+		u.AutomationTrigger = best.Value.(*AutomationTrigger)
+		return nil
+	case TriggerUnionTypeJourneySubmissionTrigger:
+		u.JourneySubmissionTrigger = best.Value.(*JourneySubmissionTrigger)
+		return nil
+	case TriggerUnionTypeManualTrigger:
+		u.ManualTrigger = best.Value.(*ManualTrigger)
+		return nil
+	case TriggerUnionTypeJourneyAutomationTrigger:
+		u.JourneyAutomationTrigger = best.Value.(*JourneyAutomationTrigger)
 		return nil
 	}
 
@@ -88,6 +140,10 @@ func (u Trigger) MarshalJSON() ([]byte, error) {
 
 	if u.JourneySubmissionTrigger != nil {
 		return utils.MarshalJSON(u.JourneySubmissionTrigger, "", true)
+	}
+
+	if u.JourneyAutomationTrigger != nil {
+		return utils.MarshalJSON(u.JourneyAutomationTrigger, "", true)
 	}
 
 	return nil, errors.New("could not marshal union type Trigger: all fields are null")

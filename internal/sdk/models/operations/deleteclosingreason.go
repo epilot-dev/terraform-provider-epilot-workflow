@@ -12,11 +12,11 @@ type DeleteClosingReasonRequest struct {
 	ReasonID string `pathParam:"style=simple,explode=false,name=reasonId"`
 }
 
-func (o *DeleteClosingReasonRequest) GetReasonID() string {
-	if o == nil {
+func (d *DeleteClosingReasonRequest) GetReasonID() string {
+	if d == nil {
 		return ""
 	}
-	return o.ReasonID
+	return d.ReasonID
 }
 
 type DeleteClosingReasonResponse struct {
@@ -32,37 +32,37 @@ type DeleteClosingReasonResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *DeleteClosingReasonResponse) GetClosingReasonNotFoundResp() *shared.ClosingReasonNotFoundResp {
-	if o == nil {
+func (d *DeleteClosingReasonResponse) GetClosingReasonNotFoundResp() *shared.ClosingReasonNotFoundResp {
+	if d == nil {
 		return nil
 	}
-	return o.ClosingReasonNotFoundResp
+	return d.ClosingReasonNotFoundResp
 }
 
-func (o *DeleteClosingReasonResponse) GetContentType() string {
-	if o == nil {
+func (d *DeleteClosingReasonResponse) GetContentType() string {
+	if d == nil {
 		return ""
 	}
-	return o.ContentType
+	return d.ContentType
 }
 
-func (o *DeleteClosingReasonResponse) GetErrorResp() *shared.ErrorResp {
-	if o == nil {
+func (d *DeleteClosingReasonResponse) GetErrorResp() *shared.ErrorResp {
+	if d == nil {
 		return nil
 	}
-	return o.ErrorResp
+	return d.ErrorResp
 }
 
-func (o *DeleteClosingReasonResponse) GetStatusCode() int {
-	if o == nil {
+func (d *DeleteClosingReasonResponse) GetStatusCode() int {
+	if d == nil {
 		return 0
 	}
-	return o.StatusCode
+	return d.StatusCode
 }
 
-func (o *DeleteClosingReasonResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (d *DeleteClosingReasonResponse) GetRawResponse() *http.Response {
+	if d == nil {
 		return nil
 	}
-	return o.RawResponse
+	return d.RawResponse
 }
