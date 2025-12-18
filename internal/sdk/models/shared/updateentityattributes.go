@@ -36,40 +36,40 @@ func (e *Source) UnmarshalJSON(data []byte) error {
 	}
 }
 
-type Target struct {
+type UpdateEntityAttributesTarget struct {
 	EntityAttribute string `json:"entityAttribute"`
 	EntitySchema    string `json:"entitySchema"`
 }
 
-func (o *Target) GetEntityAttribute() string {
-	if o == nil {
+func (u *UpdateEntityAttributesTarget) GetEntityAttribute() string {
+	if u == nil {
 		return ""
 	}
-	return o.EntityAttribute
+	return u.EntityAttribute
 }
 
-func (o *Target) GetEntitySchema() string {
-	if o == nil {
+func (u *UpdateEntityAttributesTarget) GetEntitySchema() string {
+	if u == nil {
 		return ""
 	}
-	return o.EntitySchema
+	return u.EntitySchema
 }
 
 type UpdateEntityAttributes struct {
-	Source Source `json:"source"`
-	Target Target `json:"target"`
+	Source Source                       `json:"source"`
+	Target UpdateEntityAttributesTarget `json:"target"`
 }
 
-func (o *UpdateEntityAttributes) GetSource() Source {
-	if o == nil {
+func (u *UpdateEntityAttributes) GetSource() Source {
+	if u == nil {
 		return Source("")
 	}
-	return o.Source
+	return u.Source
 }
 
-func (o *UpdateEntityAttributes) GetTarget() Target {
-	if o == nil {
-		return Target{}
+func (u *UpdateEntityAttributes) GetTarget() UpdateEntityAttributesTarget {
+	if u == nil {
+		return UpdateEntityAttributesTarget{}
 	}
-	return o.Target
+	return u.Target
 }

@@ -6,11 +6,22 @@ import (
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
 )
 
+type CreateFlowTemplateClosingReasons struct {
+	ID string `json:"id"`
+}
+
+func (c *CreateFlowTemplateClosingReasons) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
 type CreateFlowTemplate struct {
 	AssignedTo []string `json:"assigned_to,omitempty"`
 	// Indicates whether this workflow is available for End Customer Portal or not. By default it's not.
-	AvailableInEcp *bool             `json:"available_in_ecp,omitempty"`
-	ClosingReasons []ClosingReasonID `json:"closing_reasons,omitempty"`
+	AvailableInEcp *bool                              `json:"available_in_ecp,omitempty"`
+	ClosingReasons []CreateFlowTemplateClosingReasons `json:"closing_reasons,omitempty"`
 	// ISO String Date & Time
 	CreatedAt   *string `json:"created_at,omitempty"`
 	Description *string `json:"description,omitempty"`
@@ -19,20 +30,25 @@ type CreateFlowTemplate struct {
 	DueDateConfig *DueDateConfig `json:"due_date_config,omitempty"`
 	Edges         []Edge         `json:"edges"`
 	// Whether the workflow is enabled or not
-	Enabled *bool   `default:"true" json:"enabled"`
-	ID      *string `json:"id,omitempty"`
-	// Whether the workflow is migrated from workflows to flows or not
-	IsFlowMigrated *bool   `default:"false" json:"is_flow_migrated"`
-	Name           string  `json:"name"`
-	OrgID          *string `json:"org_id,omitempty"`
-	Phases         []Phase `json:"phases,omitempty"`
-	Tasks          []Task  `json:"tasks"`
+	Enabled    *bool        `default:"true" json:"enabled"`
+	EntitySync []EntitySync `json:"entity_sync,omitempty"`
+	ID         *string      `json:"id,omitempty"`
+	Name       string       `json:"name"`
+	OrgID      *string      `json:"org_id,omitempty"`
+	Phases     []Phase      `json:"phases,omitempty"`
+	Tasks      []Task       `json:"tasks"`
 	// Taxonomy ids that are associated with this workflow and used for filtering
-	Taxonomies             []string                 `json:"taxonomies,omitempty"`
-	Trigger                *Trigger                 `json:"trigger,omitempty"`
-	UpdateEntityAttributes []UpdateEntityAttributes `json:"update_entity_attributes,omitempty"`
+	Taxonomies []string `json:"taxonomies,omitempty"`
+	Trigger    *Trigger `json:"trigger,omitempty"`
 	// ISO String Date & Time
 	UpdatedAt *string `json:"updated_at,omitempty"`
+	// Version of the workflow schema.
+	//
+	// - `v1` – *Deprecated*. The initial version of workflows with limited structure and automation capabilities.
+	// - `v2` – Linear workflows. Supports sequential task execution with basic automation triggers.
+	// - `v3` – Advanced workflows. Adds support for branching logic (conditions), parallel paths, and enhanced automation features such as dynamic triggers and flow control.
+	//
+	Version *Version `json:"version,omitempty"`
 }
 
 func (c CreateFlowTemplate) MarshalJSON() ([]byte, error) {
@@ -40,141 +56,141 @@ func (c CreateFlowTemplate) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreateFlowTemplate) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &c, "", false, []string{"edges", "name", "tasks"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &c, "", false, nil); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *CreateFlowTemplate) GetAssignedTo() []string {
-	if o == nil {
+func (c *CreateFlowTemplate) GetAssignedTo() []string {
+	if c == nil {
 		return nil
 	}
-	return o.AssignedTo
+	return c.AssignedTo
 }
 
-func (o *CreateFlowTemplate) GetAvailableInEcp() *bool {
-	if o == nil {
+func (c *CreateFlowTemplate) GetAvailableInEcp() *bool {
+	if c == nil {
 		return nil
 	}
-	return o.AvailableInEcp
+	return c.AvailableInEcp
 }
 
-func (o *CreateFlowTemplate) GetClosingReasons() []ClosingReasonID {
-	if o == nil {
+func (c *CreateFlowTemplate) GetClosingReasons() []CreateFlowTemplateClosingReasons {
+	if c == nil {
 		return nil
 	}
-	return o.ClosingReasons
+	return c.ClosingReasons
 }
 
-func (o *CreateFlowTemplate) GetCreatedAt() *string {
-	if o == nil {
+func (c *CreateFlowTemplate) GetCreatedAt() *string {
+	if c == nil {
 		return nil
 	}
-	return o.CreatedAt
+	return c.CreatedAt
 }
 
-func (o *CreateFlowTemplate) GetDescription() *string {
-	if o == nil {
+func (c *CreateFlowTemplate) GetDescription() *string {
+	if c == nil {
 		return nil
 	}
-	return o.Description
+	return c.Description
 }
 
-func (o *CreateFlowTemplate) GetDueDate() *string {
-	if o == nil {
+func (c *CreateFlowTemplate) GetDueDate() *string {
+	if c == nil {
 		return nil
 	}
-	return o.DueDate
+	return c.DueDate
 }
 
-func (o *CreateFlowTemplate) GetDueDateConfig() *DueDateConfig {
-	if o == nil {
+func (c *CreateFlowTemplate) GetDueDateConfig() *DueDateConfig {
+	if c == nil {
 		return nil
 	}
-	return o.DueDateConfig
+	return c.DueDateConfig
 }
 
-func (o *CreateFlowTemplate) GetEdges() []Edge {
-	if o == nil {
+func (c *CreateFlowTemplate) GetEdges() []Edge {
+	if c == nil {
 		return []Edge{}
 	}
-	return o.Edges
+	return c.Edges
 }
 
-func (o *CreateFlowTemplate) GetEnabled() *bool {
-	if o == nil {
+func (c *CreateFlowTemplate) GetEnabled() *bool {
+	if c == nil {
 		return nil
 	}
-	return o.Enabled
+	return c.Enabled
 }
 
-func (o *CreateFlowTemplate) GetID() *string {
-	if o == nil {
+func (c *CreateFlowTemplate) GetEntitySync() []EntitySync {
+	if c == nil {
 		return nil
 	}
-	return o.ID
+	return c.EntitySync
 }
 
-func (o *CreateFlowTemplate) GetIsFlowMigrated() *bool {
-	if o == nil {
+func (c *CreateFlowTemplate) GetID() *string {
+	if c == nil {
 		return nil
 	}
-	return o.IsFlowMigrated
+	return c.ID
 }
 
-func (o *CreateFlowTemplate) GetName() string {
-	if o == nil {
+func (c *CreateFlowTemplate) GetName() string {
+	if c == nil {
 		return ""
 	}
-	return o.Name
+	return c.Name
 }
 
-func (o *CreateFlowTemplate) GetOrgID() *string {
-	if o == nil {
+func (c *CreateFlowTemplate) GetOrgID() *string {
+	if c == nil {
 		return nil
 	}
-	return o.OrgID
+	return c.OrgID
 }
 
-func (o *CreateFlowTemplate) GetPhases() []Phase {
-	if o == nil {
+func (c *CreateFlowTemplate) GetPhases() []Phase {
+	if c == nil {
 		return nil
 	}
-	return o.Phases
+	return c.Phases
 }
 
-func (o *CreateFlowTemplate) GetTasks() []Task {
-	if o == nil {
+func (c *CreateFlowTemplate) GetTasks() []Task {
+	if c == nil {
 		return []Task{}
 	}
-	return o.Tasks
+	return c.Tasks
 }
 
-func (o *CreateFlowTemplate) GetTaxonomies() []string {
-	if o == nil {
+func (c *CreateFlowTemplate) GetTaxonomies() []string {
+	if c == nil {
 		return nil
 	}
-	return o.Taxonomies
+	return c.Taxonomies
 }
 
-func (o *CreateFlowTemplate) GetTrigger() *Trigger {
-	if o == nil {
+func (c *CreateFlowTemplate) GetTrigger() *Trigger {
+	if c == nil {
 		return nil
 	}
-	return o.Trigger
+	return c.Trigger
 }
 
-func (o *CreateFlowTemplate) GetUpdateEntityAttributes() []UpdateEntityAttributes {
-	if o == nil {
+func (c *CreateFlowTemplate) GetUpdatedAt() *string {
+	if c == nil {
 		return nil
 	}
-	return o.UpdateEntityAttributes
+	return c.UpdatedAt
 }
 
-func (o *CreateFlowTemplate) GetUpdatedAt() *string {
-	if o == nil {
+func (c *CreateFlowTemplate) GetVersion() *Version {
+	if c == nil {
 		return nil
 	}
-	return o.UpdatedAt
+	return c.Version
 }

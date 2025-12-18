@@ -40,8 +40,9 @@ func (p *EpilotWorkflowProvider) Schema(ctx context.Context, req provider.Schema
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"bearer_auth": schema.StringAttribute{
-				Required:  true,
-				Sensitive: true,
+				MarkdownDescription: `HTTP Bearer.`,
+				Required:            true,
+				Sensitive:           true,
 			},
 			"server_url": schema.StringAttribute{
 				Description: `Server URL (defaults to https://workflows-definition.sls.epilot.io)`,

@@ -16,10 +16,12 @@ type DecisionTask struct {
 	ID            types.String        `tfsdk:"id"`
 	Installer     *ECPDetails         `tfsdk:"installer"`
 	Journey       *StepJourney        `tfsdk:"journey"`
+	LoopConfig    *LoopConfig         `tfsdk:"loop_config"`
 	Name          types.String        `tfsdk:"name"`
 	PhaseID       types.String        `tfsdk:"phase_id"`
 	Requirements  []EnableRequirement `tfsdk:"requirements"`
 	Schedule      *Schedule           `tfsdk:"schedule"`
 	TaskType      types.String        `tfsdk:"task_type"`
 	Taxonomies    []types.String      `tfsdk:"taxonomies"`
+	TriggerMode   types.String        `tfsdk:"trigger_mode"`
 }

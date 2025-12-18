@@ -17,9 +17,9 @@ const (
 )
 
 type ActionSchedule struct {
-	ImmediateSchedule *ImmediateSchedule `queryParam:"inline"`
-	DelayedSchedule   *DelayedSchedule   `queryParam:"inline"`
-	RelativeSchedule  *RelativeSchedule  `queryParam:"inline"`
+	ImmediateSchedule *ImmediateSchedule `queryParam:"inline,name=ActionSchedule" union:"member"`
+	DelayedSchedule   *DelayedSchedule   `queryParam:"inline,name=ActionSchedule" union:"member"`
+	RelativeSchedule  *RelativeSchedule  `queryParam:"inline,name=ActionSchedule" union:"member"`
 
 	Type ActionScheduleType
 }
@@ -53,24 +53,54 @@ func CreateActionScheduleRelativeSchedule(relativeSchedule RelativeSchedule) Act
 
 func (u *ActionSchedule) UnmarshalJSON(data []byte) error {
 
-	var relativeSchedule RelativeSchedule = RelativeSchedule{}
-	if err := utils.UnmarshalJSON(data, &relativeSchedule, "", true, nil); err == nil {
-		u.RelativeSchedule = &relativeSchedule
-		u.Type = ActionScheduleTypeRelativeSchedule
-		return nil
+	var candidates []utils.UnionCandidate
+
+	// Collect all valid candidates
+	var immediateSchedule ImmediateSchedule = ImmediateSchedule{}
+	if err := utils.UnmarshalJSON(data, &immediateSchedule, "", true, nil); err == nil {
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  ActionScheduleTypeImmediateSchedule,
+			Value: &immediateSchedule,
+		})
 	}
 
 	var delayedSchedule DelayedSchedule = DelayedSchedule{}
 	if err := utils.UnmarshalJSON(data, &delayedSchedule, "", true, nil); err == nil {
-		u.DelayedSchedule = &delayedSchedule
-		u.Type = ActionScheduleTypeDelayedSchedule
-		return nil
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  ActionScheduleTypeDelayedSchedule,
+			Value: &delayedSchedule,
+		})
 	}
 
-	var immediateSchedule ImmediateSchedule = ImmediateSchedule{}
-	if err := utils.UnmarshalJSON(data, &immediateSchedule, "", true, nil); err == nil {
-		u.ImmediateSchedule = &immediateSchedule
-		u.Type = ActionScheduleTypeImmediateSchedule
+	var relativeSchedule RelativeSchedule = RelativeSchedule{}
+	if err := utils.UnmarshalJSON(data, &relativeSchedule, "", true, nil); err == nil {
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  ActionScheduleTypeRelativeSchedule,
+			Value: &relativeSchedule,
+		})
+	}
+
+	if len(candidates) == 0 {
+		return fmt.Errorf("could not unmarshal `%s` into any supported union types for ActionSchedule", string(data))
+	}
+
+	// Pick the best candidate using multi-stage filtering
+	best := utils.PickBestUnionCandidate(candidates, data)
+	if best == nil {
+		return fmt.Errorf("could not unmarshal `%s` into any supported union types for ActionSchedule", string(data))
+	}
+
+	// Set the union type and value based on the best candidate
+	u.Type = best.Type.(ActionScheduleType)
+	switch best.Type {
+	case ActionScheduleTypeImmediateSchedule:
+		u.ImmediateSchedule = best.Value.(*ImmediateSchedule)
+		return nil
+	case ActionScheduleTypeDelayedSchedule:
+		u.DelayedSchedule = best.Value.(*DelayedSchedule)
+		return nil
+	case ActionScheduleTypeRelativeSchedule:
+		u.RelativeSchedule = best.Value.(*RelativeSchedule)
 		return nil
 	}
 

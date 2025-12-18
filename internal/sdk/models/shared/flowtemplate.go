@@ -19,20 +19,25 @@ type FlowTemplate struct {
 	DueDateConfig *DueDateConfig `json:"due_date_config,omitempty"`
 	Edges         []Edge         `json:"edges"`
 	// Whether the workflow is enabled or not
-	Enabled *bool   `default:"true" json:"enabled"`
-	ID      *string `json:"id,omitempty"`
-	// Whether the workflow is migrated from workflows to flows or not
-	IsFlowMigrated *bool   `default:"false" json:"is_flow_migrated"`
-	Name           string  `json:"name"`
-	OrgID          *string `json:"org_id,omitempty"`
-	Phases         []Phase `json:"phases,omitempty"`
-	Tasks          []Task  `json:"tasks"`
+	Enabled    *bool        `default:"true" json:"enabled"`
+	EntitySync []EntitySync `json:"entity_sync,omitempty"`
+	ID         *string      `json:"id,omitempty"`
+	Name       string       `json:"name"`
+	OrgID      *string      `json:"org_id,omitempty"`
+	Phases     []Phase      `json:"phases,omitempty"`
+	Tasks      []Task       `json:"tasks"`
 	// Taxonomy ids that are associated with this workflow and used for filtering
-	Taxonomies             []string                 `json:"taxonomies,omitempty"`
-	Trigger                *Trigger                 `json:"trigger,omitempty"`
-	UpdateEntityAttributes []UpdateEntityAttributes `json:"update_entity_attributes,omitempty"`
+	Taxonomies []string `json:"taxonomies,omitempty"`
+	Trigger    *Trigger `json:"trigger,omitempty"`
 	// ISO String Date & Time
 	UpdatedAt *string `json:"updated_at,omitempty"`
+	// Version of the workflow schema.
+	//
+	// - `v1` – *Deprecated*. The initial version of workflows with limited structure and automation capabilities.
+	// - `v2` – Linear workflows. Supports sequential task execution with basic automation triggers.
+	// - `v3` – Advanced workflows. Adds support for branching logic (conditions), parallel paths, and enhanced automation features such as dynamic triggers and flow control.
+	//
+	Version *Version `json:"version,omitempty"`
 }
 
 func (f FlowTemplate) MarshalJSON() ([]byte, error) {
@@ -40,141 +45,141 @@ func (f FlowTemplate) MarshalJSON() ([]byte, error) {
 }
 
 func (f *FlowTemplate) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &f, "", false, []string{"edges", "name", "tasks"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &f, "", false, nil); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *FlowTemplate) GetAssignedTo() []string {
-	if o == nil {
+func (f *FlowTemplate) GetAssignedTo() []string {
+	if f == nil {
 		return nil
 	}
-	return o.AssignedTo
+	return f.AssignedTo
 }
 
-func (o *FlowTemplate) GetAvailableInEcp() *bool {
-	if o == nil {
+func (f *FlowTemplate) GetAvailableInEcp() *bool {
+	if f == nil {
 		return nil
 	}
-	return o.AvailableInEcp
+	return f.AvailableInEcp
 }
 
-func (o *FlowTemplate) GetClosingReasons() []ClosingReason {
-	if o == nil {
+func (f *FlowTemplate) GetClosingReasons() []ClosingReason {
+	if f == nil {
 		return nil
 	}
-	return o.ClosingReasons
+	return f.ClosingReasons
 }
 
-func (o *FlowTemplate) GetCreatedAt() *string {
-	if o == nil {
+func (f *FlowTemplate) GetCreatedAt() *string {
+	if f == nil {
 		return nil
 	}
-	return o.CreatedAt
+	return f.CreatedAt
 }
 
-func (o *FlowTemplate) GetDescription() *string {
-	if o == nil {
+func (f *FlowTemplate) GetDescription() *string {
+	if f == nil {
 		return nil
 	}
-	return o.Description
+	return f.Description
 }
 
-func (o *FlowTemplate) GetDueDate() *string {
-	if o == nil {
+func (f *FlowTemplate) GetDueDate() *string {
+	if f == nil {
 		return nil
 	}
-	return o.DueDate
+	return f.DueDate
 }
 
-func (o *FlowTemplate) GetDueDateConfig() *DueDateConfig {
-	if o == nil {
+func (f *FlowTemplate) GetDueDateConfig() *DueDateConfig {
+	if f == nil {
 		return nil
 	}
-	return o.DueDateConfig
+	return f.DueDateConfig
 }
 
-func (o *FlowTemplate) GetEdges() []Edge {
-	if o == nil {
+func (f *FlowTemplate) GetEdges() []Edge {
+	if f == nil {
 		return []Edge{}
 	}
-	return o.Edges
+	return f.Edges
 }
 
-func (o *FlowTemplate) GetEnabled() *bool {
-	if o == nil {
+func (f *FlowTemplate) GetEnabled() *bool {
+	if f == nil {
 		return nil
 	}
-	return o.Enabled
+	return f.Enabled
 }
 
-func (o *FlowTemplate) GetID() *string {
-	if o == nil {
+func (f *FlowTemplate) GetEntitySync() []EntitySync {
+	if f == nil {
 		return nil
 	}
-	return o.ID
+	return f.EntitySync
 }
 
-func (o *FlowTemplate) GetIsFlowMigrated() *bool {
-	if o == nil {
+func (f *FlowTemplate) GetID() *string {
+	if f == nil {
 		return nil
 	}
-	return o.IsFlowMigrated
+	return f.ID
 }
 
-func (o *FlowTemplate) GetName() string {
-	if o == nil {
+func (f *FlowTemplate) GetName() string {
+	if f == nil {
 		return ""
 	}
-	return o.Name
+	return f.Name
 }
 
-func (o *FlowTemplate) GetOrgID() *string {
-	if o == nil {
+func (f *FlowTemplate) GetOrgID() *string {
+	if f == nil {
 		return nil
 	}
-	return o.OrgID
+	return f.OrgID
 }
 
-func (o *FlowTemplate) GetPhases() []Phase {
-	if o == nil {
+func (f *FlowTemplate) GetPhases() []Phase {
+	if f == nil {
 		return nil
 	}
-	return o.Phases
+	return f.Phases
 }
 
-func (o *FlowTemplate) GetTasks() []Task {
-	if o == nil {
+func (f *FlowTemplate) GetTasks() []Task {
+	if f == nil {
 		return []Task{}
 	}
-	return o.Tasks
+	return f.Tasks
 }
 
-func (o *FlowTemplate) GetTaxonomies() []string {
-	if o == nil {
+func (f *FlowTemplate) GetTaxonomies() []string {
+	if f == nil {
 		return nil
 	}
-	return o.Taxonomies
+	return f.Taxonomies
 }
 
-func (o *FlowTemplate) GetTrigger() *Trigger {
-	if o == nil {
+func (f *FlowTemplate) GetTrigger() *Trigger {
+	if f == nil {
 		return nil
 	}
-	return o.Trigger
+	return f.Trigger
 }
 
-func (o *FlowTemplate) GetUpdateEntityAttributes() []UpdateEntityAttributes {
-	if o == nil {
+func (f *FlowTemplate) GetUpdatedAt() *string {
+	if f == nil {
 		return nil
 	}
-	return o.UpdateEntityAttributes
+	return f.UpdatedAt
 }
 
-func (o *FlowTemplate) GetUpdatedAt() *string {
-	if o == nil {
+func (f *FlowTemplate) GetVersion() *Version {
+	if f == nil {
 		return nil
 	}
-	return o.UpdatedAt
+	return f.Version
 }

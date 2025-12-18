@@ -17,15 +17,15 @@ func (a AutomationConfig) MarshalJSON() ([]byte, error) {
 }
 
 func (a *AutomationConfig) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &a, "", false, []string{"flow_id"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &a, "", false, nil); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *AutomationConfig) GetFlowID() string {
-	if o == nil {
+func (a *AutomationConfig) GetFlowID() string {
+	if a == nil {
 		return ""
 	}
-	return o.FlowID
+	return a.FlowID
 }

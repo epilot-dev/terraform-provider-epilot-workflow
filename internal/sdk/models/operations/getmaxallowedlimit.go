@@ -20,37 +20,37 @@ type GetMaxAllowedLimitResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetMaxAllowedLimitResponse) GetContentType() string {
-	if o == nil {
+func (g *GetMaxAllowedLimitResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetMaxAllowedLimitResponse) GetErrorResp() *shared.ErrorResp {
-	if o == nil {
+func (g *GetMaxAllowedLimitResponse) GetErrorResp() *shared.ErrorResp {
+	if g == nil {
 		return nil
 	}
-	return o.ErrorResp
+	return g.ErrorResp
 }
 
-func (o *GetMaxAllowedLimitResponse) GetMaxAllowedLimit() *shared.MaxAllowedLimit {
-	if o == nil {
+func (g *GetMaxAllowedLimitResponse) GetMaxAllowedLimit() *shared.MaxAllowedLimit {
+	if g == nil {
 		return nil
 	}
-	return o.MaxAllowedLimit
+	return g.MaxAllowedLimit
 }
 
-func (o *GetMaxAllowedLimitResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetMaxAllowedLimitResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetMaxAllowedLimitResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetMaxAllowedLimitResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

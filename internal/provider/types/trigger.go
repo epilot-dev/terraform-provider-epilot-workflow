@@ -3,7 +3,8 @@
 package types
 
 type Trigger struct {
-	AutomationTrigger        *AutomationTrigger        `queryParam:"inline" tfsdk:"automation_trigger" tfPlanOnly:"true"`
-	JourneySubmissionTrigger *JourneySubmissionTrigger `queryParam:"inline" tfsdk:"journey_submission_trigger" tfPlanOnly:"true"`
-	ManualTrigger            *ManualTrigger            `queryParam:"inline" tfsdk:"manual_trigger" tfPlanOnly:"true"`
+	AutomationTrigger        *AutomationTrigger        `queryParam:"inline" tfsdk:"automation_trigger"`
+	JourneyAutomationTrigger *JourneyAutomationTrigger `queryParam:"inline" tfsdk:"journey_automation_trigger"`
+	JourneySubmissionTrigger *JourneySubmissionTrigger `queryParam:"inline" tfsdk:"journey_submission_trigger"`
+	ManualTrigger            *JourneyAutomationTrigger `queryParam:"inline" tfsdk:"manual_trigger"`
 }

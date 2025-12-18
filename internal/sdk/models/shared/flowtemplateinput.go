@@ -19,20 +19,25 @@ type FlowTemplateInput struct {
 	DueDateConfig *DueDateConfig `json:"due_date_config,omitempty"`
 	Edges         []Edge         `json:"edges"`
 	// Whether the workflow is enabled or not
-	Enabled *bool   `default:"true" json:"enabled"`
-	ID      *string `json:"id,omitempty"`
-	// Whether the workflow is migrated from workflows to flows or not
-	IsFlowMigrated *bool   `default:"false" json:"is_flow_migrated"`
-	Name           string  `json:"name"`
-	OrgID          *string `json:"org_id,omitempty"`
-	Phases         []Phase `json:"phases,omitempty"`
-	Tasks          []Task  `json:"tasks"`
+	Enabled    *bool        `default:"true" json:"enabled"`
+	EntitySync []EntitySync `json:"entity_sync,omitempty"`
+	ID         *string      `json:"id,omitempty"`
+	Name       string       `json:"name"`
+	OrgID      *string      `json:"org_id,omitempty"`
+	Phases     []Phase      `json:"phases,omitempty"`
+	Tasks      []Task       `json:"tasks"`
 	// Taxonomy ids that are associated with this workflow and used for filtering
-	Taxonomies             []string                 `json:"taxonomies,omitempty"`
-	Trigger                *Trigger                 `json:"trigger,omitempty"`
-	UpdateEntityAttributes []UpdateEntityAttributes `json:"update_entity_attributes,omitempty"`
+	Taxonomies []string `json:"taxonomies,omitempty"`
+	Trigger    *Trigger `json:"trigger,omitempty"`
 	// ISO String Date & Time
 	UpdatedAt *string `json:"updated_at,omitempty"`
+	// Version of the workflow schema.
+	//
+	// - `v1` – *Deprecated*. The initial version of workflows with limited structure and automation capabilities.
+	// - `v2` – Linear workflows. Supports sequential task execution with basic automation triggers.
+	// - `v3` – Advanced workflows. Adds support for branching logic (conditions), parallel paths, and enhanced automation features such as dynamic triggers and flow control.
+	//
+	Version *Version `json:"version,omitempty"`
 }
 
 func (f FlowTemplateInput) MarshalJSON() ([]byte, error) {
@@ -40,141 +45,141 @@ func (f FlowTemplateInput) MarshalJSON() ([]byte, error) {
 }
 
 func (f *FlowTemplateInput) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &f, "", false, []string{"edges", "name", "tasks"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &f, "", false, nil); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *FlowTemplateInput) GetAssignedTo() []string {
-	if o == nil {
+func (f *FlowTemplateInput) GetAssignedTo() []string {
+	if f == nil {
 		return nil
 	}
-	return o.AssignedTo
+	return f.AssignedTo
 }
 
-func (o *FlowTemplateInput) GetAvailableInEcp() *bool {
-	if o == nil {
+func (f *FlowTemplateInput) GetAvailableInEcp() *bool {
+	if f == nil {
 		return nil
 	}
-	return o.AvailableInEcp
+	return f.AvailableInEcp
 }
 
-func (o *FlowTemplateInput) GetClosingReasons() []ClosingReasonInput {
-	if o == nil {
+func (f *FlowTemplateInput) GetClosingReasons() []ClosingReasonInput {
+	if f == nil {
 		return nil
 	}
-	return o.ClosingReasons
+	return f.ClosingReasons
 }
 
-func (o *FlowTemplateInput) GetCreatedAt() *string {
-	if o == nil {
+func (f *FlowTemplateInput) GetCreatedAt() *string {
+	if f == nil {
 		return nil
 	}
-	return o.CreatedAt
+	return f.CreatedAt
 }
 
-func (o *FlowTemplateInput) GetDescription() *string {
-	if o == nil {
+func (f *FlowTemplateInput) GetDescription() *string {
+	if f == nil {
 		return nil
 	}
-	return o.Description
+	return f.Description
 }
 
-func (o *FlowTemplateInput) GetDueDate() *string {
-	if o == nil {
+func (f *FlowTemplateInput) GetDueDate() *string {
+	if f == nil {
 		return nil
 	}
-	return o.DueDate
+	return f.DueDate
 }
 
-func (o *FlowTemplateInput) GetDueDateConfig() *DueDateConfig {
-	if o == nil {
+func (f *FlowTemplateInput) GetDueDateConfig() *DueDateConfig {
+	if f == nil {
 		return nil
 	}
-	return o.DueDateConfig
+	return f.DueDateConfig
 }
 
-func (o *FlowTemplateInput) GetEdges() []Edge {
-	if o == nil {
+func (f *FlowTemplateInput) GetEdges() []Edge {
+	if f == nil {
 		return []Edge{}
 	}
-	return o.Edges
+	return f.Edges
 }
 
-func (o *FlowTemplateInput) GetEnabled() *bool {
-	if o == nil {
+func (f *FlowTemplateInput) GetEnabled() *bool {
+	if f == nil {
 		return nil
 	}
-	return o.Enabled
+	return f.Enabled
 }
 
-func (o *FlowTemplateInput) GetID() *string {
-	if o == nil {
+func (f *FlowTemplateInput) GetEntitySync() []EntitySync {
+	if f == nil {
 		return nil
 	}
-	return o.ID
+	return f.EntitySync
 }
 
-func (o *FlowTemplateInput) GetIsFlowMigrated() *bool {
-	if o == nil {
+func (f *FlowTemplateInput) GetID() *string {
+	if f == nil {
 		return nil
 	}
-	return o.IsFlowMigrated
+	return f.ID
 }
 
-func (o *FlowTemplateInput) GetName() string {
-	if o == nil {
+func (f *FlowTemplateInput) GetName() string {
+	if f == nil {
 		return ""
 	}
-	return o.Name
+	return f.Name
 }
 
-func (o *FlowTemplateInput) GetOrgID() *string {
-	if o == nil {
+func (f *FlowTemplateInput) GetOrgID() *string {
+	if f == nil {
 		return nil
 	}
-	return o.OrgID
+	return f.OrgID
 }
 
-func (o *FlowTemplateInput) GetPhases() []Phase {
-	if o == nil {
+func (f *FlowTemplateInput) GetPhases() []Phase {
+	if f == nil {
 		return nil
 	}
-	return o.Phases
+	return f.Phases
 }
 
-func (o *FlowTemplateInput) GetTasks() []Task {
-	if o == nil {
+func (f *FlowTemplateInput) GetTasks() []Task {
+	if f == nil {
 		return []Task{}
 	}
-	return o.Tasks
+	return f.Tasks
 }
 
-func (o *FlowTemplateInput) GetTaxonomies() []string {
-	if o == nil {
+func (f *FlowTemplateInput) GetTaxonomies() []string {
+	if f == nil {
 		return nil
 	}
-	return o.Taxonomies
+	return f.Taxonomies
 }
 
-func (o *FlowTemplateInput) GetTrigger() *Trigger {
-	if o == nil {
+func (f *FlowTemplateInput) GetTrigger() *Trigger {
+	if f == nil {
 		return nil
 	}
-	return o.Trigger
+	return f.Trigger
 }
 
-func (o *FlowTemplateInput) GetUpdateEntityAttributes() []UpdateEntityAttributes {
-	if o == nil {
+func (f *FlowTemplateInput) GetUpdatedAt() *string {
+	if f == nil {
 		return nil
 	}
-	return o.UpdateEntityAttributes
+	return f.UpdatedAt
 }
 
-func (o *FlowTemplateInput) GetUpdatedAt() *string {
-	if o == nil {
+func (f *FlowTemplateInput) GetVersion() *Version {
+	if f == nil {
 		return nil
 	}
-	return o.UpdatedAt
+	return f.Version
 }

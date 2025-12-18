@@ -63,7 +63,7 @@ func (s *ClosingReason) ChangeReasonStatus(ctx context.Context, request operatio
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "changeReasonStatus",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, true, "ChangeReasonStatusReq", "json", `request:"mediaType=application/json"`)
@@ -291,7 +291,7 @@ func (s *ClosingReason) CreateClosingReason(ctx context.Context, request shared.
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "createClosingReason",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
@@ -497,7 +497,7 @@ func (s *ClosingReason) DeleteClosingReason(ctx context.Context, request operati
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "deleteClosingReason",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -718,7 +718,7 @@ func (s *ClosingReason) GetAllClosingReasons(ctx context.Context, request operat
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getAllClosingReasons",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -740,7 +740,7 @@ func (s *ClosingReason) GetAllClosingReasons(ctx context.Context, request operat
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", s.sdkConfiguration.UserAgent)
 
-	if err := utils.PopulateQueryParams(ctx, req, request, nil); err != nil {
+	if err := utils.PopulateQueryParams(ctx, req, request, nil, nil); err != nil {
 		return nil, fmt.Errorf("error populating query params: %w", err)
 	}
 
@@ -921,7 +921,7 @@ func (s *ClosingReason) GetClosingReason(ctx context.Context, request operations
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getClosingReason",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -1166,7 +1166,7 @@ func (s *ClosingReason) GetClosingReasonV1(ctx context.Context, request operatio
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getClosingReasonV1",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -1430,7 +1430,7 @@ func (s *ClosingReason) UpdateClosingReason(ctx context.Context, request operati
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "updateClosingReason",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "ClosingReason", "json", `request:"mediaType=application/json"`)

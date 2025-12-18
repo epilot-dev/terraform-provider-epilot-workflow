@@ -198,58 +198,58 @@ func (e *EvaluationSource) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *EvaluationSource) GetAttribute() *string {
-	if o == nil {
+func (e *EvaluationSource) GetAttribute() *string {
+	if e == nil {
 		return nil
 	}
-	return o.Attribute
+	return e.Attribute
 }
 
-func (o *EvaluationSource) GetAttributeOperation() *AttributeOperation {
-	if o == nil {
+func (e *EvaluationSource) GetAttributeOperation() *AttributeOperation {
+	if e == nil {
 		return nil
 	}
-	return o.AttributeOperation
+	return e.AttributeOperation
 }
 
-func (o *EvaluationSource) GetAttributeRepeatable() *bool {
-	if o == nil {
+func (e *EvaluationSource) GetAttributeRepeatable() *bool {
+	if e == nil {
 		return nil
 	}
-	return o.AttributeRepeatable
+	return e.AttributeRepeatable
 }
 
-func (o *EvaluationSource) GetAttributeType() *AttributeType {
-	if o == nil {
+func (e *EvaluationSource) GetAttributeType() *AttributeType {
+	if e == nil {
 		return nil
 	}
-	return o.AttributeType
+	return e.AttributeType
 }
 
-func (o *EvaluationSource) GetID() *string {
-	if o == nil {
+func (e *EvaluationSource) GetID() *string {
+	if e == nil {
 		return nil
 	}
-	return o.ID
+	return e.ID
 }
 
-func (o *EvaluationSource) GetOrigin() *Origin {
-	if o == nil {
+func (e *EvaluationSource) GetOrigin() *Origin {
+	if e == nil {
 		return nil
 	}
-	return o.Origin
+	return e.Origin
 }
 
-func (o *EvaluationSource) GetOriginType() *OriginType {
-	if o == nil {
+func (e *EvaluationSource) GetOriginType() *OriginType {
+	if e == nil {
 		return nil
 	}
-	return o.OriginType
+	return e.OriginType
 }
 
-func (o *EvaluationSource) GetSchema() *string {
-	if o == nil {
+func (e *EvaluationSource) GetSchema() *string {
+	if e == nil {
 		return nil
 	}
-	return o.Schema
+	return e.Schema
 }

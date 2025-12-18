@@ -29,25 +29,25 @@ type FlowTemplateDataSource struct {
 
 // FlowTemplateDataSourceModel describes the data model.
 type FlowTemplateDataSourceModel struct {
-	AssignedTo             []types.String                   `tfsdk:"assigned_to"`
-	AvailableInEcp         types.Bool                       `tfsdk:"available_in_ecp"`
-	ClosingReasons         []tfTypes.ClosingReason1         `tfsdk:"closing_reasons"`
-	CreatedAt              types.String                     `tfsdk:"created_at"`
-	Description            types.String                     `tfsdk:"description"`
-	DueDate                types.String                     `tfsdk:"due_date"`
-	DueDateConfig          *tfTypes.DueDateConfig           `tfsdk:"due_date_config"`
-	Edges                  []tfTypes.Edge                   `tfsdk:"edges"`
-	Enabled                types.Bool                       `tfsdk:"enabled"`
-	ID                     types.String                     `tfsdk:"id"`
-	IsFlowMigrated         types.Bool                       `tfsdk:"is_flow_migrated"`
-	Name                   types.String                     `tfsdk:"name"`
-	OrgID                  types.String                     `tfsdk:"org_id"`
-	Phases                 []tfTypes.Phase                  `tfsdk:"phases"`
-	Tasks                  []tfTypes.Task                   `tfsdk:"tasks"`
-	Taxonomies             []types.String                   `tfsdk:"taxonomies"`
-	Trigger                *tfTypes.Trigger                 `tfsdk:"trigger"`
-	UpdateEntityAttributes []tfTypes.UpdateEntityAttributes `tfsdk:"update_entity_attributes"`
-	UpdatedAt              types.String                     `tfsdk:"updated_at"`
+	AssignedTo     []types.String           `tfsdk:"assigned_to"`
+	AvailableInEcp types.Bool               `tfsdk:"available_in_ecp"`
+	ClosingReasons []tfTypes.ClosingReason1 `tfsdk:"closing_reasons"`
+	CreatedAt      types.String             `tfsdk:"created_at"`
+	Description    types.String             `tfsdk:"description"`
+	DueDate        types.String             `tfsdk:"due_date"`
+	DueDateConfig  *tfTypes.DueDateConfig   `tfsdk:"due_date_config"`
+	Edges          []tfTypes.Edge           `tfsdk:"edges"`
+	Enabled        types.Bool               `tfsdk:"enabled"`
+	EntitySync     []tfTypes.EntitySync     `tfsdk:"entity_sync"`
+	ID             types.String             `tfsdk:"id"`
+	Name           types.String             `tfsdk:"name"`
+	OrgID          types.String             `tfsdk:"org_id"`
+	Phases         []tfTypes.Phase          `tfsdk:"phases"`
+	Tasks          []tfTypes.Task           `tfsdk:"tasks"`
+	Taxonomies     []types.String           `tfsdk:"taxonomies"`
+	Trigger        *tfTypes.Trigger         `tfsdk:"trigger"`
+	UpdatedAt      types.String             `tfsdk:"updated_at"`
+	Version        types.String             `tfsdk:"version"`
 }
 
 // Metadata returns the data source type name.
@@ -149,12 +149,66 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 				Computed:    true,
 				Description: `Whether the workflow is enabled or not`,
 			},
+			"entity_sync": schema.ListNestedAttribute{
+				Computed: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"target": schema.SingleNestedAttribute{
+							Computed: true,
+							Attributes: map[string]schema.Attribute{
+								"entity_attribute": schema.StringAttribute{
+									Computed: true,
+								},
+								"entity_schema": schema.StringAttribute{
+									Computed: true,
+								},
+							},
+						},
+						"trigger": schema.SingleNestedAttribute{
+							Computed: true,
+							Attributes: map[string]schema.Attribute{
+								"event": schema.StringAttribute{
+									Computed: true,
+									MarkdownDescription: `Event or condition that triggers the entity sync.` + "\n" +
+										`Direct triggers match EventBridge event names (PascalCase).` + "\n" +
+										`Status triggers are deduced from event + entity status combination.`,
+								},
+								"filter": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"phase_template_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `Target a specific phase by its template ID (stable across executions)`,
+										},
+										"task_template_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `Target a specific task by its template ID (stable across executions)`,
+										},
+									},
+									MarkdownDescription: `Optional filter to target specific tasks or phases.` + "\n" +
+										`Specify either task_template_id OR phase_template_id (mutually exclusive).` + "\n" +
+										`If omitted, trigger applies to all tasks/phases.`,
+								},
+							},
+							MarkdownDescription: `Trigger configuration that determines when entity sync occurs.` + "\n" +
+								`Contains the event type and optional filter to target specific tasks/phases.`,
+						},
+						"value": schema.SingleNestedAttribute{
+							Computed: true,
+							Attributes: map[string]schema.Attribute{
+								"source": schema.StringAttribute{
+									Computed: true,
+								},
+								"value": schema.StringAttribute{
+									Computed: true,
+								},
+							},
+						},
+					},
+				},
+			},
 			"id": schema.StringAttribute{
 				Computed: true,
-			},
-			"is_flow_migrated": schema.BoolAttribute{
-				Computed:    true,
-				Description: `Whether the workflow is migrated from workflows to flows or not`,
 			},
 			"name": schema.StringAttribute{
 				Computed: true,
@@ -229,6 +283,10 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 									},
 									Description: `Configuration for automation execution to run`,
 								},
+								"created_automatically": schema.BoolAttribute{
+									Computed:    true,
+									Description: `Indicates whether this task was created automatically by journeys or manually by an user`,
+								},
 								"description": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
@@ -277,6 +335,10 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 										"journey": schema.SingleNestedAttribute{
 											Computed: true,
 											Attributes: map[string]schema.Attribute{
+												"complete_task_automatically": schema.BoolAttribute{
+													Computed:    true,
+													Description: `If true, the task be auto completed when the journey is completed. By default it is true.`,
+												},
 												"id": schema.StringAttribute{
 													Computed: true,
 												},
@@ -309,6 +371,10 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 										"journey": schema.SingleNestedAttribute{
 											Computed: true,
 											Attributes: map[string]schema.Attribute{
+												"complete_task_automatically": schema.BoolAttribute{
+													Computed:    true,
+													Description: `If true, the task be auto completed when the journey is completed. By default it is true.`,
+												},
 												"id": schema.StringAttribute{
 													Computed: true,
 												},
@@ -329,6 +395,10 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 								"journey": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
+										"complete_task_automatically": schema.BoolAttribute{
+											Computed:    true,
+											Description: `If true, the task be auto completed when the journey is completed. By default it is true.`,
+										},
 										"id": schema.StringAttribute{
 											Computed: true,
 										},
@@ -351,10 +421,12 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 									NestedObject: schema.NestedAttributeObject{
 										Attributes: map[string]schema.Attribute{
 											"phase_id": schema.StringAttribute{
-												Computed: true,
+												Computed:    true,
+												Description: `The id of the phase that it points to`,
 											},
 											"task_id": schema.StringAttribute{
-												Computed: true,
+												Computed:    true,
+												Description: `The id of the task that it points to`,
 											},
 											"when": schema.StringAttribute{
 												Computed: true,
@@ -559,6 +631,10 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 										"journey": schema.SingleNestedAttribute{
 											Computed: true,
 											Attributes: map[string]schema.Attribute{
+												"complete_task_automatically": schema.BoolAttribute{
+													Computed:    true,
+													Description: `If true, the task be auto completed when the journey is completed. By default it is true.`,
+												},
 												"id": schema.StringAttribute{
 													Computed: true,
 												},
@@ -591,6 +667,10 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 										"journey": schema.SingleNestedAttribute{
 											Computed: true,
 											Attributes: map[string]schema.Attribute{
+												"complete_task_automatically": schema.BoolAttribute{
+													Computed:    true,
+													Description: `If true, the task be auto completed when the journey is completed. By default it is true.`,
+												},
 												"id": schema.StringAttribute{
 													Computed: true,
 												},
@@ -611,6 +691,10 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 								"journey": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
+										"complete_task_automatically": schema.BoolAttribute{
+											Computed:    true,
+											Description: `If true, the task be auto completed when the journey is completed. By default it is true.`,
+										},
 										"id": schema.StringAttribute{
 											Computed: true,
 										},
@@ -619,6 +703,23 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 										},
 										"name": schema.StringAttribute{
 											Computed: true,
+										},
+									},
+								},
+								"loop_config": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"exit_branch_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The id of the branch that will be used to exit the loop`,
+										},
+										"loop_branch_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `The id of the branch that will be looped`,
+										},
+										"max_iterations": schema.Int64Attribute{
+											Computed:    true,
+											Description: `Maximum number of iterations for the loop branch`,
 										},
 									},
 								},
@@ -633,10 +734,12 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 									NestedObject: schema.NestedAttributeObject{
 										Attributes: map[string]schema.Attribute{
 											"phase_id": schema.StringAttribute{
-												Computed: true,
+												Computed:    true,
+												Description: `The id of the phase that it points to`,
 											},
 											"task_id": schema.StringAttribute{
-												Computed: true,
+												Computed:    true,
+												Description: `The id of the task that it points to`,
 											},
 											"when": schema.StringAttribute{
 												Computed: true,
@@ -709,6 +812,9 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 									ElementType: types.StringType,
 									Description: `Taxonomy ids that are associated with this workflow and used for filtering`,
 								},
+								"trigger_mode": schema.StringAttribute{
+									Computed: true,
+								},
 							},
 						},
 						"task_base": schema.SingleNestedAttribute{
@@ -766,6 +872,10 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 										"journey": schema.SingleNestedAttribute{
 											Computed: true,
 											Attributes: map[string]schema.Attribute{
+												"complete_task_automatically": schema.BoolAttribute{
+													Computed:    true,
+													Description: `If true, the task be auto completed when the journey is completed. By default it is true.`,
+												},
 												"id": schema.StringAttribute{
 													Computed: true,
 												},
@@ -798,6 +908,10 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 										"journey": schema.SingleNestedAttribute{
 											Computed: true,
 											Attributes: map[string]schema.Attribute{
+												"complete_task_automatically": schema.BoolAttribute{
+													Computed:    true,
+													Description: `If true, the task be auto completed when the journey is completed. By default it is true.`,
+												},
 												"id": schema.StringAttribute{
 													Computed: true,
 												},
@@ -818,6 +932,10 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 								"journey": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
+										"complete_task_automatically": schema.BoolAttribute{
+											Computed:    true,
+											Description: `If true, the task be auto completed when the journey is completed. By default it is true.`,
+										},
 										"id": schema.StringAttribute{
 											Computed: true,
 										},
@@ -840,10 +958,12 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 									NestedObject: schema.NestedAttributeObject{
 										Attributes: map[string]schema.Attribute{
 											"phase_id": schema.StringAttribute{
-												Computed: true,
+												Computed:    true,
+												Description: `The id of the phase that it points to`,
 											},
 											"task_id": schema.StringAttribute{
-												Computed: true,
+												Computed:    true,
+												Description: `The id of the task that it points to`,
 											},
 											"when": schema.StringAttribute{
 												Computed: true,
@@ -888,6 +1008,21 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 							},
 						},
 					},
+					"journey_automation_trigger": schema.SingleNestedAttribute{
+						Computed: true,
+						Attributes: map[string]schema.Attribute{
+							"entity_schema": schema.StringAttribute{
+								Computed:    true,
+								Description: `Schema of the main entity where flow will be triggered. The entity will be picked from automation context.`,
+							},
+							"id": schema.StringAttribute{
+								Computed: true,
+							},
+							"type": schema.StringAttribute{
+								Computed: true,
+							},
+						},
+					},
 					"journey_submission_trigger": schema.SingleNestedAttribute{
 						Computed: true,
 						Attributes: map[string]schema.Attribute{
@@ -900,6 +1035,10 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 							"journey_id": schema.StringAttribute{
 								Computed:    true,
 								Description: `ID of the journey that will trigger this flow`,
+							},
+							"journey_name": schema.StringAttribute{
+								Computed:    true,
+								Description: `Name of the journey that will trigger this flow`,
 							},
 							"type": schema.StringAttribute{
 								Computed: true,
@@ -922,30 +1061,17 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 					},
 				},
 			},
-			"update_entity_attributes": schema.ListNestedAttribute{
-				Computed: true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"source": schema.StringAttribute{
-							Computed: true,
-						},
-						"target": schema.SingleNestedAttribute{
-							Computed: true,
-							Attributes: map[string]schema.Attribute{
-								"entity_attribute": schema.StringAttribute{
-									Computed: true,
-								},
-								"entity_schema": schema.StringAttribute{
-									Computed: true,
-								},
-							},
-						},
-					},
-				},
-			},
 			"updated_at": schema.StringAttribute{
 				Computed:    true,
 				Description: `ISO String Date & Time`,
+			},
+			"version": schema.StringAttribute{
+				Computed: true,
+				MarkdownDescription: `Version of the workflow schema.` + "\n" +
+					`` + "\n" +
+					`- ` + "`" + `v1` + "`" + ` – *Deprecated*. The initial version of workflows with limited structure and automation capabilities.  ` + "\n" +
+					`- ` + "`" + `v2` + "`" + ` – Linear workflows. Supports sequential task execution with basic automation triggers.  ` + "\n" +
+					`- ` + "`" + `v3` + "`" + ` – Advanced workflows. Adds support for branching logic (conditions), parallel paths, and enhanced automation features such as dynamic triggers and flow control.`,
 			},
 		},
 	}

@@ -13,18 +13,18 @@ type ChangeReasonStatusRequest struct {
 	ReasonID              string                        `pathParam:"style=simple,explode=false,name=reasonId"`
 }
 
-func (o *ChangeReasonStatusRequest) GetChangeReasonStatusReq() *shared.ChangeReasonStatusReq {
-	if o == nil {
+func (c *ChangeReasonStatusRequest) GetChangeReasonStatusReq() *shared.ChangeReasonStatusReq {
+	if c == nil {
 		return nil
 	}
-	return o.ChangeReasonStatusReq
+	return c.ChangeReasonStatusReq
 }
 
-func (o *ChangeReasonStatusRequest) GetReasonID() string {
-	if o == nil {
+func (c *ChangeReasonStatusRequest) GetReasonID() string {
+	if c == nil {
 		return ""
 	}
-	return o.ReasonID
+	return c.ReasonID
 }
 
 type ChangeReasonStatusResponse struct {
@@ -38,30 +38,30 @@ type ChangeReasonStatusResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *ChangeReasonStatusResponse) GetContentType() string {
-	if o == nil {
+func (c *ChangeReasonStatusResponse) GetContentType() string {
+	if c == nil {
 		return ""
 	}
-	return o.ContentType
+	return c.ContentType
 }
 
-func (o *ChangeReasonStatusResponse) GetErrorResp() *shared.ErrorResp {
-	if o == nil {
+func (c *ChangeReasonStatusResponse) GetErrorResp() *shared.ErrorResp {
+	if c == nil {
 		return nil
 	}
-	return o.ErrorResp
+	return c.ErrorResp
 }
 
-func (o *ChangeReasonStatusResponse) GetStatusCode() int {
-	if o == nil {
+func (c *ChangeReasonStatusResponse) GetStatusCode() int {
+	if c == nil {
 		return 0
 	}
-	return o.StatusCode
+	return c.StatusCode
 }
 
-func (o *ChangeReasonStatusResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (c *ChangeReasonStatusResponse) GetRawResponse() *http.Response {
+	if c == nil {
 		return nil
 	}
-	return o.RawResponse
+	return c.RawResponse
 }

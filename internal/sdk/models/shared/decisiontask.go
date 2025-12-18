@@ -8,6 +8,47 @@ import (
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
 )
 
+type LoopConfig struct {
+	// The id of the branch that will be used to exit the loop
+	ExitBranchID string `json:"exit_branch_id"`
+	// The id of the branch that will be looped
+	LoopBranchID string `json:"loop_branch_id"`
+	// Maximum number of iterations for the loop branch
+	MaxIterations *int64 `default:"3" json:"max_iterations"`
+}
+
+func (l LoopConfig) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(l, "", false)
+}
+
+func (l *LoopConfig) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &l, "", false, nil); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (l *LoopConfig) GetExitBranchID() string {
+	if l == nil {
+		return ""
+	}
+	return l.ExitBranchID
+}
+
+func (l *LoopConfig) GetLoopBranchID() string {
+	if l == nil {
+		return ""
+	}
+	return l.LoopBranchID
+}
+
+func (l *LoopConfig) GetMaxIterations() *int64 {
+	if l == nil {
+		return nil
+	}
+	return l.MaxIterations
+}
+
 type ScheduleType string
 
 const (
@@ -16,8 +57,8 @@ const (
 )
 
 type Schedule struct {
-	DelayedSchedule  *DelayedSchedule  `queryParam:"inline"`
-	RelativeSchedule *RelativeSchedule `queryParam:"inline"`
+	DelayedSchedule  *DelayedSchedule  `queryParam:"inline,name=schedule" union:"member"`
+	RelativeSchedule *RelativeSchedule `queryParam:"inline,name=schedule" union:"member"`
 
 	Type ScheduleType
 }
@@ -42,17 +83,43 @@ func CreateScheduleRelativeSchedule(relativeSchedule RelativeSchedule) Schedule 
 
 func (u *Schedule) UnmarshalJSON(data []byte) error {
 
-	var relativeSchedule RelativeSchedule = RelativeSchedule{}
-	if err := utils.UnmarshalJSON(data, &relativeSchedule, "", true, nil); err == nil {
-		u.RelativeSchedule = &relativeSchedule
-		u.Type = ScheduleTypeRelativeSchedule
-		return nil
-	}
+	var candidates []utils.UnionCandidate
 
+	// Collect all valid candidates
 	var delayedSchedule DelayedSchedule = DelayedSchedule{}
 	if err := utils.UnmarshalJSON(data, &delayedSchedule, "", true, nil); err == nil {
-		u.DelayedSchedule = &delayedSchedule
-		u.Type = ScheduleTypeDelayedSchedule
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  ScheduleTypeDelayedSchedule,
+			Value: &delayedSchedule,
+		})
+	}
+
+	var relativeSchedule RelativeSchedule = RelativeSchedule{}
+	if err := utils.UnmarshalJSON(data, &relativeSchedule, "", true, nil); err == nil {
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  ScheduleTypeRelativeSchedule,
+			Value: &relativeSchedule,
+		})
+	}
+
+	if len(candidates) == 0 {
+		return fmt.Errorf("could not unmarshal `%s` into any supported union types for Schedule", string(data))
+	}
+
+	// Pick the best candidate using multi-stage filtering
+	best := utils.PickBestUnionCandidate(candidates, data)
+	if best == nil {
+		return fmt.Errorf("could not unmarshal `%s` into any supported union types for Schedule", string(data))
+	}
+
+	// Set the union type and value based on the best candidate
+	u.Type = best.Type.(ScheduleType)
+	switch best.Type {
+	case ScheduleTypeDelayedSchedule:
+		u.DelayedSchedule = best.Value.(*DelayedSchedule)
+		return nil
+	case ScheduleTypeRelativeSchedule:
+		u.RelativeSchedule = best.Value.(*RelativeSchedule)
 		return nil
 	}
 
@@ -83,16 +150,18 @@ type DecisionTask struct {
 	Ecp *ECPDetails `json:"ecp,omitempty"`
 	ID  string      `json:"id"`
 	// Details regarding ECP for the workflow step
-	Installer *ECPDetails  `json:"installer,omitempty"`
-	Journey   *StepJourney `json:"journey,omitempty"`
-	Name      string       `json:"name"`
-	PhaseID   *string      `json:"phase_id,omitempty"`
+	Installer  *ECPDetails  `json:"installer,omitempty"`
+	Journey    *StepJourney `json:"journey,omitempty"`
+	LoopConfig *LoopConfig  `json:"loop_config,omitempty"`
+	Name       string       `json:"name"`
+	PhaseID    *string      `json:"phase_id,omitempty"`
 	// requirements that need to be fulfilled in order to enable the task while flow instances are running
 	Requirements []EnableRequirement `json:"requirements,omitempty"`
 	Schedule     *Schedule           `json:"schedule,omitempty"`
 	TaskType     TaskType            `json:"task_type"`
 	// Taxonomy ids that are associated with this workflow and used for filtering
-	Taxonomies []string `json:"taxonomies,omitempty"`
+	Taxonomies  []string    `json:"taxonomies,omitempty"`
+	TriggerMode TriggerMode `json:"trigger_mode"`
 }
 
 func (d DecisionTask) MarshalJSON() ([]byte, error) {
@@ -100,113 +169,127 @@ func (d DecisionTask) MarshalJSON() ([]byte, error) {
 }
 
 func (d *DecisionTask) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &d, "", false, []string{"conditions", "id", "name", "task_type"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &d, "", false, nil); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *DecisionTask) GetAssignedTo() []string {
-	if o == nil {
+func (d *DecisionTask) GetAssignedTo() []string {
+	if d == nil {
 		return nil
 	}
-	return o.AssignedTo
+	return d.AssignedTo
 }
 
-func (o *DecisionTask) GetConditions() []Condition {
-	if o == nil {
+func (d *DecisionTask) GetConditions() []Condition {
+	if d == nil {
 		return []Condition{}
 	}
-	return o.Conditions
+	return d.Conditions
 }
 
-func (o *DecisionTask) GetDescription() *StepDescription {
-	if o == nil {
+func (d *DecisionTask) GetDescription() *StepDescription {
+	if d == nil {
 		return nil
 	}
-	return o.Description
+	return d.Description
 }
 
-func (o *DecisionTask) GetDueDate() *string {
-	if o == nil {
+func (d *DecisionTask) GetDueDate() *string {
+	if d == nil {
 		return nil
 	}
-	return o.DueDate
+	return d.DueDate
 }
 
-func (o *DecisionTask) GetDueDateConfig() *DueDateConfig {
-	if o == nil {
+func (d *DecisionTask) GetDueDateConfig() *DueDateConfig {
+	if d == nil {
 		return nil
 	}
-	return o.DueDateConfig
+	return d.DueDateConfig
 }
 
-func (o *DecisionTask) GetEcp() *ECPDetails {
-	if o == nil {
+func (d *DecisionTask) GetEcp() *ECPDetails {
+	if d == nil {
 		return nil
 	}
-	return o.Ecp
+	return d.Ecp
 }
 
-func (o *DecisionTask) GetID() string {
-	if o == nil {
+func (d *DecisionTask) GetID() string {
+	if d == nil {
 		return ""
 	}
-	return o.ID
+	return d.ID
 }
 
-func (o *DecisionTask) GetInstaller() *ECPDetails {
-	if o == nil {
+func (d *DecisionTask) GetInstaller() *ECPDetails {
+	if d == nil {
 		return nil
 	}
-	return o.Installer
+	return d.Installer
 }
 
-func (o *DecisionTask) GetJourney() *StepJourney {
-	if o == nil {
+func (d *DecisionTask) GetJourney() *StepJourney {
+	if d == nil {
 		return nil
 	}
-	return o.Journey
+	return d.Journey
 }
 
-func (o *DecisionTask) GetName() string {
-	if o == nil {
+func (d *DecisionTask) GetLoopConfig() *LoopConfig {
+	if d == nil {
+		return nil
+	}
+	return d.LoopConfig
+}
+
+func (d *DecisionTask) GetName() string {
+	if d == nil {
 		return ""
 	}
-	return o.Name
+	return d.Name
 }
 
-func (o *DecisionTask) GetPhaseID() *string {
-	if o == nil {
+func (d *DecisionTask) GetPhaseID() *string {
+	if d == nil {
 		return nil
 	}
-	return o.PhaseID
+	return d.PhaseID
 }
 
-func (o *DecisionTask) GetRequirements() []EnableRequirement {
-	if o == nil {
+func (d *DecisionTask) GetRequirements() []EnableRequirement {
+	if d == nil {
 		return nil
 	}
-	return o.Requirements
+	return d.Requirements
 }
 
-func (o *DecisionTask) GetSchedule() *Schedule {
-	if o == nil {
+func (d *DecisionTask) GetSchedule() *Schedule {
+	if d == nil {
 		return nil
 	}
-	return o.Schedule
+	return d.Schedule
 }
 
-func (o *DecisionTask) GetTaskType() TaskType {
-	if o == nil {
+func (d *DecisionTask) GetTaskType() TaskType {
+	if d == nil {
 		return TaskType("")
 	}
-	return o.TaskType
+	return d.TaskType
 }
 
-func (o *DecisionTask) GetTaxonomies() []string {
-	if o == nil {
+func (d *DecisionTask) GetTaxonomies() []string {
+	if d == nil {
 		return nil
 	}
-	return o.Taxonomies
+	return d.Taxonomies
+}
+
+func (d *DecisionTask) GetTriggerMode() TriggerMode {
+	if d == nil {
+		return TriggerMode("")
+	}
+	return d.TriggerMode
 }

@@ -60,8 +60,27 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 			r.Edges = append(r.Edges, edges)
 		}
 		r.Enabled = types.BoolPointerValue(resp.Enabled)
+		r.EntitySync = []tfTypes.EntitySync{}
+
+		for _, entitySyncItem := range resp.EntitySync {
+			var entitySync tfTypes.EntitySync
+
+			entitySync.Target.EntityAttribute = types.StringValue(entitySyncItem.Target.EntityAttribute)
+			entitySync.Target.EntitySchema = types.StringValue(entitySyncItem.Target.EntitySchema)
+			entitySync.Trigger.Event = types.StringValue(string(entitySyncItem.Trigger.Event))
+			if entitySyncItem.Trigger.Filter == nil {
+				entitySync.Trigger.Filter = nil
+			} else {
+				entitySync.Trigger.Filter = &tfTypes.Filter{}
+				entitySync.Trigger.Filter.PhaseTemplateID = types.StringPointerValue(entitySyncItem.Trigger.Filter.PhaseTemplateID)
+				entitySync.Trigger.Filter.TaskTemplateID = types.StringPointerValue(entitySyncItem.Trigger.Filter.TaskTemplateID)
+			}
+			entitySync.Value.Source = types.StringValue(string(entitySyncItem.Value.Source))
+			entitySync.Value.Value = types.StringPointerValue(entitySyncItem.Value.Value)
+
+			r.EntitySync = append(r.EntitySync, entitySync)
+		}
 		r.ID = types.StringPointerValue(resp.ID)
-		r.IsFlowMigrated = types.BoolPointerValue(resp.IsFlowMigrated)
 		r.Name = types.StringValue(resp.Name)
 		r.OrgID = types.StringPointerValue(resp.OrgID)
 		r.Phases = []tfTypes.Phase{}
@@ -105,6 +124,7 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 					tasks.AutomationTask.AssignedTo = append(tasks.AutomationTask.AssignedTo, types.StringValue(v))
 				}
 				tasks.AutomationTask.AutomationConfig.FlowID = types.StringValue(tasksItem.AutomationTask.AutomationConfig.FlowID)
+				tasks.AutomationTask.CreatedAutomatically = types.BoolPointerValue(tasksItem.AutomationTask.CreatedAutomatically)
 				if tasksItem.AutomationTask.Description == nil {
 					tasks.AutomationTask.Description = nil
 				} else {
@@ -133,6 +153,7 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 						tasks.AutomationTask.Ecp.Journey = nil
 					} else {
 						tasks.AutomationTask.Ecp.Journey = &tfTypes.StepJourney{}
+						tasks.AutomationTask.Ecp.Journey.CompleteTaskAutomatically = types.BoolPointerValue(tasksItem.AutomationTask.Ecp.Journey.CompleteTaskAutomatically)
 						tasks.AutomationTask.Ecp.Journey.ID = types.StringPointerValue(tasksItem.AutomationTask.Ecp.Journey.ID)
 						tasks.AutomationTask.Ecp.Journey.JourneyID = types.StringPointerValue(tasksItem.AutomationTask.Ecp.Journey.JourneyID)
 						tasks.AutomationTask.Ecp.Journey.Name = types.StringPointerValue(tasksItem.AutomationTask.Ecp.Journey.Name)
@@ -150,6 +171,7 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 						tasks.AutomationTask.Installer.Journey = nil
 					} else {
 						tasks.AutomationTask.Installer.Journey = &tfTypes.StepJourney{}
+						tasks.AutomationTask.Installer.Journey.CompleteTaskAutomatically = types.BoolPointerValue(tasksItem.AutomationTask.Installer.Journey.CompleteTaskAutomatically)
 						tasks.AutomationTask.Installer.Journey.ID = types.StringPointerValue(tasksItem.AutomationTask.Installer.Journey.ID)
 						tasks.AutomationTask.Installer.Journey.JourneyID = types.StringPointerValue(tasksItem.AutomationTask.Installer.Journey.JourneyID)
 						tasks.AutomationTask.Installer.Journey.Name = types.StringPointerValue(tasksItem.AutomationTask.Installer.Journey.Name)
@@ -160,6 +182,7 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 					tasks.AutomationTask.Journey = nil
 				} else {
 					tasks.AutomationTask.Journey = &tfTypes.StepJourney{}
+					tasks.AutomationTask.Journey.CompleteTaskAutomatically = types.BoolPointerValue(tasksItem.AutomationTask.Journey.CompleteTaskAutomatically)
 					tasks.AutomationTask.Journey.ID = types.StringPointerValue(tasksItem.AutomationTask.Journey.ID)
 					tasks.AutomationTask.Journey.JourneyID = types.StringPointerValue(tasksItem.AutomationTask.Journey.JourneyID)
 					tasks.AutomationTask.Journey.Name = types.StringPointerValue(tasksItem.AutomationTask.Journey.Name)
@@ -299,6 +322,7 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 						tasks.DecisionTask.Ecp.Journey = nil
 					} else {
 						tasks.DecisionTask.Ecp.Journey = &tfTypes.StepJourney{}
+						tasks.DecisionTask.Ecp.Journey.CompleteTaskAutomatically = types.BoolPointerValue(tasksItem.DecisionTask.Ecp.Journey.CompleteTaskAutomatically)
 						tasks.DecisionTask.Ecp.Journey.ID = types.StringPointerValue(tasksItem.DecisionTask.Ecp.Journey.ID)
 						tasks.DecisionTask.Ecp.Journey.JourneyID = types.StringPointerValue(tasksItem.DecisionTask.Ecp.Journey.JourneyID)
 						tasks.DecisionTask.Ecp.Journey.Name = types.StringPointerValue(tasksItem.DecisionTask.Ecp.Journey.Name)
@@ -316,6 +340,7 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 						tasks.DecisionTask.Installer.Journey = nil
 					} else {
 						tasks.DecisionTask.Installer.Journey = &tfTypes.StepJourney{}
+						tasks.DecisionTask.Installer.Journey.CompleteTaskAutomatically = types.BoolPointerValue(tasksItem.DecisionTask.Installer.Journey.CompleteTaskAutomatically)
 						tasks.DecisionTask.Installer.Journey.ID = types.StringPointerValue(tasksItem.DecisionTask.Installer.Journey.ID)
 						tasks.DecisionTask.Installer.Journey.JourneyID = types.StringPointerValue(tasksItem.DecisionTask.Installer.Journey.JourneyID)
 						tasks.DecisionTask.Installer.Journey.Name = types.StringPointerValue(tasksItem.DecisionTask.Installer.Journey.Name)
@@ -326,9 +351,18 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 					tasks.DecisionTask.Journey = nil
 				} else {
 					tasks.DecisionTask.Journey = &tfTypes.StepJourney{}
+					tasks.DecisionTask.Journey.CompleteTaskAutomatically = types.BoolPointerValue(tasksItem.DecisionTask.Journey.CompleteTaskAutomatically)
 					tasks.DecisionTask.Journey.ID = types.StringPointerValue(tasksItem.DecisionTask.Journey.ID)
 					tasks.DecisionTask.Journey.JourneyID = types.StringPointerValue(tasksItem.DecisionTask.Journey.JourneyID)
 					tasks.DecisionTask.Journey.Name = types.StringPointerValue(tasksItem.DecisionTask.Journey.Name)
+				}
+				if tasksItem.DecisionTask.LoopConfig == nil {
+					tasks.DecisionTask.LoopConfig = nil
+				} else {
+					tasks.DecisionTask.LoopConfig = &tfTypes.LoopConfig{}
+					tasks.DecisionTask.LoopConfig.ExitBranchID = types.StringValue(tasksItem.DecisionTask.LoopConfig.ExitBranchID)
+					tasks.DecisionTask.LoopConfig.LoopBranchID = types.StringValue(tasksItem.DecisionTask.LoopConfig.LoopBranchID)
+					tasks.DecisionTask.LoopConfig.MaxIterations = types.Int64PointerValue(tasksItem.DecisionTask.LoopConfig.MaxIterations)
 				}
 				tasks.DecisionTask.Name = types.StringValue(tasksItem.DecisionTask.Name)
 				tasks.DecisionTask.PhaseID = types.StringPointerValue(tasksItem.DecisionTask.PhaseID)
@@ -368,6 +402,7 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 				for _, v := range tasksItem.DecisionTask.Taxonomies {
 					tasks.DecisionTask.Taxonomies = append(tasks.DecisionTask.Taxonomies, types.StringValue(v))
 				}
+				tasks.DecisionTask.TriggerMode = types.StringValue(string(tasksItem.DecisionTask.TriggerMode))
 			}
 			if tasksItem.TaskBase != nil {
 				tasks.TaskBase = &tfTypes.TaskBase{}
@@ -403,6 +438,7 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 						tasks.TaskBase.Ecp.Journey = nil
 					} else {
 						tasks.TaskBase.Ecp.Journey = &tfTypes.StepJourney{}
+						tasks.TaskBase.Ecp.Journey.CompleteTaskAutomatically = types.BoolPointerValue(tasksItem.TaskBase.Ecp.Journey.CompleteTaskAutomatically)
 						tasks.TaskBase.Ecp.Journey.ID = types.StringPointerValue(tasksItem.TaskBase.Ecp.Journey.ID)
 						tasks.TaskBase.Ecp.Journey.JourneyID = types.StringPointerValue(tasksItem.TaskBase.Ecp.Journey.JourneyID)
 						tasks.TaskBase.Ecp.Journey.Name = types.StringPointerValue(tasksItem.TaskBase.Ecp.Journey.Name)
@@ -420,6 +456,7 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 						tasks.TaskBase.Installer.Journey = nil
 					} else {
 						tasks.TaskBase.Installer.Journey = &tfTypes.StepJourney{}
+						tasks.TaskBase.Installer.Journey.CompleteTaskAutomatically = types.BoolPointerValue(tasksItem.TaskBase.Installer.Journey.CompleteTaskAutomatically)
 						tasks.TaskBase.Installer.Journey.ID = types.StringPointerValue(tasksItem.TaskBase.Installer.Journey.ID)
 						tasks.TaskBase.Installer.Journey.JourneyID = types.StringPointerValue(tasksItem.TaskBase.Installer.Journey.JourneyID)
 						tasks.TaskBase.Installer.Journey.Name = types.StringPointerValue(tasksItem.TaskBase.Installer.Journey.Name)
@@ -430,6 +467,7 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 					tasks.TaskBase.Journey = nil
 				} else {
 					tasks.TaskBase.Journey = &tfTypes.StepJourney{}
+					tasks.TaskBase.Journey.CompleteTaskAutomatically = types.BoolPointerValue(tasksItem.TaskBase.Journey.CompleteTaskAutomatically)
 					tasks.TaskBase.Journey.ID = types.StringPointerValue(tasksItem.TaskBase.Journey.ID)
 					tasks.TaskBase.Journey.JourneyID = types.StringPointerValue(tasksItem.TaskBase.Journey.JourneyID)
 					tasks.TaskBase.Journey.Name = types.StringPointerValue(tasksItem.TaskBase.Journey.Name)
@@ -468,32 +506,33 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 				r.Trigger.AutomationTrigger.ID = types.StringPointerValue(resp.Trigger.AutomationTrigger.ID)
 				r.Trigger.AutomationTrigger.Type = types.StringValue(string(resp.Trigger.AutomationTrigger.Type))
 			}
+			if resp.Trigger.JourneyAutomationTrigger != nil {
+				r.Trigger.JourneyAutomationTrigger = &tfTypes.JourneyAutomationTrigger{}
+				r.Trigger.JourneyAutomationTrigger.EntitySchema = types.StringPointerValue(resp.Trigger.JourneyAutomationTrigger.EntitySchema)
+				r.Trigger.JourneyAutomationTrigger.ID = types.StringPointerValue(resp.Trigger.JourneyAutomationTrigger.ID)
+				r.Trigger.JourneyAutomationTrigger.Type = types.StringValue(string(resp.Trigger.JourneyAutomationTrigger.Type))
+			}
 			if resp.Trigger.JourneySubmissionTrigger != nil {
 				r.Trigger.JourneySubmissionTrigger = &tfTypes.JourneySubmissionTrigger{}
 				r.Trigger.JourneySubmissionTrigger.AutomationID = types.StringPointerValue(resp.Trigger.JourneySubmissionTrigger.AutomationID)
 				r.Trigger.JourneySubmissionTrigger.ID = types.StringPointerValue(resp.Trigger.JourneySubmissionTrigger.ID)
 				r.Trigger.JourneySubmissionTrigger.JourneyID = types.StringValue(resp.Trigger.JourneySubmissionTrigger.JourneyID)
+				r.Trigger.JourneySubmissionTrigger.JourneyName = types.StringPointerValue(resp.Trigger.JourneySubmissionTrigger.JourneyName)
 				r.Trigger.JourneySubmissionTrigger.Type = types.StringValue(string(resp.Trigger.JourneySubmissionTrigger.Type))
 			}
 			if resp.Trigger.ManualTrigger != nil {
-				r.Trigger.ManualTrigger = &tfTypes.ManualTrigger{}
+				r.Trigger.ManualTrigger = &tfTypes.JourneyAutomationTrigger{}
 				r.Trigger.ManualTrigger.EntitySchema = types.StringPointerValue(resp.Trigger.ManualTrigger.EntitySchema)
 				r.Trigger.ManualTrigger.ID = types.StringPointerValue(resp.Trigger.ManualTrigger.ID)
 				r.Trigger.ManualTrigger.Type = types.StringValue(string(resp.Trigger.ManualTrigger.Type))
 			}
 		}
-		r.UpdateEntityAttributes = []tfTypes.UpdateEntityAttributes{}
-
-		for _, updateEntityAttributesItem := range resp.UpdateEntityAttributes {
-			var updateEntityAttributes tfTypes.UpdateEntityAttributes
-
-			updateEntityAttributes.Source = types.StringValue(string(updateEntityAttributesItem.Source))
-			updateEntityAttributes.Target.EntityAttribute = types.StringValue(updateEntityAttributesItem.Target.EntityAttribute)
-			updateEntityAttributes.Target.EntitySchema = types.StringValue(updateEntityAttributesItem.Target.EntitySchema)
-
-			r.UpdateEntityAttributes = append(r.UpdateEntityAttributes, updateEntityAttributes)
-		}
 		r.UpdatedAt = types.StringPointerValue(resp.UpdatedAt)
+		if resp.Version != nil {
+			r.Version = types.StringValue(string(*resp.Version))
+		} else {
+			r.Version = types.StringNull()
+		}
 	}
 
 	return diags

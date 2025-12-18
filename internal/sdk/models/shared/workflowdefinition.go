@@ -38,113 +38,113 @@ func (w WorkflowDefinition) MarshalJSON() ([]byte, error) {
 }
 
 func (w *WorkflowDefinition) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &w, "", false, []string{"flow", "name"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &w, "", false, nil); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *WorkflowDefinition) GetAssignedTo() []string {
-	if o == nil {
+func (w *WorkflowDefinition) GetAssignedTo() []string {
+	if w == nil {
 		return nil
 	}
-	return o.AssignedTo
+	return w.AssignedTo
 }
 
-func (o *WorkflowDefinition) GetClosingReasons() []ClosingReasonID {
-	if o == nil {
+func (w *WorkflowDefinition) GetClosingReasons() []ClosingReasonID {
+	if w == nil {
 		return nil
 	}
-	return o.ClosingReasons
+	return w.ClosingReasons
 }
 
-func (o *WorkflowDefinition) GetCreationTime() *string {
-	if o == nil {
+func (w *WorkflowDefinition) GetCreationTime() *string {
+	if w == nil {
 		return nil
 	}
-	return o.CreationTime
+	return w.CreationTime
 }
 
-func (o *WorkflowDefinition) GetDescription() *string {
-	if o == nil {
+func (w *WorkflowDefinition) GetDescription() *string {
+	if w == nil {
 		return nil
 	}
-	return o.Description
+	return w.Description
 }
 
-func (o *WorkflowDefinition) GetDueDate() *string {
-	if o == nil {
+func (w *WorkflowDefinition) GetDueDate() *string {
+	if w == nil {
 		return nil
 	}
-	return o.DueDate
+	return w.DueDate
 }
 
-func (o *WorkflowDefinition) GetDynamicDueDate() *DynamicDueDate {
-	if o == nil {
+func (w *WorkflowDefinition) GetDynamicDueDate() *DynamicDueDate {
+	if w == nil {
 		return nil
 	}
-	return o.DynamicDueDate
+	return w.DynamicDueDate
 }
 
-func (o *WorkflowDefinition) GetEnableECPWorkflow() *bool {
-	if o == nil {
+func (w *WorkflowDefinition) GetEnableECPWorkflow() *bool {
+	if w == nil {
 		return nil
 	}
-	return o.EnableECPWorkflow
+	return w.EnableECPWorkflow
 }
 
-func (o *WorkflowDefinition) GetEnabled() *bool {
-	if o == nil {
+func (w *WorkflowDefinition) GetEnabled() *bool {
+	if w == nil {
 		return nil
 	}
-	return o.Enabled
+	return w.Enabled
 }
 
-func (o *WorkflowDefinition) GetFlow() any {
-	if o == nil {
+func (w *WorkflowDefinition) GetFlow() any {
+	if w == nil {
 		return nil
 	}
-	return o.Flow
+	return w.Flow
 }
 
-func (o *WorkflowDefinition) GetID() *string {
-	if o == nil {
+func (w *WorkflowDefinition) GetID() *string {
+	if w == nil {
 		return nil
 	}
-	return o.ID
+	return w.ID
 }
 
-func (o *WorkflowDefinition) GetLastUpdateTime() *string {
-	if o == nil {
+func (w *WorkflowDefinition) GetLastUpdateTime() *string {
+	if w == nil {
 		return nil
 	}
-	return o.LastUpdateTime
+	return w.LastUpdateTime
 }
 
-func (o *WorkflowDefinition) GetName() string {
-	if o == nil {
+func (w *WorkflowDefinition) GetName() string {
+	if w == nil {
 		return ""
 	}
-	return o.Name
+	return w.Name
 }
 
-func (o *WorkflowDefinition) GetTaxonomies() []string {
-	if o == nil {
+func (w *WorkflowDefinition) GetTaxonomies() []string {
+	if w == nil {
 		return nil
 	}
-	return o.Taxonomies
+	return w.Taxonomies
 }
 
-func (o *WorkflowDefinition) GetUpdateEntityAttributes() []UpdateEntityAttributes {
-	if o == nil {
+func (w *WorkflowDefinition) GetUpdateEntityAttributes() []UpdateEntityAttributes {
+	if w == nil {
 		return nil
 	}
-	return o.UpdateEntityAttributes
+	return w.UpdateEntityAttributes
 }
 
-func (o *WorkflowDefinition) GetUserIds() []float64 {
-	if o == nil {
+func (w *WorkflowDefinition) GetUserIds() []float64 {
+	if w == nil {
 		return nil
 	}
-	return o.UserIds
+	return w.UserIds
 }

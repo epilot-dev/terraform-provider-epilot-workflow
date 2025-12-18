@@ -47,36 +47,36 @@ func (c Condition) MarshalJSON() ([]byte, error) {
 }
 
 func (c *Condition) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &c, "", false, []string{"branch_name", "id", "logical_operator", "statements"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &c, "", false, nil); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *Condition) GetBranchName() string {
-	if o == nil {
+func (c *Condition) GetBranchName() string {
+	if c == nil {
 		return ""
 	}
-	return o.BranchName
+	return c.BranchName
 }
 
-func (o *Condition) GetID() string {
-	if o == nil {
+func (c *Condition) GetID() string {
+	if c == nil {
 		return ""
 	}
-	return o.ID
+	return c.ID
 }
 
-func (o *Condition) GetLogicalOperator() LogicalOperator {
-	if o == nil {
+func (c *Condition) GetLogicalOperator() LogicalOperator {
+	if c == nil {
 		return LogicalOperator("")
 	}
-	return o.LogicalOperator
+	return c.LogicalOperator
 }
 
-func (o *Condition) GetStatements() []Statement {
-	if o == nil {
+func (c *Condition) GetStatements() []Statement {
+	if c == nil {
 		return []Statement{}
 	}
-	return o.Statements
+	return c.Statements
 }

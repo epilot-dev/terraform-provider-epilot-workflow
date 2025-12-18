@@ -46,9 +46,9 @@ func (i *ImmediateSchedule) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (o *ImmediateSchedule) GetMode() *ImmediateScheduleMode {
-	if o == nil {
+func (i *ImmediateSchedule) GetMode() *ImmediateScheduleMode {
+	if i == nil {
 		return nil
 	}
-	return o.Mode
+	return i.Mode
 }

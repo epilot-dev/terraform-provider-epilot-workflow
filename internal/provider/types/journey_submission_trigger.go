@@ -10,5 +10,6 @@ type JourneySubmissionTrigger struct {
 	AutomationID types.String `tfsdk:"automation_id"`
 	ID           types.String `tfsdk:"id"`
 	JourneyID    types.String `tfsdk:"journey_id"`
+	JourneyName  types.String `tfsdk:"journey_name"`
 	Type         types.String `tfsdk:"type"`
 }

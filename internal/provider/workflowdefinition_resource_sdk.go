@@ -125,13 +125,13 @@ func (r *WorkflowDefinitionResourceModel) ToSharedWorkflowDefinition(ctx context
 	var diags diag.Diagnostics
 
 	assignedTo := make([]string, 0, len(r.AssignedTo))
-	for _, assignedToItem := range r.AssignedTo {
-		assignedTo = append(assignedTo, assignedToItem.ValueString())
+	for assignedToIndex := range r.AssignedTo {
+		assignedTo = append(assignedTo, r.AssignedTo[assignedToIndex].ValueString())
 	}
 	closingReasons := make([]shared.ClosingReasonID, 0, len(r.ClosingReasons))
-	for _, closingReasonsItem := range r.ClosingReasons {
+	for closingReasonsIndex := range r.ClosingReasons {
 		var id string
-		id = closingReasonsItem.ID.ValueString()
+		id = r.ClosingReasons[closingReasonsIndex].ID.ValueString()
 
 		closingReasons = append(closingReasons, shared.ClosingReasonID{
 			ID: id,
@@ -212,19 +212,19 @@ func (r *WorkflowDefinitionResourceModel) ToSharedWorkflowDefinition(ctx context
 	name = r.Name.ValueString()
 
 	taxonomies := make([]string, 0, len(r.Taxonomies))
-	for _, taxonomiesItem := range r.Taxonomies {
-		taxonomies = append(taxonomies, taxonomiesItem.ValueString())
+	for taxonomiesIndex := range r.Taxonomies {
+		taxonomies = append(taxonomies, r.Taxonomies[taxonomiesIndex].ValueString())
 	}
 	updateEntityAttributes := make([]shared.UpdateEntityAttributes, 0, len(r.UpdateEntityAttributes))
-	for _, updateEntityAttributesItem := range r.UpdateEntityAttributes {
-		source := shared.Source(updateEntityAttributesItem.Source.ValueString())
+	for updateEntityAttributesIndex := range r.UpdateEntityAttributes {
+		source := shared.Source(r.UpdateEntityAttributes[updateEntityAttributesIndex].Source.ValueString())
 		var entityAttribute string
-		entityAttribute = updateEntityAttributesItem.Target.EntityAttribute.ValueString()
+		entityAttribute = r.UpdateEntityAttributes[updateEntityAttributesIndex].Target.EntityAttribute.ValueString()
 
 		var entitySchema string
-		entitySchema = updateEntityAttributesItem.Target.EntitySchema.ValueString()
+		entitySchema = r.UpdateEntityAttributes[updateEntityAttributesIndex].Target.EntitySchema.ValueString()
 
-		target := shared.Target{
+		target := shared.UpdateEntityAttributesTarget{
 			EntityAttribute: entityAttribute,
 			EntitySchema:    entitySchema,
 		}
@@ -234,8 +234,8 @@ func (r *WorkflowDefinitionResourceModel) ToSharedWorkflowDefinition(ctx context
 		})
 	}
 	userIds := make([]float64, 0, len(r.UserIds))
-	for _, userIdsItem := range r.UserIds {
-		userIds = append(userIds, userIdsItem.ValueFloat64())
+	for userIdsIndex := range r.UserIds {
+		userIds = append(userIds, r.UserIds[userIdsIndex].ValueFloat64())
 	}
 	out := shared.WorkflowDefinition{
 		AssignedTo:             assignedTo,

@@ -11,11 +11,11 @@ type GetFlowTemplateRequest struct {
 	FlowID string `pathParam:"style=simple,explode=false,name=flowId"`
 }
 
-func (o *GetFlowTemplateRequest) GetFlowID() string {
-	if o == nil {
+func (g *GetFlowTemplateRequest) GetFlowID() string {
+	if g == nil {
 		return ""
 	}
-	return o.FlowID
+	return g.FlowID
 }
 
 type GetFlowTemplateResponse struct {
@@ -33,44 +33,44 @@ type GetFlowTemplateResponse struct {
 	RawResponse *http.Response
 }
 
-func (o *GetFlowTemplateResponse) GetContentType() string {
-	if o == nil {
+func (g *GetFlowTemplateResponse) GetContentType() string {
+	if g == nil {
 		return ""
 	}
-	return o.ContentType
+	return g.ContentType
 }
 
-func (o *GetFlowTemplateResponse) GetDefinitionNotFoundResp() *shared.DefinitionNotFoundResp {
-	if o == nil {
+func (g *GetFlowTemplateResponse) GetDefinitionNotFoundResp() *shared.DefinitionNotFoundResp {
+	if g == nil {
 		return nil
 	}
-	return o.DefinitionNotFoundResp
+	return g.DefinitionNotFoundResp
 }
 
-func (o *GetFlowTemplateResponse) GetErrorResp() *shared.ErrorResp {
-	if o == nil {
+func (g *GetFlowTemplateResponse) GetErrorResp() *shared.ErrorResp {
+	if g == nil {
 		return nil
 	}
-	return o.ErrorResp
+	return g.ErrorResp
 }
 
-func (o *GetFlowTemplateResponse) GetFlowTemplate() *shared.FlowTemplate {
-	if o == nil {
+func (g *GetFlowTemplateResponse) GetFlowTemplate() *shared.FlowTemplate {
+	if g == nil {
 		return nil
 	}
-	return o.FlowTemplate
+	return g.FlowTemplate
 }
 
-func (o *GetFlowTemplateResponse) GetStatusCode() int {
-	if o == nil {
+func (g *GetFlowTemplateResponse) GetStatusCode() int {
+	if g == nil {
 		return 0
 	}
-	return o.StatusCode
+	return g.StatusCode
 }
 
-func (o *GetFlowTemplateResponse) GetRawResponse() *http.Response {
-	if o == nil {
+func (g *GetFlowTemplateResponse) GetRawResponse() *http.Response {
+	if g == nil {
 		return nil
 	}
-	return o.RawResponse
+	return g.RawResponse
 }

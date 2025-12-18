@@ -3,6 +3,6 @@
 package types
 
 type Schedule struct {
-	DelayedSchedule  *DelayedSchedule  `queryParam:"inline" tfsdk:"delayed_schedule" tfPlanOnly:"true"`
-	RelativeSchedule *RelativeSchedule `queryParam:"inline" tfsdk:"relative_schedule" tfPlanOnly:"true"`
+	DelayedSchedule  *DelayedSchedule  `queryParam:"inline" tfsdk:"delayed_schedule"`
+	RelativeSchedule *RelativeSchedule `queryParam:"inline" tfsdk:"relative_schedule"`
 }

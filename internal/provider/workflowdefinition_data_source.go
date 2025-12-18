@@ -36,8 +36,8 @@ type WorkflowDefinitionDataSourceModel struct {
 	Description            types.String                     `tfsdk:"description"`
 	DueDate                types.String                     `tfsdk:"due_date"`
 	DynamicDueDate         *tfTypes.DynamicDueDate          `tfsdk:"dynamic_due_date"`
-	EnableECPWorkflow      types.Bool                       `tfsdk:"enable_ecp_workflow"`
 	Enabled                types.Bool                       `tfsdk:"enabled"`
+	EnableECPWorkflow      types.Bool                       `tfsdk:"enable_ecp_workflow"`
 	Flow                   jsontypes.Normalized             `tfsdk:"flow"`
 	ID                     types.String                     `tfsdk:"id"`
 	LastUpdateTime         types.String                     `tfsdk:"last_update_time"`

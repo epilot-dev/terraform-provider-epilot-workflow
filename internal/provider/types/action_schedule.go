@@ -3,7 +3,7 @@
 package types
 
 type ActionSchedule struct {
-	DelayedSchedule   *DelayedSchedule   `queryParam:"inline" tfsdk:"delayed_schedule" tfPlanOnly:"true"`
-	ImmediateSchedule *ImmediateSchedule `queryParam:"inline" tfsdk:"immediate_schedule" tfPlanOnly:"true"`
-	RelativeSchedule  *RelativeSchedule  `queryParam:"inline" tfsdk:"relative_schedule" tfPlanOnly:"true"`
+	DelayedSchedule   *DelayedSchedule   `queryParam:"inline" tfsdk:"delayed_schedule"`
+	ImmediateSchedule *ImmediateSchedule `queryParam:"inline" tfsdk:"immediate_schedule"`
+	RelativeSchedule  *RelativeSchedule  `queryParam:"inline" tfsdk:"relative_schedule"`
 }

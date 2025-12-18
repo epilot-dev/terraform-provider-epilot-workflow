@@ -17,9 +17,9 @@ const (
 )
 
 type Task struct {
-	TaskBase       *TaskBase       `queryParam:"inline"`
-	AutomationTask *AutomationTask `queryParam:"inline"`
-	DecisionTask   *DecisionTask   `queryParam:"inline"`
+	TaskBase       *TaskBase       `queryParam:"inline,name=Task" union:"member"`
+	AutomationTask *AutomationTask `queryParam:"inline,name=Task" union:"member"`
+	DecisionTask   *DecisionTask   `queryParam:"inline,name=Task" union:"member"`
 
 	Type TaskUnionType
 }
@@ -53,24 +53,54 @@ func CreateTaskDecisionTask(decisionTask DecisionTask) Task {
 
 func (u *Task) UnmarshalJSON(data []byte) error {
 
+	var candidates []utils.UnionCandidate
+
+	// Collect all valid candidates
+	var taskBase TaskBase = TaskBase{}
+	if err := utils.UnmarshalJSON(data, &taskBase, "", true, nil); err == nil {
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  TaskUnionTypeTaskBase,
+			Value: &taskBase,
+		})
+	}
+
 	var automationTask AutomationTask = AutomationTask{}
 	if err := utils.UnmarshalJSON(data, &automationTask, "", true, nil); err == nil {
-		u.AutomationTask = &automationTask
-		u.Type = TaskUnionTypeAutomationTask
-		return nil
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  TaskUnionTypeAutomationTask,
+			Value: &automationTask,
+		})
 	}
 
 	var decisionTask DecisionTask = DecisionTask{}
 	if err := utils.UnmarshalJSON(data, &decisionTask, "", true, nil); err == nil {
-		u.DecisionTask = &decisionTask
-		u.Type = TaskUnionTypeDecisionTask
-		return nil
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  TaskUnionTypeDecisionTask,
+			Value: &decisionTask,
+		})
 	}
 
-	var taskBase TaskBase = TaskBase{}
-	if err := utils.UnmarshalJSON(data, &taskBase, "", true, nil); err == nil {
-		u.TaskBase = &taskBase
-		u.Type = TaskUnionTypeTaskBase
+	if len(candidates) == 0 {
+		return fmt.Errorf("could not unmarshal `%s` into any supported union types for Task", string(data))
+	}
+
+	// Pick the best candidate using multi-stage filtering
+	best := utils.PickBestUnionCandidate(candidates, data)
+	if best == nil {
+		return fmt.Errorf("could not unmarshal `%s` into any supported union types for Task", string(data))
+	}
+
+	// Set the union type and value based on the best candidate
+	u.Type = best.Type.(TaskUnionType)
+	switch best.Type {
+	case TaskUnionTypeTaskBase:
+		u.TaskBase = best.Value.(*TaskBase)
+		return nil
+	case TaskUnionTypeAutomationTask:
+		u.AutomationTask = best.Value.(*AutomationTask)
+		return nil
+	case TaskUnionTypeDecisionTask:
+		u.DecisionTask = best.Value.(*DecisionTask)
 		return nil
 	}
 

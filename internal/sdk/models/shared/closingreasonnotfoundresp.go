@@ -7,9 +7,9 @@ type ClosingReasonNotFoundResp struct {
 	Message *string `json:"message,omitempty"`
 }
 
-func (o *ClosingReasonNotFoundResp) GetMessage() *string {
-	if o == nil {
+func (c *ClosingReasonNotFoundResp) GetMessage() *string {
+	if c == nil {
 		return nil
 	}
-	return o.Message
+	return c.Message
 }

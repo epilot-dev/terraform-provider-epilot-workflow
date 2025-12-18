@@ -7,7 +7,8 @@ import (
 )
 
 type StepJourney struct {
-	ID        types.String `tfsdk:"id"`
-	JourneyID types.String `tfsdk:"journey_id"`
-	Name      types.String `tfsdk:"name"`
+	CompleteTaskAutomatically types.Bool   `tfsdk:"complete_task_automatically"`
+	ID                        types.String `tfsdk:"id"`
+	JourneyID                 types.String `tfsdk:"journey_id"`
+	Name                      types.String `tfsdk:"name"`
 }

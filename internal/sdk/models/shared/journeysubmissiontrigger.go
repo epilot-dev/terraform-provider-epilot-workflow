@@ -35,8 +35,10 @@ type JourneySubmissionTrigger struct {
 	AutomationID *string `json:"automation_id,omitempty"`
 	ID           *string `json:"id,omitempty"`
 	// ID of the journey that will trigger this flow
-	JourneyID string                       `json:"journey_id"`
-	Type      JourneySubmissionTriggerType `json:"type"`
+	JourneyID string `json:"journey_id"`
+	// Name of the journey that will trigger this flow
+	JourneyName *string                      `json:"journey_name,omitempty"`
+	Type        JourneySubmissionTriggerType `json:"type"`
 }
 
 func (j JourneySubmissionTrigger) MarshalJSON() ([]byte, error) {
@@ -44,36 +46,43 @@ func (j JourneySubmissionTrigger) MarshalJSON() ([]byte, error) {
 }
 
 func (j *JourneySubmissionTrigger) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &j, "", false, []string{"journey_id", "type"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &j, "", false, nil); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *JourneySubmissionTrigger) GetAutomationID() *string {
-	if o == nil {
+func (j *JourneySubmissionTrigger) GetAutomationID() *string {
+	if j == nil {
 		return nil
 	}
-	return o.AutomationID
+	return j.AutomationID
 }
 
-func (o *JourneySubmissionTrigger) GetID() *string {
-	if o == nil {
+func (j *JourneySubmissionTrigger) GetID() *string {
+	if j == nil {
 		return nil
 	}
-	return o.ID
+	return j.ID
 }
 
-func (o *JourneySubmissionTrigger) GetJourneyID() string {
-	if o == nil {
+func (j *JourneySubmissionTrigger) GetJourneyID() string {
+	if j == nil {
 		return ""
 	}
-	return o.JourneyID
+	return j.JourneyID
 }
 
-func (o *JourneySubmissionTrigger) GetType() JourneySubmissionTriggerType {
-	if o == nil {
+func (j *JourneySubmissionTrigger) GetJourneyName() *string {
+	if j == nil {
+		return nil
+	}
+	return j.JourneyName
+}
+
+func (j *JourneySubmissionTrigger) GetType() JourneySubmissionTriggerType {
+	if j == nil {
 		return JourneySubmissionTriggerType("")
 	}
-	return o.Type
+	return j.Type
 }

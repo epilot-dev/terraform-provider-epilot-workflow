@@ -36,9 +36,11 @@ func (e *When) UnmarshalJSON(data []byte) error {
 
 // EnableRequirement - describe the requirement for a task to be enabled
 type EnableRequirement struct {
+	// The id of the phase that it points to
 	PhaseID *string `json:"phase_id,omitempty"`
-	TaskID  *string `json:"task_id,omitempty"`
-	When    When    `json:"when"`
+	// The id of the task that it points to
+	TaskID *string `json:"task_id,omitempty"`
+	When   When    `json:"when"`
 }
 
 func (e EnableRequirement) MarshalJSON() ([]byte, error) {
@@ -46,29 +48,29 @@ func (e EnableRequirement) MarshalJSON() ([]byte, error) {
 }
 
 func (e *EnableRequirement) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &e, "", false, []string{"when"}); err != nil {
+	if err := utils.UnmarshalJSON(data, &e, "", false, nil); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (o *EnableRequirement) GetPhaseID() *string {
-	if o == nil {
+func (e *EnableRequirement) GetPhaseID() *string {
+	if e == nil {
 		return nil
 	}
-	return o.PhaseID
+	return e.PhaseID
 }
 
-func (o *EnableRequirement) GetTaskID() *string {
-	if o == nil {
+func (e *EnableRequirement) GetTaskID() *string {
+	if e == nil {
 		return nil
 	}
-	return o.TaskID
+	return e.TaskID
 }
 
-func (o *EnableRequirement) GetWhen() When {
-	if o == nil {
+func (e *EnableRequirement) GetWhen() When {
+	if e == nil {
 		return When("")
 	}
-	return o.When
+	return e.When
 }

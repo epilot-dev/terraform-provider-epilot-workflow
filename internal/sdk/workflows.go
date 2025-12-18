@@ -63,7 +63,7 @@ func (s *Workflows) CreateDefinition(ctx context.Context, request shared.Workflo
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "createDefinition",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "Request", "json", `request:"mediaType=application/json"`)
@@ -313,7 +313,7 @@ func (s *Workflows) DeleteDefinition(ctx context.Context, request operations.Del
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "deleteDefinition",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -514,7 +514,7 @@ func (s *Workflows) GetDefinition(ctx context.Context, request operations.GetDef
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getDefinition",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -778,7 +778,7 @@ func (s *Workflows) GetDefinitions(ctx context.Context, opts ...operations.Optio
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getDefinitions",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -998,7 +998,7 @@ func (s *Workflows) GetMaxAllowedLimit(ctx context.Context, opts ...operations.O
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getMaxAllowedLimit",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -1218,7 +1218,7 @@ func (s *Workflows) GetWorkflowClosingReasons(ctx context.Context, request opera
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "getWorkflowClosingReasons",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 
@@ -1417,7 +1417,7 @@ func (s *Workflows) SetWorkflowClosingReasons(ctx context.Context, request opera
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "setWorkflowClosingReasons",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "ClosingReasonsIds", "json", `request:"mediaType=application/json"`)
@@ -1603,7 +1603,7 @@ func (s *Workflows) UpdateDefinition(ctx context.Context, request operations.Upd
 		BaseURL:          baseURL,
 		Context:          ctx,
 		OperationID:      "updateDefinition",
-		OAuth2Scopes:     []string{},
+		OAuth2Scopes:     nil,
 		SecuritySource:   s.sdkConfiguration.Security,
 	}
 	bodyReader, reqContentType, err := utils.SerializeRequestBody(ctx, request, false, false, "WorkflowDefinition", "json", `request:"mediaType=application/json"`)

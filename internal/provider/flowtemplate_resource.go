@@ -5,6 +5,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	speakeasy_objectplanmodifier "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/planmodifiers/objectplanmodifier"
 	speakeasy_stringplanmodifier "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/provider/types"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk"
@@ -12,12 +13,14 @@ import (
 	speakeasy_listvalidators "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/validators/listvalidators"
 	speakeasy_objectvalidators "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/validators/objectvalidators"
 	speakeasy_stringvalidators "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/validators/stringvalidators"
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -41,25 +44,25 @@ type FlowTemplateResource struct {
 
 // FlowTemplateResourceModel describes the resource data model.
 type FlowTemplateResourceModel struct {
-	AssignedTo             []types.String                   `tfsdk:"assigned_to"`
-	AvailableInEcp         types.Bool                       `tfsdk:"available_in_ecp"`
-	ClosingReasons         []tfTypes.ClosingReason          `tfsdk:"closing_reasons"`
-	CreatedAt              types.String                     `tfsdk:"created_at"`
-	Description            types.String                     `tfsdk:"description"`
-	DueDate                types.String                     `tfsdk:"due_date"`
-	DueDateConfig          *tfTypes.DueDateConfig           `tfsdk:"due_date_config"`
-	Edges                  []tfTypes.Edge                   `tfsdk:"edges"`
-	Enabled                types.Bool                       `tfsdk:"enabled"`
-	ID                     types.String                     `tfsdk:"id"`
-	IsFlowMigrated         types.Bool                       `tfsdk:"is_flow_migrated"`
-	Name                   types.String                     `tfsdk:"name"`
-	OrgID                  types.String                     `tfsdk:"org_id"`
-	Phases                 []tfTypes.Phase                  `tfsdk:"phases"`
-	Tasks                  []tfTypes.Task                   `tfsdk:"tasks"`
-	Taxonomies             []types.String                   `tfsdk:"taxonomies"`
-	Trigger                *tfTypes.Trigger                 `tfsdk:"trigger"`
-	UpdateEntityAttributes []tfTypes.UpdateEntityAttributes `tfsdk:"update_entity_attributes"`
-	UpdatedAt              types.String                     `tfsdk:"updated_at"`
+	AssignedTo     []types.String          `tfsdk:"assigned_to"`
+	AvailableInEcp types.Bool              `tfsdk:"available_in_ecp"`
+	ClosingReasons []tfTypes.ClosingReason `tfsdk:"closing_reasons"`
+	CreatedAt      types.String            `tfsdk:"created_at"`
+	Description    types.String            `tfsdk:"description"`
+	DueDate        types.String            `tfsdk:"due_date"`
+	DueDateConfig  *tfTypes.DueDateConfig  `tfsdk:"due_date_config"`
+	Edges          []tfTypes.Edge          `tfsdk:"edges"`
+	Enabled        types.Bool              `tfsdk:"enabled"`
+	EntitySync     []tfTypes.EntitySync    `tfsdk:"entity_sync"`
+	ID             types.String            `tfsdk:"id"`
+	Name           types.String            `tfsdk:"name"`
+	OrgID          types.String            `tfsdk:"org_id"`
+	Phases         []tfTypes.Phase         `tfsdk:"phases"`
+	Tasks          []tfTypes.Task          `tfsdk:"tasks"`
+	Taxonomies     []types.String          `tfsdk:"taxonomies"`
+	Trigger        *tfTypes.Trigger        `tfsdk:"trigger"`
+	UpdatedAt      types.String            `tfsdk:"updated_at"`
+	Version        types.String            `tfsdk:"version"`
 }
 
 func (r *FlowTemplateResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -107,14 +110,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 							Computed: true,
 						},
 						"status": schema.StringAttribute{
-							Computed:    true,
-							Description: `must be one of ["ACTIVE", "INACTIVE"]`,
-							Validators: []validator.String{
-								stringvalidator.OneOf(
-									"ACTIVE",
-									"INACTIVE",
-								),
-							},
+							Computed: true,
 						},
 						"title": schema.StringAttribute{
 							Computed: true,
@@ -235,15 +231,141 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 				Default:     booldefault.StaticBool(true),
 				Description: `Whether the workflow is enabled or not. Default: true`,
 			},
+			"entity_sync": schema.ListNestedAttribute{
+				Computed: true,
+				Optional: true,
+				NestedObject: schema.NestedAttributeObject{
+					Validators: []validator.Object{
+						speakeasy_objectvalidators.NotNull(),
+					},
+					Attributes: map[string]schema.Attribute{
+						"target": schema.SingleNestedAttribute{
+							Computed: true,
+							Optional: true,
+							Attributes: map[string]schema.Attribute{
+								"entity_attribute": schema.StringAttribute{
+									Computed:    true,
+									Optional:    true,
+									Description: `Not Null`,
+									Validators: []validator.String{
+										speakeasy_stringvalidators.NotNull(),
+									},
+								},
+								"entity_schema": schema.StringAttribute{
+									Computed:    true,
+									Optional:    true,
+									Description: `Not Null`,
+									Validators: []validator.String{
+										speakeasy_stringvalidators.NotNull(),
+									},
+								},
+							},
+							Description: `Not Null`,
+							Validators: []validator.Object{
+								speakeasy_objectvalidators.NotNull(),
+							},
+						},
+						"trigger": schema.SingleNestedAttribute{
+							Computed: true,
+							Optional: true,
+							Attributes: map[string]schema.Attribute{
+								"event": schema.StringAttribute{
+									Computed: true,
+									Optional: true,
+									MarkdownDescription: `Event or condition that triggers the entity sync.` + "\n" +
+										`Direct triggers match EventBridge event names (PascalCase).` + "\n" +
+										`Status triggers are deduced from event + entity status combination.` + "\n" +
+										`Not Null; must be one of ["FlowStarted", "FlowCompleted", "FlowCancelled", "FlowReopened", "FlowDeleted", "FlowAssigned", "FlowDueDateChanged", "FlowContextsChanged", "TaskUpdated", "CurrTaskChanged", "TaskCompleted", "TaskSkipped", "TaskMarkedInProgress", "PhaseUpdated", "PhaseCompleted", "PhaseSkipped", "PhaseMarkedInProgress"]`,
+									Validators: []validator.String{
+										speakeasy_stringvalidators.NotNull(),
+										stringvalidator.OneOf(
+											"FlowStarted",
+											"FlowCompleted",
+											"FlowCancelled",
+											"FlowReopened",
+											"FlowDeleted",
+											"FlowAssigned",
+											"FlowDueDateChanged",
+											"FlowContextsChanged",
+											"TaskUpdated",
+											"CurrTaskChanged",
+											"TaskCompleted",
+											"TaskSkipped",
+											"TaskMarkedInProgress",
+											"PhaseUpdated",
+											"PhaseCompleted",
+											"PhaseSkipped",
+											"PhaseMarkedInProgress",
+										),
+									},
+								},
+								"filter": schema.SingleNestedAttribute{
+									Computed: true,
+									Optional: true,
+									Attributes: map[string]schema.Attribute{
+										"phase_template_id": schema.StringAttribute{
+											Computed:    true,
+											Optional:    true,
+											Description: `Target a specific phase by its template ID (stable across executions)`,
+										},
+										"task_template_id": schema.StringAttribute{
+											Computed:    true,
+											Optional:    true,
+											Description: `Target a specific task by its template ID (stable across executions)`,
+										},
+									},
+									MarkdownDescription: `Optional filter to target specific tasks or phases.` + "\n" +
+										`Specify either task_template_id OR phase_template_id (mutually exclusive).` + "\n" +
+										`If omitted, trigger applies to all tasks/phases.`,
+								},
+							},
+							MarkdownDescription: `Trigger configuration that determines when entity sync occurs.` + "\n" +
+								`Contains the event type and optional filter to target specific tasks/phases.` + "\n" +
+								`Not Null`,
+							Validators: []validator.Object{
+								speakeasy_objectvalidators.NotNull(),
+							},
+						},
+						"value": schema.SingleNestedAttribute{
+							Computed: true,
+							Optional: true,
+							Attributes: map[string]schema.Attribute{
+								"source": schema.StringAttribute{
+									Computed:    true,
+									Optional:    true,
+									Description: `Not Null; must be one of ["workflow_name", "workflow_status", "workflow_assigned_to", "task_name", "task_status", "task_assigned_to", "phase_name", "phase_status", "phase_assigned_to", "custom_value"]`,
+									Validators: []validator.String{
+										speakeasy_stringvalidators.NotNull(),
+										stringvalidator.OneOf(
+											"workflow_name",
+											"workflow_status",
+											"workflow_assigned_to",
+											"task_name",
+											"task_status",
+											"task_assigned_to",
+											"phase_name",
+											"phase_status",
+											"phase_assigned_to",
+											"custom_value",
+										),
+									},
+								},
+								"value": schema.StringAttribute{
+									Computed: true,
+									Optional: true,
+								},
+							},
+							Description: `Not Null`,
+							Validators: []validator.Object{
+								speakeasy_objectvalidators.NotNull(),
+							},
+						},
+					},
+				},
+			},
 			"id": schema.StringAttribute{
 				Computed: true,
 				Optional: true,
-			},
-			"is_flow_migrated": schema.BoolAttribute{
-				Computed:    true,
-				Optional:    true,
-				Default:     booldefault.StaticBool(false),
-				Description: `Whether the workflow is migrated from workflows to flows or not. Default: false`,
 			},
 			"name": schema.StringAttribute{
 				Required: true,
@@ -353,8 +475,10 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 					},
 					Attributes: map[string]schema.Attribute{
 						"automation_task": schema.SingleNestedAttribute{
-							Computed: true,
 							Optional: true,
+							PlanModifiers: []planmodifier.Object{
+								speakeasy_objectplanmodifier.UseConfigValue(),
+							},
 							Attributes: map[string]schema.Attribute{
 								"assigned_to": schema.ListAttribute{
 									Computed:    true,
@@ -378,6 +502,12 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 									Validators: []validator.Object{
 										speakeasy_objectvalidators.NotNull(),
 									},
+								},
+								"created_automatically": schema.BoolAttribute{
+									Computed:    true,
+									Optional:    true,
+									Default:     booldefault.StaticBool(false),
+									Description: `Indicates whether this task was created automatically by journeys or manually by an user. Default: false`,
 								},
 								"description": schema.SingleNestedAttribute{
 									Computed: true,
@@ -465,6 +595,12 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 											Computed: true,
 											Optional: true,
 											Attributes: map[string]schema.Attribute{
+												"complete_task_automatically": schema.BoolAttribute{
+													Computed:    true,
+													Optional:    true,
+													Default:     booldefault.StaticBool(true),
+													Description: `If true, the task be auto completed when the journey is completed. By default it is true. Default: true`,
+												},
 												"id": schema.StringAttribute{
 													Computed: true,
 													Optional: true,
@@ -510,6 +646,12 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 											Computed: true,
 											Optional: true,
 											Attributes: map[string]schema.Attribute{
+												"complete_task_automatically": schema.BoolAttribute{
+													Computed:    true,
+													Optional:    true,
+													Default:     booldefault.StaticBool(true),
+													Description: `If true, the task be auto completed when the journey is completed. By default it is true. Default: true`,
+												},
 												"id": schema.StringAttribute{
 													Computed: true,
 													Optional: true,
@@ -535,6 +677,12 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 									Computed: true,
 									Optional: true,
 									Attributes: map[string]schema.Attribute{
+										"complete_task_automatically": schema.BoolAttribute{
+											Computed:    true,
+											Optional:    true,
+											Default:     booldefault.StaticBool(true),
+											Description: `If true, the task be auto completed when the journey is completed. By default it is true. Default: true`,
+										},
 										"id": schema.StringAttribute{
 											Computed: true,
 											Optional: true,
@@ -570,12 +718,14 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 										},
 										Attributes: map[string]schema.Attribute{
 											"phase_id": schema.StringAttribute{
-												Computed: true,
-												Optional: true,
+												Computed:    true,
+												Optional:    true,
+												Description: `The id of the phase that it points to`,
 											},
 											"task_id": schema.StringAttribute{
-												Computed: true,
-												Optional: true,
+												Computed:    true,
+												Optional:    true,
+												Description: `The id of the task that it points to`,
 											},
 											"when": schema.StringAttribute{
 												Computed:    true,
@@ -598,8 +748,10 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 									Optional: true,
 									Attributes: map[string]schema.Attribute{
 										"delayed_schedule": schema.SingleNestedAttribute{
-											Computed: true,
 											Optional: true,
+											PlanModifiers: []planmodifier.Object{
+												speakeasy_objectplanmodifier.UseConfigValue(),
+											},
 											Attributes: map[string]schema.Attribute{
 												"duration": schema.Float64Attribute{
 													Computed:    true,
@@ -642,8 +794,10 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 											},
 										},
 										"immediate_schedule": schema.SingleNestedAttribute{
-											Computed: true,
 											Optional: true,
+											PlanModifiers: []planmodifier.Object{
+												speakeasy_objectplanmodifier.UseConfigValue(),
+											},
 											Attributes: map[string]schema.Attribute{
 												"mode": schema.StringAttribute{
 													Computed:    true,
@@ -664,8 +818,10 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 											},
 										},
 										"relative_schedule": schema.SingleNestedAttribute{
-											Computed: true,
 											Optional: true,
+											PlanModifiers: []planmodifier.Object{
+												speakeasy_objectplanmodifier.UseConfigValue(),
+											},
 											Attributes: map[string]schema.Attribute{
 												"direction": schema.StringAttribute{
 													Computed:    true,
@@ -801,8 +957,10 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 							},
 						},
 						"decision_task": schema.SingleNestedAttribute{
-							Computed: true,
 							Optional: true,
+							PlanModifiers: []planmodifier.Object{
+								speakeasy_objectplanmodifier.UseConfigValue(),
+							},
 							Attributes: map[string]schema.Attribute{
 								"assigned_to": schema.ListAttribute{
 									Computed:    true,
@@ -1087,6 +1245,12 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 											Computed: true,
 											Optional: true,
 											Attributes: map[string]schema.Attribute{
+												"complete_task_automatically": schema.BoolAttribute{
+													Computed:    true,
+													Optional:    true,
+													Default:     booldefault.StaticBool(true),
+													Description: `If true, the task be auto completed when the journey is completed. By default it is true. Default: true`,
+												},
 												"id": schema.StringAttribute{
 													Computed: true,
 													Optional: true,
@@ -1132,6 +1296,12 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 											Computed: true,
 											Optional: true,
 											Attributes: map[string]schema.Attribute{
+												"complete_task_automatically": schema.BoolAttribute{
+													Computed:    true,
+													Optional:    true,
+													Default:     booldefault.StaticBool(true),
+													Description: `If true, the task be auto completed when the journey is completed. By default it is true. Default: true`,
+												},
 												"id": schema.StringAttribute{
 													Computed: true,
 													Optional: true,
@@ -1157,6 +1327,12 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 									Computed: true,
 									Optional: true,
 									Attributes: map[string]schema.Attribute{
+										"complete_task_automatically": schema.BoolAttribute{
+											Computed:    true,
+											Optional:    true,
+											Default:     booldefault.StaticBool(true),
+											Description: `If true, the task be auto completed when the journey is completed. By default it is true. Default: true`,
+										},
 										"id": schema.StringAttribute{
 											Computed: true,
 											Optional: true,
@@ -1168,6 +1344,37 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 										"name": schema.StringAttribute{
 											Computed: true,
 											Optional: true,
+										},
+									},
+								},
+								"loop_config": schema.SingleNestedAttribute{
+									Computed: true,
+									Optional: true,
+									Attributes: map[string]schema.Attribute{
+										"exit_branch_id": schema.StringAttribute{
+											Computed:    true,
+											Optional:    true,
+											Description: `The id of the branch that will be used to exit the loop. Not Null`,
+											Validators: []validator.String{
+												speakeasy_stringvalidators.NotNull(),
+											},
+										},
+										"loop_branch_id": schema.StringAttribute{
+											Computed:    true,
+											Optional:    true,
+											Description: `The id of the branch that will be looped. Not Null`,
+											Validators: []validator.String{
+												speakeasy_stringvalidators.NotNull(),
+											},
+										},
+										"max_iterations": schema.Int64Attribute{
+											Computed:    true,
+											Optional:    true,
+											Default:     int64default.StaticInt64(3),
+											Description: `Maximum number of iterations for the loop branch. Default: 3`,
+											Validators: []validator.Int64{
+												int64validator.Between(1, 10),
+											},
 										},
 									},
 								},
@@ -1192,12 +1399,14 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 										},
 										Attributes: map[string]schema.Attribute{
 											"phase_id": schema.StringAttribute{
-												Computed: true,
-												Optional: true,
+												Computed:    true,
+												Optional:    true,
+												Description: `The id of the phase that it points to`,
 											},
 											"task_id": schema.StringAttribute{
-												Computed: true,
-												Optional: true,
+												Computed:    true,
+												Optional:    true,
+												Description: `The id of the task that it points to`,
 											},
 											"when": schema.StringAttribute{
 												Computed:    true,
@@ -1220,8 +1429,10 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 									Optional: true,
 									Attributes: map[string]schema.Attribute{
 										"delayed_schedule": schema.SingleNestedAttribute{
-											Computed: true,
 											Optional: true,
+											PlanModifiers: []planmodifier.Object{
+												speakeasy_objectplanmodifier.UseConfigValue(),
+											},
 											Attributes: map[string]schema.Attribute{
 												"duration": schema.Float64Attribute{
 													Computed:    true,
@@ -1263,8 +1474,10 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 											},
 										},
 										"relative_schedule": schema.SingleNestedAttribute{
-											Computed: true,
 											Optional: true,
+											PlanModifiers: []planmodifier.Object{
+												speakeasy_objectplanmodifier.UseConfigValue(),
+											},
 											Attributes: map[string]schema.Attribute{
 												"direction": schema.StringAttribute{
 													Computed:    true,
@@ -1379,6 +1592,18 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 									ElementType: types.StringType,
 									Description: `Taxonomy ids that are associated with this workflow and used for filtering`,
 								},
+								"trigger_mode": schema.StringAttribute{
+									Computed:    true,
+									Optional:    true,
+									Description: `Not Null; must be one of ["manual", "automatic"]`,
+									Validators: []validator.String{
+										speakeasy_stringvalidators.NotNull(),
+										stringvalidator.OneOf(
+											"manual",
+											"automatic",
+										),
+									},
+								},
 							},
 							Validators: []validator.Object{
 								objectvalidator.ConflictsWith(path.Expressions{
@@ -1388,8 +1613,10 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 							},
 						},
 						"task_base": schema.SingleNestedAttribute{
-							Computed: true,
 							Optional: true,
+							PlanModifiers: []planmodifier.Object{
+								speakeasy_objectplanmodifier.UseConfigValue(),
+							},
 							Attributes: map[string]schema.Attribute{
 								"assigned_to": schema.ListAttribute{
 									Computed:    true,
@@ -1482,6 +1709,12 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 											Computed: true,
 											Optional: true,
 											Attributes: map[string]schema.Attribute{
+												"complete_task_automatically": schema.BoolAttribute{
+													Computed:    true,
+													Optional:    true,
+													Default:     booldefault.StaticBool(true),
+													Description: `If true, the task be auto completed when the journey is completed. By default it is true. Default: true`,
+												},
 												"id": schema.StringAttribute{
 													Computed: true,
 													Optional: true,
@@ -1527,6 +1760,12 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 											Computed: true,
 											Optional: true,
 											Attributes: map[string]schema.Attribute{
+												"complete_task_automatically": schema.BoolAttribute{
+													Computed:    true,
+													Optional:    true,
+													Default:     booldefault.StaticBool(true),
+													Description: `If true, the task be auto completed when the journey is completed. By default it is true. Default: true`,
+												},
 												"id": schema.StringAttribute{
 													Computed: true,
 													Optional: true,
@@ -1552,6 +1791,12 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 									Computed: true,
 									Optional: true,
 									Attributes: map[string]schema.Attribute{
+										"complete_task_automatically": schema.BoolAttribute{
+											Computed:    true,
+											Optional:    true,
+											Default:     booldefault.StaticBool(true),
+											Description: `If true, the task be auto completed when the journey is completed. By default it is true. Default: true`,
+										},
 										"id": schema.StringAttribute{
 											Computed: true,
 											Optional: true,
@@ -1587,12 +1832,14 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 										},
 										Attributes: map[string]schema.Attribute{
 											"phase_id": schema.StringAttribute{
-												Computed: true,
-												Optional: true,
+												Computed:    true,
+												Optional:    true,
+												Description: `The id of the phase that it points to`,
 											},
 											"task_id": schema.StringAttribute{
-												Computed: true,
-												Optional: true,
+												Computed:    true,
+												Optional:    true,
+												Description: `The id of the task that it points to`,
 											},
 											"when": schema.StringAttribute{
 												Computed:    true,
@@ -1651,8 +1898,10 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 				Optional: true,
 				Attributes: map[string]schema.Attribute{
 					"automation_trigger": schema.SingleNestedAttribute{
-						Computed: true,
 						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							speakeasy_objectplanmodifier.UseConfigValue(),
+						},
 						Attributes: map[string]schema.Attribute{
 							"automation_id": schema.StringAttribute{
 								Computed:    true,
@@ -1680,14 +1929,52 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 						},
 						Validators: []validator.Object{
 							objectvalidator.ConflictsWith(path.Expressions{
+								path.MatchRelative().AtParent().AtName("journey_automation_trigger"),
+								path.MatchRelative().AtParent().AtName("journey_submission_trigger"),
+								path.MatchRelative().AtParent().AtName("manual_trigger"),
+							}...),
+						},
+					},
+					"journey_automation_trigger": schema.SingleNestedAttribute{
+						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							speakeasy_objectplanmodifier.UseConfigValue(),
+						},
+						Attributes: map[string]schema.Attribute{
+							"entity_schema": schema.StringAttribute{
+								Computed:    true,
+								Optional:    true,
+								Description: `Schema of the main entity where flow will be triggered. The entity will be picked from automation context.`,
+							},
+							"id": schema.StringAttribute{
+								Computed: true,
+								Optional: true,
+							},
+							"type": schema.StringAttribute{
+								Computed:    true,
+								Optional:    true,
+								Description: `Not Null; must be "journey_automation"`,
+								Validators: []validator.String{
+									speakeasy_stringvalidators.NotNull(),
+									stringvalidator.OneOf(
+										"journey_automation",
+									),
+								},
+							},
+						},
+						Validators: []validator.Object{
+							objectvalidator.ConflictsWith(path.Expressions{
+								path.MatchRelative().AtParent().AtName("automation_trigger"),
 								path.MatchRelative().AtParent().AtName("journey_submission_trigger"),
 								path.MatchRelative().AtParent().AtName("manual_trigger"),
 							}...),
 						},
 					},
 					"journey_submission_trigger": schema.SingleNestedAttribute{
-						Computed: true,
 						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							speakeasy_objectplanmodifier.UseConfigValue(),
+						},
 						Attributes: map[string]schema.Attribute{
 							"automation_id": schema.StringAttribute{
 								Computed: true,
@@ -1705,6 +1992,11 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 									speakeasy_stringvalidators.NotNull(),
 								},
 							},
+							"journey_name": schema.StringAttribute{
+								Computed:    true,
+								Optional:    true,
+								Description: `Name of the journey that will trigger this flow`,
+							},
 							"type": schema.StringAttribute{
 								Computed:    true,
 								Optional:    true,
@@ -1720,13 +2012,16 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 						Validators: []validator.Object{
 							objectvalidator.ConflictsWith(path.Expressions{
 								path.MatchRelative().AtParent().AtName("automation_trigger"),
+								path.MatchRelative().AtParent().AtName("journey_automation_trigger"),
 								path.MatchRelative().AtParent().AtName("manual_trigger"),
 							}...),
 						},
 					},
 					"manual_trigger": schema.SingleNestedAttribute{
-						Computed: true,
 						Optional: true,
+						PlanModifiers: []planmodifier.Object{
+							speakeasy_objectplanmodifier.UseConfigValue(),
+						},
 						Attributes: map[string]schema.Attribute{
 							"entity_schema": schema.StringAttribute{
 								Computed: true,
@@ -1749,58 +2044,9 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 						Validators: []validator.Object{
 							objectvalidator.ConflictsWith(path.Expressions{
 								path.MatchRelative().AtParent().AtName("automation_trigger"),
+								path.MatchRelative().AtParent().AtName("journey_automation_trigger"),
 								path.MatchRelative().AtParent().AtName("journey_submission_trigger"),
 							}...),
-						},
-					},
-				},
-			},
-			"update_entity_attributes": schema.ListNestedAttribute{
-				Computed: true,
-				Optional: true,
-				NestedObject: schema.NestedAttributeObject{
-					Validators: []validator.Object{
-						speakeasy_objectvalidators.NotNull(),
-					},
-					Attributes: map[string]schema.Attribute{
-						"source": schema.StringAttribute{
-							Computed:    true,
-							Optional:    true,
-							Description: `Not Null; must be one of ["workflow_status", "current_section", "current_step"]`,
-							Validators: []validator.String{
-								speakeasy_stringvalidators.NotNull(),
-								stringvalidator.OneOf(
-									"workflow_status",
-									"current_section",
-									"current_step",
-								),
-							},
-						},
-						"target": schema.SingleNestedAttribute{
-							Computed: true,
-							Optional: true,
-							Attributes: map[string]schema.Attribute{
-								"entity_attribute": schema.StringAttribute{
-									Computed:    true,
-									Optional:    true,
-									Description: `Not Null`,
-									Validators: []validator.String{
-										speakeasy_stringvalidators.NotNull(),
-									},
-								},
-								"entity_schema": schema.StringAttribute{
-									Computed:    true,
-									Optional:    true,
-									Description: `Not Null`,
-									Validators: []validator.String{
-										speakeasy_stringvalidators.NotNull(),
-									},
-								},
-							},
-							Description: `Not Null`,
-							Validators: []validator.Object{
-								speakeasy_objectvalidators.NotNull(),
-							},
 						},
 					},
 				},
@@ -1809,6 +2055,23 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 				Computed:    true,
 				Optional:    true,
 				Description: `ISO String Date & Time`,
+			},
+			"version": schema.StringAttribute{
+				Computed: true,
+				Optional: true,
+				MarkdownDescription: `Version of the workflow schema.` + "\n" +
+					`` + "\n" +
+					`- ` + "`" + `v1` + "`" + ` – *Deprecated*. The initial version of workflows with limited structure and automation capabilities.  ` + "\n" +
+					`- ` + "`" + `v2` + "`" + ` – Linear workflows. Supports sequential task execution with basic automation triggers.  ` + "\n" +
+					`- ` + "`" + `v3` + "`" + ` – Advanced workflows. Adds support for branching logic (conditions), parallel paths, and enhanced automation features such as dynamic triggers and flow control.` + "\n" +
+					`must be one of ["v1", "v2", "v3"]`,
+				Validators: []validator.String{
+					stringvalidator.OneOf(
+						"v1",
+						"v2",
+						"v3",
+					),
+				},
 			},
 		},
 	}
@@ -2044,7 +2307,10 @@ func (r *FlowTemplateResource) Delete(ctx context.Context, req resource.DeleteRe
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
-	if res.StatusCode != 204 {
+	switch res.StatusCode {
+	case 204, 404:
+		break
+	default:
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}

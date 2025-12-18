@@ -16,7 +16,7 @@ terraform {
   required_providers {
     epilot-workflow = {
       source  = "epilot-dev/epilot-workflow"
-      version = "0.19.0"
+      version = "0.20.1"
     }
   }
 }
@@ -31,7 +31,7 @@ provider "epilot-workflow" {
 
 ### Required
 
-- `bearer_auth` (String, Sensitive)
+- `bearer_auth` (String, Sensitive) HTTP Bearer.
 
 ### Optional
 

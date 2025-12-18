@@ -43,8 +43,8 @@ type WorkflowDefinitionResourceModel struct {
 	Description            types.String                     `tfsdk:"description"`
 	DueDate                types.String                     `tfsdk:"due_date"`
 	DynamicDueDate         *tfTypes.DynamicDueDate          `tfsdk:"dynamic_due_date"`
-	EnableECPWorkflow      types.Bool                       `tfsdk:"enable_ecp_workflow"`
 	Enabled                types.Bool                       `tfsdk:"enabled"`
+	EnableECPWorkflow      types.Bool                       `tfsdk:"enable_ecp_workflow"`
 	Flow                   jsontypes.Normalized             `tfsdk:"flow"`
 	ID                     types.String                     `tfsdk:"id"`
 	LastUpdateTime         types.String                     `tfsdk:"last_update_time"`
@@ -475,7 +475,10 @@ func (r *WorkflowDefinitionResource) Delete(ctx context.Context, req resource.De
 		resp.Diagnostics.AddError("unexpected response from API", fmt.Sprintf("%v", res))
 		return
 	}
-	if res.StatusCode != 204 {
+	switch res.StatusCode {
+	case 204, 404:
+		break
+	default:
 		resp.Diagnostics.AddError(fmt.Sprintf("unexpected response from API. Got an unexpected response code %v", res.StatusCode), debugResponse(res.RawResponse))
 		return
 	}

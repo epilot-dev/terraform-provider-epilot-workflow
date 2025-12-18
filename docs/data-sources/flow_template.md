@@ -31,16 +31,20 @@ data "epilot-workflow_flow_template" "my_flowtemplate" {
 - `due_date_config` (Attributes) Set due date for the task based on a dynamic condition (see [below for nested schema](#nestedatt--due_date_config))
 - `edges` (Attributes List) (see [below for nested schema](#nestedatt--edges))
 - `enabled` (Boolean) Whether the workflow is enabled or not
+- `entity_sync` (Attributes List) (see [below for nested schema](#nestedatt--entity_sync))
 - `id` (String) The ID of this resource.
-- `is_flow_migrated` (Boolean) Whether the workflow is migrated from workflows to flows or not
 - `name` (String)
 - `org_id` (String)
 - `phases` (Attributes List) (see [below for nested schema](#nestedatt--phases))
 - `tasks` (Attributes List) (see [below for nested schema](#nestedatt--tasks))
 - `taxonomies` (List of String) Taxonomy ids that are associated with this workflow and used for filtering
 - `trigger` (Attributes) (see [below for nested schema](#nestedatt--trigger))
-- `update_entity_attributes` (Attributes List) (see [below for nested schema](#nestedatt--update_entity_attributes))
 - `updated_at` (String) ISO String Date & Time
+- `version` (String) Version of the workflow schema.
+
+- `v1` – *Deprecated*. The initial version of workflows with limited structure and automation capabilities.  
+- `v2` – Linear workflows. Supports sequential task execution with basic automation triggers.  
+- `v3` – Advanced workflows. Adds support for branching logic (conditions), parallel paths, and enhanced automation features such as dynamic triggers and flow control.
 
 <a id="nestedatt--closing_reasons"></a>
 ### Nested Schema for `closing_reasons`
@@ -76,6 +80,57 @@ Read-Only:
 - `id` (String)
 - `none_met` (Boolean) Indicates a default case for a decision task. Only decision task edges can have this field and the flow advances using this edge if no conditions are met.
 - `to_id` (String)
+
+
+<a id="nestedatt--entity_sync"></a>
+### Nested Schema for `entity_sync`
+
+Read-Only:
+
+- `target` (Attributes) (see [below for nested schema](#nestedatt--entity_sync--target))
+- `trigger` (Attributes) Trigger configuration that determines when entity sync occurs.
+Contains the event type and optional filter to target specific tasks/phases. (see [below for nested schema](#nestedatt--entity_sync--trigger))
+- `value` (Attributes) (see [below for nested schema](#nestedatt--entity_sync--value))
+
+<a id="nestedatt--entity_sync--target"></a>
+### Nested Schema for `entity_sync.target`
+
+Read-Only:
+
+- `entity_attribute` (String)
+- `entity_schema` (String)
+
+
+<a id="nestedatt--entity_sync--trigger"></a>
+### Nested Schema for `entity_sync.trigger`
+
+Read-Only:
+
+- `event` (String) Event or condition that triggers the entity sync.
+Direct triggers match EventBridge event names (PascalCase).
+Status triggers are deduced from event + entity status combination.
+- `filter` (Attributes) Optional filter to target specific tasks or phases.
+Specify either task_template_id OR phase_template_id (mutually exclusive).
+If omitted, trigger applies to all tasks/phases. (see [below for nested schema](#nestedatt--entity_sync--trigger--filter))
+
+<a id="nestedatt--entity_sync--trigger--filter"></a>
+### Nested Schema for `entity_sync.trigger.filter`
+
+Read-Only:
+
+- `phase_template_id` (String) Target a specific phase by its template ID (stable across executions)
+- `task_template_id` (String) Target a specific task by its template ID (stable across executions)
+
+
+
+<a id="nestedatt--entity_sync--value"></a>
+### Nested Schema for `entity_sync.value`
+
+Read-Only:
+
+- `source` (String)
+- `value` (String)
+
 
 
 <a id="nestedatt--phases"></a>
@@ -119,6 +174,7 @@ Read-Only:
 
 - `assigned_to` (List of String)
 - `automation_config` (Attributes) Configuration for automation execution to run (see [below for nested schema](#nestedatt--tasks--automation_task--automation_config))
+- `created_automatically` (Boolean) Indicates whether this task was created automatically by journeys or manually by an user
 - `description` (Attributes) Longer information regarding Task (see [below for nested schema](#nestedatt--tasks--automation_task--description))
 - `due_date` (String)
 - `due_date_config` (Attributes) Set due date for the task based on a dynamic condition (see [below for nested schema](#nestedatt--tasks--automation_task--due_date_config))
@@ -178,6 +234,7 @@ Read-Only:
 
 Read-Only:
 
+- `complete_task_automatically` (Boolean) If true, the task be auto completed when the journey is completed. By default it is true.
 - `id` (String)
 - `journey_id` (String)
 - `name` (String)
@@ -199,6 +256,7 @@ Read-Only:
 
 Read-Only:
 
+- `complete_task_automatically` (Boolean) If true, the task be auto completed when the journey is completed. By default it is true.
 - `id` (String)
 - `journey_id` (String)
 - `name` (String)
@@ -210,6 +268,7 @@ Read-Only:
 
 Read-Only:
 
+- `complete_task_automatically` (Boolean) If true, the task be auto completed when the journey is completed. By default it is true.
 - `id` (String)
 - `journey_id` (String)
 - `name` (String)
@@ -220,8 +279,8 @@ Read-Only:
 
 Read-Only:
 
-- `phase_id` (String)
-- `task_id` (String)
+- `phase_id` (String) The id of the phase that it points to
+- `task_id` (String) The id of the task that it points to
 - `when` (String)
 
 
@@ -291,12 +350,14 @@ Read-Only:
 - `id` (String)
 - `installer` (Attributes) Details regarding ECP for the workflow step (see [below for nested schema](#nestedatt--tasks--decision_task--installer))
 - `journey` (Attributes) (see [below for nested schema](#nestedatt--tasks--decision_task--journey))
+- `loop_config` (Attributes) (see [below for nested schema](#nestedatt--tasks--decision_task--loop_config))
 - `name` (String)
 - `phase_id` (String)
 - `requirements` (Attributes List) requirements that need to be fulfilled in order to enable the task while flow instances are running (see [below for nested schema](#nestedatt--tasks--decision_task--requirements))
 - `schedule` (Attributes) (see [below for nested schema](#nestedatt--tasks--decision_task--schedule))
 - `task_type` (String)
 - `taxonomies` (List of String) Taxonomy ids that are associated with this workflow and used for filtering
+- `trigger_mode` (String)
 
 <a id="nestedatt--tasks--decision_task--conditions"></a>
 ### Nested Schema for `tasks.decision_task.conditions`
@@ -371,6 +432,7 @@ Read-Only:
 
 Read-Only:
 
+- `complete_task_automatically` (Boolean) If true, the task be auto completed when the journey is completed. By default it is true.
 - `id` (String)
 - `journey_id` (String)
 - `name` (String)
@@ -392,6 +454,7 @@ Read-Only:
 
 Read-Only:
 
+- `complete_task_automatically` (Boolean) If true, the task be auto completed when the journey is completed. By default it is true.
 - `id` (String)
 - `journey_id` (String)
 - `name` (String)
@@ -403,9 +466,20 @@ Read-Only:
 
 Read-Only:
 
+- `complete_task_automatically` (Boolean) If true, the task be auto completed when the journey is completed. By default it is true.
 - `id` (String)
 - `journey_id` (String)
 - `name` (String)
+
+
+<a id="nestedatt--tasks--decision_task--loop_config"></a>
+### Nested Schema for `tasks.decision_task.loop_config`
+
+Read-Only:
+
+- `exit_branch_id` (String) The id of the branch that will be used to exit the loop
+- `loop_branch_id` (String) The id of the branch that will be looped
+- `max_iterations` (Number) Maximum number of iterations for the loop branch
 
 
 <a id="nestedatt--tasks--decision_task--requirements"></a>
@@ -413,8 +487,8 @@ Read-Only:
 
 Read-Only:
 
-- `phase_id` (String)
-- `task_id` (String)
+- `phase_id` (String) The id of the phase that it points to
+- `task_id` (String) The id of the task that it points to
 - `when` (String)
 
 
@@ -516,6 +590,7 @@ Read-Only:
 
 Read-Only:
 
+- `complete_task_automatically` (Boolean) If true, the task be auto completed when the journey is completed. By default it is true.
 - `id` (String)
 - `journey_id` (String)
 - `name` (String)
@@ -537,6 +612,7 @@ Read-Only:
 
 Read-Only:
 
+- `complete_task_automatically` (Boolean) If true, the task be auto completed when the journey is completed. By default it is true.
 - `id` (String)
 - `journey_id` (String)
 - `name` (String)
@@ -548,6 +624,7 @@ Read-Only:
 
 Read-Only:
 
+- `complete_task_automatically` (Boolean) If true, the task be auto completed when the journey is completed. By default it is true.
 - `id` (String)
 - `journey_id` (String)
 - `name` (String)
@@ -558,8 +635,8 @@ Read-Only:
 
 Read-Only:
 
-- `phase_id` (String)
-- `task_id` (String)
+- `phase_id` (String) The id of the phase that it points to
+- `task_id` (String) The id of the task that it points to
 - `when` (String)
 
 
@@ -571,6 +648,7 @@ Read-Only:
 Read-Only:
 
 - `automation_trigger` (Attributes) (see [below for nested schema](#nestedatt--trigger--automation_trigger))
+- `journey_automation_trigger` (Attributes) (see [below for nested schema](#nestedatt--trigger--journey_automation_trigger))
 - `journey_submission_trigger` (Attributes) (see [below for nested schema](#nestedatt--trigger--journey_submission_trigger))
 - `manual_trigger` (Attributes) (see [below for nested schema](#nestedatt--trigger--manual_trigger))
 
@@ -584,6 +662,16 @@ Read-Only:
 - `type` (String)
 
 
+<a id="nestedatt--trigger--journey_automation_trigger"></a>
+### Nested Schema for `trigger.journey_automation_trigger`
+
+Read-Only:
+
+- `entity_schema` (String) Schema of the main entity where flow will be triggered. The entity will be picked from automation context.
+- `id` (String)
+- `type` (String)
+
+
 <a id="nestedatt--trigger--journey_submission_trigger"></a>
 ### Nested Schema for `trigger.journey_submission_trigger`
 
@@ -592,6 +680,7 @@ Read-Only:
 - `automation_id` (String)
 - `id` (String)
 - `journey_id` (String) ID of the journey that will trigger this flow
+- `journey_name` (String) Name of the journey that will trigger this flow
 - `type` (String)
 
 
@@ -603,21 +692,3 @@ Read-Only:
 - `entity_schema` (String)
 - `id` (String)
 - `type` (String)
-
-
-
-<a id="nestedatt--update_entity_attributes"></a>
-### Nested Schema for `update_entity_attributes`
-
-Read-Only:
-
-- `source` (String)
-- `target` (Attributes) (see [below for nested schema](#nestedatt--update_entity_attributes--target))
-
-<a id="nestedatt--update_entity_attributes--target"></a>
-### Nested Schema for `update_entity_attributes.target`
-
-Read-Only:
-
-- `entity_attribute` (String)
-- `entity_schema` (String)
