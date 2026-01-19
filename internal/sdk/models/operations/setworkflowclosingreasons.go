@@ -14,18 +14,18 @@ type SetWorkflowClosingReasonsRequest struct {
 	DefinitionID string `pathParam:"style=simple,explode=false,name=definitionId"`
 }
 
-func (s *SetWorkflowClosingReasonsRequest) GetClosingReasonsIds() shared.ClosingReasonsIds {
-	if s == nil {
+func (o *SetWorkflowClosingReasonsRequest) GetClosingReasonsIds() shared.ClosingReasonsIds {
+	if o == nil {
 		return shared.ClosingReasonsIds{}
 	}
-	return s.ClosingReasonsIds
+	return o.ClosingReasonsIds
 }
 
-func (s *SetWorkflowClosingReasonsRequest) GetDefinitionID() string {
-	if s == nil {
+func (o *SetWorkflowClosingReasonsRequest) GetDefinitionID() string {
+	if o == nil {
 		return ""
 	}
-	return s.DefinitionID
+	return o.DefinitionID
 }
 
 type SetWorkflowClosingReasonsResponse struct {
@@ -37,23 +37,23 @@ type SetWorkflowClosingReasonsResponse struct {
 	RawResponse *http.Response
 }
 
-func (s *SetWorkflowClosingReasonsResponse) GetContentType() string {
-	if s == nil {
+func (o *SetWorkflowClosingReasonsResponse) GetContentType() string {
+	if o == nil {
 		return ""
 	}
-	return s.ContentType
+	return o.ContentType
 }
 
-func (s *SetWorkflowClosingReasonsResponse) GetStatusCode() int {
-	if s == nil {
+func (o *SetWorkflowClosingReasonsResponse) GetStatusCode() int {
+	if o == nil {
 		return 0
 	}
-	return s.StatusCode
+	return o.StatusCode
 }
 
-func (s *SetWorkflowClosingReasonsResponse) GetRawResponse() *http.Response {
-	if s == nil {
+func (o *SetWorkflowClosingReasonsResponse) GetRawResponse() *http.Response {
+	if o == nil {
 		return nil
 	}
-	return s.RawResponse
+	return o.RawResponse
 }

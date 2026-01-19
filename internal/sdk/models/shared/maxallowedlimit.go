@@ -7,16 +7,16 @@ type MaxAllowedLimit struct {
 	MaxAllowed           *float64 `json:"maxAllowed,omitempty"`
 }
 
-func (m *MaxAllowedLimit) GetCurrentNoOfWorkflows() *float64 {
-	if m == nil {
+func (o *MaxAllowedLimit) GetCurrentNoOfWorkflows() *float64 {
+	if o == nil {
 		return nil
 	}
-	return m.CurrentNoOfWorkflows
+	return o.CurrentNoOfWorkflows
 }
 
-func (m *MaxAllowedLimit) GetMaxAllowed() *float64 {
-	if m == nil {
+func (o *MaxAllowedLimit) GetMaxAllowed() *float64 {
+	if o == nil {
 		return nil
 	}
-	return m.MaxAllowed
+	return o.MaxAllowed
 }

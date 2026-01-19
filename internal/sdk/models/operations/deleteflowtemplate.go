@@ -12,11 +12,11 @@ type DeleteFlowTemplateRequest struct {
 	FlowID string `pathParam:"style=simple,explode=false,name=flowId"`
 }
 
-func (d *DeleteFlowTemplateRequest) GetFlowID() string {
-	if d == nil {
+func (o *DeleteFlowTemplateRequest) GetFlowID() string {
+	if o == nil {
 		return ""
 	}
-	return d.FlowID
+	return o.FlowID
 }
 
 type DeleteFlowTemplateResponse struct {
@@ -30,30 +30,30 @@ type DeleteFlowTemplateResponse struct {
 	RawResponse *http.Response
 }
 
-func (d *DeleteFlowTemplateResponse) GetContentType() string {
-	if d == nil {
+func (o *DeleteFlowTemplateResponse) GetContentType() string {
+	if o == nil {
 		return ""
 	}
-	return d.ContentType
+	return o.ContentType
 }
 
-func (d *DeleteFlowTemplateResponse) GetErrorResp() *shared.ErrorResp {
-	if d == nil {
+func (o *DeleteFlowTemplateResponse) GetErrorResp() *shared.ErrorResp {
+	if o == nil {
 		return nil
 	}
-	return d.ErrorResp
+	return o.ErrorResp
 }
 
-func (d *DeleteFlowTemplateResponse) GetStatusCode() int {
-	if d == nil {
+func (o *DeleteFlowTemplateResponse) GetStatusCode() int {
+	if o == nil {
 		return 0
 	}
-	return d.StatusCode
+	return o.StatusCode
 }
 
-func (d *DeleteFlowTemplateResponse) GetRawResponse() *http.Response {
-	if d == nil {
+func (o *DeleteFlowTemplateResponse) GetRawResponse() *http.Response {
+	if o == nil {
 		return nil
 	}
-	return d.RawResponse
+	return o.RawResponse
 }

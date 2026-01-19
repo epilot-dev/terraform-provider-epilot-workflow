@@ -20,37 +20,37 @@ type CreateFlowTemplateResponse struct {
 	RawResponse *http.Response
 }
 
-func (c *CreateFlowTemplateResponse) GetContentType() string {
-	if c == nil {
+func (o *CreateFlowTemplateResponse) GetContentType() string {
+	if o == nil {
 		return ""
 	}
-	return c.ContentType
+	return o.ContentType
 }
 
-func (c *CreateFlowTemplateResponse) GetErrorResp() *shared.ErrorResp {
-	if c == nil {
+func (o *CreateFlowTemplateResponse) GetErrorResp() *shared.ErrorResp {
+	if o == nil {
 		return nil
 	}
-	return c.ErrorResp
+	return o.ErrorResp
 }
 
-func (c *CreateFlowTemplateResponse) GetFlowTemplate() *shared.FlowTemplate {
-	if c == nil {
+func (o *CreateFlowTemplateResponse) GetFlowTemplate() *shared.FlowTemplate {
+	if o == nil {
 		return nil
 	}
-	return c.FlowTemplate
+	return o.FlowTemplate
 }
 
-func (c *CreateFlowTemplateResponse) GetStatusCode() int {
-	if c == nil {
+func (o *CreateFlowTemplateResponse) GetStatusCode() int {
+	if o == nil {
 		return 0
 	}
-	return c.StatusCode
+	return o.StatusCode
 }
 
-func (c *CreateFlowTemplateResponse) GetRawResponse() *http.Response {
-	if c == nil {
+func (o *CreateFlowTemplateResponse) GetRawResponse() *http.Response {
+	if o == nil {
 		return nil
 	}
-	return c.RawResponse
+	return o.RawResponse
 }

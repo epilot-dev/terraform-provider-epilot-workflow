@@ -6,9 +6,9 @@ type ClosingReasonsIds struct {
 	Reasons []ClosingReasonID `json:"reasons"`
 }
 
-func (c *ClosingReasonsIds) GetReasons() []ClosingReasonID {
-	if c == nil {
+func (o *ClosingReasonsIds) GetReasons() []ClosingReasonID {
+	if o == nil {
 		return []ClosingReasonID{}
 	}
-	return c.Reasons
+	return o.Reasons
 }

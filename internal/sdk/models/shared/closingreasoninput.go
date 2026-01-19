@@ -8,16 +8,16 @@ type ClosingReasonInput struct {
 	Title  string               `json:"title"`
 }
 
-func (c *ClosingReasonInput) GetStatus() ClosingReasonsStatus {
-	if c == nil {
+func (o *ClosingReasonInput) GetStatus() ClosingReasonsStatus {
+	if o == nil {
 		return ClosingReasonsStatus("")
 	}
-	return c.Status
+	return o.Status
 }
 
-func (c *ClosingReasonInput) GetTitle() string {
-	if c == nil {
+func (o *ClosingReasonInput) GetTitle() string {
+	if o == nil {
 		return ""
 	}
-	return c.Title
+	return o.Title
 }

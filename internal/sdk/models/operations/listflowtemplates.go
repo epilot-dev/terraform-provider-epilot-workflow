@@ -53,25 +53,25 @@ type ListFlowTemplatesRequest struct {
 	TriggerType *TriggerType `queryParam:"style=form,explode=true,name=trigger_type"`
 }
 
-func (l *ListFlowTemplatesRequest) GetTriggerSchema() *string {
-	if l == nil {
+func (o *ListFlowTemplatesRequest) GetTriggerSchema() *string {
+	if o == nil {
 		return nil
 	}
-	return l.TriggerSchema
+	return o.TriggerSchema
 }
 
-func (l *ListFlowTemplatesRequest) GetTriggerSourceID() *string {
-	if l == nil {
+func (o *ListFlowTemplatesRequest) GetTriggerSourceID() *string {
+	if o == nil {
 		return nil
 	}
-	return l.TriggerSourceID
+	return o.TriggerSourceID
 }
 
-func (l *ListFlowTemplatesRequest) GetTriggerType() *TriggerType {
-	if l == nil {
+func (o *ListFlowTemplatesRequest) GetTriggerType() *TriggerType {
+	if o == nil {
 		return nil
 	}
-	return l.TriggerType
+	return o.TriggerType
 }
 
 type ListFlowTemplatesResponse struct {
@@ -87,37 +87,37 @@ type ListFlowTemplatesResponse struct {
 	RawResponse *http.Response
 }
 
-func (l *ListFlowTemplatesResponse) GetContentType() string {
-	if l == nil {
+func (o *ListFlowTemplatesResponse) GetContentType() string {
+	if o == nil {
 		return ""
 	}
-	return l.ContentType
+	return o.ContentType
 }
 
-func (l *ListFlowTemplatesResponse) GetErrorResp() *shared.ErrorResp {
-	if l == nil {
+func (o *ListFlowTemplatesResponse) GetErrorResp() *shared.ErrorResp {
+	if o == nil {
 		return nil
 	}
-	return l.ErrorResp
+	return o.ErrorResp
 }
 
-func (l *ListFlowTemplatesResponse) GetFlowTemplatesList() *shared.FlowTemplatesList {
-	if l == nil {
+func (o *ListFlowTemplatesResponse) GetFlowTemplatesList() *shared.FlowTemplatesList {
+	if o == nil {
 		return nil
 	}
-	return l.FlowTemplatesList
+	return o.FlowTemplatesList
 }
 
-func (l *ListFlowTemplatesResponse) GetStatusCode() int {
-	if l == nil {
+func (o *ListFlowTemplatesResponse) GetStatusCode() int {
+	if o == nil {
 		return 0
 	}
-	return l.StatusCode
+	return o.StatusCode
 }
 
-func (l *ListFlowTemplatesResponse) GetRawResponse() *http.Response {
-	if l == nil {
+func (o *ListFlowTemplatesResponse) GetRawResponse() *http.Response {
+	if o == nil {
 		return nil
 	}
-	return l.RawResponse
+	return o.RawResponse
 }

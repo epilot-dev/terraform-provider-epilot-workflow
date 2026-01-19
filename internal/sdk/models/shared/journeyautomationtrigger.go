@@ -43,29 +43,29 @@ func (j JourneyAutomationTrigger) MarshalJSON() ([]byte, error) {
 }
 
 func (j *JourneyAutomationTrigger) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &j, "", false, nil); err != nil {
+	if err := utils.UnmarshalJSON(data, &j, "", false, []string{"type"}); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (j *JourneyAutomationTrigger) GetEntitySchema() *string {
-	if j == nil {
+func (o *JourneyAutomationTrigger) GetEntitySchema() *string {
+	if o == nil {
 		return nil
 	}
-	return j.EntitySchema
+	return o.EntitySchema
 }
 
-func (j *JourneyAutomationTrigger) GetID() *string {
-	if j == nil {
+func (o *JourneyAutomationTrigger) GetID() *string {
+	if o == nil {
 		return nil
 	}
-	return j.ID
+	return o.ID
 }
 
-func (j *JourneyAutomationTrigger) GetType() JourneyAutomationTriggerType {
-	if j == nil {
+func (o *JourneyAutomationTrigger) GetType() JourneyAutomationTriggerType {
+	if o == nil {
 		return JourneyAutomationTriggerType("")
 	}
-	return j.Type
+	return o.Type
 }

@@ -40,9 +40,8 @@ func (p *EpilotWorkflowProvider) Schema(ctx context.Context, req provider.Schema
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"bearer_auth": schema.StringAttribute{
-				MarkdownDescription: `HTTP Bearer.`,
-				Required:            true,
-				Sensitive:           true,
+				Required:  true,
+				Sensitive: true,
 			},
 			"server_url": schema.StringAttribute{
 				Description: `Server URL (defaults to https://workflows-definition.sls.epilot.io)`,
@@ -102,19 +101,11 @@ func (p *EpilotWorkflowProvider) Configure(ctx context.Context, req provider.Con
 }
 
 func (p *EpilotWorkflowProvider) Resources(ctx context.Context) []func() resource.Resource {
-	return []func() resource.Resource{
-		NewClosingReasonResource,
-		NewFlowTemplateResource,
-		NewWorkflowDefinitionResource,
-	}
+	return []func() resource.Resource{}
 }
 
 func (p *EpilotWorkflowProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
-	return []func() datasource.DataSource{
-		NewClosingReasonDataSource,
-		NewFlowTemplateDataSource,
-		NewWorkflowDefinitionDataSource,
-	}
+	return []func() datasource.DataSource{}
 }
 
 func (p *EpilotWorkflowProvider) EphemeralResources(ctx context.Context) []func() ephemeral.EphemeralResource {

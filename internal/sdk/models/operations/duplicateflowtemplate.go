@@ -11,11 +11,11 @@ type DuplicateFlowTemplateRequest struct {
 	FlowID string `pathParam:"style=simple,explode=false,name=flowId"`
 }
 
-func (d *DuplicateFlowTemplateRequest) GetFlowID() string {
-	if d == nil {
+func (o *DuplicateFlowTemplateRequest) GetFlowID() string {
+	if o == nil {
 		return ""
 	}
-	return d.FlowID
+	return o.FlowID
 }
 
 type DuplicateFlowTemplateResponse struct {
@@ -31,37 +31,37 @@ type DuplicateFlowTemplateResponse struct {
 	RawResponse *http.Response
 }
 
-func (d *DuplicateFlowTemplateResponse) GetContentType() string {
-	if d == nil {
+func (o *DuplicateFlowTemplateResponse) GetContentType() string {
+	if o == nil {
 		return ""
 	}
-	return d.ContentType
+	return o.ContentType
 }
 
-func (d *DuplicateFlowTemplateResponse) GetErrorResp() *shared.ErrorResp {
-	if d == nil {
+func (o *DuplicateFlowTemplateResponse) GetErrorResp() *shared.ErrorResp {
+	if o == nil {
 		return nil
 	}
-	return d.ErrorResp
+	return o.ErrorResp
 }
 
-func (d *DuplicateFlowTemplateResponse) GetFlowTemplate() *shared.FlowTemplate {
-	if d == nil {
+func (o *DuplicateFlowTemplateResponse) GetFlowTemplate() *shared.FlowTemplate {
+	if o == nil {
 		return nil
 	}
-	return d.FlowTemplate
+	return o.FlowTemplate
 }
 
-func (d *DuplicateFlowTemplateResponse) GetStatusCode() int {
-	if d == nil {
+func (o *DuplicateFlowTemplateResponse) GetStatusCode() int {
+	if o == nil {
 		return 0
 	}
-	return d.StatusCode
+	return o.StatusCode
 }
 
-func (d *DuplicateFlowTemplateResponse) GetRawResponse() *http.Response {
-	if d == nil {
+func (o *DuplicateFlowTemplateResponse) GetRawResponse() *http.Response {
+	if o == nil {
 		return nil
 	}
-	return d.RawResponse
+	return o.RawResponse
 }

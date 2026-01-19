@@ -14,18 +14,18 @@ type UpdateDefinitionRequest struct {
 	DefinitionID string `pathParam:"style=simple,explode=false,name=definitionId"`
 }
 
-func (u *UpdateDefinitionRequest) GetWorkflowDefinition() shared.WorkflowDefinition {
-	if u == nil {
+func (o *UpdateDefinitionRequest) GetWorkflowDefinition() shared.WorkflowDefinition {
+	if o == nil {
 		return shared.WorkflowDefinition{}
 	}
-	return u.WorkflowDefinition
+	return o.WorkflowDefinition
 }
 
-func (u *UpdateDefinitionRequest) GetDefinitionID() string {
-	if u == nil {
+func (o *UpdateDefinitionRequest) GetDefinitionID() string {
+	if o == nil {
 		return ""
 	}
-	return u.DefinitionID
+	return o.DefinitionID
 }
 
 type UpdateDefinitionResponse struct {
@@ -41,37 +41,37 @@ type UpdateDefinitionResponse struct {
 	WorkflowDefinition *shared.WorkflowDefinition
 }
 
-func (u *UpdateDefinitionResponse) GetContentType() string {
-	if u == nil {
+func (o *UpdateDefinitionResponse) GetContentType() string {
+	if o == nil {
 		return ""
 	}
-	return u.ContentType
+	return o.ContentType
 }
 
-func (u *UpdateDefinitionResponse) GetErrorResp() *shared.ErrorResp {
-	if u == nil {
+func (o *UpdateDefinitionResponse) GetErrorResp() *shared.ErrorResp {
+	if o == nil {
 		return nil
 	}
-	return u.ErrorResp
+	return o.ErrorResp
 }
 
-func (u *UpdateDefinitionResponse) GetStatusCode() int {
-	if u == nil {
+func (o *UpdateDefinitionResponse) GetStatusCode() int {
+	if o == nil {
 		return 0
 	}
-	return u.StatusCode
+	return o.StatusCode
 }
 
-func (u *UpdateDefinitionResponse) GetRawResponse() *http.Response {
-	if u == nil {
+func (o *UpdateDefinitionResponse) GetRawResponse() *http.Response {
+	if o == nil {
 		return nil
 	}
-	return u.RawResponse
+	return o.RawResponse
 }
 
-func (u *UpdateDefinitionResponse) GetWorkflowDefinition() *shared.WorkflowDefinition {
-	if u == nil {
+func (o *UpdateDefinitionResponse) GetWorkflowDefinition() *shared.WorkflowDefinition {
+	if o == nil {
 		return nil
 	}
-	return u.WorkflowDefinition
+	return o.WorkflowDefinition
 }

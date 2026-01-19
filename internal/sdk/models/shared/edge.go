@@ -11,37 +11,37 @@ type Edge struct {
 	ToID    string `json:"to_id"`
 }
 
-func (e *Edge) GetConditionID() *string {
-	if e == nil {
+func (o *Edge) GetConditionID() *string {
+	if o == nil {
 		return nil
 	}
-	return e.ConditionID
+	return o.ConditionID
 }
 
-func (e *Edge) GetFromID() string {
-	if e == nil {
+func (o *Edge) GetFromID() string {
+	if o == nil {
 		return ""
 	}
-	return e.FromID
+	return o.FromID
 }
 
-func (e *Edge) GetID() string {
-	if e == nil {
+func (o *Edge) GetID() string {
+	if o == nil {
 		return ""
 	}
-	return e.ID
+	return o.ID
 }
 
-func (e *Edge) GetNoneMet() *bool {
-	if e == nil {
+func (o *Edge) GetNoneMet() *bool {
+	if o == nil {
 		return nil
 	}
-	return e.NoneMet
+	return o.NoneMet
 }
 
-func (e *Edge) GetToID() string {
-	if e == nil {
+func (o *Edge) GetToID() string {
+	if o == nil {
 		return ""
 	}
-	return e.ToID
+	return o.ToID
 }

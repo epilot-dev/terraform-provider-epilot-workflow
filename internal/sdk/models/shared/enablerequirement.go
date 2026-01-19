@@ -48,29 +48,29 @@ func (e EnableRequirement) MarshalJSON() ([]byte, error) {
 }
 
 func (e *EnableRequirement) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &e, "", false, nil); err != nil {
+	if err := utils.UnmarshalJSON(data, &e, "", false, []string{"when"}); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (e *EnableRequirement) GetPhaseID() *string {
-	if e == nil {
+func (o *EnableRequirement) GetPhaseID() *string {
+	if o == nil {
 		return nil
 	}
-	return e.PhaseID
+	return o.PhaseID
 }
 
-func (e *EnableRequirement) GetTaskID() *string {
-	if e == nil {
+func (o *EnableRequirement) GetTaskID() *string {
+	if o == nil {
 		return nil
 	}
-	return e.TaskID
+	return o.TaskID
 }
 
-func (e *EnableRequirement) GetWhen() When {
-	if e == nil {
+func (o *EnableRequirement) GetWhen() When {
+	if o == nil {
 		return When("")
 	}
-	return e.When
+	return o.When
 }
