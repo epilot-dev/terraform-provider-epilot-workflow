@@ -18,36 +18,36 @@ func (s Statement) MarshalJSON() ([]byte, error) {
 }
 
 func (s *Statement) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &s, "", false, nil); err != nil {
+	if err := utils.UnmarshalJSON(data, &s, "", false, []string{"id", "operator", "source", "values"}); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (s *Statement) GetID() string {
-	if s == nil {
+func (o *Statement) GetID() string {
+	if o == nil {
 		return ""
 	}
-	return s.ID
+	return o.ID
 }
 
-func (s *Statement) GetOperator() Operator {
-	if s == nil {
+func (o *Statement) GetOperator() Operator {
+	if o == nil {
 		return Operator("")
 	}
-	return s.Operator
+	return o.Operator
 }
 
-func (s *Statement) GetSource() EvaluationSource {
-	if s == nil {
+func (o *Statement) GetSource() EvaluationSource {
+	if o == nil {
 		return EvaluationSource{}
 	}
-	return s.Source
+	return o.Source
 }
 
-func (s *Statement) GetValues() []string {
-	if s == nil {
+func (o *Statement) GetValues() []string {
+	if o == nil {
 		return []string{}
 	}
-	return s.Values
+	return o.Values
 }

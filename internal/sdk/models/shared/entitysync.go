@@ -12,18 +12,18 @@ type Target struct {
 	EntitySchema    string `json:"entitySchema"`
 }
 
-func (t *Target) GetEntityAttribute() string {
-	if t == nil {
+func (o *Target) GetEntityAttribute() string {
+	if o == nil {
 		return ""
 	}
-	return t.EntityAttribute
+	return o.EntityAttribute
 }
 
-func (t *Target) GetEntitySchema() string {
-	if t == nil {
+func (o *Target) GetEntitySchema() string {
+	if o == nil {
 		return ""
 	}
-	return t.EntitySchema
+	return o.EntitySchema
 }
 
 // Event or condition that triggers the entity sync.
@@ -110,18 +110,18 @@ type Filter struct {
 	TaskTemplateID *string `json:"task_template_id,omitempty"`
 }
 
-func (f *Filter) GetPhaseTemplateID() *string {
-	if f == nil {
+func (o *Filter) GetPhaseTemplateID() *string {
+	if o == nil {
 		return nil
 	}
-	return f.PhaseTemplateID
+	return o.PhaseTemplateID
 }
 
-func (f *Filter) GetTaskTemplateID() *string {
-	if f == nil {
+func (o *Filter) GetTaskTemplateID() *string {
+	if o == nil {
 		return nil
 	}
-	return f.TaskTemplateID
+	return o.TaskTemplateID
 }
 
 // EntitySyncTrigger - Trigger configuration that determines when entity sync occurs.
@@ -139,18 +139,18 @@ type EntitySyncTrigger struct {
 	Filter *Filter `json:"filter,omitempty"`
 }
 
-func (e *EntitySyncTrigger) GetEvent() Event {
-	if e == nil {
+func (o *EntitySyncTrigger) GetEvent() Event {
+	if o == nil {
 		return Event("")
 	}
-	return e.Event
+	return o.Event
 }
 
-func (e *EntitySyncTrigger) GetFilter() *Filter {
-	if e == nil {
+func (o *EntitySyncTrigger) GetFilter() *Filter {
+	if o == nil {
 		return nil
 	}
-	return e.Filter
+	return o.Filter
 }
 
 type EntitySyncSource string
@@ -208,18 +208,18 @@ type Value struct {
 	Value  *string          `json:"value,omitempty"`
 }
 
-func (v *Value) GetSource() EntitySyncSource {
-	if v == nil {
+func (o *Value) GetSource() EntitySyncSource {
+	if o == nil {
 		return EntitySyncSource("")
 	}
-	return v.Source
+	return o.Source
 }
 
-func (v *Value) GetValue() *string {
-	if v == nil {
+func (o *Value) GetValue() *string {
+	if o == nil {
 		return nil
 	}
-	return v.Value
+	return o.Value
 }
 
 type EntitySync struct {
@@ -231,23 +231,23 @@ type EntitySync struct {
 	Value   Value             `json:"value"`
 }
 
-func (e *EntitySync) GetTarget() Target {
-	if e == nil {
+func (o *EntitySync) GetTarget() Target {
+	if o == nil {
 		return Target{}
 	}
-	return e.Target
+	return o.Target
 }
 
-func (e *EntitySync) GetTrigger() EntitySyncTrigger {
-	if e == nil {
+func (o *EntitySync) GetTrigger() EntitySyncTrigger {
+	if o == nil {
 		return EntitySyncTrigger{}
 	}
-	return e.Trigger
+	return o.Trigger
 }
 
-func (e *EntitySync) GetValue() Value {
-	if e == nil {
+func (o *EntitySync) GetValue() Value {
+	if o == nil {
 		return Value{}
 	}
-	return e.Value
+	return o.Value
 }

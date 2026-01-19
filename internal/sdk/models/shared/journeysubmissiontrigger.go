@@ -46,43 +46,43 @@ func (j JourneySubmissionTrigger) MarshalJSON() ([]byte, error) {
 }
 
 func (j *JourneySubmissionTrigger) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &j, "", false, nil); err != nil {
+	if err := utils.UnmarshalJSON(data, &j, "", false, []string{"journey_id", "type"}); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (j *JourneySubmissionTrigger) GetAutomationID() *string {
-	if j == nil {
+func (o *JourneySubmissionTrigger) GetAutomationID() *string {
+	if o == nil {
 		return nil
 	}
-	return j.AutomationID
+	return o.AutomationID
 }
 
-func (j *JourneySubmissionTrigger) GetID() *string {
-	if j == nil {
+func (o *JourneySubmissionTrigger) GetID() *string {
+	if o == nil {
 		return nil
 	}
-	return j.ID
+	return o.ID
 }
 
-func (j *JourneySubmissionTrigger) GetJourneyID() string {
-	if j == nil {
+func (o *JourneySubmissionTrigger) GetJourneyID() string {
+	if o == nil {
 		return ""
 	}
-	return j.JourneyID
+	return o.JourneyID
 }
 
-func (j *JourneySubmissionTrigger) GetJourneyName() *string {
-	if j == nil {
+func (o *JourneySubmissionTrigger) GetJourneyName() *string {
+	if o == nil {
 		return nil
 	}
-	return j.JourneyName
+	return o.JourneyName
 }
 
-func (j *JourneySubmissionTrigger) GetType() JourneySubmissionTriggerType {
-	if j == nil {
+func (o *JourneySubmissionTrigger) GetType() JourneySubmissionTriggerType {
+	if o == nil {
 		return JourneySubmissionTriggerType("")
 	}
-	return j.Type
+	return o.Type
 }

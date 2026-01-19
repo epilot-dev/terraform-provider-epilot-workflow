@@ -42,29 +42,29 @@ func (m ManualTrigger) MarshalJSON() ([]byte, error) {
 }
 
 func (m *ManualTrigger) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &m, "", false, nil); err != nil {
+	if err := utils.UnmarshalJSON(data, &m, "", false, []string{"type"}); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (m *ManualTrigger) GetEntitySchema() *string {
-	if m == nil {
+func (o *ManualTrigger) GetEntitySchema() *string {
+	if o == nil {
 		return nil
 	}
-	return m.EntitySchema
+	return o.EntitySchema
 }
 
-func (m *ManualTrigger) GetID() *string {
-	if m == nil {
+func (o *ManualTrigger) GetID() *string {
+	if o == nil {
 		return nil
 	}
-	return m.ID
+	return o.ID
 }
 
-func (m *ManualTrigger) GetType() ManualTriggerType {
-	if m == nil {
+func (o *ManualTrigger) GetType() ManualTriggerType {
+	if o == nil {
 		return ManualTriggerType("")
 	}
-	return m.Type
+	return o.Type
 }

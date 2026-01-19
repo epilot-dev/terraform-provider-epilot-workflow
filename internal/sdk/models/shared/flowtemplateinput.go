@@ -25,7 +25,9 @@ type FlowTemplateInput struct {
 	Name       string       `json:"name"`
 	OrgID      *string      `json:"org_id,omitempty"`
 	Phases     []Phase      `json:"phases,omitempty"`
-	Tasks      []Task       `json:"tasks"`
+	// Whether only a single closing reason can be selected
+	SingleClosingReasonSelection *bool  `json:"singleClosingReasonSelection,omitempty"`
+	Tasks                        []Task `json:"tasks"`
 	// Taxonomy ids that are associated with this workflow and used for filtering
 	Taxonomies []string `json:"taxonomies,omitempty"`
 	Trigger    *Trigger `json:"trigger,omitempty"`
@@ -45,141 +47,148 @@ func (f FlowTemplateInput) MarshalJSON() ([]byte, error) {
 }
 
 func (f *FlowTemplateInput) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &f, "", false, nil); err != nil {
+	if err := utils.UnmarshalJSON(data, &f, "", false, []string{"edges", "name", "tasks"}); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (f *FlowTemplateInput) GetAssignedTo() []string {
-	if f == nil {
+func (o *FlowTemplateInput) GetAssignedTo() []string {
+	if o == nil {
 		return nil
 	}
-	return f.AssignedTo
+	return o.AssignedTo
 }
 
-func (f *FlowTemplateInput) GetAvailableInEcp() *bool {
-	if f == nil {
+func (o *FlowTemplateInput) GetAvailableInEcp() *bool {
+	if o == nil {
 		return nil
 	}
-	return f.AvailableInEcp
+	return o.AvailableInEcp
 }
 
-func (f *FlowTemplateInput) GetClosingReasons() []ClosingReasonInput {
-	if f == nil {
+func (o *FlowTemplateInput) GetClosingReasons() []ClosingReasonInput {
+	if o == nil {
 		return nil
 	}
-	return f.ClosingReasons
+	return o.ClosingReasons
 }
 
-func (f *FlowTemplateInput) GetCreatedAt() *string {
-	if f == nil {
+func (o *FlowTemplateInput) GetCreatedAt() *string {
+	if o == nil {
 		return nil
 	}
-	return f.CreatedAt
+	return o.CreatedAt
 }
 
-func (f *FlowTemplateInput) GetDescription() *string {
-	if f == nil {
+func (o *FlowTemplateInput) GetDescription() *string {
+	if o == nil {
 		return nil
 	}
-	return f.Description
+	return o.Description
 }
 
-func (f *FlowTemplateInput) GetDueDate() *string {
-	if f == nil {
+func (o *FlowTemplateInput) GetDueDate() *string {
+	if o == nil {
 		return nil
 	}
-	return f.DueDate
+	return o.DueDate
 }
 
-func (f *FlowTemplateInput) GetDueDateConfig() *DueDateConfig {
-	if f == nil {
+func (o *FlowTemplateInput) GetDueDateConfig() *DueDateConfig {
+	if o == nil {
 		return nil
 	}
-	return f.DueDateConfig
+	return o.DueDateConfig
 }
 
-func (f *FlowTemplateInput) GetEdges() []Edge {
-	if f == nil {
+func (o *FlowTemplateInput) GetEdges() []Edge {
+	if o == nil {
 		return []Edge{}
 	}
-	return f.Edges
+	return o.Edges
 }
 
-func (f *FlowTemplateInput) GetEnabled() *bool {
-	if f == nil {
+func (o *FlowTemplateInput) GetEnabled() *bool {
+	if o == nil {
 		return nil
 	}
-	return f.Enabled
+	return o.Enabled
 }
 
-func (f *FlowTemplateInput) GetEntitySync() []EntitySync {
-	if f == nil {
+func (o *FlowTemplateInput) GetEntitySync() []EntitySync {
+	if o == nil {
 		return nil
 	}
-	return f.EntitySync
+	return o.EntitySync
 }
 
-func (f *FlowTemplateInput) GetID() *string {
-	if f == nil {
+func (o *FlowTemplateInput) GetID() *string {
+	if o == nil {
 		return nil
 	}
-	return f.ID
+	return o.ID
 }
 
-func (f *FlowTemplateInput) GetName() string {
-	if f == nil {
+func (o *FlowTemplateInput) GetName() string {
+	if o == nil {
 		return ""
 	}
-	return f.Name
+	return o.Name
 }
 
-func (f *FlowTemplateInput) GetOrgID() *string {
-	if f == nil {
+func (o *FlowTemplateInput) GetOrgID() *string {
+	if o == nil {
 		return nil
 	}
-	return f.OrgID
+	return o.OrgID
 }
 
-func (f *FlowTemplateInput) GetPhases() []Phase {
-	if f == nil {
+func (o *FlowTemplateInput) GetPhases() []Phase {
+	if o == nil {
 		return nil
 	}
-	return f.Phases
+	return o.Phases
 }
 
-func (f *FlowTemplateInput) GetTasks() []Task {
-	if f == nil {
+func (o *FlowTemplateInput) GetSingleClosingReasonSelection() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.SingleClosingReasonSelection
+}
+
+func (o *FlowTemplateInput) GetTasks() []Task {
+	if o == nil {
 		return []Task{}
 	}
-	return f.Tasks
+	return o.Tasks
 }
 
-func (f *FlowTemplateInput) GetTaxonomies() []string {
-	if f == nil {
+func (o *FlowTemplateInput) GetTaxonomies() []string {
+	if o == nil {
 		return nil
 	}
-	return f.Taxonomies
+	return o.Taxonomies
 }
 
-func (f *FlowTemplateInput) GetTrigger() *Trigger {
-	if f == nil {
+func (o *FlowTemplateInput) GetTrigger() *Trigger {
+	if o == nil {
 		return nil
 	}
-	return f.Trigger
+	return o.Trigger
 }
 
-func (f *FlowTemplateInput) GetUpdatedAt() *string {
-	if f == nil {
+func (o *FlowTemplateInput) GetUpdatedAt() *string {
+	if o == nil {
 		return nil
 	}
-	return f.UpdatedAt
+	return o.UpdatedAt
 }
 
-func (f *FlowTemplateInput) GetVersion() *Version {
-	if f == nil {
+func (o *FlowTemplateInput) GetVersion() *Version {
+	if o == nil {
 		return nil
 	}
-	return f.Version
+	return o.Version
 }

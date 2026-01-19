@@ -20,37 +20,37 @@ type GetDefinitionsResponse struct {
 	Classes []shared.WorkflowDefinition
 }
 
-func (g *GetDefinitionsResponse) GetContentType() string {
-	if g == nil {
+func (o *GetDefinitionsResponse) GetContentType() string {
+	if o == nil {
 		return ""
 	}
-	return g.ContentType
+	return o.ContentType
 }
 
-func (g *GetDefinitionsResponse) GetErrorResp() *shared.ErrorResp {
-	if g == nil {
+func (o *GetDefinitionsResponse) GetErrorResp() *shared.ErrorResp {
+	if o == nil {
 		return nil
 	}
-	return g.ErrorResp
+	return o.ErrorResp
 }
 
-func (g *GetDefinitionsResponse) GetStatusCode() int {
-	if g == nil {
+func (o *GetDefinitionsResponse) GetStatusCode() int {
+	if o == nil {
 		return 0
 	}
-	return g.StatusCode
+	return o.StatusCode
 }
 
-func (g *GetDefinitionsResponse) GetRawResponse() *http.Response {
-	if g == nil {
+func (o *GetDefinitionsResponse) GetRawResponse() *http.Response {
+	if o == nil {
 		return nil
 	}
-	return g.RawResponse
+	return o.RawResponse
 }
 
-func (g *GetDefinitionsResponse) GetClasses() []shared.WorkflowDefinition {
-	if g == nil {
+func (o *GetDefinitionsResponse) GetClasses() []shared.WorkflowDefinition {
+	if o == nil {
 		return nil
 	}
-	return g.Classes
+	return o.Classes
 }

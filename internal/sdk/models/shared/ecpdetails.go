@@ -25,30 +25,30 @@ func (e *ECPDetails) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (e *ECPDetails) GetDescription() *string {
-	if e == nil {
+func (o *ECPDetails) GetDescription() *string {
+	if o == nil {
 		return nil
 	}
-	return e.Description
+	return o.Description
 }
 
-func (e *ECPDetails) GetEnabled() *bool {
-	if e == nil {
+func (o *ECPDetails) GetEnabled() *bool {
+	if o == nil {
 		return nil
 	}
-	return e.Enabled
+	return o.Enabled
 }
 
-func (e *ECPDetails) GetJourney() *StepJourney {
-	if e == nil {
+func (o *ECPDetails) GetJourney() *StepJourney {
+	if o == nil {
 		return nil
 	}
-	return e.Journey
+	return o.Journey
 }
 
-func (e *ECPDetails) GetLabel() *string {
-	if e == nil {
+func (o *ECPDetails) GetLabel() *string {
+	if o == nil {
 		return nil
 	}
-	return e.Label
+	return o.Label
 }

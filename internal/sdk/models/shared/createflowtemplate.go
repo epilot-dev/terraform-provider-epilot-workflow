@@ -10,11 +10,11 @@ type CreateFlowTemplateClosingReasons struct {
 	ID string `json:"id"`
 }
 
-func (c *CreateFlowTemplateClosingReasons) GetID() string {
-	if c == nil {
+func (o *CreateFlowTemplateClosingReasons) GetID() string {
+	if o == nil {
 		return ""
 	}
-	return c.ID
+	return o.ID
 }
 
 type CreateFlowTemplate struct {
@@ -36,7 +36,9 @@ type CreateFlowTemplate struct {
 	Name       string       `json:"name"`
 	OrgID      *string      `json:"org_id,omitempty"`
 	Phases     []Phase      `json:"phases,omitempty"`
-	Tasks      []Task       `json:"tasks"`
+	// Whether only a single closing reason can be selected
+	SingleClosingReasonSelection *bool  `json:"singleClosingReasonSelection,omitempty"`
+	Tasks                        []Task `json:"tasks"`
 	// Taxonomy ids that are associated with this workflow and used for filtering
 	Taxonomies []string `json:"taxonomies,omitempty"`
 	Trigger    *Trigger `json:"trigger,omitempty"`
@@ -56,141 +58,148 @@ func (c CreateFlowTemplate) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreateFlowTemplate) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &c, "", false, nil); err != nil {
+	if err := utils.UnmarshalJSON(data, &c, "", false, []string{"edges", "name", "tasks"}); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (c *CreateFlowTemplate) GetAssignedTo() []string {
-	if c == nil {
+func (o *CreateFlowTemplate) GetAssignedTo() []string {
+	if o == nil {
 		return nil
 	}
-	return c.AssignedTo
+	return o.AssignedTo
 }
 
-func (c *CreateFlowTemplate) GetAvailableInEcp() *bool {
-	if c == nil {
+func (o *CreateFlowTemplate) GetAvailableInEcp() *bool {
+	if o == nil {
 		return nil
 	}
-	return c.AvailableInEcp
+	return o.AvailableInEcp
 }
 
-func (c *CreateFlowTemplate) GetClosingReasons() []CreateFlowTemplateClosingReasons {
-	if c == nil {
+func (o *CreateFlowTemplate) GetClosingReasons() []CreateFlowTemplateClosingReasons {
+	if o == nil {
 		return nil
 	}
-	return c.ClosingReasons
+	return o.ClosingReasons
 }
 
-func (c *CreateFlowTemplate) GetCreatedAt() *string {
-	if c == nil {
+func (o *CreateFlowTemplate) GetCreatedAt() *string {
+	if o == nil {
 		return nil
 	}
-	return c.CreatedAt
+	return o.CreatedAt
 }
 
-func (c *CreateFlowTemplate) GetDescription() *string {
-	if c == nil {
+func (o *CreateFlowTemplate) GetDescription() *string {
+	if o == nil {
 		return nil
 	}
-	return c.Description
+	return o.Description
 }
 
-func (c *CreateFlowTemplate) GetDueDate() *string {
-	if c == nil {
+func (o *CreateFlowTemplate) GetDueDate() *string {
+	if o == nil {
 		return nil
 	}
-	return c.DueDate
+	return o.DueDate
 }
 
-func (c *CreateFlowTemplate) GetDueDateConfig() *DueDateConfig {
-	if c == nil {
+func (o *CreateFlowTemplate) GetDueDateConfig() *DueDateConfig {
+	if o == nil {
 		return nil
 	}
-	return c.DueDateConfig
+	return o.DueDateConfig
 }
 
-func (c *CreateFlowTemplate) GetEdges() []Edge {
-	if c == nil {
+func (o *CreateFlowTemplate) GetEdges() []Edge {
+	if o == nil {
 		return []Edge{}
 	}
-	return c.Edges
+	return o.Edges
 }
 
-func (c *CreateFlowTemplate) GetEnabled() *bool {
-	if c == nil {
+func (o *CreateFlowTemplate) GetEnabled() *bool {
+	if o == nil {
 		return nil
 	}
-	return c.Enabled
+	return o.Enabled
 }
 
-func (c *CreateFlowTemplate) GetEntitySync() []EntitySync {
-	if c == nil {
+func (o *CreateFlowTemplate) GetEntitySync() []EntitySync {
+	if o == nil {
 		return nil
 	}
-	return c.EntitySync
+	return o.EntitySync
 }
 
-func (c *CreateFlowTemplate) GetID() *string {
-	if c == nil {
+func (o *CreateFlowTemplate) GetID() *string {
+	if o == nil {
 		return nil
 	}
-	return c.ID
+	return o.ID
 }
 
-func (c *CreateFlowTemplate) GetName() string {
-	if c == nil {
+func (o *CreateFlowTemplate) GetName() string {
+	if o == nil {
 		return ""
 	}
-	return c.Name
+	return o.Name
 }
 
-func (c *CreateFlowTemplate) GetOrgID() *string {
-	if c == nil {
+func (o *CreateFlowTemplate) GetOrgID() *string {
+	if o == nil {
 		return nil
 	}
-	return c.OrgID
+	return o.OrgID
 }
 
-func (c *CreateFlowTemplate) GetPhases() []Phase {
-	if c == nil {
+func (o *CreateFlowTemplate) GetPhases() []Phase {
+	if o == nil {
 		return nil
 	}
-	return c.Phases
+	return o.Phases
 }
 
-func (c *CreateFlowTemplate) GetTasks() []Task {
-	if c == nil {
+func (o *CreateFlowTemplate) GetSingleClosingReasonSelection() *bool {
+	if o == nil {
+		return nil
+	}
+	return o.SingleClosingReasonSelection
+}
+
+func (o *CreateFlowTemplate) GetTasks() []Task {
+	if o == nil {
 		return []Task{}
 	}
-	return c.Tasks
+	return o.Tasks
 }
 
-func (c *CreateFlowTemplate) GetTaxonomies() []string {
-	if c == nil {
+func (o *CreateFlowTemplate) GetTaxonomies() []string {
+	if o == nil {
 		return nil
 	}
-	return c.Taxonomies
+	return o.Taxonomies
 }
 
-func (c *CreateFlowTemplate) GetTrigger() *Trigger {
-	if c == nil {
+func (o *CreateFlowTemplate) GetTrigger() *Trigger {
+	if o == nil {
 		return nil
 	}
-	return c.Trigger
+	return o.Trigger
 }
 
-func (c *CreateFlowTemplate) GetUpdatedAt() *string {
-	if c == nil {
+func (o *CreateFlowTemplate) GetUpdatedAt() *string {
+	if o == nil {
 		return nil
 	}
-	return c.UpdatedAt
+	return o.UpdatedAt
 }
 
-func (c *CreateFlowTemplate) GetVersion() *Version {
-	if c == nil {
+func (o *CreateFlowTemplate) GetVersion() *Version {
+	if o == nil {
 		return nil
 	}
-	return c.Version
+	return o.Version
 }

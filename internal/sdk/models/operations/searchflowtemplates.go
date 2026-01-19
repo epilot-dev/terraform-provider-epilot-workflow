@@ -13,18 +13,18 @@ type SearchFlowTemplatesResponseBody struct {
 	Results []shared.FlowTemplate `json:"results,omitempty"`
 }
 
-func (s *SearchFlowTemplatesResponseBody) GetHits() *float64 {
-	if s == nil {
+func (o *SearchFlowTemplatesResponseBody) GetHits() *float64 {
+	if o == nil {
 		return nil
 	}
-	return s.Hits
+	return o.Hits
 }
 
-func (s *SearchFlowTemplatesResponseBody) GetResults() []shared.FlowTemplate {
-	if s == nil {
+func (o *SearchFlowTemplatesResponseBody) GetResults() []shared.FlowTemplate {
+	if o == nil {
 		return nil
 	}
-	return s.Results
+	return o.Results
 }
 
 type SearchFlowTemplatesResponse struct {
@@ -40,37 +40,37 @@ type SearchFlowTemplatesResponse struct {
 	Object *SearchFlowTemplatesResponseBody
 }
 
-func (s *SearchFlowTemplatesResponse) GetContentType() string {
-	if s == nil {
+func (o *SearchFlowTemplatesResponse) GetContentType() string {
+	if o == nil {
 		return ""
 	}
-	return s.ContentType
+	return o.ContentType
 }
 
-func (s *SearchFlowTemplatesResponse) GetErrorResp() *shared.ErrorResp {
-	if s == nil {
+func (o *SearchFlowTemplatesResponse) GetErrorResp() *shared.ErrorResp {
+	if o == nil {
 		return nil
 	}
-	return s.ErrorResp
+	return o.ErrorResp
 }
 
-func (s *SearchFlowTemplatesResponse) GetStatusCode() int {
-	if s == nil {
+func (o *SearchFlowTemplatesResponse) GetStatusCode() int {
+	if o == nil {
 		return 0
 	}
-	return s.StatusCode
+	return o.StatusCode
 }
 
-func (s *SearchFlowTemplatesResponse) GetRawResponse() *http.Response {
-	if s == nil {
+func (o *SearchFlowTemplatesResponse) GetRawResponse() *http.Response {
+	if o == nil {
 		return nil
 	}
-	return s.RawResponse
+	return o.RawResponse
 }
 
-func (s *SearchFlowTemplatesResponse) GetObject() *SearchFlowTemplatesResponseBody {
-	if s == nil {
+func (o *SearchFlowTemplatesResponse) GetObject() *SearchFlowTemplatesResponseBody {
+	if o == nil {
 		return nil
 	}
-	return s.Object
+	return o.Object
 }

@@ -18,30 +18,30 @@ type CreateClosingReasonResponse struct {
 	RawResponse *http.Response
 }
 
-func (c *CreateClosingReasonResponse) GetClosingReason() *shared.ClosingReason {
-	if c == nil {
+func (o *CreateClosingReasonResponse) GetClosingReason() *shared.ClosingReason {
+	if o == nil {
 		return nil
 	}
-	return c.ClosingReason
+	return o.ClosingReason
 }
 
-func (c *CreateClosingReasonResponse) GetContentType() string {
-	if c == nil {
+func (o *CreateClosingReasonResponse) GetContentType() string {
+	if o == nil {
 		return ""
 	}
-	return c.ContentType
+	return o.ContentType
 }
 
-func (c *CreateClosingReasonResponse) GetStatusCode() int {
-	if c == nil {
+func (o *CreateClosingReasonResponse) GetStatusCode() int {
+	if o == nil {
 		return 0
 	}
-	return c.StatusCode
+	return o.StatusCode
 }
 
-func (c *CreateClosingReasonResponse) GetRawResponse() *http.Response {
-	if c == nil {
+func (o *CreateClosingReasonResponse) GetRawResponse() *http.Response {
+	if o == nil {
 		return nil
 	}
-	return c.RawResponse
+	return o.RawResponse
 }

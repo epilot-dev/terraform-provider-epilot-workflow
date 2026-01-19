@@ -12,11 +12,11 @@ type GetAllClosingReasonsRequest struct {
 	IncludeInactive *bool `queryParam:"style=form,explode=true,name=includeInactive"`
 }
 
-func (g *GetAllClosingReasonsRequest) GetIncludeInactive() *bool {
-	if g == nil {
+func (o *GetAllClosingReasonsRequest) GetIncludeInactive() *bool {
+	if o == nil {
 		return nil
 	}
-	return g.IncludeInactive
+	return o.IncludeInactive
 }
 
 type GetAllClosingReasonsResponse struct {
@@ -30,30 +30,30 @@ type GetAllClosingReasonsResponse struct {
 	RawResponse *http.Response
 }
 
-func (g *GetAllClosingReasonsResponse) GetClosingReasons() *shared.ClosingReasons {
-	if g == nil {
+func (o *GetAllClosingReasonsResponse) GetClosingReasons() *shared.ClosingReasons {
+	if o == nil {
 		return nil
 	}
-	return g.ClosingReasons
+	return o.ClosingReasons
 }
 
-func (g *GetAllClosingReasonsResponse) GetContentType() string {
-	if g == nil {
+func (o *GetAllClosingReasonsResponse) GetContentType() string {
+	if o == nil {
 		return ""
 	}
-	return g.ContentType
+	return o.ContentType
 }
 
-func (g *GetAllClosingReasonsResponse) GetStatusCode() int {
-	if g == nil {
+func (o *GetAllClosingReasonsResponse) GetStatusCode() int {
+	if o == nil {
 		return 0
 	}
-	return g.StatusCode
+	return o.StatusCode
 }
 
-func (g *GetAllClosingReasonsResponse) GetRawResponse() *http.Response {
-	if g == nil {
+func (o *GetAllClosingReasonsResponse) GetRawResponse() *http.Response {
+	if o == nil {
 		return nil
 	}
-	return g.RawResponse
+	return o.RawResponse
 }

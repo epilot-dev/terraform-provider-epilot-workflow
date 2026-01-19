@@ -33,99 +33,99 @@ func (t TaskBase) MarshalJSON() ([]byte, error) {
 }
 
 func (t *TaskBase) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &t, "", false, nil); err != nil {
+	if err := utils.UnmarshalJSON(data, &t, "", false, []string{"id", "name", "task_type"}); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (t *TaskBase) GetAssignedTo() []string {
-	if t == nil {
+func (o *TaskBase) GetAssignedTo() []string {
+	if o == nil {
 		return nil
 	}
-	return t.AssignedTo
+	return o.AssignedTo
 }
 
-func (t *TaskBase) GetDescription() *StepDescription {
-	if t == nil {
+func (o *TaskBase) GetDescription() *StepDescription {
+	if o == nil {
 		return nil
 	}
-	return t.Description
+	return o.Description
 }
 
-func (t *TaskBase) GetDueDate() *string {
-	if t == nil {
+func (o *TaskBase) GetDueDate() *string {
+	if o == nil {
 		return nil
 	}
-	return t.DueDate
+	return o.DueDate
 }
 
-func (t *TaskBase) GetDueDateConfig() *DueDateConfig {
-	if t == nil {
+func (o *TaskBase) GetDueDateConfig() *DueDateConfig {
+	if o == nil {
 		return nil
 	}
-	return t.DueDateConfig
+	return o.DueDateConfig
 }
 
-func (t *TaskBase) GetEcp() *ECPDetails {
-	if t == nil {
+func (o *TaskBase) GetEcp() *ECPDetails {
+	if o == nil {
 		return nil
 	}
-	return t.Ecp
+	return o.Ecp
 }
 
-func (t *TaskBase) GetID() string {
-	if t == nil {
+func (o *TaskBase) GetID() string {
+	if o == nil {
 		return ""
 	}
-	return t.ID
+	return o.ID
 }
 
-func (t *TaskBase) GetInstaller() *ECPDetails {
-	if t == nil {
+func (o *TaskBase) GetInstaller() *ECPDetails {
+	if o == nil {
 		return nil
 	}
-	return t.Installer
+	return o.Installer
 }
 
-func (t *TaskBase) GetJourney() *StepJourney {
-	if t == nil {
+func (o *TaskBase) GetJourney() *StepJourney {
+	if o == nil {
 		return nil
 	}
-	return t.Journey
+	return o.Journey
 }
 
-func (t *TaskBase) GetName() string {
-	if t == nil {
+func (o *TaskBase) GetName() string {
+	if o == nil {
 		return ""
 	}
-	return t.Name
+	return o.Name
 }
 
-func (t *TaskBase) GetPhaseID() *string {
-	if t == nil {
+func (o *TaskBase) GetPhaseID() *string {
+	if o == nil {
 		return nil
 	}
-	return t.PhaseID
+	return o.PhaseID
 }
 
-func (t *TaskBase) GetRequirements() []EnableRequirement {
-	if t == nil {
+func (o *TaskBase) GetRequirements() []EnableRequirement {
+	if o == nil {
 		return nil
 	}
-	return t.Requirements
+	return o.Requirements
 }
 
-func (t *TaskBase) GetTaskType() TaskType {
-	if t == nil {
+func (o *TaskBase) GetTaskType() TaskType {
+	if o == nil {
 		return TaskType("")
 	}
-	return t.TaskType
+	return o.TaskType
 }
 
-func (t *TaskBase) GetTaxonomies() []string {
-	if t == nil {
+func (o *TaskBase) GetTaxonomies() []string {
+	if o == nil {
 		return nil
 	}
-	return t.Taxonomies
+	return o.Taxonomies
 }

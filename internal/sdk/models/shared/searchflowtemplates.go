@@ -111,58 +111,58 @@ func (s *SearchFlowTemplates) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (s *SearchFlowTemplates) GetDefinitionID() *string {
-	if s == nil {
+func (o *SearchFlowTemplates) GetDefinitionID() *string {
+	if o == nil {
 		return nil
 	}
-	return s.DefinitionID
+	return o.DefinitionID
 }
 
-func (s *SearchFlowTemplates) GetEnabled() *bool {
-	if s == nil {
+func (o *SearchFlowTemplates) GetEnabled() *bool {
+	if o == nil {
 		return nil
 	}
-	return s.Enabled
+	return o.Enabled
 }
 
-func (s *SearchFlowTemplates) GetFrom() *int64 {
-	if s == nil {
+func (o *SearchFlowTemplates) GetFrom() *int64 {
+	if o == nil {
 		return nil
 	}
-	return s.From
+	return o.From
 }
 
-func (s *SearchFlowTemplates) GetName() *string {
-	if s == nil {
+func (o *SearchFlowTemplates) GetName() *string {
+	if o == nil {
 		return nil
 	}
-	return s.Name
+	return o.Name
 }
 
-func (s *SearchFlowTemplates) GetSize() *int64 {
-	if s == nil {
+func (o *SearchFlowTemplates) GetSize() *int64 {
+	if o == nil {
 		return nil
 	}
-	return s.Size
+	return o.Size
 }
 
-func (s *SearchFlowTemplates) GetSortBy() *SortBy {
-	if s == nil {
+func (o *SearchFlowTemplates) GetSortBy() *SortBy {
+	if o == nil {
 		return nil
 	}
-	return s.SortBy
+	return o.SortBy
 }
 
-func (s *SearchFlowTemplates) GetSortOrder() *SortOrder {
-	if s == nil {
+func (o *SearchFlowTemplates) GetSortOrder() *SortOrder {
+	if o == nil {
 		return nil
 	}
-	return s.SortOrder
+	return o.SortOrder
 }
 
-func (s *SearchFlowTemplates) GetTriggerType() *TriggerType {
-	if s == nil {
+func (o *SearchFlowTemplates) GetTriggerType() *TriggerType {
+	if o == nil {
 		return nil
 	}
-	return s.TriggerType
+	return o.TriggerType
 }

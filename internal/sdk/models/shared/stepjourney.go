@@ -25,30 +25,30 @@ func (s *StepJourney) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (s *StepJourney) GetCompleteTaskAutomatically() *bool {
-	if s == nil {
+func (o *StepJourney) GetCompleteTaskAutomatically() *bool {
+	if o == nil {
 		return nil
 	}
-	return s.CompleteTaskAutomatically
+	return o.CompleteTaskAutomatically
 }
 
-func (s *StepJourney) GetID() *string {
-	if s == nil {
+func (o *StepJourney) GetID() *string {
+	if o == nil {
 		return nil
 	}
-	return s.ID
+	return o.ID
 }
 
-func (s *StepJourney) GetJourneyID() *string {
-	if s == nil {
+func (o *StepJourney) GetJourneyID() *string {
+	if o == nil {
 		return nil
 	}
-	return s.JourneyID
+	return o.JourneyID
 }
 
-func (s *StepJourney) GetName() *string {
-	if s == nil {
+func (o *StepJourney) GetName() *string {
+	if o == nil {
 		return nil
 	}
-	return s.Name
+	return o.Name
 }

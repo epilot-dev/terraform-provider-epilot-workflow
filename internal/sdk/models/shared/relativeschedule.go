@@ -101,38 +101,38 @@ func (r Reference) MarshalJSON() ([]byte, error) {
 }
 
 func (r *Reference) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &r, "", false, nil); err != nil {
+	if err := utils.UnmarshalJSON(data, &r, "", false, []string{"id", "origin"}); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *Reference) GetAttribute() *string {
-	if r == nil {
+func (o *Reference) GetAttribute() *string {
+	if o == nil {
 		return nil
 	}
-	return r.Attribute
+	return o.Attribute
 }
 
-func (r *Reference) GetID() string {
-	if r == nil {
+func (o *Reference) GetID() string {
+	if o == nil {
 		return ""
 	}
-	return r.ID
+	return o.ID
 }
 
-func (r *Reference) GetOrigin() RelativeScheduleOrigin {
-	if r == nil {
+func (o *Reference) GetOrigin() RelativeScheduleOrigin {
+	if o == nil {
 		return RelativeScheduleOrigin("")
 	}
-	return r.Origin
+	return o.Origin
 }
 
-func (r *Reference) GetSchema() *string {
-	if r == nil {
+func (o *Reference) GetSchema() *string {
+	if o == nil {
 		return nil
 	}
-	return r.Schema
+	return o.Schema
 }
 
 type RelativeSchedule struct {
@@ -148,43 +148,43 @@ func (r RelativeSchedule) MarshalJSON() ([]byte, error) {
 }
 
 func (r *RelativeSchedule) UnmarshalJSON(data []byte) error {
-	if err := utils.UnmarshalJSON(data, &r, "", false, nil); err != nil {
+	if err := utils.UnmarshalJSON(data, &r, "", false, []string{"direction", "duration", "mode", "reference", "unit"}); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *RelativeSchedule) GetDirection() Direction {
-	if r == nil {
+func (o *RelativeSchedule) GetDirection() Direction {
+	if o == nil {
 		return Direction("")
 	}
-	return r.Direction
+	return o.Direction
 }
 
-func (r *RelativeSchedule) GetDuration() float64 {
-	if r == nil {
+func (o *RelativeSchedule) GetDuration() float64 {
+	if o == nil {
 		return 0.0
 	}
-	return r.Duration
+	return o.Duration
 }
 
-func (r *RelativeSchedule) GetMode() RelativeScheduleMode {
-	if r == nil {
+func (o *RelativeSchedule) GetMode() RelativeScheduleMode {
+	if o == nil {
 		return RelativeScheduleMode("")
 	}
-	return r.Mode
+	return o.Mode
 }
 
-func (r *RelativeSchedule) GetReference() Reference {
-	if r == nil {
+func (o *RelativeSchedule) GetReference() Reference {
+	if o == nil {
 		return Reference{}
 	}
-	return r.Reference
+	return o.Reference
 }
 
-func (r *RelativeSchedule) GetUnit() TimeUnit {
-	if r == nil {
+func (o *RelativeSchedule) GetUnit() TimeUnit {
+	if o == nil {
 		return TimeUnit("")
 	}
-	return r.Unit
+	return o.Unit
 }

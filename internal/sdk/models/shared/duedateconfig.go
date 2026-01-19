@@ -45,37 +45,37 @@ type DueDateConfig struct {
 	Unit     TimeUnit          `json:"unit"`
 }
 
-func (d *DueDateConfig) GetDuration() float64 {
-	if d == nil {
+func (o *DueDateConfig) GetDuration() float64 {
+	if o == nil {
 		return 0.0
 	}
-	return d.Duration
+	return o.Duration
 }
 
-func (d *DueDateConfig) GetPhaseID() *string {
-	if d == nil {
+func (o *DueDateConfig) GetPhaseID() *string {
+	if o == nil {
 		return nil
 	}
-	return d.PhaseID
+	return o.PhaseID
 }
 
-func (d *DueDateConfig) GetTaskID() *string {
-	if d == nil {
+func (o *DueDateConfig) GetTaskID() *string {
+	if o == nil {
 		return nil
 	}
-	return d.TaskID
+	return o.TaskID
 }
 
-func (d *DueDateConfig) GetType() DueDateConfigType {
-	if d == nil {
+func (o *DueDateConfig) GetType() DueDateConfigType {
+	if o == nil {
 		return DueDateConfigType("")
 	}
-	return d.Type
+	return o.Type
 }
 
-func (d *DueDateConfig) GetUnit() TimeUnit {
-	if d == nil {
+func (o *DueDateConfig) GetUnit() TimeUnit {
+	if o == nil {
 		return TimeUnit("")
 	}
-	return d.Unit
+	return o.Unit
 }
