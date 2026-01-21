@@ -17,12 +17,13 @@ resource "epilot-workflow_workflow_definition" "my_workflowdefinition" {
     step_id               = "...my_step_id..."
     time_period           = "days"
   }
-  enable_ecp_workflow = false
-  enabled             = false
-  flow                = "{ \"see\": \"documentation\" }"
-  id                  = "...my_id..."
-  last_update_time    = "2021-04-27T12:01:13.000Z"
-  name                = "...my_name..."
+  enable_ecp_workflow             = false
+  enabled                         = false
+  flow                            = "{ \"see\": \"documentation\" }"
+  id                              = "...my_id..."
+  last_update_time                = "2021-04-27T12:01:13.000Z"
+  name                            = "...my_name..."
+  single_closing_reason_selection = false
   taxonomies = [
     "..."
   ]

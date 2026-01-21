@@ -30,21 +30,22 @@ type WorkflowDefinitionDataSource struct {
 
 // WorkflowDefinitionDataSourceModel describes the data model.
 type WorkflowDefinitionDataSourceModel struct {
-	AssignedTo             []types.String                   `tfsdk:"assigned_to"`
-	ClosingReasons         []tfTypes.ClosingReasonID        `tfsdk:"closing_reasons"`
-	CreationTime           types.String                     `tfsdk:"creation_time"`
-	Description            types.String                     `tfsdk:"description"`
-	DueDate                types.String                     `tfsdk:"due_date"`
-	DynamicDueDate         *tfTypes.DynamicDueDate          `tfsdk:"dynamic_due_date"`
-	Enabled                types.Bool                       `tfsdk:"enabled"`
-	EnableECPWorkflow      types.Bool                       `tfsdk:"enable_ecp_workflow"`
-	Flow                   jsontypes.Normalized             `tfsdk:"flow"`
-	ID                     types.String                     `tfsdk:"id"`
-	LastUpdateTime         types.String                     `tfsdk:"last_update_time"`
-	Name                   types.String                     `tfsdk:"name"`
-	Taxonomies             []types.String                   `tfsdk:"taxonomies"`
-	UpdateEntityAttributes []tfTypes.UpdateEntityAttributes `tfsdk:"update_entity_attributes"`
-	UserIds                []types.Float64                  `tfsdk:"user_ids"`
+	AssignedTo                   []types.String                   `tfsdk:"assigned_to"`
+	ClosingReasons               []tfTypes.ClosingReasonID        `tfsdk:"closing_reasons"`
+	CreationTime                 types.String                     `tfsdk:"creation_time"`
+	Description                  types.String                     `tfsdk:"description"`
+	DueDate                      types.String                     `tfsdk:"due_date"`
+	DynamicDueDate               *tfTypes.DynamicDueDate          `tfsdk:"dynamic_due_date"`
+	Enabled                      types.Bool                       `tfsdk:"enabled"`
+	EnableECPWorkflow            types.Bool                       `tfsdk:"enable_ecp_workflow"`
+	Flow                         jsontypes.Normalized             `tfsdk:"flow"`
+	ID                           types.String                     `tfsdk:"id"`
+	LastUpdateTime               types.String                     `tfsdk:"last_update_time"`
+	Name                         types.String                     `tfsdk:"name"`
+	SingleClosingReasonSelection types.Bool                       `tfsdk:"single_closing_reason_selection"`
+	Taxonomies                   []types.String                   `tfsdk:"taxonomies"`
+	UpdateEntityAttributes       []tfTypes.UpdateEntityAttributes `tfsdk:"update_entity_attributes"`
+	UserIds                      []types.Float64                  `tfsdk:"user_ids"`
 }
 
 // Metadata returns the data source type name.
@@ -125,6 +126,10 @@ func (r *WorkflowDefinitionDataSource) Schema(ctx context.Context, req datasourc
 			},
 			"name": schema.StringAttribute{
 				Computed: true,
+			},
+			"single_closing_reason_selection": schema.BoolAttribute{
+				Computed:    true,
+				Description: `Whether only a single closing reason can be selected`,
 			},
 			"taxonomies": schema.ListAttribute{
 				Computed:    true,

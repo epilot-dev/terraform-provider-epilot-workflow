@@ -18,10 +18,10 @@ const (
 )
 
 type Trigger struct {
-	ManualTrigger            *ManualTrigger            `queryParam:"inline,name=Trigger" union:"member"`
-	AutomationTrigger        *AutomationTrigger        `queryParam:"inline,name=Trigger" union:"member"`
-	JourneySubmissionTrigger *JourneySubmissionTrigger `queryParam:"inline,name=Trigger" union:"member"`
-	JourneyAutomationTrigger *JourneyAutomationTrigger `queryParam:"inline,name=Trigger" union:"member"`
+	ManualTrigger            *ManualTrigger            `queryParam:"inline" union:"member"`
+	AutomationTrigger        *AutomationTrigger        `queryParam:"inline" union:"member"`
+	JourneySubmissionTrigger *JourneySubmissionTrigger `queryParam:"inline" union:"member"`
+	JourneyAutomationTrigger *JourneyAutomationTrigger `queryParam:"inline" union:"member"`
 
 	Type TriggerUnionType
 }

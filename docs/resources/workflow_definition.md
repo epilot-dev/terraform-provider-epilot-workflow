@@ -32,12 +32,13 @@ resource "epilot-workflow_workflow_definition" "my_workflowdefinition" {
     step_id               = "...my_step_id..."
     time_period           = "days"
   }
-  enable_ecp_workflow = false
-  enabled             = false
-  flow                = "{ \"see\": \"documentation\" }"
-  id                  = "...my_id..."
-  last_update_time    = "2021-04-27T12:01:13.000Z"
-  name                = "...my_name..."
+  enable_ecp_workflow             = false
+  enabled                         = false
+  flow                            = "{ \"see\": \"documentation\" }"
+  id                              = "...my_id..."
+  last_update_time                = "2021-04-27T12:01:13.000Z"
+  name                            = "...my_name..."
+  single_closing_reason_selection = false
   taxonomies = [
     "..."
   ]
@@ -75,6 +76,7 @@ resource "epilot-workflow_workflow_definition" "my_workflowdefinition" {
 - `enable_ecp_workflow` (Boolean) Indicates whether this workflow is available for End Customer Portal or not. By default it's not.
 - `enabled` (Boolean) Whether the workflow is enabled or not. Default: true
 - `last_update_time` (String) ISO String Date & Time
+- `single_closing_reason_selection` (Boolean) Whether only a single closing reason can be selected
 - `taxonomies` (List of String) Taxonomy ids that are associated with this workflow and used for filtering
 - `update_entity_attributes` (Attributes List) (see [below for nested schema](#nestedatt--update_entity_attributes))
 - `user_ids` (List of Number, Deprecated) This field is deprecated. Please use assignedTo

@@ -57,8 +57,8 @@ const (
 )
 
 type Schedule struct {
-	DelayedSchedule  *DelayedSchedule  `queryParam:"inline,name=schedule" union:"member"`
-	RelativeSchedule *RelativeSchedule `queryParam:"inline,name=schedule" union:"member"`
+	DelayedSchedule  *DelayedSchedule  `queryParam:"inline" union:"member"`
+	RelativeSchedule *RelativeSchedule `queryParam:"inline" union:"member"`
 
 	Type ScheduleType
 }

@@ -34,6 +34,7 @@ data "epilot-workflow_workflow_definition" "my_workflowdefinition" {
 - `id` (String) The ID of this resource.
 - `last_update_time` (String) ISO String Date & Time
 - `name` (String)
+- `single_closing_reason_selection` (Boolean) Whether only a single closing reason can be selected
 - `taxonomies` (List of String) Taxonomy ids that are associated with this workflow and used for filtering
 - `update_entity_attributes` (Attributes List) (see [below for nested schema](#nestedatt--update_entity_attributes))
 - `user_ids` (List of Number, Deprecated) This field is deprecated. Please use assignedTo

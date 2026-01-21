@@ -7,6 +7,7 @@ import (
 	"fmt"
 	tfTypes "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/provider/types"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk"
+	"github.com/hashicorp/terraform-plugin-framework-jsontypes/jsontypes"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -29,25 +30,26 @@ type FlowTemplateDataSource struct {
 
 // FlowTemplateDataSourceModel describes the data model.
 type FlowTemplateDataSourceModel struct {
-	AssignedTo     []types.String           `tfsdk:"assigned_to"`
-	AvailableInEcp types.Bool               `tfsdk:"available_in_ecp"`
-	ClosingReasons []tfTypes.ClosingReason1 `tfsdk:"closing_reasons"`
-	CreatedAt      types.String             `tfsdk:"created_at"`
-	Description    types.String             `tfsdk:"description"`
-	DueDate        types.String             `tfsdk:"due_date"`
-	DueDateConfig  *tfTypes.DueDateConfig   `tfsdk:"due_date_config"`
-	Edges          []tfTypes.Edge           `tfsdk:"edges"`
-	Enabled        types.Bool               `tfsdk:"enabled"`
-	EntitySync     []tfTypes.EntitySync     `tfsdk:"entity_sync"`
-	ID             types.String             `tfsdk:"id"`
-	Name           types.String             `tfsdk:"name"`
-	OrgID          types.String             `tfsdk:"org_id"`
-	Phases         []tfTypes.Phase          `tfsdk:"phases"`
-	Tasks          []tfTypes.Task           `tfsdk:"tasks"`
-	Taxonomies     []types.String           `tfsdk:"taxonomies"`
-	Trigger        *tfTypes.Trigger         `tfsdk:"trigger"`
-	UpdatedAt      types.String             `tfsdk:"updated_at"`
-	Version        types.String             `tfsdk:"version"`
+	AssignedTo                   []types.String           `tfsdk:"assigned_to"`
+	AvailableInEcp               types.Bool               `tfsdk:"available_in_ecp"`
+	ClosingReasons               []tfTypes.ClosingReason1 `tfsdk:"closing_reasons"`
+	CreatedAt                    types.String             `tfsdk:"created_at"`
+	Description                  types.String             `tfsdk:"description"`
+	DueDate                      types.String             `tfsdk:"due_date"`
+	DueDateConfig                *tfTypes.DueDateConfig   `tfsdk:"due_date_config"`
+	Edges                        []tfTypes.Edge           `tfsdk:"edges"`
+	Enabled                      types.Bool               `tfsdk:"enabled"`
+	EntitySync                   []tfTypes.EntitySync     `tfsdk:"entity_sync"`
+	ID                           types.String             `tfsdk:"id"`
+	Name                         types.String             `tfsdk:"name"`
+	OrgID                        types.String             `tfsdk:"org_id"`
+	Phases                       []tfTypes.Phase          `tfsdk:"phases"`
+	SingleClosingReasonSelection types.Bool               `tfsdk:"single_closing_reason_selection"`
+	Tasks                        []tfTypes.Task           `tfsdk:"tasks"`
+	Taxonomies                   []types.String           `tfsdk:"taxonomies"`
+	Trigger                      *tfTypes.Trigger         `tfsdk:"trigger"`
+	UpdatedAt                    types.String             `tfsdk:"updated_at"`
+	Version                      types.String             `tfsdk:"version"`
 }
 
 // Metadata returns the data source type name.
@@ -262,10 +264,194 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 					},
 				},
 			},
+			"single_closing_reason_selection": schema.BoolAttribute{
+				Computed:    true,
+				Description: `Whether only a single closing reason can be selected`,
+			},
 			"tasks": schema.ListNestedAttribute{
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
+						"ai_agent_task": schema.SingleNestedAttribute{
+							Computed: true,
+							Attributes: map[string]schema.Attribute{
+								"agent_config": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"additional_properties": schema.StringAttribute{
+											CustomType:  jsontypes.NormalizedType{},
+											Computed:    true,
+											Description: `Parsed as JSON.`,
+										},
+										"agent_id": schema.StringAttribute{
+											Computed:    true,
+											Description: `Id of the configured AI Agent to run`,
+										},
+									},
+									Description: `Configuration for AI Agent to run`,
+								},
+								"assigned_to": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
+								},
+								"description": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"enabled": schema.BoolAttribute{
+											Computed: true,
+										},
+										"value": schema.StringAttribute{
+											Computed: true,
+										},
+									},
+									Description: `Longer information regarding Task`,
+								},
+								"due_date": schema.StringAttribute{
+									Computed: true,
+								},
+								"due_date_config": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"duration": schema.Float64Attribute{
+											Computed: true,
+										},
+										"phase_id": schema.StringAttribute{
+											Computed: true,
+										},
+										"task_id": schema.StringAttribute{
+											Computed: true,
+										},
+										"type": schema.StringAttribute{
+											Computed: true,
+										},
+										"unit": schema.StringAttribute{
+											Computed: true,
+										},
+									},
+									Description: `Set due date for the task based on a dynamic condition`,
+								},
+								"ecp": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"description": schema.StringAttribute{
+											Computed: true,
+										},
+										"enabled": schema.BoolAttribute{
+											Computed: true,
+										},
+										"journey": schema.SingleNestedAttribute{
+											Computed: true,
+											Attributes: map[string]schema.Attribute{
+												"complete_task_automatically": schema.BoolAttribute{
+													Computed:    true,
+													Description: `If true, the task be auto completed when the journey is completed. By default it is true.`,
+												},
+												"id": schema.StringAttribute{
+													Computed: true,
+												},
+												"journey_id": schema.StringAttribute{
+													Computed: true,
+												},
+												"name": schema.StringAttribute{
+													Computed: true,
+												},
+											},
+										},
+										"label": schema.StringAttribute{
+											Computed: true,
+										},
+									},
+									Description: `Details regarding ECP for the workflow step`,
+								},
+								"id": schema.StringAttribute{
+									Computed: true,
+								},
+								"installer": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"description": schema.StringAttribute{
+											Computed: true,
+										},
+										"enabled": schema.BoolAttribute{
+											Computed: true,
+										},
+										"journey": schema.SingleNestedAttribute{
+											Computed: true,
+											Attributes: map[string]schema.Attribute{
+												"complete_task_automatically": schema.BoolAttribute{
+													Computed:    true,
+													Description: `If true, the task be auto completed when the journey is completed. By default it is true.`,
+												},
+												"id": schema.StringAttribute{
+													Computed: true,
+												},
+												"journey_id": schema.StringAttribute{
+													Computed: true,
+												},
+												"name": schema.StringAttribute{
+													Computed: true,
+												},
+											},
+										},
+										"label": schema.StringAttribute{
+											Computed: true,
+										},
+									},
+									Description: `Details regarding ECP for the workflow step`,
+								},
+								"journey": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"complete_task_automatically": schema.BoolAttribute{
+											Computed:    true,
+											Description: `If true, the task be auto completed when the journey is completed. By default it is true.`,
+										},
+										"id": schema.StringAttribute{
+											Computed: true,
+										},
+										"journey_id": schema.StringAttribute{
+											Computed: true,
+										},
+										"name": schema.StringAttribute{
+											Computed: true,
+										},
+									},
+								},
+								"name": schema.StringAttribute{
+									Computed: true,
+								},
+								"phase_id": schema.StringAttribute{
+									Computed: true,
+								},
+								"requirements": schema.ListNestedAttribute{
+									Computed: true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"phase_id": schema.StringAttribute{
+												Computed:    true,
+												Description: `The id of the phase that it points to`,
+											},
+											"task_id": schema.StringAttribute{
+												Computed:    true,
+												Description: `The id of the task that it points to`,
+											},
+											"when": schema.StringAttribute{
+												Computed: true,
+											},
+										},
+									},
+									Description: `requirements that need to be fulfilled in order to enable the task while flow instances are running`,
+								},
+								"task_type": schema.StringAttribute{
+									Computed: true,
+								},
+								"taxonomies": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
+									Description: `Taxonomy ids that are associated with this workflow and used for filtering`,
+								},
+							},
+						},
 						"automation_task": schema.SingleNestedAttribute{
 							Computed: true,
 							Attributes: map[string]schema.Attribute{

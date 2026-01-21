@@ -14,12 +14,14 @@ const (
 	TaskUnionTypeTaskBase       TaskUnionType = "TaskBase"
 	TaskUnionTypeAutomationTask TaskUnionType = "AutomationTask"
 	TaskUnionTypeDecisionTask   TaskUnionType = "DecisionTask"
+	TaskUnionTypeAiAgentTask    TaskUnionType = "AiAgentTask"
 )
 
 type Task struct {
-	TaskBase       *TaskBase       `queryParam:"inline,name=Task" union:"member"`
-	AutomationTask *AutomationTask `queryParam:"inline,name=Task" union:"member"`
-	DecisionTask   *DecisionTask   `queryParam:"inline,name=Task" union:"member"`
+	TaskBase       *TaskBase       `queryParam:"inline" union:"member"`
+	AutomationTask *AutomationTask `queryParam:"inline" union:"member"`
+	DecisionTask   *DecisionTask   `queryParam:"inline" union:"member"`
+	AiAgentTask    *AiAgentTask    `queryParam:"inline" union:"member"`
 
 	Type TaskUnionType
 }
@@ -48,6 +50,15 @@ func CreateTaskDecisionTask(decisionTask DecisionTask) Task {
 	return Task{
 		DecisionTask: &decisionTask,
 		Type:         typ,
+	}
+}
+
+func CreateTaskAiAgentTask(aiAgentTask AiAgentTask) Task {
+	typ := TaskUnionTypeAiAgentTask
+
+	return Task{
+		AiAgentTask: &aiAgentTask,
+		Type:        typ,
 	}
 }
 
@@ -80,6 +91,14 @@ func (u *Task) UnmarshalJSON(data []byte) error {
 		})
 	}
 
+	var aiAgentTask AiAgentTask = AiAgentTask{}
+	if err := utils.UnmarshalJSON(data, &aiAgentTask, "", true, nil); err == nil {
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  TaskUnionTypeAiAgentTask,
+			Value: &aiAgentTask,
+		})
+	}
+
 	if len(candidates) == 0 {
 		return fmt.Errorf("could not unmarshal `%s` into any supported union types for Task", string(data))
 	}
@@ -102,6 +121,9 @@ func (u *Task) UnmarshalJSON(data []byte) error {
 	case TaskUnionTypeDecisionTask:
 		u.DecisionTask = best.Value.(*DecisionTask)
 		return nil
+	case TaskUnionTypeAiAgentTask:
+		u.AiAgentTask = best.Value.(*AiAgentTask)
+		return nil
 	}
 
 	return fmt.Errorf("could not unmarshal `%s` into any supported union types for Task", string(data))
@@ -118,6 +140,10 @@ func (u Task) MarshalJSON() ([]byte, error) {
 
 	if u.DecisionTask != nil {
 		return utils.MarshalJSON(u.DecisionTask, "", true)
+	}
+
+	if u.AiAgentTask != nil {
+		return utils.MarshalJSON(u.AiAgentTask, "", true)
 	}
 
 	return nil, errors.New("could not marshal union type Task: all fields are null")

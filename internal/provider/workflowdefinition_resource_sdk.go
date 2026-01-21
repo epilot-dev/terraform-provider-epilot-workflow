@@ -50,6 +50,7 @@ func (r *WorkflowDefinitionResourceModel) RefreshFromSharedWorkflowDefinition(ct
 		r.ID = types.StringPointerValue(resp.ID)
 		r.LastUpdateTime = types.StringPointerValue(resp.LastUpdateTime)
 		r.Name = types.StringValue(resp.Name)
+		r.SingleClosingReasonSelection = types.BoolPointerValue(resp.SingleClosingReasonSelection)
 		r.Taxonomies = make([]types.String, 0, len(resp.Taxonomies))
 		for _, v := range resp.Taxonomies {
 			r.Taxonomies = append(r.Taxonomies, types.StringValue(v))
@@ -211,6 +212,12 @@ func (r *WorkflowDefinitionResourceModel) ToSharedWorkflowDefinition(ctx context
 	var name string
 	name = r.Name.ValueString()
 
+	singleClosingReasonSelection := new(bool)
+	if !r.SingleClosingReasonSelection.IsUnknown() && !r.SingleClosingReasonSelection.IsNull() {
+		*singleClosingReasonSelection = r.SingleClosingReasonSelection.ValueBool()
+	} else {
+		singleClosingReasonSelection = nil
+	}
 	taxonomies := make([]string, 0, len(r.Taxonomies))
 	for taxonomiesIndex := range r.Taxonomies {
 		taxonomies = append(taxonomies, r.Taxonomies[taxonomiesIndex].ValueString())
@@ -238,21 +245,22 @@ func (r *WorkflowDefinitionResourceModel) ToSharedWorkflowDefinition(ctx context
 		userIds = append(userIds, r.UserIds[userIdsIndex].ValueFloat64())
 	}
 	out := shared.WorkflowDefinition{
-		AssignedTo:             assignedTo,
-		ClosingReasons:         closingReasons,
-		CreationTime:           creationTime,
-		Description:            description,
-		DueDate:                dueDate,
-		DynamicDueDate:         dynamicDueDate,
-		EnableECPWorkflow:      enableECPWorkflow,
-		Enabled:                enabled,
-		Flow:                   flow,
-		ID:                     id1,
-		LastUpdateTime:         lastUpdateTime,
-		Name:                   name,
-		Taxonomies:             taxonomies,
-		UpdateEntityAttributes: updateEntityAttributes,
-		UserIds:                userIds,
+		AssignedTo:                   assignedTo,
+		ClosingReasons:               closingReasons,
+		CreationTime:                 creationTime,
+		Description:                  description,
+		DueDate:                      dueDate,
+		DynamicDueDate:               dynamicDueDate,
+		EnableECPWorkflow:            enableECPWorkflow,
+		Enabled:                      enabled,
+		Flow:                         flow,
+		ID:                           id1,
+		LastUpdateTime:               lastUpdateTime,
+		Name:                         name,
+		SingleClosingReasonSelection: singleClosingReasonSelection,
+		Taxonomies:                   taxonomies,
+		UpdateEntityAttributes:       updateEntityAttributes,
+		UserIds:                      userIds,
 	}
 
 	return &out, diags

@@ -17,9 +17,9 @@ const (
 )
 
 type ActionSchedule struct {
-	ImmediateSchedule *ImmediateSchedule `queryParam:"inline,name=ActionSchedule" union:"member"`
-	DelayedSchedule   *DelayedSchedule   `queryParam:"inline,name=ActionSchedule" union:"member"`
-	RelativeSchedule  *RelativeSchedule  `queryParam:"inline,name=ActionSchedule" union:"member"`
+	ImmediateSchedule *ImmediateSchedule `queryParam:"inline" union:"member"`
+	DelayedSchedule   *DelayedSchedule   `queryParam:"inline" union:"member"`
+	RelativeSchedule  *RelativeSchedule  `queryParam:"inline" union:"member"`
 
 	Type ActionScheduleType
 }

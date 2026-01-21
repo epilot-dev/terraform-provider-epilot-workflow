@@ -25,7 +25,9 @@ type FlowTemplateInput struct {
 	Name       string       `json:"name"`
 	OrgID      *string      `json:"org_id,omitempty"`
 	Phases     []Phase      `json:"phases,omitempty"`
-	Tasks      []Task       `json:"tasks"`
+	// Whether only a single closing reason can be selected
+	SingleClosingReasonSelection *bool  `json:"singleClosingReasonSelection,omitempty"`
+	Tasks                        []Task `json:"tasks"`
 	// Taxonomy ids that are associated with this workflow and used for filtering
 	Taxonomies []string `json:"taxonomies,omitempty"`
 	Trigger    *Trigger `json:"trigger,omitempty"`
@@ -147,6 +149,13 @@ func (f *FlowTemplateInput) GetPhases() []Phase {
 		return nil
 	}
 	return f.Phases
+}
+
+func (f *FlowTemplateInput) GetSingleClosingReasonSelection() *bool {
+	if f == nil {
+		return nil
+	}
+	return f.SingleClosingReasonSelection
 }
 
 func (f *FlowTemplateInput) GetTasks() []Task {

@@ -36,6 +36,7 @@ data "epilot-workflow_flow_template" "my_flowtemplate" {
 - `name` (String)
 - `org_id` (String)
 - `phases` (Attributes List) (see [below for nested schema](#nestedatt--phases))
+- `single_closing_reason_selection` (Boolean) Whether only a single closing reason can be selected
 - `tasks` (Attributes List) (see [below for nested schema](#nestedatt--tasks))
 - `taxonomies` (List of String) Taxonomy ids that are associated with this workflow and used for filtering
 - `trigger` (Attributes) (see [below for nested schema](#nestedatt--trigger))
@@ -163,9 +164,126 @@ Read-Only:
 
 Read-Only:
 
+- `ai_agent_task` (Attributes) (see [below for nested schema](#nestedatt--tasks--ai_agent_task))
 - `automation_task` (Attributes) (see [below for nested schema](#nestedatt--tasks--automation_task))
 - `decision_task` (Attributes) (see [below for nested schema](#nestedatt--tasks--decision_task))
 - `task_base` (Attributes) (see [below for nested schema](#nestedatt--tasks--task_base))
+
+<a id="nestedatt--tasks--ai_agent_task"></a>
+### Nested Schema for `tasks.ai_agent_task`
+
+Read-Only:
+
+- `agent_config` (Attributes) Configuration for AI Agent to run (see [below for nested schema](#nestedatt--tasks--ai_agent_task--agent_config))
+- `assigned_to` (List of String)
+- `description` (Attributes) Longer information regarding Task (see [below for nested schema](#nestedatt--tasks--ai_agent_task--description))
+- `due_date` (String)
+- `due_date_config` (Attributes) Set due date for the task based on a dynamic condition (see [below for nested schema](#nestedatt--tasks--ai_agent_task--due_date_config))
+- `ecp` (Attributes) Details regarding ECP for the workflow step (see [below for nested schema](#nestedatt--tasks--ai_agent_task--ecp))
+- `id` (String)
+- `installer` (Attributes) Details regarding ECP for the workflow step (see [below for nested schema](#nestedatt--tasks--ai_agent_task--installer))
+- `journey` (Attributes) (see [below for nested schema](#nestedatt--tasks--ai_agent_task--journey))
+- `name` (String)
+- `phase_id` (String)
+- `requirements` (Attributes List) requirements that need to be fulfilled in order to enable the task while flow instances are running (see [below for nested schema](#nestedatt--tasks--ai_agent_task--requirements))
+- `task_type` (String)
+- `taxonomies` (List of String) Taxonomy ids that are associated with this workflow and used for filtering
+
+<a id="nestedatt--tasks--ai_agent_task--agent_config"></a>
+### Nested Schema for `tasks.ai_agent_task.agent_config`
+
+Read-Only:
+
+- `additional_properties` (String) Parsed as JSON.
+- `agent_id` (String) Id of the configured AI Agent to run
+
+
+<a id="nestedatt--tasks--ai_agent_task--description"></a>
+### Nested Schema for `tasks.ai_agent_task.description`
+
+Read-Only:
+
+- `enabled` (Boolean)
+- `value` (String)
+
+
+<a id="nestedatt--tasks--ai_agent_task--due_date_config"></a>
+### Nested Schema for `tasks.ai_agent_task.due_date_config`
+
+Read-Only:
+
+- `duration` (Number)
+- `phase_id` (String)
+- `task_id` (String)
+- `type` (String)
+- `unit` (String)
+
+
+<a id="nestedatt--tasks--ai_agent_task--ecp"></a>
+### Nested Schema for `tasks.ai_agent_task.ecp`
+
+Read-Only:
+
+- `description` (String)
+- `enabled` (Boolean)
+- `journey` (Attributes) (see [below for nested schema](#nestedatt--tasks--ai_agent_task--ecp--journey))
+- `label` (String)
+
+<a id="nestedatt--tasks--ai_agent_task--ecp--journey"></a>
+### Nested Schema for `tasks.ai_agent_task.ecp.journey`
+
+Read-Only:
+
+- `complete_task_automatically` (Boolean) If true, the task be auto completed when the journey is completed. By default it is true.
+- `id` (String)
+- `journey_id` (String)
+- `name` (String)
+
+
+
+<a id="nestedatt--tasks--ai_agent_task--installer"></a>
+### Nested Schema for `tasks.ai_agent_task.installer`
+
+Read-Only:
+
+- `description` (String)
+- `enabled` (Boolean)
+- `journey` (Attributes) (see [below for nested schema](#nestedatt--tasks--ai_agent_task--installer--journey))
+- `label` (String)
+
+<a id="nestedatt--tasks--ai_agent_task--installer--journey"></a>
+### Nested Schema for `tasks.ai_agent_task.installer.journey`
+
+Read-Only:
+
+- `complete_task_automatically` (Boolean) If true, the task be auto completed when the journey is completed. By default it is true.
+- `id` (String)
+- `journey_id` (String)
+- `name` (String)
+
+
+
+<a id="nestedatt--tasks--ai_agent_task--journey"></a>
+### Nested Schema for `tasks.ai_agent_task.journey`
+
+Read-Only:
+
+- `complete_task_automatically` (Boolean) If true, the task be auto completed when the journey is completed. By default it is true.
+- `id` (String)
+- `journey_id` (String)
+- `name` (String)
+
+
+<a id="nestedatt--tasks--ai_agent_task--requirements"></a>
+### Nested Schema for `tasks.ai_agent_task.requirements`
+
+Read-Only:
+
+- `phase_id` (String) The id of the phase that it points to
+- `task_id` (String) The id of the task that it points to
+- `when` (String)
+
+
 
 <a id="nestedatt--tasks--automation_task"></a>
 ### Nested Schema for `tasks.automation_task`

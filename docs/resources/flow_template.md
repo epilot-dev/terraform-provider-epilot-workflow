@@ -85,33 +85,34 @@ resource "epilot-workflow_flow_template" "my_flowtemplate" {
       ]
     }
   ]
+  single_closing_reason_selection = true
   tasks = [
     {
-      automation_task = {
+      ai_agent_task = {
+        agent_config = {
+          additional_properties = "{ \"see\": \"documentation\" }"
+          agent_id              = "...my_agent_id..."
+        }
         assigned_to = [
           "..."
         ]
-        automation_config = {
-          flow_id = "...my_flow_id..."
-        }
-        created_automatically = true
         description = {
           enabled = false
           value   = "...my_value..."
         }
         due_date = "2021-04-27T12:00:00.000Z"
         due_date_config = {
-          duration = 8.65
+          duration = 3.61
           phase_id = "...my_phase_id..."
           task_id  = "...my_task_id..."
           type     = "PHASE_FINISHED"
-          unit     = "days"
+          unit     = "months"
         }
         ecp = {
           description = "...my_description..."
-          enabled     = true
+          enabled     = false
           journey = {
-            complete_task_automatically = false
+            complete_task_automatically = true
             id                          = "...my_id..."
             journey_id                  = "...my_journey_id..."
             name                        = "...my_name..."
@@ -121,9 +122,9 @@ resource "epilot-workflow_flow_template" "my_flowtemplate" {
         id = "...my_id..."
         installer = {
           description = "...my_description..."
-          enabled     = false
+          enabled     = true
           journey = {
-            complete_task_automatically = true
+            complete_task_automatically = false
             id                          = "...my_id..."
             journey_id                  = "...my_journey_id..."
             name                        = "...my_name..."
@@ -142,28 +143,13 @@ resource "epilot-workflow_flow_template" "my_flowtemplate" {
           {
             phase_id = "...my_phase_id..."
             task_id  = "...my_task_id..."
-            when     = "PHASE_FINISHED"
+            when     = "TASK_FINISHED"
           }
         ]
-        schedule = {
-          relative_schedule = {
-            direction = "before"
-            duration  = 3.2
-            mode      = "relative"
-            reference = {
-              attribute = "...my_attribute..."
-              id        = "...my_id..."
-              origin    = "flow_started"
-              schema    = "...my_schema..."
-            }
-            unit = "days"
-          }
-        }
-        task_type = "AUTOMATION"
+        task_type = "MANUAL"
         taxonomies = [
           "..."
         ]
-        trigger_mode = "automatic"
       }
     }
   ]
@@ -206,6 +192,7 @@ resource "epilot-workflow_flow_template" "my_flowtemplate" {
 - `entity_sync` (Attributes List) (see [below for nested schema](#nestedatt--entity_sync))
 - `org_id` (String)
 - `phases` (Attributes List) (see [below for nested schema](#nestedatt--phases))
+- `single_closing_reason_selection` (Boolean) Whether only a single closing reason can be selected
 - `taxonomies` (List of String) Taxonomy ids that are associated with this workflow and used for filtering
 - `trigger` (Attributes) (see [below for nested schema](#nestedatt--trigger))
 - `updated_at` (String) ISO String Date & Time
@@ -237,9 +224,126 @@ Optional:
 
 Optional:
 
+- `ai_agent_task` (Attributes) (see [below for nested schema](#nestedatt--tasks--ai_agent_task))
 - `automation_task` (Attributes) (see [below for nested schema](#nestedatt--tasks--automation_task))
 - `decision_task` (Attributes) (see [below for nested schema](#nestedatt--tasks--decision_task))
 - `task_base` (Attributes) (see [below for nested schema](#nestedatt--tasks--task_base))
+
+<a id="nestedatt--tasks--ai_agent_task"></a>
+### Nested Schema for `tasks.ai_agent_task`
+
+Optional:
+
+- `agent_config` (Attributes) Configuration for AI Agent to run (see [below for nested schema](#nestedatt--tasks--ai_agent_task--agent_config))
+- `assigned_to` (List of String)
+- `description` (Attributes) Longer information regarding Task (see [below for nested schema](#nestedatt--tasks--ai_agent_task--description))
+- `due_date` (String)
+- `due_date_config` (Attributes) Set due date for the task based on a dynamic condition (see [below for nested schema](#nestedatt--tasks--ai_agent_task--due_date_config))
+- `ecp` (Attributes) Details regarding ECP for the workflow step (see [below for nested schema](#nestedatt--tasks--ai_agent_task--ecp))
+- `id` (String) Not Null
+- `installer` (Attributes) Details regarding ECP for the workflow step (see [below for nested schema](#nestedatt--tasks--ai_agent_task--installer))
+- `journey` (Attributes) (see [below for nested schema](#nestedatt--tasks--ai_agent_task--journey))
+- `name` (String) Not Null
+- `phase_id` (String)
+- `requirements` (Attributes List) requirements that need to be fulfilled in order to enable the task while flow instances are running (see [below for nested schema](#nestedatt--tasks--ai_agent_task--requirements))
+- `task_type` (String) Not Null; must be one of ["MANUAL", "AUTOMATION", "DECISION", "AI_AGENT"]
+- `taxonomies` (List of String) Taxonomy ids that are associated with this workflow and used for filtering
+
+<a id="nestedatt--tasks--ai_agent_task--agent_config"></a>
+### Nested Schema for `tasks.ai_agent_task.agent_config`
+
+Optional:
+
+- `additional_properties` (String) Parsed as JSON.
+- `agent_id` (String) Id of the configured AI Agent to run. Not Null
+
+
+<a id="nestedatt--tasks--ai_agent_task--description"></a>
+### Nested Schema for `tasks.ai_agent_task.description`
+
+Optional:
+
+- `enabled` (Boolean)
+- `value` (String)
+
+
+<a id="nestedatt--tasks--ai_agent_task--due_date_config"></a>
+### Nested Schema for `tasks.ai_agent_task.due_date_config`
+
+Optional:
+
+- `duration` (Number) Not Null
+- `phase_id` (String)
+- `task_id` (String)
+- `type` (String) Not Null; must be one of ["WORKFLOW_STARTED", "TASK_FINISHED", "PHASE_FINISHED"]
+- `unit` (String) Not Null; must be one of ["minutes", "hours", "days", "weeks", "months"]
+
+
+<a id="nestedatt--tasks--ai_agent_task--ecp"></a>
+### Nested Schema for `tasks.ai_agent_task.ecp`
+
+Optional:
+
+- `description` (String)
+- `enabled` (Boolean)
+- `journey` (Attributes) (see [below for nested schema](#nestedatt--tasks--ai_agent_task--ecp--journey))
+- `label` (String)
+
+<a id="nestedatt--tasks--ai_agent_task--ecp--journey"></a>
+### Nested Schema for `tasks.ai_agent_task.ecp.journey`
+
+Optional:
+
+- `complete_task_automatically` (Boolean) If true, the task be auto completed when the journey is completed. By default it is true. Default: true
+- `id` (String)
+- `journey_id` (String)
+- `name` (String)
+
+
+
+<a id="nestedatt--tasks--ai_agent_task--installer"></a>
+### Nested Schema for `tasks.ai_agent_task.installer`
+
+Optional:
+
+- `description` (String)
+- `enabled` (Boolean)
+- `journey` (Attributes) (see [below for nested schema](#nestedatt--tasks--ai_agent_task--installer--journey))
+- `label` (String)
+
+<a id="nestedatt--tasks--ai_agent_task--installer--journey"></a>
+### Nested Schema for `tasks.ai_agent_task.installer.journey`
+
+Optional:
+
+- `complete_task_automatically` (Boolean) If true, the task be auto completed when the journey is completed. By default it is true. Default: true
+- `id` (String)
+- `journey_id` (String)
+- `name` (String)
+
+
+
+<a id="nestedatt--tasks--ai_agent_task--journey"></a>
+### Nested Schema for `tasks.ai_agent_task.journey`
+
+Optional:
+
+- `complete_task_automatically` (Boolean) If true, the task be auto completed when the journey is completed. By default it is true. Default: true
+- `id` (String)
+- `journey_id` (String)
+- `name` (String)
+
+
+<a id="nestedatt--tasks--ai_agent_task--requirements"></a>
+### Nested Schema for `tasks.ai_agent_task.requirements`
+
+Optional:
+
+- `phase_id` (String) The id of the phase that it points to
+- `task_id` (String) The id of the task that it points to
+- `when` (String) Not Null; must be one of ["TASK_FINISHED", "PHASE_FINISHED"]
+
+
 
 <a id="nestedatt--tasks--automation_task"></a>
 ### Nested Schema for `tasks.automation_task`
@@ -260,7 +364,7 @@ Optional:
 - `phase_id` (String)
 - `requirements` (Attributes List) requirements that need to be fulfilled in order to enable the task while flow instances are running (see [below for nested schema](#nestedatt--tasks--automation_task--requirements))
 - `schedule` (Attributes) (see [below for nested schema](#nestedatt--tasks--automation_task--schedule))
-- `task_type` (String) Not Null; must be one of ["MANUAL", "AUTOMATION", "DECISION"]
+- `task_type` (String) Not Null; must be one of ["MANUAL", "AUTOMATION", "DECISION", "AI_AGENT"]
 - `taxonomies` (List of String) Taxonomy ids that are associated with this workflow and used for filtering
 - `trigger_mode` (String) must be one of ["manual", "automatic"]
 
@@ -429,7 +533,7 @@ Optional:
 - `phase_id` (String)
 - `requirements` (Attributes List) requirements that need to be fulfilled in order to enable the task while flow instances are running (see [below for nested schema](#nestedatt--tasks--decision_task--requirements))
 - `schedule` (Attributes) (see [below for nested schema](#nestedatt--tasks--decision_task--schedule))
-- `task_type` (String) Not Null; must be one of ["MANUAL", "AUTOMATION", "DECISION"]
+- `task_type` (String) Not Null; must be one of ["MANUAL", "AUTOMATION", "DECISION", "AI_AGENT"]
 - `taxonomies` (List of String) Taxonomy ids that are associated with this workflow and used for filtering
 - `trigger_mode` (String) Not Null; must be one of ["manual", "automatic"]
 
@@ -625,7 +729,7 @@ Optional:
 - `name` (String) Not Null
 - `phase_id` (String)
 - `requirements` (Attributes List) requirements that need to be fulfilled in order to enable the task while flow instances are running (see [below for nested schema](#nestedatt--tasks--task_base--requirements))
-- `task_type` (String) Not Null; must be one of ["MANUAL", "AUTOMATION", "DECISION"]
+- `task_type` (String) Not Null; must be one of ["MANUAL", "AUTOMATION", "DECISION", "AI_AGENT"]
 - `taxonomies` (List of String) Taxonomy ids that are associated with this workflow and used for filtering
 
 <a id="nestedatt--tasks--task_base--description"></a>

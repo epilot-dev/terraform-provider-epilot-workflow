@@ -50,6 +50,7 @@ func (r *WorkflowDefinitionDataSourceModel) RefreshFromSharedWorkflowDefinition(
 		r.ID = types.StringPointerValue(resp.ID)
 		r.LastUpdateTime = types.StringPointerValue(resp.LastUpdateTime)
 		r.Name = types.StringValue(resp.Name)
+		r.SingleClosingReasonSelection = types.BoolPointerValue(resp.SingleClosingReasonSelection)
 		r.Taxonomies = make([]types.String, 0, len(resp.Taxonomies))
 		for _, v := range resp.Taxonomies {
 			r.Taxonomies = append(r.Taxonomies, types.StringValue(v))

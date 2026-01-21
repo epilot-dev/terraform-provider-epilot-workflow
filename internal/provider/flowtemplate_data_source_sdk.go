@@ -4,9 +4,11 @@ package provider
 
 import (
 	"context"
+	"encoding/json"
 	tfTypes "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/provider/types"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/models/operations"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/models/shared"
+	"github.com/hashicorp/terraform-plugin-framework-jsontypes/jsontypes"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
@@ -112,11 +114,111 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 
 			r.Phases = append(r.Phases, phases)
 		}
+		r.SingleClosingReasonSelection = types.BoolPointerValue(resp.SingleClosingReasonSelection)
 		r.Tasks = []tfTypes.Task{}
 
 		for _, tasksItem := range resp.Tasks {
 			var tasks tfTypes.Task
 
+			if tasksItem.AiAgentTask != nil {
+				tasks.AiAgentTask = &tfTypes.AiAgentTask{}
+				if tasksItem.AiAgentTask.AgentConfig == nil {
+					tasks.AiAgentTask.AgentConfig = nil
+				} else {
+					tasks.AiAgentTask.AgentConfig = &tfTypes.AgentConfig{}
+					if tasksItem.AiAgentTask.AgentConfig.AdditionalProperties == nil {
+						tasks.AiAgentTask.AgentConfig.AdditionalProperties = jsontypes.NewNormalizedNull()
+					} else {
+						additionalPropertiesResult, _ := json.Marshal(tasksItem.AiAgentTask.AgentConfig.AdditionalProperties)
+						tasks.AiAgentTask.AgentConfig.AdditionalProperties = jsontypes.NewNormalizedValue(string(additionalPropertiesResult))
+					}
+					tasks.AiAgentTask.AgentConfig.AgentID = types.StringValue(tasksItem.AiAgentTask.AgentConfig.AgentID)
+				}
+				tasks.AiAgentTask.AssignedTo = make([]types.String, 0, len(tasksItem.AiAgentTask.AssignedTo))
+				for _, v := range tasksItem.AiAgentTask.AssignedTo {
+					tasks.AiAgentTask.AssignedTo = append(tasks.AiAgentTask.AssignedTo, types.StringValue(v))
+				}
+				if tasksItem.AiAgentTask.Description == nil {
+					tasks.AiAgentTask.Description = nil
+				} else {
+					tasks.AiAgentTask.Description = &tfTypes.StepDescription{}
+					tasks.AiAgentTask.Description.Enabled = types.BoolPointerValue(tasksItem.AiAgentTask.Description.Enabled)
+					tasks.AiAgentTask.Description.Value = types.StringPointerValue(tasksItem.AiAgentTask.Description.Value)
+				}
+				tasks.AiAgentTask.DueDate = types.StringPointerValue(tasksItem.AiAgentTask.DueDate)
+				if tasksItem.AiAgentTask.DueDateConfig == nil {
+					tasks.AiAgentTask.DueDateConfig = nil
+				} else {
+					tasks.AiAgentTask.DueDateConfig = &tfTypes.DueDateConfig{}
+					tasks.AiAgentTask.DueDateConfig.Duration = types.Float64Value(tasksItem.AiAgentTask.DueDateConfig.Duration)
+					tasks.AiAgentTask.DueDateConfig.PhaseID = types.StringPointerValue(tasksItem.AiAgentTask.DueDateConfig.PhaseID)
+					tasks.AiAgentTask.DueDateConfig.TaskID = types.StringPointerValue(tasksItem.AiAgentTask.DueDateConfig.TaskID)
+					tasks.AiAgentTask.DueDateConfig.Type = types.StringValue(string(tasksItem.AiAgentTask.DueDateConfig.Type))
+					tasks.AiAgentTask.DueDateConfig.Unit = types.StringValue(string(tasksItem.AiAgentTask.DueDateConfig.Unit))
+				}
+				if tasksItem.AiAgentTask.Ecp == nil {
+					tasks.AiAgentTask.Ecp = nil
+				} else {
+					tasks.AiAgentTask.Ecp = &tfTypes.ECPDetails{}
+					tasks.AiAgentTask.Ecp.Description = types.StringPointerValue(tasksItem.AiAgentTask.Ecp.Description)
+					tasks.AiAgentTask.Ecp.Enabled = types.BoolPointerValue(tasksItem.AiAgentTask.Ecp.Enabled)
+					if tasksItem.AiAgentTask.Ecp.Journey == nil {
+						tasks.AiAgentTask.Ecp.Journey = nil
+					} else {
+						tasks.AiAgentTask.Ecp.Journey = &tfTypes.StepJourney{}
+						tasks.AiAgentTask.Ecp.Journey.CompleteTaskAutomatically = types.BoolPointerValue(tasksItem.AiAgentTask.Ecp.Journey.CompleteTaskAutomatically)
+						tasks.AiAgentTask.Ecp.Journey.ID = types.StringPointerValue(tasksItem.AiAgentTask.Ecp.Journey.ID)
+						tasks.AiAgentTask.Ecp.Journey.JourneyID = types.StringPointerValue(tasksItem.AiAgentTask.Ecp.Journey.JourneyID)
+						tasks.AiAgentTask.Ecp.Journey.Name = types.StringPointerValue(tasksItem.AiAgentTask.Ecp.Journey.Name)
+					}
+					tasks.AiAgentTask.Ecp.Label = types.StringPointerValue(tasksItem.AiAgentTask.Ecp.Label)
+				}
+				tasks.AiAgentTask.ID = types.StringValue(tasksItem.AiAgentTask.ID)
+				if tasksItem.AiAgentTask.Installer == nil {
+					tasks.AiAgentTask.Installer = nil
+				} else {
+					tasks.AiAgentTask.Installer = &tfTypes.ECPDetails{}
+					tasks.AiAgentTask.Installer.Description = types.StringPointerValue(tasksItem.AiAgentTask.Installer.Description)
+					tasks.AiAgentTask.Installer.Enabled = types.BoolPointerValue(tasksItem.AiAgentTask.Installer.Enabled)
+					if tasksItem.AiAgentTask.Installer.Journey == nil {
+						tasks.AiAgentTask.Installer.Journey = nil
+					} else {
+						tasks.AiAgentTask.Installer.Journey = &tfTypes.StepJourney{}
+						tasks.AiAgentTask.Installer.Journey.CompleteTaskAutomatically = types.BoolPointerValue(tasksItem.AiAgentTask.Installer.Journey.CompleteTaskAutomatically)
+						tasks.AiAgentTask.Installer.Journey.ID = types.StringPointerValue(tasksItem.AiAgentTask.Installer.Journey.ID)
+						tasks.AiAgentTask.Installer.Journey.JourneyID = types.StringPointerValue(tasksItem.AiAgentTask.Installer.Journey.JourneyID)
+						tasks.AiAgentTask.Installer.Journey.Name = types.StringPointerValue(tasksItem.AiAgentTask.Installer.Journey.Name)
+					}
+					tasks.AiAgentTask.Installer.Label = types.StringPointerValue(tasksItem.AiAgentTask.Installer.Label)
+				}
+				if tasksItem.AiAgentTask.Journey == nil {
+					tasks.AiAgentTask.Journey = nil
+				} else {
+					tasks.AiAgentTask.Journey = &tfTypes.StepJourney{}
+					tasks.AiAgentTask.Journey.CompleteTaskAutomatically = types.BoolPointerValue(tasksItem.AiAgentTask.Journey.CompleteTaskAutomatically)
+					tasks.AiAgentTask.Journey.ID = types.StringPointerValue(tasksItem.AiAgentTask.Journey.ID)
+					tasks.AiAgentTask.Journey.JourneyID = types.StringPointerValue(tasksItem.AiAgentTask.Journey.JourneyID)
+					tasks.AiAgentTask.Journey.Name = types.StringPointerValue(tasksItem.AiAgentTask.Journey.Name)
+				}
+				tasks.AiAgentTask.Name = types.StringValue(tasksItem.AiAgentTask.Name)
+				tasks.AiAgentTask.PhaseID = types.StringPointerValue(tasksItem.AiAgentTask.PhaseID)
+				tasks.AiAgentTask.Requirements = []tfTypes.EnableRequirement{}
+
+				for _, requirementsItem := range tasksItem.AiAgentTask.Requirements {
+					var requirements tfTypes.EnableRequirement
+
+					requirements.PhaseID = types.StringPointerValue(requirementsItem.PhaseID)
+					requirements.TaskID = types.StringPointerValue(requirementsItem.TaskID)
+					requirements.When = types.StringValue(string(requirementsItem.When))
+
+					tasks.AiAgentTask.Requirements = append(tasks.AiAgentTask.Requirements, requirements)
+				}
+				tasks.AiAgentTask.TaskType = types.StringValue(string(tasksItem.AiAgentTask.TaskType))
+				tasks.AiAgentTask.Taxonomies = make([]types.String, 0, len(tasksItem.AiAgentTask.Taxonomies))
+				for _, v := range tasksItem.AiAgentTask.Taxonomies {
+					tasks.AiAgentTask.Taxonomies = append(tasks.AiAgentTask.Taxonomies, types.StringValue(v))
+				}
+			}
 			if tasksItem.AutomationTask != nil {
 				tasks.AutomationTask = &tfTypes.AutomationTask{}
 				tasks.AutomationTask.AssignedTo = make([]types.String, 0, len(tasksItem.AutomationTask.AssignedTo))
@@ -191,14 +293,14 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 				tasks.AutomationTask.PhaseID = types.StringPointerValue(tasksItem.AutomationTask.PhaseID)
 				tasks.AutomationTask.Requirements = []tfTypes.EnableRequirement{}
 
-				for _, requirementsItem := range tasksItem.AutomationTask.Requirements {
-					var requirements tfTypes.EnableRequirement
+				for _, requirementsItem1 := range tasksItem.AutomationTask.Requirements {
+					var requirements1 tfTypes.EnableRequirement
 
-					requirements.PhaseID = types.StringPointerValue(requirementsItem.PhaseID)
-					requirements.TaskID = types.StringPointerValue(requirementsItem.TaskID)
-					requirements.When = types.StringValue(string(requirementsItem.When))
+					requirements1.PhaseID = types.StringPointerValue(requirementsItem1.PhaseID)
+					requirements1.TaskID = types.StringPointerValue(requirementsItem1.TaskID)
+					requirements1.When = types.StringValue(string(requirementsItem1.When))
 
-					tasks.AutomationTask.Requirements = append(tasks.AutomationTask.Requirements, requirements)
+					tasks.AutomationTask.Requirements = append(tasks.AutomationTask.Requirements, requirements1)
 				}
 				if tasksItem.AutomationTask.Schedule != nil {
 					tasks.AutomationTask.Schedule = &tfTypes.ActionSchedule{}
@@ -368,14 +470,14 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 				tasks.DecisionTask.PhaseID = types.StringPointerValue(tasksItem.DecisionTask.PhaseID)
 				tasks.DecisionTask.Requirements = []tfTypes.EnableRequirement{}
 
-				for _, requirementsItem1 := range tasksItem.DecisionTask.Requirements {
-					var requirements1 tfTypes.EnableRequirement
+				for _, requirementsItem2 := range tasksItem.DecisionTask.Requirements {
+					var requirements2 tfTypes.EnableRequirement
 
-					requirements1.PhaseID = types.StringPointerValue(requirementsItem1.PhaseID)
-					requirements1.TaskID = types.StringPointerValue(requirementsItem1.TaskID)
-					requirements1.When = types.StringValue(string(requirementsItem1.When))
+					requirements2.PhaseID = types.StringPointerValue(requirementsItem2.PhaseID)
+					requirements2.TaskID = types.StringPointerValue(requirementsItem2.TaskID)
+					requirements2.When = types.StringValue(string(requirementsItem2.When))
 
-					tasks.DecisionTask.Requirements = append(tasks.DecisionTask.Requirements, requirements1)
+					tasks.DecisionTask.Requirements = append(tasks.DecisionTask.Requirements, requirements2)
 				}
 				if tasksItem.DecisionTask.Schedule != nil {
 					tasks.DecisionTask.Schedule = &tfTypes.Schedule{}
@@ -476,14 +578,14 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 				tasks.TaskBase.PhaseID = types.StringPointerValue(tasksItem.TaskBase.PhaseID)
 				tasks.TaskBase.Requirements = []tfTypes.EnableRequirement{}
 
-				for _, requirementsItem2 := range tasksItem.TaskBase.Requirements {
-					var requirements2 tfTypes.EnableRequirement
+				for _, requirementsItem3 := range tasksItem.TaskBase.Requirements {
+					var requirements3 tfTypes.EnableRequirement
 
-					requirements2.PhaseID = types.StringPointerValue(requirementsItem2.PhaseID)
-					requirements2.TaskID = types.StringPointerValue(requirementsItem2.TaskID)
-					requirements2.When = types.StringValue(string(requirementsItem2.When))
+					requirements3.PhaseID = types.StringPointerValue(requirementsItem3.PhaseID)
+					requirements3.TaskID = types.StringPointerValue(requirementsItem3.TaskID)
+					requirements3.When = types.StringValue(string(requirementsItem3.When))
 
-					tasks.TaskBase.Requirements = append(tasks.TaskBase.Requirements, requirements2)
+					tasks.TaskBase.Requirements = append(tasks.TaskBase.Requirements, requirements3)
 				}
 				tasks.TaskBase.TaskType = types.StringValue(string(tasksItem.TaskBase.TaskType))
 				tasks.TaskBase.Taxonomies = make([]types.String, 0, len(tasksItem.TaskBase.Taxonomies))

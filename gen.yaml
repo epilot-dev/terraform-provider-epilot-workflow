@@ -10,6 +10,7 @@ generation:
     requestResponseComponentNamesFeb2024: false
     securityFeb2025: false
     sharedErrorComponentsApr2025: false
+    sharedNestedComponentsJan2026: false
   auth:
     oAuth2ClientCredentialsEnabled: false
     oAuth2PasswordEnabled: false
@@ -40,10 +41,11 @@ go:
   outputModelSuffix: output
   packageName: openapi
 terraform:
-  version: 0.20.1
+  version: 0.21.1
   additionalDataSources: []
   additionalDependencies: {}
   additionalEphemeralResources: []
+  additionalListResources: []
   additionalProviderAttributes:
     httpHeaders: ""
     tlsSkipVerify: ""

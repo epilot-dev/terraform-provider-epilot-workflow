@@ -24,6 +24,8 @@ type WorkflowDefinition struct {
 	// ISO String Date & Time
 	LastUpdateTime *string `json:"lastUpdateTime,omitempty"`
 	Name           string  `json:"name"`
+	// Whether only a single closing reason can be selected
+	SingleClosingReasonSelection *bool `json:"singleClosingReasonSelection,omitempty"`
 	// Taxonomy ids that are associated with this workflow and used for filtering
 	Taxonomies             []string                 `json:"taxonomies,omitempty"`
 	UpdateEntityAttributes []UpdateEntityAttributes `json:"updateEntityAttributes,omitempty"`
@@ -126,6 +128,13 @@ func (w *WorkflowDefinition) GetName() string {
 		return ""
 	}
 	return w.Name
+}
+
+func (w *WorkflowDefinition) GetSingleClosingReasonSelection() *bool {
+	if w == nil {
+		return nil
+	}
+	return w.SingleClosingReasonSelection
 }
 
 func (w *WorkflowDefinition) GetTaxonomies() []string {

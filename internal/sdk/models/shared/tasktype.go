@@ -13,6 +13,7 @@ const (
 	TaskTypeManual     TaskType = "MANUAL"
 	TaskTypeAutomation TaskType = "AUTOMATION"
 	TaskTypeDecision   TaskType = "DECISION"
+	TaskTypeAiAgent    TaskType = "AI_AGENT"
 )
 
 func (e TaskType) ToPointer() *TaskType {
@@ -29,6 +30,8 @@ func (e *TaskType) UnmarshalJSON(data []byte) error {
 	case "AUTOMATION":
 		fallthrough
 	case "DECISION":
+		fallthrough
+	case "AI_AGENT":
 		*e = TaskType(v)
 		return nil
 	default:

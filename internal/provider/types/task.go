@@ -3,6 +3,7 @@
 package types
 
 type Task struct {
+	AiAgentTask    *AiAgentTask    `queryParam:"inline" tfsdk:"ai_agent_task"`
 	AutomationTask *AutomationTask `queryParam:"inline" tfsdk:"automation_task"`
 	DecisionTask   *DecisionTask   `queryParam:"inline" tfsdk:"decision_task"`
 	TaskBase       *TaskBase       `queryParam:"inline" tfsdk:"task_base"`

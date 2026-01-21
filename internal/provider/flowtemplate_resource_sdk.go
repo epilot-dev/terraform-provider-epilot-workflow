@@ -4,9 +4,11 @@ package provider
 
 import (
 	"context"
+	"encoding/json"
 	tfTypes "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/provider/types"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/models/operations"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/models/shared"
+	"github.com/hashicorp/terraform-plugin-framework-jsontypes/jsontypes"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
@@ -112,11 +114,111 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 
 			r.Phases = append(r.Phases, phases)
 		}
+		r.SingleClosingReasonSelection = types.BoolPointerValue(resp.SingleClosingReasonSelection)
 		r.Tasks = []tfTypes.Task{}
 
 		for _, tasksItem := range resp.Tasks {
 			var tasks tfTypes.Task
 
+			if tasksItem.AiAgentTask != nil {
+				tasks.AiAgentTask = &tfTypes.AiAgentTask{}
+				if tasksItem.AiAgentTask.AgentConfig == nil {
+					tasks.AiAgentTask.AgentConfig = nil
+				} else {
+					tasks.AiAgentTask.AgentConfig = &tfTypes.AgentConfig{}
+					if tasksItem.AiAgentTask.AgentConfig.AdditionalProperties == nil {
+						tasks.AiAgentTask.AgentConfig.AdditionalProperties = jsontypes.NewNormalizedNull()
+					} else {
+						additionalPropertiesResult, _ := json.Marshal(tasksItem.AiAgentTask.AgentConfig.AdditionalProperties)
+						tasks.AiAgentTask.AgentConfig.AdditionalProperties = jsontypes.NewNormalizedValue(string(additionalPropertiesResult))
+					}
+					tasks.AiAgentTask.AgentConfig.AgentID = types.StringValue(tasksItem.AiAgentTask.AgentConfig.AgentID)
+				}
+				tasks.AiAgentTask.AssignedTo = make([]types.String, 0, len(tasksItem.AiAgentTask.AssignedTo))
+				for _, v := range tasksItem.AiAgentTask.AssignedTo {
+					tasks.AiAgentTask.AssignedTo = append(tasks.AiAgentTask.AssignedTo, types.StringValue(v))
+				}
+				if tasksItem.AiAgentTask.Description == nil {
+					tasks.AiAgentTask.Description = nil
+				} else {
+					tasks.AiAgentTask.Description = &tfTypes.StepDescription{}
+					tasks.AiAgentTask.Description.Enabled = types.BoolPointerValue(tasksItem.AiAgentTask.Description.Enabled)
+					tasks.AiAgentTask.Description.Value = types.StringPointerValue(tasksItem.AiAgentTask.Description.Value)
+				}
+				tasks.AiAgentTask.DueDate = types.StringPointerValue(tasksItem.AiAgentTask.DueDate)
+				if tasksItem.AiAgentTask.DueDateConfig == nil {
+					tasks.AiAgentTask.DueDateConfig = nil
+				} else {
+					tasks.AiAgentTask.DueDateConfig = &tfTypes.DueDateConfig{}
+					tasks.AiAgentTask.DueDateConfig.Duration = types.Float64Value(tasksItem.AiAgentTask.DueDateConfig.Duration)
+					tasks.AiAgentTask.DueDateConfig.PhaseID = types.StringPointerValue(tasksItem.AiAgentTask.DueDateConfig.PhaseID)
+					tasks.AiAgentTask.DueDateConfig.TaskID = types.StringPointerValue(tasksItem.AiAgentTask.DueDateConfig.TaskID)
+					tasks.AiAgentTask.DueDateConfig.Type = types.StringValue(string(tasksItem.AiAgentTask.DueDateConfig.Type))
+					tasks.AiAgentTask.DueDateConfig.Unit = types.StringValue(string(tasksItem.AiAgentTask.DueDateConfig.Unit))
+				}
+				if tasksItem.AiAgentTask.Ecp == nil {
+					tasks.AiAgentTask.Ecp = nil
+				} else {
+					tasks.AiAgentTask.Ecp = &tfTypes.ECPDetails{}
+					tasks.AiAgentTask.Ecp.Description = types.StringPointerValue(tasksItem.AiAgentTask.Ecp.Description)
+					tasks.AiAgentTask.Ecp.Enabled = types.BoolPointerValue(tasksItem.AiAgentTask.Ecp.Enabled)
+					if tasksItem.AiAgentTask.Ecp.Journey == nil {
+						tasks.AiAgentTask.Ecp.Journey = nil
+					} else {
+						tasks.AiAgentTask.Ecp.Journey = &tfTypes.StepJourney{}
+						tasks.AiAgentTask.Ecp.Journey.CompleteTaskAutomatically = types.BoolPointerValue(tasksItem.AiAgentTask.Ecp.Journey.CompleteTaskAutomatically)
+						tasks.AiAgentTask.Ecp.Journey.ID = types.StringPointerValue(tasksItem.AiAgentTask.Ecp.Journey.ID)
+						tasks.AiAgentTask.Ecp.Journey.JourneyID = types.StringPointerValue(tasksItem.AiAgentTask.Ecp.Journey.JourneyID)
+						tasks.AiAgentTask.Ecp.Journey.Name = types.StringPointerValue(tasksItem.AiAgentTask.Ecp.Journey.Name)
+					}
+					tasks.AiAgentTask.Ecp.Label = types.StringPointerValue(tasksItem.AiAgentTask.Ecp.Label)
+				}
+				tasks.AiAgentTask.ID = types.StringValue(tasksItem.AiAgentTask.ID)
+				if tasksItem.AiAgentTask.Installer == nil {
+					tasks.AiAgentTask.Installer = nil
+				} else {
+					tasks.AiAgentTask.Installer = &tfTypes.ECPDetails{}
+					tasks.AiAgentTask.Installer.Description = types.StringPointerValue(tasksItem.AiAgentTask.Installer.Description)
+					tasks.AiAgentTask.Installer.Enabled = types.BoolPointerValue(tasksItem.AiAgentTask.Installer.Enabled)
+					if tasksItem.AiAgentTask.Installer.Journey == nil {
+						tasks.AiAgentTask.Installer.Journey = nil
+					} else {
+						tasks.AiAgentTask.Installer.Journey = &tfTypes.StepJourney{}
+						tasks.AiAgentTask.Installer.Journey.CompleteTaskAutomatically = types.BoolPointerValue(tasksItem.AiAgentTask.Installer.Journey.CompleteTaskAutomatically)
+						tasks.AiAgentTask.Installer.Journey.ID = types.StringPointerValue(tasksItem.AiAgentTask.Installer.Journey.ID)
+						tasks.AiAgentTask.Installer.Journey.JourneyID = types.StringPointerValue(tasksItem.AiAgentTask.Installer.Journey.JourneyID)
+						tasks.AiAgentTask.Installer.Journey.Name = types.StringPointerValue(tasksItem.AiAgentTask.Installer.Journey.Name)
+					}
+					tasks.AiAgentTask.Installer.Label = types.StringPointerValue(tasksItem.AiAgentTask.Installer.Label)
+				}
+				if tasksItem.AiAgentTask.Journey == nil {
+					tasks.AiAgentTask.Journey = nil
+				} else {
+					tasks.AiAgentTask.Journey = &tfTypes.StepJourney{}
+					tasks.AiAgentTask.Journey.CompleteTaskAutomatically = types.BoolPointerValue(tasksItem.AiAgentTask.Journey.CompleteTaskAutomatically)
+					tasks.AiAgentTask.Journey.ID = types.StringPointerValue(tasksItem.AiAgentTask.Journey.ID)
+					tasks.AiAgentTask.Journey.JourneyID = types.StringPointerValue(tasksItem.AiAgentTask.Journey.JourneyID)
+					tasks.AiAgentTask.Journey.Name = types.StringPointerValue(tasksItem.AiAgentTask.Journey.Name)
+				}
+				tasks.AiAgentTask.Name = types.StringValue(tasksItem.AiAgentTask.Name)
+				tasks.AiAgentTask.PhaseID = types.StringPointerValue(tasksItem.AiAgentTask.PhaseID)
+				tasks.AiAgentTask.Requirements = []tfTypes.EnableRequirement{}
+
+				for _, requirementsItem := range tasksItem.AiAgentTask.Requirements {
+					var requirements tfTypes.EnableRequirement
+
+					requirements.PhaseID = types.StringPointerValue(requirementsItem.PhaseID)
+					requirements.TaskID = types.StringPointerValue(requirementsItem.TaskID)
+					requirements.When = types.StringValue(string(requirementsItem.When))
+
+					tasks.AiAgentTask.Requirements = append(tasks.AiAgentTask.Requirements, requirements)
+				}
+				tasks.AiAgentTask.TaskType = types.StringValue(string(tasksItem.AiAgentTask.TaskType))
+				tasks.AiAgentTask.Taxonomies = make([]types.String, 0, len(tasksItem.AiAgentTask.Taxonomies))
+				for _, v := range tasksItem.AiAgentTask.Taxonomies {
+					tasks.AiAgentTask.Taxonomies = append(tasks.AiAgentTask.Taxonomies, types.StringValue(v))
+				}
+			}
 			if tasksItem.AutomationTask != nil {
 				tasks.AutomationTask = &tfTypes.AutomationTask{}
 				tasks.AutomationTask.AssignedTo = make([]types.String, 0, len(tasksItem.AutomationTask.AssignedTo))
@@ -191,14 +293,14 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 				tasks.AutomationTask.PhaseID = types.StringPointerValue(tasksItem.AutomationTask.PhaseID)
 				tasks.AutomationTask.Requirements = []tfTypes.EnableRequirement{}
 
-				for _, requirementsItem := range tasksItem.AutomationTask.Requirements {
-					var requirements tfTypes.EnableRequirement
+				for _, requirementsItem1 := range tasksItem.AutomationTask.Requirements {
+					var requirements1 tfTypes.EnableRequirement
 
-					requirements.PhaseID = types.StringPointerValue(requirementsItem.PhaseID)
-					requirements.TaskID = types.StringPointerValue(requirementsItem.TaskID)
-					requirements.When = types.StringValue(string(requirementsItem.When))
+					requirements1.PhaseID = types.StringPointerValue(requirementsItem1.PhaseID)
+					requirements1.TaskID = types.StringPointerValue(requirementsItem1.TaskID)
+					requirements1.When = types.StringValue(string(requirementsItem1.When))
 
-					tasks.AutomationTask.Requirements = append(tasks.AutomationTask.Requirements, requirements)
+					tasks.AutomationTask.Requirements = append(tasks.AutomationTask.Requirements, requirements1)
 				}
 				if tasksItem.AutomationTask.Schedule != nil {
 					tasks.AutomationTask.Schedule = &tfTypes.ActionSchedule{}
@@ -368,14 +470,14 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 				tasks.DecisionTask.PhaseID = types.StringPointerValue(tasksItem.DecisionTask.PhaseID)
 				tasks.DecisionTask.Requirements = []tfTypes.EnableRequirement{}
 
-				for _, requirementsItem1 := range tasksItem.DecisionTask.Requirements {
-					var requirements1 tfTypes.EnableRequirement
+				for _, requirementsItem2 := range tasksItem.DecisionTask.Requirements {
+					var requirements2 tfTypes.EnableRequirement
 
-					requirements1.PhaseID = types.StringPointerValue(requirementsItem1.PhaseID)
-					requirements1.TaskID = types.StringPointerValue(requirementsItem1.TaskID)
-					requirements1.When = types.StringValue(string(requirementsItem1.When))
+					requirements2.PhaseID = types.StringPointerValue(requirementsItem2.PhaseID)
+					requirements2.TaskID = types.StringPointerValue(requirementsItem2.TaskID)
+					requirements2.When = types.StringValue(string(requirementsItem2.When))
 
-					tasks.DecisionTask.Requirements = append(tasks.DecisionTask.Requirements, requirements1)
+					tasks.DecisionTask.Requirements = append(tasks.DecisionTask.Requirements, requirements2)
 				}
 				if tasksItem.DecisionTask.Schedule != nil {
 					tasks.DecisionTask.Schedule = &tfTypes.Schedule{}
@@ -476,14 +578,14 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 				tasks.TaskBase.PhaseID = types.StringPointerValue(tasksItem.TaskBase.PhaseID)
 				tasks.TaskBase.Requirements = []tfTypes.EnableRequirement{}
 
-				for _, requirementsItem2 := range tasksItem.TaskBase.Requirements {
-					var requirements2 tfTypes.EnableRequirement
+				for _, requirementsItem3 := range tasksItem.TaskBase.Requirements {
+					var requirements3 tfTypes.EnableRequirement
 
-					requirements2.PhaseID = types.StringPointerValue(requirementsItem2.PhaseID)
-					requirements2.TaskID = types.StringPointerValue(requirementsItem2.TaskID)
-					requirements2.When = types.StringValue(string(requirementsItem2.When))
+					requirements3.PhaseID = types.StringPointerValue(requirementsItem3.PhaseID)
+					requirements3.TaskID = types.StringPointerValue(requirementsItem3.TaskID)
+					requirements3.When = types.StringValue(string(requirementsItem3.When))
 
-					tasks.TaskBase.Requirements = append(tasks.TaskBase.Requirements, requirements2)
+					tasks.TaskBase.Requirements = append(tasks.TaskBase.Requirements, requirements3)
 				}
 				tasks.TaskBase.TaskType = types.StringValue(string(tasksItem.TaskBase.TaskType))
 				tasks.TaskBase.Taxonomies = make([]types.String, 0, len(tasksItem.TaskBase.Taxonomies))
@@ -814,6 +916,12 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 			Name:          name1,
 			Taxonomies:    taxonomies,
 		})
+	}
+	singleClosingReasonSelection := new(bool)
+	if !r.SingleClosingReasonSelection.IsUnknown() && !r.SingleClosingReasonSelection.IsNull() {
+		*singleClosingReasonSelection = r.SingleClosingReasonSelection.ValueBool()
+	} else {
+		singleClosingReasonSelection = nil
 	}
 	tasks := make([]shared.Task, 0, len(r.Tasks))
 	for tasksItem := range r.Tasks {
@@ -1901,10 +2009,292 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 				DecisionTask: &decisionTask,
 			})
 		}
+		if r.Tasks[tasksItem].AiAgentTask != nil {
+			var agentConfig *shared.AgentConfig
+			if r.Tasks[tasksItem].AiAgentTask.AgentConfig != nil {
+				var additionalProperties map[string]any
+				if !r.Tasks[tasksItem].AiAgentTask.AgentConfig.AdditionalProperties.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.AgentConfig.AdditionalProperties.IsNull() {
+					_ = json.Unmarshal([]byte(r.Tasks[tasksItem].AiAgentTask.AgentConfig.AdditionalProperties.ValueString()), &additionalProperties)
+				}
+				var agentID string
+				agentID = r.Tasks[tasksItem].AiAgentTask.AgentConfig.AgentID.ValueString()
+
+				agentConfig = &shared.AgentConfig{
+					AdditionalProperties: additionalProperties,
+					AgentID:              agentID,
+				}
+			}
+			assignedTo5 := make([]string, 0, len(r.Tasks[tasksItem].AiAgentTask.AssignedTo))
+			for assignedToIndex5 := range r.Tasks[tasksItem].AiAgentTask.AssignedTo {
+				assignedTo5 = append(assignedTo5, r.Tasks[tasksItem].AiAgentTask.AssignedTo[assignedToIndex5].ValueString())
+			}
+			var description10 *shared.StepDescription
+			if r.Tasks[tasksItem].AiAgentTask.Description != nil {
+				enabled10 := new(bool)
+				if !r.Tasks[tasksItem].AiAgentTask.Description.Enabled.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Description.Enabled.IsNull() {
+					*enabled10 = r.Tasks[tasksItem].AiAgentTask.Description.Enabled.ValueBool()
+				} else {
+					enabled10 = nil
+				}
+				value5 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.Description.Value.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Description.Value.IsNull() {
+					*value5 = r.Tasks[tasksItem].AiAgentTask.Description.Value.ValueString()
+				} else {
+					value5 = nil
+				}
+				description10 = &shared.StepDescription{
+					Enabled: enabled10,
+					Value:   value5,
+				}
+			}
+			dueDate5 := new(string)
+			if !r.Tasks[tasksItem].AiAgentTask.DueDate.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.DueDate.IsNull() {
+				*dueDate5 = r.Tasks[tasksItem].AiAgentTask.DueDate.ValueString()
+			} else {
+				dueDate5 = nil
+			}
+			var dueDateConfig5 *shared.DueDateConfig
+			if r.Tasks[tasksItem].AiAgentTask.DueDateConfig != nil {
+				var duration9 float64
+				duration9 = r.Tasks[tasksItem].AiAgentTask.DueDateConfig.Duration.ValueFloat64()
+
+				phaseId11 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.DueDateConfig.PhaseID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.DueDateConfig.PhaseID.IsNull() {
+					*phaseId11 = r.Tasks[tasksItem].AiAgentTask.DueDateConfig.PhaseID.ValueString()
+				} else {
+					phaseId11 = nil
+				}
+				taskId8 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.DueDateConfig.TaskID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.DueDateConfig.TaskID.IsNull() {
+					*taskId8 = r.Tasks[tasksItem].AiAgentTask.DueDateConfig.TaskID.ValueString()
+				} else {
+					taskId8 = nil
+				}
+				typeVar5 := shared.DueDateConfigType(r.Tasks[tasksItem].AiAgentTask.DueDateConfig.Type.ValueString())
+				unit9 := shared.TimeUnit(r.Tasks[tasksItem].AiAgentTask.DueDateConfig.Unit.ValueString())
+				dueDateConfig5 = &shared.DueDateConfig{
+					Duration: duration9,
+					PhaseID:  phaseId11,
+					TaskID:   taskId8,
+					Type:     typeVar5,
+					Unit:     unit9,
+				}
+			}
+			var ecp3 *shared.ECPDetails
+			if r.Tasks[tasksItem].AiAgentTask.Ecp != nil {
+				description11 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.Ecp.Description.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Ecp.Description.IsNull() {
+					*description11 = r.Tasks[tasksItem].AiAgentTask.Ecp.Description.ValueString()
+				} else {
+					description11 = nil
+				}
+				enabled11 := new(bool)
+				if !r.Tasks[tasksItem].AiAgentTask.Ecp.Enabled.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Ecp.Enabled.IsNull() {
+					*enabled11 = r.Tasks[tasksItem].AiAgentTask.Ecp.Enabled.ValueBool()
+				} else {
+					enabled11 = nil
+				}
+				var journey9 *shared.StepJourney
+				if r.Tasks[tasksItem].AiAgentTask.Ecp.Journey != nil {
+					completeTaskAutomatically9 := new(bool)
+					if !r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.CompleteTaskAutomatically.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.CompleteTaskAutomatically.IsNull() {
+						*completeTaskAutomatically9 = r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.CompleteTaskAutomatically.ValueBool()
+					} else {
+						completeTaskAutomatically9 = nil
+					}
+					id21 := new(string)
+					if !r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.ID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.ID.IsNull() {
+						*id21 = r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.ID.ValueString()
+					} else {
+						id21 = nil
+					}
+					journeyId9 := new(string)
+					if !r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.JourneyID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.JourneyID.IsNull() {
+						*journeyId9 = r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.JourneyID.ValueString()
+					} else {
+						journeyId9 = nil
+					}
+					name14 := new(string)
+					if !r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.Name.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.Name.IsNull() {
+						*name14 = r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.Name.ValueString()
+					} else {
+						name14 = nil
+					}
+					journey9 = &shared.StepJourney{
+						CompleteTaskAutomatically: completeTaskAutomatically9,
+						ID:                        id21,
+						JourneyID:                 journeyId9,
+						Name:                      name14,
+					}
+				}
+				label6 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.Ecp.Label.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Ecp.Label.IsNull() {
+					*label6 = r.Tasks[tasksItem].AiAgentTask.Ecp.Label.ValueString()
+				} else {
+					label6 = nil
+				}
+				ecp3 = &shared.ECPDetails{
+					Description: description11,
+					Enabled:     enabled11,
+					Journey:     journey9,
+					Label:       label6,
+				}
+			}
+			var id22 string
+			id22 = r.Tasks[tasksItem].AiAgentTask.ID.ValueString()
+
+			var installer3 *shared.ECPDetails
+			if r.Tasks[tasksItem].AiAgentTask.Installer != nil {
+				description12 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.Installer.Description.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Installer.Description.IsNull() {
+					*description12 = r.Tasks[tasksItem].AiAgentTask.Installer.Description.ValueString()
+				} else {
+					description12 = nil
+				}
+				enabled12 := new(bool)
+				if !r.Tasks[tasksItem].AiAgentTask.Installer.Enabled.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Installer.Enabled.IsNull() {
+					*enabled12 = r.Tasks[tasksItem].AiAgentTask.Installer.Enabled.ValueBool()
+				} else {
+					enabled12 = nil
+				}
+				var journey10 *shared.StepJourney
+				if r.Tasks[tasksItem].AiAgentTask.Installer.Journey != nil {
+					completeTaskAutomatically10 := new(bool)
+					if !r.Tasks[tasksItem].AiAgentTask.Installer.Journey.CompleteTaskAutomatically.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Installer.Journey.CompleteTaskAutomatically.IsNull() {
+						*completeTaskAutomatically10 = r.Tasks[tasksItem].AiAgentTask.Installer.Journey.CompleteTaskAutomatically.ValueBool()
+					} else {
+						completeTaskAutomatically10 = nil
+					}
+					id23 := new(string)
+					if !r.Tasks[tasksItem].AiAgentTask.Installer.Journey.ID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Installer.Journey.ID.IsNull() {
+						*id23 = r.Tasks[tasksItem].AiAgentTask.Installer.Journey.ID.ValueString()
+					} else {
+						id23 = nil
+					}
+					journeyId10 := new(string)
+					if !r.Tasks[tasksItem].AiAgentTask.Installer.Journey.JourneyID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Installer.Journey.JourneyID.IsNull() {
+						*journeyId10 = r.Tasks[tasksItem].AiAgentTask.Installer.Journey.JourneyID.ValueString()
+					} else {
+						journeyId10 = nil
+					}
+					name15 := new(string)
+					if !r.Tasks[tasksItem].AiAgentTask.Installer.Journey.Name.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Installer.Journey.Name.IsNull() {
+						*name15 = r.Tasks[tasksItem].AiAgentTask.Installer.Journey.Name.ValueString()
+					} else {
+						name15 = nil
+					}
+					journey10 = &shared.StepJourney{
+						CompleteTaskAutomatically: completeTaskAutomatically10,
+						ID:                        id23,
+						JourneyID:                 journeyId10,
+						Name:                      name15,
+					}
+				}
+				label7 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.Installer.Label.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Installer.Label.IsNull() {
+					*label7 = r.Tasks[tasksItem].AiAgentTask.Installer.Label.ValueString()
+				} else {
+					label7 = nil
+				}
+				installer3 = &shared.ECPDetails{
+					Description: description12,
+					Enabled:     enabled12,
+					Journey:     journey10,
+					Label:       label7,
+				}
+			}
+			var journey11 *shared.StepJourney
+			if r.Tasks[tasksItem].AiAgentTask.Journey != nil {
+				completeTaskAutomatically11 := new(bool)
+				if !r.Tasks[tasksItem].AiAgentTask.Journey.CompleteTaskAutomatically.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Journey.CompleteTaskAutomatically.IsNull() {
+					*completeTaskAutomatically11 = r.Tasks[tasksItem].AiAgentTask.Journey.CompleteTaskAutomatically.ValueBool()
+				} else {
+					completeTaskAutomatically11 = nil
+				}
+				id24 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.Journey.ID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Journey.ID.IsNull() {
+					*id24 = r.Tasks[tasksItem].AiAgentTask.Journey.ID.ValueString()
+				} else {
+					id24 = nil
+				}
+				journeyId11 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.Journey.JourneyID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Journey.JourneyID.IsNull() {
+					*journeyId11 = r.Tasks[tasksItem].AiAgentTask.Journey.JourneyID.ValueString()
+				} else {
+					journeyId11 = nil
+				}
+				name16 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.Journey.Name.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Journey.Name.IsNull() {
+					*name16 = r.Tasks[tasksItem].AiAgentTask.Journey.Name.ValueString()
+				} else {
+					name16 = nil
+				}
+				journey11 = &shared.StepJourney{
+					CompleteTaskAutomatically: completeTaskAutomatically11,
+					ID:                        id24,
+					JourneyID:                 journeyId11,
+					Name:                      name16,
+				}
+			}
+			var name17 string
+			name17 = r.Tasks[tasksItem].AiAgentTask.Name.ValueString()
+
+			phaseId12 := new(string)
+			if !r.Tasks[tasksItem].AiAgentTask.PhaseID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.PhaseID.IsNull() {
+				*phaseId12 = r.Tasks[tasksItem].AiAgentTask.PhaseID.ValueString()
+			} else {
+				phaseId12 = nil
+			}
+			requirements3 := make([]shared.EnableRequirement, 0, len(r.Tasks[tasksItem].AiAgentTask.Requirements))
+			for requirementsIndex3 := range r.Tasks[tasksItem].AiAgentTask.Requirements {
+				phaseId13 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.Requirements[requirementsIndex3].PhaseID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Requirements[requirementsIndex3].PhaseID.IsNull() {
+					*phaseId13 = r.Tasks[tasksItem].AiAgentTask.Requirements[requirementsIndex3].PhaseID.ValueString()
+				} else {
+					phaseId13 = nil
+				}
+				taskId9 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.Requirements[requirementsIndex3].TaskID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Requirements[requirementsIndex3].TaskID.IsNull() {
+					*taskId9 = r.Tasks[tasksItem].AiAgentTask.Requirements[requirementsIndex3].TaskID.ValueString()
+				} else {
+					taskId9 = nil
+				}
+				when3 := shared.When(r.Tasks[tasksItem].AiAgentTask.Requirements[requirementsIndex3].When.ValueString())
+				requirements3 = append(requirements3, shared.EnableRequirement{
+					PhaseID: phaseId13,
+					TaskID:  taskId9,
+					When:    when3,
+				})
+			}
+			taskType3 := shared.TaskType(r.Tasks[tasksItem].AiAgentTask.TaskType.ValueString())
+			taxonomies4 := make([]string, 0, len(r.Tasks[tasksItem].AiAgentTask.Taxonomies))
+			for taxonomiesIndex4 := range r.Tasks[tasksItem].AiAgentTask.Taxonomies {
+				taxonomies4 = append(taxonomies4, r.Tasks[tasksItem].AiAgentTask.Taxonomies[taxonomiesIndex4].ValueString())
+			}
+			aiAgentTask := shared.AiAgentTask{
+				AgentConfig:   agentConfig,
+				AssignedTo:    assignedTo5,
+				Description:   description10,
+				DueDate:       dueDate5,
+				DueDateConfig: dueDateConfig5,
+				Ecp:           ecp3,
+				ID:            id22,
+				Installer:     installer3,
+				Journey:       journey11,
+				Name:          name17,
+				PhaseID:       phaseId12,
+				Requirements:  requirements3,
+				TaskType:      taskType3,
+				Taxonomies:    taxonomies4,
+			}
+			tasks = append(tasks, shared.Task{
+				AiAgentTask: &aiAgentTask,
+			})
+		}
 	}
-	taxonomies4 := make([]string, 0, len(r.Taxonomies))
-	for taxonomiesIndex4 := range r.Taxonomies {
-		taxonomies4 = append(taxonomies4, r.Taxonomies[taxonomiesIndex4].ValueString())
+	taxonomies5 := make([]string, 0, len(r.Taxonomies))
+	for taxonomiesIndex5 := range r.Taxonomies {
+		taxonomies5 = append(taxonomies5, r.Taxonomies[taxonomiesIndex5].ValueString())
 	}
 	var trigger1 *shared.Trigger
 	if r.Trigger != nil {
@@ -1916,17 +2306,17 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 			} else {
 				entitySchema1 = nil
 			}
-			id21 := new(string)
+			id25 := new(string)
 			if !r.Trigger.ManualTrigger.ID.IsUnknown() && !r.Trigger.ManualTrigger.ID.IsNull() {
-				*id21 = r.Trigger.ManualTrigger.ID.ValueString()
+				*id25 = r.Trigger.ManualTrigger.ID.ValueString()
 			} else {
-				id21 = nil
+				id25 = nil
 			}
-			typeVar5 := shared.ManualTriggerType(r.Trigger.ManualTrigger.Type.ValueString())
+			typeVar6 := shared.ManualTriggerType(r.Trigger.ManualTrigger.Type.ValueString())
 			manualTrigger = &shared.ManualTrigger{
 				EntitySchema: entitySchema1,
-				ID:           id21,
-				Type:         typeVar5,
+				ID:           id25,
+				Type:         typeVar6,
 			}
 		}
 		if manualTrigger != nil {
@@ -1939,17 +2329,17 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 			var automationID string
 			automationID = r.Trigger.AutomationTrigger.AutomationID.ValueString()
 
-			id22 := new(string)
+			id26 := new(string)
 			if !r.Trigger.AutomationTrigger.ID.IsUnknown() && !r.Trigger.AutomationTrigger.ID.IsNull() {
-				*id22 = r.Trigger.AutomationTrigger.ID.ValueString()
+				*id26 = r.Trigger.AutomationTrigger.ID.ValueString()
 			} else {
-				id22 = nil
+				id26 = nil
 			}
-			typeVar6 := shared.Type(r.Trigger.AutomationTrigger.Type.ValueString())
+			typeVar7 := shared.Type(r.Trigger.AutomationTrigger.Type.ValueString())
 			automationTrigger = &shared.AutomationTrigger{
 				AutomationID: automationID,
-				ID:           id22,
-				Type:         typeVar6,
+				ID:           id26,
+				Type:         typeVar7,
 			}
 		}
 		if automationTrigger != nil {
@@ -1965,14 +2355,14 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 			} else {
 				automationId1 = nil
 			}
-			id23 := new(string)
+			id27 := new(string)
 			if !r.Trigger.JourneySubmissionTrigger.ID.IsUnknown() && !r.Trigger.JourneySubmissionTrigger.ID.IsNull() {
-				*id23 = r.Trigger.JourneySubmissionTrigger.ID.ValueString()
+				*id27 = r.Trigger.JourneySubmissionTrigger.ID.ValueString()
 			} else {
-				id23 = nil
+				id27 = nil
 			}
-			var journeyId9 string
-			journeyId9 = r.Trigger.JourneySubmissionTrigger.JourneyID.ValueString()
+			var journeyId12 string
+			journeyId12 = r.Trigger.JourneySubmissionTrigger.JourneyID.ValueString()
 
 			journeyName := new(string)
 			if !r.Trigger.JourneySubmissionTrigger.JourneyName.IsUnknown() && !r.Trigger.JourneySubmissionTrigger.JourneyName.IsNull() {
@@ -1980,13 +2370,13 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 			} else {
 				journeyName = nil
 			}
-			typeVar7 := shared.JourneySubmissionTriggerType(r.Trigger.JourneySubmissionTrigger.Type.ValueString())
+			typeVar8 := shared.JourneySubmissionTriggerType(r.Trigger.JourneySubmissionTrigger.Type.ValueString())
 			journeySubmissionTrigger = &shared.JourneySubmissionTrigger{
 				AutomationID: automationId1,
-				ID:           id23,
-				JourneyID:    journeyId9,
+				ID:           id27,
+				JourneyID:    journeyId12,
 				JourneyName:  journeyName,
-				Type:         typeVar7,
+				Type:         typeVar8,
 			}
 		}
 		if journeySubmissionTrigger != nil {
@@ -2002,17 +2392,17 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 			} else {
 				entitySchema2 = nil
 			}
-			id24 := new(string)
+			id28 := new(string)
 			if !r.Trigger.JourneyAutomationTrigger.ID.IsUnknown() && !r.Trigger.JourneyAutomationTrigger.ID.IsNull() {
-				*id24 = r.Trigger.JourneyAutomationTrigger.ID.ValueString()
+				*id28 = r.Trigger.JourneyAutomationTrigger.ID.ValueString()
 			} else {
-				id24 = nil
+				id28 = nil
 			}
-			typeVar8 := shared.JourneyAutomationTriggerType(r.Trigger.JourneyAutomationTrigger.Type.ValueString())
+			typeVar9 := shared.JourneyAutomationTriggerType(r.Trigger.JourneyAutomationTrigger.Type.ValueString())
 			journeyAutomationTrigger = &shared.JourneyAutomationTrigger{
 				EntitySchema: entitySchema2,
-				ID:           id24,
-				Type:         typeVar8,
+				ID:           id28,
+				Type:         typeVar9,
 			}
 		}
 		if journeyAutomationTrigger != nil {
@@ -2034,25 +2424,26 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 		version = nil
 	}
 	out := shared.CreateFlowTemplate{
-		AssignedTo:     assignedTo,
-		AvailableInEcp: availableInEcp,
-		ClosingReasons: closingReasons,
-		CreatedAt:      createdAt,
-		Description:    description,
-		DueDate:        dueDate,
-		DueDateConfig:  dueDateConfig,
-		Edges:          edges,
-		Enabled:        enabled,
-		EntitySync:     entitySync,
-		ID:             id2,
-		Name:           name,
-		OrgID:          orgID,
-		Phases:         phases,
-		Tasks:          tasks,
-		Taxonomies:     taxonomies4,
-		Trigger:        trigger1,
-		UpdatedAt:      updatedAt,
-		Version:        version,
+		AssignedTo:                   assignedTo,
+		AvailableInEcp:               availableInEcp,
+		ClosingReasons:               closingReasons,
+		CreatedAt:                    createdAt,
+		Description:                  description,
+		DueDate:                      dueDate,
+		DueDateConfig:                dueDateConfig,
+		Edges:                        edges,
+		Enabled:                      enabled,
+		EntitySync:                   entitySync,
+		ID:                           id2,
+		Name:                         name,
+		OrgID:                        orgID,
+		Phases:                       phases,
+		SingleClosingReasonSelection: singleClosingReasonSelection,
+		Tasks:                        tasks,
+		Taxonomies:                   taxonomies5,
+		Trigger:                      trigger1,
+		UpdatedAt:                    updatedAt,
+		Version:                      version,
 	}
 
 	return &out, diags
@@ -2289,6 +2680,12 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			Name:          name1,
 			Taxonomies:    taxonomies,
 		})
+	}
+	singleClosingReasonSelection := new(bool)
+	if !r.SingleClosingReasonSelection.IsUnknown() && !r.SingleClosingReasonSelection.IsNull() {
+		*singleClosingReasonSelection = r.SingleClosingReasonSelection.ValueBool()
+	} else {
+		singleClosingReasonSelection = nil
 	}
 	tasks := make([]shared.Task, 0, len(r.Tasks))
 	for tasksItem := range r.Tasks {
@@ -3376,10 +3773,292 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 				DecisionTask: &decisionTask,
 			})
 		}
+		if r.Tasks[tasksItem].AiAgentTask != nil {
+			var agentConfig *shared.AgentConfig
+			if r.Tasks[tasksItem].AiAgentTask.AgentConfig != nil {
+				var additionalProperties map[string]any
+				if !r.Tasks[tasksItem].AiAgentTask.AgentConfig.AdditionalProperties.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.AgentConfig.AdditionalProperties.IsNull() {
+					_ = json.Unmarshal([]byte(r.Tasks[tasksItem].AiAgentTask.AgentConfig.AdditionalProperties.ValueString()), &additionalProperties)
+				}
+				var agentID string
+				agentID = r.Tasks[tasksItem].AiAgentTask.AgentConfig.AgentID.ValueString()
+
+				agentConfig = &shared.AgentConfig{
+					AdditionalProperties: additionalProperties,
+					AgentID:              agentID,
+				}
+			}
+			assignedTo5 := make([]string, 0, len(r.Tasks[tasksItem].AiAgentTask.AssignedTo))
+			for assignedToIndex5 := range r.Tasks[tasksItem].AiAgentTask.AssignedTo {
+				assignedTo5 = append(assignedTo5, r.Tasks[tasksItem].AiAgentTask.AssignedTo[assignedToIndex5].ValueString())
+			}
+			var description10 *shared.StepDescription
+			if r.Tasks[tasksItem].AiAgentTask.Description != nil {
+				enabled10 := new(bool)
+				if !r.Tasks[tasksItem].AiAgentTask.Description.Enabled.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Description.Enabled.IsNull() {
+					*enabled10 = r.Tasks[tasksItem].AiAgentTask.Description.Enabled.ValueBool()
+				} else {
+					enabled10 = nil
+				}
+				value5 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.Description.Value.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Description.Value.IsNull() {
+					*value5 = r.Tasks[tasksItem].AiAgentTask.Description.Value.ValueString()
+				} else {
+					value5 = nil
+				}
+				description10 = &shared.StepDescription{
+					Enabled: enabled10,
+					Value:   value5,
+				}
+			}
+			dueDate5 := new(string)
+			if !r.Tasks[tasksItem].AiAgentTask.DueDate.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.DueDate.IsNull() {
+				*dueDate5 = r.Tasks[tasksItem].AiAgentTask.DueDate.ValueString()
+			} else {
+				dueDate5 = nil
+			}
+			var dueDateConfig5 *shared.DueDateConfig
+			if r.Tasks[tasksItem].AiAgentTask.DueDateConfig != nil {
+				var duration9 float64
+				duration9 = r.Tasks[tasksItem].AiAgentTask.DueDateConfig.Duration.ValueFloat64()
+
+				phaseId11 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.DueDateConfig.PhaseID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.DueDateConfig.PhaseID.IsNull() {
+					*phaseId11 = r.Tasks[tasksItem].AiAgentTask.DueDateConfig.PhaseID.ValueString()
+				} else {
+					phaseId11 = nil
+				}
+				taskId8 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.DueDateConfig.TaskID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.DueDateConfig.TaskID.IsNull() {
+					*taskId8 = r.Tasks[tasksItem].AiAgentTask.DueDateConfig.TaskID.ValueString()
+				} else {
+					taskId8 = nil
+				}
+				typeVar5 := shared.DueDateConfigType(r.Tasks[tasksItem].AiAgentTask.DueDateConfig.Type.ValueString())
+				unit9 := shared.TimeUnit(r.Tasks[tasksItem].AiAgentTask.DueDateConfig.Unit.ValueString())
+				dueDateConfig5 = &shared.DueDateConfig{
+					Duration: duration9,
+					PhaseID:  phaseId11,
+					TaskID:   taskId8,
+					Type:     typeVar5,
+					Unit:     unit9,
+				}
+			}
+			var ecp3 *shared.ECPDetails
+			if r.Tasks[tasksItem].AiAgentTask.Ecp != nil {
+				description11 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.Ecp.Description.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Ecp.Description.IsNull() {
+					*description11 = r.Tasks[tasksItem].AiAgentTask.Ecp.Description.ValueString()
+				} else {
+					description11 = nil
+				}
+				enabled11 := new(bool)
+				if !r.Tasks[tasksItem].AiAgentTask.Ecp.Enabled.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Ecp.Enabled.IsNull() {
+					*enabled11 = r.Tasks[tasksItem].AiAgentTask.Ecp.Enabled.ValueBool()
+				} else {
+					enabled11 = nil
+				}
+				var journey9 *shared.StepJourney
+				if r.Tasks[tasksItem].AiAgentTask.Ecp.Journey != nil {
+					completeTaskAutomatically9 := new(bool)
+					if !r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.CompleteTaskAutomatically.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.CompleteTaskAutomatically.IsNull() {
+						*completeTaskAutomatically9 = r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.CompleteTaskAutomatically.ValueBool()
+					} else {
+						completeTaskAutomatically9 = nil
+					}
+					id20 := new(string)
+					if !r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.ID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.ID.IsNull() {
+						*id20 = r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.ID.ValueString()
+					} else {
+						id20 = nil
+					}
+					journeyId9 := new(string)
+					if !r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.JourneyID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.JourneyID.IsNull() {
+						*journeyId9 = r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.JourneyID.ValueString()
+					} else {
+						journeyId9 = nil
+					}
+					name14 := new(string)
+					if !r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.Name.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.Name.IsNull() {
+						*name14 = r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.Name.ValueString()
+					} else {
+						name14 = nil
+					}
+					journey9 = &shared.StepJourney{
+						CompleteTaskAutomatically: completeTaskAutomatically9,
+						ID:                        id20,
+						JourneyID:                 journeyId9,
+						Name:                      name14,
+					}
+				}
+				label6 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.Ecp.Label.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Ecp.Label.IsNull() {
+					*label6 = r.Tasks[tasksItem].AiAgentTask.Ecp.Label.ValueString()
+				} else {
+					label6 = nil
+				}
+				ecp3 = &shared.ECPDetails{
+					Description: description11,
+					Enabled:     enabled11,
+					Journey:     journey9,
+					Label:       label6,
+				}
+			}
+			var id21 string
+			id21 = r.Tasks[tasksItem].AiAgentTask.ID.ValueString()
+
+			var installer3 *shared.ECPDetails
+			if r.Tasks[tasksItem].AiAgentTask.Installer != nil {
+				description12 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.Installer.Description.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Installer.Description.IsNull() {
+					*description12 = r.Tasks[tasksItem].AiAgentTask.Installer.Description.ValueString()
+				} else {
+					description12 = nil
+				}
+				enabled12 := new(bool)
+				if !r.Tasks[tasksItem].AiAgentTask.Installer.Enabled.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Installer.Enabled.IsNull() {
+					*enabled12 = r.Tasks[tasksItem].AiAgentTask.Installer.Enabled.ValueBool()
+				} else {
+					enabled12 = nil
+				}
+				var journey10 *shared.StepJourney
+				if r.Tasks[tasksItem].AiAgentTask.Installer.Journey != nil {
+					completeTaskAutomatically10 := new(bool)
+					if !r.Tasks[tasksItem].AiAgentTask.Installer.Journey.CompleteTaskAutomatically.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Installer.Journey.CompleteTaskAutomatically.IsNull() {
+						*completeTaskAutomatically10 = r.Tasks[tasksItem].AiAgentTask.Installer.Journey.CompleteTaskAutomatically.ValueBool()
+					} else {
+						completeTaskAutomatically10 = nil
+					}
+					id22 := new(string)
+					if !r.Tasks[tasksItem].AiAgentTask.Installer.Journey.ID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Installer.Journey.ID.IsNull() {
+						*id22 = r.Tasks[tasksItem].AiAgentTask.Installer.Journey.ID.ValueString()
+					} else {
+						id22 = nil
+					}
+					journeyId10 := new(string)
+					if !r.Tasks[tasksItem].AiAgentTask.Installer.Journey.JourneyID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Installer.Journey.JourneyID.IsNull() {
+						*journeyId10 = r.Tasks[tasksItem].AiAgentTask.Installer.Journey.JourneyID.ValueString()
+					} else {
+						journeyId10 = nil
+					}
+					name15 := new(string)
+					if !r.Tasks[tasksItem].AiAgentTask.Installer.Journey.Name.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Installer.Journey.Name.IsNull() {
+						*name15 = r.Tasks[tasksItem].AiAgentTask.Installer.Journey.Name.ValueString()
+					} else {
+						name15 = nil
+					}
+					journey10 = &shared.StepJourney{
+						CompleteTaskAutomatically: completeTaskAutomatically10,
+						ID:                        id22,
+						JourneyID:                 journeyId10,
+						Name:                      name15,
+					}
+				}
+				label7 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.Installer.Label.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Installer.Label.IsNull() {
+					*label7 = r.Tasks[tasksItem].AiAgentTask.Installer.Label.ValueString()
+				} else {
+					label7 = nil
+				}
+				installer3 = &shared.ECPDetails{
+					Description: description12,
+					Enabled:     enabled12,
+					Journey:     journey10,
+					Label:       label7,
+				}
+			}
+			var journey11 *shared.StepJourney
+			if r.Tasks[tasksItem].AiAgentTask.Journey != nil {
+				completeTaskAutomatically11 := new(bool)
+				if !r.Tasks[tasksItem].AiAgentTask.Journey.CompleteTaskAutomatically.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Journey.CompleteTaskAutomatically.IsNull() {
+					*completeTaskAutomatically11 = r.Tasks[tasksItem].AiAgentTask.Journey.CompleteTaskAutomatically.ValueBool()
+				} else {
+					completeTaskAutomatically11 = nil
+				}
+				id23 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.Journey.ID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Journey.ID.IsNull() {
+					*id23 = r.Tasks[tasksItem].AiAgentTask.Journey.ID.ValueString()
+				} else {
+					id23 = nil
+				}
+				journeyId11 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.Journey.JourneyID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Journey.JourneyID.IsNull() {
+					*journeyId11 = r.Tasks[tasksItem].AiAgentTask.Journey.JourneyID.ValueString()
+				} else {
+					journeyId11 = nil
+				}
+				name16 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.Journey.Name.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Journey.Name.IsNull() {
+					*name16 = r.Tasks[tasksItem].AiAgentTask.Journey.Name.ValueString()
+				} else {
+					name16 = nil
+				}
+				journey11 = &shared.StepJourney{
+					CompleteTaskAutomatically: completeTaskAutomatically11,
+					ID:                        id23,
+					JourneyID:                 journeyId11,
+					Name:                      name16,
+				}
+			}
+			var name17 string
+			name17 = r.Tasks[tasksItem].AiAgentTask.Name.ValueString()
+
+			phaseId12 := new(string)
+			if !r.Tasks[tasksItem].AiAgentTask.PhaseID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.PhaseID.IsNull() {
+				*phaseId12 = r.Tasks[tasksItem].AiAgentTask.PhaseID.ValueString()
+			} else {
+				phaseId12 = nil
+			}
+			requirements3 := make([]shared.EnableRequirement, 0, len(r.Tasks[tasksItem].AiAgentTask.Requirements))
+			for requirementsIndex3 := range r.Tasks[tasksItem].AiAgentTask.Requirements {
+				phaseId13 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.Requirements[requirementsIndex3].PhaseID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Requirements[requirementsIndex3].PhaseID.IsNull() {
+					*phaseId13 = r.Tasks[tasksItem].AiAgentTask.Requirements[requirementsIndex3].PhaseID.ValueString()
+				} else {
+					phaseId13 = nil
+				}
+				taskId9 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.Requirements[requirementsIndex3].TaskID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Requirements[requirementsIndex3].TaskID.IsNull() {
+					*taskId9 = r.Tasks[tasksItem].AiAgentTask.Requirements[requirementsIndex3].TaskID.ValueString()
+				} else {
+					taskId9 = nil
+				}
+				when3 := shared.When(r.Tasks[tasksItem].AiAgentTask.Requirements[requirementsIndex3].When.ValueString())
+				requirements3 = append(requirements3, shared.EnableRequirement{
+					PhaseID: phaseId13,
+					TaskID:  taskId9,
+					When:    when3,
+				})
+			}
+			taskType3 := shared.TaskType(r.Tasks[tasksItem].AiAgentTask.TaskType.ValueString())
+			taxonomies4 := make([]string, 0, len(r.Tasks[tasksItem].AiAgentTask.Taxonomies))
+			for taxonomiesIndex4 := range r.Tasks[tasksItem].AiAgentTask.Taxonomies {
+				taxonomies4 = append(taxonomies4, r.Tasks[tasksItem].AiAgentTask.Taxonomies[taxonomiesIndex4].ValueString())
+			}
+			aiAgentTask := shared.AiAgentTask{
+				AgentConfig:   agentConfig,
+				AssignedTo:    assignedTo5,
+				Description:   description10,
+				DueDate:       dueDate5,
+				DueDateConfig: dueDateConfig5,
+				Ecp:           ecp3,
+				ID:            id21,
+				Installer:     installer3,
+				Journey:       journey11,
+				Name:          name17,
+				PhaseID:       phaseId12,
+				Requirements:  requirements3,
+				TaskType:      taskType3,
+				Taxonomies:    taxonomies4,
+			}
+			tasks = append(tasks, shared.Task{
+				AiAgentTask: &aiAgentTask,
+			})
+		}
 	}
-	taxonomies4 := make([]string, 0, len(r.Taxonomies))
-	for taxonomiesIndex4 := range r.Taxonomies {
-		taxonomies4 = append(taxonomies4, r.Taxonomies[taxonomiesIndex4].ValueString())
+	taxonomies5 := make([]string, 0, len(r.Taxonomies))
+	for taxonomiesIndex5 := range r.Taxonomies {
+		taxonomies5 = append(taxonomies5, r.Taxonomies[taxonomiesIndex5].ValueString())
 	}
 	var trigger1 *shared.Trigger
 	if r.Trigger != nil {
@@ -3391,17 +4070,17 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			} else {
 				entitySchema1 = nil
 			}
-			id20 := new(string)
+			id24 := new(string)
 			if !r.Trigger.ManualTrigger.ID.IsUnknown() && !r.Trigger.ManualTrigger.ID.IsNull() {
-				*id20 = r.Trigger.ManualTrigger.ID.ValueString()
+				*id24 = r.Trigger.ManualTrigger.ID.ValueString()
 			} else {
-				id20 = nil
+				id24 = nil
 			}
-			typeVar5 := shared.ManualTriggerType(r.Trigger.ManualTrigger.Type.ValueString())
+			typeVar6 := shared.ManualTriggerType(r.Trigger.ManualTrigger.Type.ValueString())
 			manualTrigger = &shared.ManualTrigger{
 				EntitySchema: entitySchema1,
-				ID:           id20,
-				Type:         typeVar5,
+				ID:           id24,
+				Type:         typeVar6,
 			}
 		}
 		if manualTrigger != nil {
@@ -3414,17 +4093,17 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			var automationID string
 			automationID = r.Trigger.AutomationTrigger.AutomationID.ValueString()
 
-			id21 := new(string)
+			id25 := new(string)
 			if !r.Trigger.AutomationTrigger.ID.IsUnknown() && !r.Trigger.AutomationTrigger.ID.IsNull() {
-				*id21 = r.Trigger.AutomationTrigger.ID.ValueString()
+				*id25 = r.Trigger.AutomationTrigger.ID.ValueString()
 			} else {
-				id21 = nil
+				id25 = nil
 			}
-			typeVar6 := shared.Type(r.Trigger.AutomationTrigger.Type.ValueString())
+			typeVar7 := shared.Type(r.Trigger.AutomationTrigger.Type.ValueString())
 			automationTrigger = &shared.AutomationTrigger{
 				AutomationID: automationID,
-				ID:           id21,
-				Type:         typeVar6,
+				ID:           id25,
+				Type:         typeVar7,
 			}
 		}
 		if automationTrigger != nil {
@@ -3440,14 +4119,14 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			} else {
 				automationId1 = nil
 			}
-			id22 := new(string)
+			id26 := new(string)
 			if !r.Trigger.JourneySubmissionTrigger.ID.IsUnknown() && !r.Trigger.JourneySubmissionTrigger.ID.IsNull() {
-				*id22 = r.Trigger.JourneySubmissionTrigger.ID.ValueString()
+				*id26 = r.Trigger.JourneySubmissionTrigger.ID.ValueString()
 			} else {
-				id22 = nil
+				id26 = nil
 			}
-			var journeyId9 string
-			journeyId9 = r.Trigger.JourneySubmissionTrigger.JourneyID.ValueString()
+			var journeyId12 string
+			journeyId12 = r.Trigger.JourneySubmissionTrigger.JourneyID.ValueString()
 
 			journeyName := new(string)
 			if !r.Trigger.JourneySubmissionTrigger.JourneyName.IsUnknown() && !r.Trigger.JourneySubmissionTrigger.JourneyName.IsNull() {
@@ -3455,13 +4134,13 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			} else {
 				journeyName = nil
 			}
-			typeVar7 := shared.JourneySubmissionTriggerType(r.Trigger.JourneySubmissionTrigger.Type.ValueString())
+			typeVar8 := shared.JourneySubmissionTriggerType(r.Trigger.JourneySubmissionTrigger.Type.ValueString())
 			journeySubmissionTrigger = &shared.JourneySubmissionTrigger{
 				AutomationID: automationId1,
-				ID:           id22,
-				JourneyID:    journeyId9,
+				ID:           id26,
+				JourneyID:    journeyId12,
 				JourneyName:  journeyName,
-				Type:         typeVar7,
+				Type:         typeVar8,
 			}
 		}
 		if journeySubmissionTrigger != nil {
@@ -3477,17 +4156,17 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			} else {
 				entitySchema2 = nil
 			}
-			id23 := new(string)
+			id27 := new(string)
 			if !r.Trigger.JourneyAutomationTrigger.ID.IsUnknown() && !r.Trigger.JourneyAutomationTrigger.ID.IsNull() {
-				*id23 = r.Trigger.JourneyAutomationTrigger.ID.ValueString()
+				*id27 = r.Trigger.JourneyAutomationTrigger.ID.ValueString()
 			} else {
-				id23 = nil
+				id27 = nil
 			}
-			typeVar8 := shared.JourneyAutomationTriggerType(r.Trigger.JourneyAutomationTrigger.Type.ValueString())
+			typeVar9 := shared.JourneyAutomationTriggerType(r.Trigger.JourneyAutomationTrigger.Type.ValueString())
 			journeyAutomationTrigger = &shared.JourneyAutomationTrigger{
 				EntitySchema: entitySchema2,
-				ID:           id23,
-				Type:         typeVar8,
+				ID:           id27,
+				Type:         typeVar9,
 			}
 		}
 		if journeyAutomationTrigger != nil {
@@ -3509,25 +4188,26 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 		version = nil
 	}
 	out := shared.FlowTemplateInput{
-		AssignedTo:     assignedTo,
-		AvailableInEcp: availableInEcp,
-		ClosingReasons: closingReasons,
-		CreatedAt:      createdAt,
-		Description:    description,
-		DueDate:        dueDate,
-		DueDateConfig:  dueDateConfig,
-		Edges:          edges,
-		Enabled:        enabled,
-		EntitySync:     entitySync,
-		ID:             id1,
-		Name:           name,
-		OrgID:          orgID,
-		Phases:         phases,
-		Tasks:          tasks,
-		Taxonomies:     taxonomies4,
-		Trigger:        trigger1,
-		UpdatedAt:      updatedAt,
-		Version:        version,
+		AssignedTo:                   assignedTo,
+		AvailableInEcp:               availableInEcp,
+		ClosingReasons:               closingReasons,
+		CreatedAt:                    createdAt,
+		Description:                  description,
+		DueDate:                      dueDate,
+		DueDateConfig:                dueDateConfig,
+		Edges:                        edges,
+		Enabled:                      enabled,
+		EntitySync:                   entitySync,
+		ID:                           id1,
+		Name:                         name,
+		OrgID:                        orgID,
+		Phases:                       phases,
+		SingleClosingReasonSelection: singleClosingReasonSelection,
+		Tasks:                        tasks,
+		Taxonomies:                   taxonomies5,
+		Trigger:                      trigger1,
+		UpdatedAt:                    updatedAt,
+		Version:                      version,
 	}
 
 	return &out, diags
