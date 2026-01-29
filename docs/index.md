@@ -16,7 +16,7 @@ terraform {
   required_providers {
     epilot-workflow = {
       source  = "epilot-dev/epilot-workflow"
-      version = "0.21.1"
+      version = "0.22.0"
     }
   }
 }
