@@ -3,8 +3,99 @@
 package shared
 
 import (
+	"errors"
+	"fmt"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
 )
+
+type FlowType string
+
+const (
+	FlowTypeSection FlowType = "Section"
+	FlowTypeStep    FlowType = "Step"
+)
+
+type Flow struct {
+	Section *Section `queryParam:"inline" union:"member"`
+	Step    *Step    `queryParam:"inline" union:"member"`
+
+	Type FlowType
+}
+
+func CreateFlowSection(section Section) Flow {
+	typ := FlowTypeSection
+
+	return Flow{
+		Section: &section,
+		Type:    typ,
+	}
+}
+
+func CreateFlowStep(step Step) Flow {
+	typ := FlowTypeStep
+
+	return Flow{
+		Step: &step,
+		Type: typ,
+	}
+}
+
+func (u *Flow) UnmarshalJSON(data []byte) error {
+
+	var candidates []utils.UnionCandidate
+
+	// Collect all valid candidates
+	var section Section = Section{}
+	if err := utils.UnmarshalJSON(data, &section, "", true, nil); err == nil {
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  FlowTypeSection,
+			Value: &section,
+		})
+	}
+
+	var step Step = Step{}
+	if err := utils.UnmarshalJSON(data, &step, "", true, nil); err == nil {
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  FlowTypeStep,
+			Value: &step,
+		})
+	}
+
+	if len(candidates) == 0 {
+		return fmt.Errorf("could not unmarshal `%s` into any supported union types for Flow", string(data))
+	}
+
+	// Pick the best candidate using multi-stage filtering
+	best := utils.PickBestUnionCandidate(candidates, data)
+	if best == nil {
+		return fmt.Errorf("could not unmarshal `%s` into any supported union types for Flow", string(data))
+	}
+
+	// Set the union type and value based on the best candidate
+	u.Type = best.Type.(FlowType)
+	switch best.Type {
+	case FlowTypeSection:
+		u.Section = best.Value.(*Section)
+		return nil
+	case FlowTypeStep:
+		u.Step = best.Value.(*Step)
+		return nil
+	}
+
+	return fmt.Errorf("could not unmarshal `%s` into any supported union types for Flow", string(data))
+}
+
+func (u Flow) MarshalJSON() ([]byte, error) {
+	if u.Section != nil {
+		return utils.MarshalJSON(u.Section, "", true)
+	}
+
+	if u.Step != nil {
+		return utils.MarshalJSON(u.Step, "", true)
+	}
+
+	return nil, errors.New("could not marshal union type Flow: all fields are null")
+}
 
 type WorkflowDefinition struct {
 	AssignedTo     []string          `json:"assignedTo,omitempty"`
@@ -19,7 +110,7 @@ type WorkflowDefinition struct {
 	EnableECPWorkflow *bool `json:"enableECPWorkflow,omitempty"`
 	// Whether the workflow is enabled or not
 	Enabled *bool   `default:"true" json:"enabled"`
-	Flow    any     `json:"flow"`
+	Flow    []Flow  `json:"flow"`
 	ID      *string `json:"id,omitempty"`
 	// ISO String Date & Time
 	LastUpdateTime *string `json:"lastUpdateTime,omitempty"`
@@ -102,9 +193,9 @@ func (w *WorkflowDefinition) GetEnabled() *bool {
 	return w.Enabled
 }
 
-func (w *WorkflowDefinition) GetFlow() any {
+func (w *WorkflowDefinition) GetFlow() []Flow {
 	if w == nil {
-		return nil
+		return []Flow{}
 	}
 	return w.Flow
 }
