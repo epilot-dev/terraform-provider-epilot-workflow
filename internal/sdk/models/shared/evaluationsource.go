@@ -43,26 +43,27 @@ func (e *AttributeOperation) UnmarshalJSON(data []byte) error {
 type AttributeType string
 
 const (
-	AttributeTypeString       AttributeType = "string"
-	AttributeTypeText         AttributeType = "text"
-	AttributeTypeNumber       AttributeType = "number"
-	AttributeTypeBoolean      AttributeType = "boolean"
-	AttributeTypeDate         AttributeType = "date"
-	AttributeTypeDatetime     AttributeType = "datetime"
-	AttributeTypeTags         AttributeType = "tags"
-	AttributeTypeCountry      AttributeType = "country"
-	AttributeTypeEmail        AttributeType = "email"
-	AttributeTypePhone        AttributeType = "phone"
-	AttributeTypeProduct      AttributeType = "product"
-	AttributeTypePrice        AttributeType = "price"
-	AttributeTypeStatus       AttributeType = "status"
-	AttributeTypeRelation     AttributeType = "relation"
-	AttributeTypeMultiselect  AttributeType = "multiselect"
-	AttributeTypeSelect       AttributeType = "select"
-	AttributeTypeRadio        AttributeType = "radio"
-	AttributeTypeRelationUser AttributeType = "relation_user"
-	AttributeTypePurpose      AttributeType = "purpose"
-	AttributeTypeLabel        AttributeType = "label"
+	AttributeTypeString              AttributeType = "string"
+	AttributeTypeText                AttributeType = "text"
+	AttributeTypeNumber              AttributeType = "number"
+	AttributeTypeBoolean             AttributeType = "boolean"
+	AttributeTypeDate                AttributeType = "date"
+	AttributeTypeDatetime            AttributeType = "datetime"
+	AttributeTypeTags                AttributeType = "tags"
+	AttributeTypeCountry             AttributeType = "country"
+	AttributeTypeEmail               AttributeType = "email"
+	AttributeTypePhone               AttributeType = "phone"
+	AttributeTypeProduct             AttributeType = "product"
+	AttributeTypePrice               AttributeType = "price"
+	AttributeTypeStatus              AttributeType = "status"
+	AttributeTypeRelation            AttributeType = "relation"
+	AttributeTypeMultiselect         AttributeType = "multiselect"
+	AttributeTypeSelect              AttributeType = "select"
+	AttributeTypeRadio               AttributeType = "radio"
+	AttributeTypeRelationUser        AttributeType = "relation_user"
+	AttributeTypePurpose             AttributeType = "purpose"
+	AttributeTypeLabel               AttributeType = "label"
+	AttributeTypeMessageEmailAddress AttributeType = "message_email_address"
 )
 
 func (e AttributeType) ToPointer() *AttributeType {
@@ -113,6 +114,8 @@ func (e *AttributeType) UnmarshalJSON(data []byte) error {
 	case "purpose":
 		fallthrough
 	case "label":
+		fallthrough
+	case "message_email_address":
 		*e = AttributeType(v)
 		return nil
 	default:
@@ -179,7 +182,9 @@ type EvaluationSource struct {
 	Attribute           *string             `json:"attribute,omitempty"`
 	AttributeOperation  *AttributeOperation `json:"attribute_operation,omitempty"`
 	AttributeRepeatable *bool               `json:"attribute_repeatable,omitempty"`
-	AttributeType       *AttributeType      `json:"attribute_type,omitempty"`
+	// For complex attribute types, specifies which sub-field to extract (e.g., 'address', 'name', 'email_type')
+	AttributeSubField *string        `json:"attribute_sub_field,omitempty"`
+	AttributeType     *AttributeType `json:"attribute_type,omitempty"`
 	// The id of the action or trigger
 	ID         *string     `json:"id,omitempty"`
 	Origin     *Origin     `json:"origin,omitempty"`
@@ -217,6 +222,13 @@ func (e *EvaluationSource) GetAttributeRepeatable() *bool {
 		return nil
 	}
 	return e.AttributeRepeatable
+}
+
+func (e *EvaluationSource) GetAttributeSubField() *string {
+	if e == nil {
+		return nil
+	}
+	return e.AttributeSubField
 }
 
 func (e *EvaluationSource) GetAttributeType() *AttributeType {
