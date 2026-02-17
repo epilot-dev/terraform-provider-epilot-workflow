@@ -7,7 +7,9 @@ import (
 )
 
 type FlowTemplate struct {
-	AssignedTo []string `json:"assigned_to,omitempty"`
+	// Additional trigger configurations that can also start this flow. Useful for flows that should be startable via multiple methods (e.g., both automation AND manual).
+	AdditionalTriggers []Trigger `json:"additional_triggers,omitempty"`
+	AssignedTo         []string  `json:"assigned_to,omitempty"`
 	// Indicates whether this workflow is available for End Customer Portal or not. By default it's not.
 	AvailableInEcp *bool           `json:"available_in_ecp,omitempty"`
 	ClosingReasons []ClosingReason `json:"closing_reasons,omitempty"`
@@ -51,6 +53,13 @@ func (f *FlowTemplate) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	return nil
+}
+
+func (f *FlowTemplate) GetAdditionalTriggers() []Trigger {
+	if f == nil {
+		return nil
+	}
+	return f.AdditionalTriggers
 }
 
 func (f *FlowTemplate) GetAssignedTo() []string {

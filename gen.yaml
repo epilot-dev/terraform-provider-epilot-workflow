@@ -18,6 +18,7 @@ generation:
   schemas:
     allOfMergeStrategy: shallowMerge
   requestBodyFieldName: ""
+  versioningStrategy: automatic
   persistentEdits: {}
   tests:
     generateTests: true
@@ -41,10 +42,12 @@ go:
   outputModelSuffix: output
   packageName: openapi
 terraform:
-  version: 0.21.1
+  version: 0.22.0
+  additionalActions: []
   additionalDataSources: []
   additionalDependencies: {}
   additionalEphemeralResources: []
+  additionalFunctions: []
   additionalListResources: []
   additionalProviderAttributes:
     httpHeaders: ""
@@ -75,4 +78,5 @@ terraform:
   outputModelSuffix: output
   packageName: epilot-workflow
   respectRequiredFields: false
+  respectTitlesForPrimitiveUnionMembers: false
   unionStrategy: populated-fields
