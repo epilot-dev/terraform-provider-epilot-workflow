@@ -5,15 +5,15 @@ management:
   docVersion: 1.0.0
   speakeasyVersion: 1.750.0
   generationVersion: 2.856.1
-  releaseVersion: 0.22.0
-  configChecksum: 0b1ba94df79c19c13155d1b78e0a1bb7
+  releaseVersion: 0.22.1
+  configChecksum: 5abe3c2a631a90b80ad85a4979f66fa8
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-workflow.git
   repoSubDirectory: .
   published: true
 persistentEdits:
-  generation_id: 64ff6679-8c27-4522-aee2-35a46394c668
-  pristine_commit_hash: 75b6be1fe44dcfc7a521cdaee351b53998a7aa6c
-  pristine_tree_hash: cf5c9fdeec2c224e73d0cebc751a6e3af968c9d8
+  generation_id: 7943abb5-a233-404b-b5a5-d67c87358186
+  pristine_commit_hash: ea916b994e63e332ad83b9996289c04f00029ebd
+  pristine_tree_hash: 9de3dd9ad5b54c7e7d9307aa737f9af620081418
 features:
   go:
     additionalProperties: 0.1.1
@@ -59,8 +59,8 @@ trackedFiles:
     pristine_git_object: 38491662220645d5a33eb955e6c06d459459434a
   examples/provider/provider.tf:
     id: 954e955c0240
-    last_write_checksum: sha1:f7869120a63c36207a6bb78a3159c87f019ba4eb
-    pristine_git_object: 4f3bd848784378dfef5e925f740b93aa3eb226d7
+    last_write_checksum: sha1:b1acc7adc5c8a9c5888beb9851ef0ff9ebf8e2c5
+    pristine_git_object: ae29b076277d5d4b8aef1c32edb2eaf43ee37db4
   examples/resources/epilot-workflow_closing_reason/import-by-string-id.tf:
     id: 6a55cbc44ab7
     last_write_checksum: sha1:fa5f76e472bd939b11d68877f3c14e48e08c16f5
@@ -931,8 +931,8 @@ trackedFiles:
     pristine_git_object: aa809fccb3445b1e2530a979dad620512f50e70f
   internal/sdk/sdk.go:
     id: 02d7190ee502
-    last_write_checksum: sha1:69a4dc928a1cdda5b46163e82c077573a948263d
-    pristine_git_object: 755032f8a50422c62067e912defae30dc054b676
+    last_write_checksum: sha1:21c3dd10346ae2062707af26a5779b0ce831de3c
+    pristine_git_object: b622ec6c60cf19f3939e8558d23079ee9d1ddfa7
   internal/sdk/types/bigint.go:
     id: fc530b70337e
     last_write_checksum: sha1:49b004005d0461fb04b846eca062b070b0360b31
