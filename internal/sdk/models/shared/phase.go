@@ -2,9 +2,104 @@
 
 package shared
 
+import (
+	"errors"
+	"fmt"
+	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
+)
+
+type PhaseAssignedToType string
+
+const (
+	PhaseAssignedToTypeStr                PhaseAssignedToType = "str"
+	PhaseAssignedToTypeVariableAssignment PhaseAssignedToType = "VariableAssignment"
+)
+
+type PhaseAssignedTo struct {
+	Str                *string             `queryParam:"inline" union:"member"`
+	VariableAssignment *VariableAssignment `queryParam:"inline" union:"member"`
+
+	Type PhaseAssignedToType
+}
+
+func CreatePhaseAssignedToStr(str string) PhaseAssignedTo {
+	typ := PhaseAssignedToTypeStr
+
+	return PhaseAssignedTo{
+		Str:  &str,
+		Type: typ,
+	}
+}
+
+func CreatePhaseAssignedToVariableAssignment(variableAssignment VariableAssignment) PhaseAssignedTo {
+	typ := PhaseAssignedToTypeVariableAssignment
+
+	return PhaseAssignedTo{
+		VariableAssignment: &variableAssignment,
+		Type:               typ,
+	}
+}
+
+func (u *PhaseAssignedTo) UnmarshalJSON(data []byte) error {
+
+	var candidates []utils.UnionCandidate
+
+	// Collect all valid candidates
+	var str string = ""
+	if err := utils.UnmarshalJSON(data, &str, "", true, nil); err == nil {
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  PhaseAssignedToTypeStr,
+			Value: &str,
+		})
+	}
+
+	var variableAssignment VariableAssignment = VariableAssignment{}
+	if err := utils.UnmarshalJSON(data, &variableAssignment, "", true, nil); err == nil {
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  PhaseAssignedToTypeVariableAssignment,
+			Value: &variableAssignment,
+		})
+	}
+
+	if len(candidates) == 0 {
+		return fmt.Errorf("could not unmarshal `%s` into any supported union types for PhaseAssignedTo", string(data))
+	}
+
+	// Pick the best candidate using multi-stage filtering
+	best := utils.PickBestUnionCandidate(candidates, data)
+	if best == nil {
+		return fmt.Errorf("could not unmarshal `%s` into any supported union types for PhaseAssignedTo", string(data))
+	}
+
+	// Set the union type and value based on the best candidate
+	u.Type = best.Type.(PhaseAssignedToType)
+	switch best.Type {
+	case PhaseAssignedToTypeStr:
+		u.Str = best.Value.(*string)
+		return nil
+	case PhaseAssignedToTypeVariableAssignment:
+		u.VariableAssignment = best.Value.(*VariableAssignment)
+		return nil
+	}
+
+	return fmt.Errorf("could not unmarshal `%s` into any supported union types for PhaseAssignedTo", string(data))
+}
+
+func (u PhaseAssignedTo) MarshalJSON() ([]byte, error) {
+	if u.Str != nil {
+		return utils.MarshalJSON(u.Str, "", true)
+	}
+
+	if u.VariableAssignment != nil {
+		return utils.MarshalJSON(u.VariableAssignment, "", true)
+	}
+
+	return nil, errors.New("could not marshal union type PhaseAssignedTo: all fields are null")
+}
+
 type Phase struct {
-	AssignedTo []string `json:"assigned_to,omitempty"`
-	DueDate    *string  `json:"due_date,omitempty"`
+	AssignedTo []PhaseAssignedTo `json:"assigned_to,omitempty"`
+	DueDate    *string           `json:"due_date,omitempty"`
 	// Set due date for the task based on a dynamic condition
 	DueDateConfig *DueDateConfig `json:"due_date_config,omitempty"`
 	ID            string         `json:"id"`
@@ -13,7 +108,7 @@ type Phase struct {
 	Taxonomies []string `json:"taxonomies,omitempty"`
 }
 
-func (p *Phase) GetAssignedTo() []string {
+func (p *Phase) GetAssignedTo() []PhaseAssignedTo {
 	if p == nil {
 		return nil
 	}

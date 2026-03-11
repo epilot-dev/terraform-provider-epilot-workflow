@@ -45,6 +45,7 @@ const (
 	EventTaskCompleted         Event = "TaskCompleted"
 	EventTaskSkipped           Event = "TaskSkipped"
 	EventTaskMarkedInProgress  Event = "TaskMarkedInProgress"
+	EventTaskMarkedOnHold      Event = "TaskMarkedOnHold"
 	EventPhaseUpdated          Event = "PhaseUpdated"
 	EventPhaseCompleted        Event = "PhaseCompleted"
 	EventPhaseSkipped          Event = "PhaseSkipped"
@@ -85,6 +86,8 @@ func (e *Event) UnmarshalJSON(data []byte) error {
 	case "TaskSkipped":
 		fallthrough
 	case "TaskMarkedInProgress":
+		fallthrough
+	case "TaskMarkedOnHold":
 		fallthrough
 	case "PhaseUpdated":
 		fallthrough

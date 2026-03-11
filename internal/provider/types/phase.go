@@ -7,10 +7,10 @@ import (
 )
 
 type Phase struct {
-	AssignedTo    []types.String `tfsdk:"assigned_to"`
-	DueDate       types.String   `tfsdk:"due_date"`
-	DueDateConfig *DueDateConfig `tfsdk:"due_date_config"`
-	ID            types.String   `tfsdk:"id"`
-	Name          types.String   `tfsdk:"name"`
-	Taxonomies    []types.String `tfsdk:"taxonomies"`
+	AssignedTo    []FlowTemplateAssignedTo `tfsdk:"assigned_to"`
+	DueDate       types.String             `tfsdk:"due_date"`
+	DueDateConfig *DueDateConfig           `tfsdk:"due_date_config"`
+	ID            types.String             `tfsdk:"id"`
+	Name          types.String             `tfsdk:"name"`
+	Taxonomies    []types.String           `tfsdk:"taxonomies"`
 }

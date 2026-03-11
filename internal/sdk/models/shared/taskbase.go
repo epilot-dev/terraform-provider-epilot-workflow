@@ -3,11 +3,102 @@
 package shared
 
 import (
+	"errors"
+	"fmt"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
 )
 
+type TaskBaseAssignedToType string
+
+const (
+	TaskBaseAssignedToTypeStr                TaskBaseAssignedToType = "str"
+	TaskBaseAssignedToTypeVariableAssignment TaskBaseAssignedToType = "VariableAssignment"
+)
+
+type TaskBaseAssignedTo struct {
+	Str                *string             `queryParam:"inline" union:"member"`
+	VariableAssignment *VariableAssignment `queryParam:"inline" union:"member"`
+
+	Type TaskBaseAssignedToType
+}
+
+func CreateTaskBaseAssignedToStr(str string) TaskBaseAssignedTo {
+	typ := TaskBaseAssignedToTypeStr
+
+	return TaskBaseAssignedTo{
+		Str:  &str,
+		Type: typ,
+	}
+}
+
+func CreateTaskBaseAssignedToVariableAssignment(variableAssignment VariableAssignment) TaskBaseAssignedTo {
+	typ := TaskBaseAssignedToTypeVariableAssignment
+
+	return TaskBaseAssignedTo{
+		VariableAssignment: &variableAssignment,
+		Type:               typ,
+	}
+}
+
+func (u *TaskBaseAssignedTo) UnmarshalJSON(data []byte) error {
+
+	var candidates []utils.UnionCandidate
+
+	// Collect all valid candidates
+	var str string = ""
+	if err := utils.UnmarshalJSON(data, &str, "", true, nil); err == nil {
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  TaskBaseAssignedToTypeStr,
+			Value: &str,
+		})
+	}
+
+	var variableAssignment VariableAssignment = VariableAssignment{}
+	if err := utils.UnmarshalJSON(data, &variableAssignment, "", true, nil); err == nil {
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  TaskBaseAssignedToTypeVariableAssignment,
+			Value: &variableAssignment,
+		})
+	}
+
+	if len(candidates) == 0 {
+		return fmt.Errorf("could not unmarshal `%s` into any supported union types for TaskBaseAssignedTo", string(data))
+	}
+
+	// Pick the best candidate using multi-stage filtering
+	best := utils.PickBestUnionCandidate(candidates, data)
+	if best == nil {
+		return fmt.Errorf("could not unmarshal `%s` into any supported union types for TaskBaseAssignedTo", string(data))
+	}
+
+	// Set the union type and value based on the best candidate
+	u.Type = best.Type.(TaskBaseAssignedToType)
+	switch best.Type {
+	case TaskBaseAssignedToTypeStr:
+		u.Str = best.Value.(*string)
+		return nil
+	case TaskBaseAssignedToTypeVariableAssignment:
+		u.VariableAssignment = best.Value.(*VariableAssignment)
+		return nil
+	}
+
+	return fmt.Errorf("could not unmarshal `%s` into any supported union types for TaskBaseAssignedTo", string(data))
+}
+
+func (u TaskBaseAssignedTo) MarshalJSON() ([]byte, error) {
+	if u.Str != nil {
+		return utils.MarshalJSON(u.Str, "", true)
+	}
+
+	if u.VariableAssignment != nil {
+		return utils.MarshalJSON(u.VariableAssignment, "", true)
+	}
+
+	return nil, errors.New("could not marshal union type TaskBaseAssignedTo: all fields are null")
+}
+
 type TaskBase struct {
-	AssignedTo []string `json:"assigned_to,omitempty"`
+	AssignedTo []TaskBaseAssignedTo `json:"assigned_to,omitempty"`
 	// Longer information regarding Task
 	Description *StepDescription `json:"description,omitempty"`
 	DueDate     *string          `json:"due_date,omitempty"`
@@ -39,7 +130,7 @@ func (t *TaskBase) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (t *TaskBase) GetAssignedTo() []string {
+func (t *TaskBase) GetAssignedTo() []TaskBaseAssignedTo {
 	if t == nil {
 		return nil
 	}

@@ -7,7 +7,8 @@ import (
 )
 
 type AutomationTrigger struct {
-	AutomationID types.String `tfsdk:"automation_id"`
-	ID           types.String `tfsdk:"id"`
-	Type         types.String `tfsdk:"type"`
+	AutomationID  types.String    `tfsdk:"automation_id"`
+	ID            types.String    `tfsdk:"id"`
+	TriggerConfig []TriggerConfig `tfsdk:"trigger_config"`
+	Type          types.String    `tfsdk:"type"`
 }

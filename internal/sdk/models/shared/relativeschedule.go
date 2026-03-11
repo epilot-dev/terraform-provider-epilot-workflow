@@ -60,9 +60,10 @@ func (e *RelativeScheduleMode) UnmarshalJSON(data []byte) error {
 type RelativeScheduleOrigin string
 
 const (
-	RelativeScheduleOriginFlowStarted            RelativeScheduleOrigin = "flow_started"
-	RelativeScheduleOriginTaskCompleted          RelativeScheduleOrigin = "task_completed"
-	RelativeScheduleOriginTriggerEntityAttribute RelativeScheduleOrigin = "trigger_entity_attribute"
+	RelativeScheduleOriginFlowStarted                RelativeScheduleOrigin = "flow_started"
+	RelativeScheduleOriginTaskCompleted              RelativeScheduleOrigin = "task_completed"
+	RelativeScheduleOriginTriggerEntityAttribute     RelativeScheduleOrigin = "trigger_entity_attribute"
+	RelativeScheduleOriginAllPrecedingTasksCompleted RelativeScheduleOrigin = "all_preceding_tasks_completed"
 )
 
 func (e RelativeScheduleOrigin) ToPointer() *RelativeScheduleOrigin {
@@ -79,6 +80,8 @@ func (e *RelativeScheduleOrigin) UnmarshalJSON(data []byte) error {
 	case "task_completed":
 		fallthrough
 	case "trigger_entity_attribute":
+		fallthrough
+	case "all_preceding_tasks_completed":
 		*e = RelativeScheduleOrigin(v)
 		return nil
 	default:
@@ -89,7 +92,7 @@ func (e *RelativeScheduleOrigin) UnmarshalJSON(data []byte) error {
 type Reference struct {
 	// An entity attribute that identifies a date / datetime
 	Attribute *string `json:"attribute,omitempty"`
-	// The id of the entity / workflow / task, based on the origin of the schedule
+	// The id of the entity / workflow / task, based on the origin of the schedule. For all_preceding_tasks_completed, use the sentinel value 'all_preceding_tasks_completed'.
 	ID     string                 `json:"id"`
 	Origin RelativeScheduleOrigin `json:"origin"`
 	// The schema of the entity

@@ -17,9 +17,80 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 	var diags diag.Diagnostics
 
 	if resp != nil {
-		r.AssignedTo = make([]types.String, 0, len(resp.AssignedTo))
-		for _, v := range resp.AssignedTo {
-			r.AssignedTo = append(r.AssignedTo, types.StringValue(v))
+		r.AdditionalTriggers = []tfTypes.Trigger{}
+
+		for _, additionalTriggersItem := range resp.AdditionalTriggers {
+			var additionalTriggers tfTypes.Trigger
+
+			if additionalTriggersItem.AutomationTrigger != nil {
+				additionalTriggers.AutomationTrigger = &tfTypes.AutomationTrigger{}
+				additionalTriggers.AutomationTrigger.AutomationID = types.StringPointerValue(additionalTriggersItem.AutomationTrigger.AutomationID)
+				additionalTriggers.AutomationTrigger.ID = types.StringPointerValue(additionalTriggersItem.AutomationTrigger.ID)
+				additionalTriggers.AutomationTrigger.TriggerConfig = []tfTypes.TriggerConfig{}
+
+				for _, triggerConfigItem := range additionalTriggersItem.AutomationTrigger.TriggerConfig {
+					var triggerConfig tfTypes.TriggerConfig
+
+					if triggerConfigItem.AdditionalProperties == nil {
+						triggerConfig.AdditionalProperties = jsontypes.NewNormalizedNull()
+					} else {
+						additionalPropertiesResult, _ := json.Marshal(triggerConfigItem.AdditionalProperties)
+						triggerConfig.AdditionalProperties = jsontypes.NewNormalizedValue(string(additionalPropertiesResult))
+					}
+					if len(triggerConfigItem.Configuration) > 0 {
+						triggerConfig.Configuration = make(map[string]jsontypes.Normalized, len(triggerConfigItem.Configuration))
+						for key, value := range triggerConfigItem.Configuration {
+							result, _ := json.Marshal(value)
+							triggerConfig.Configuration[key] = jsontypes.NewNormalizedValue(string(result))
+						}
+					}
+					triggerConfig.Type = types.StringValue(triggerConfigItem.Type)
+
+					additionalTriggers.AutomationTrigger.TriggerConfig = append(additionalTriggers.AutomationTrigger.TriggerConfig, triggerConfig)
+				}
+				additionalTriggers.AutomationTrigger.Type = types.StringValue(string(additionalTriggersItem.AutomationTrigger.Type))
+			}
+			if additionalTriggersItem.JourneyAutomationTrigger != nil {
+				additionalTriggers.JourneyAutomationTrigger = &tfTypes.JourneyAutomationTrigger{}
+				additionalTriggers.JourneyAutomationTrigger.EntitySchema = types.StringPointerValue(additionalTriggersItem.JourneyAutomationTrigger.EntitySchema)
+				additionalTriggers.JourneyAutomationTrigger.ID = types.StringPointerValue(additionalTriggersItem.JourneyAutomationTrigger.ID)
+				additionalTriggers.JourneyAutomationTrigger.Type = types.StringValue(string(additionalTriggersItem.JourneyAutomationTrigger.Type))
+			}
+			if additionalTriggersItem.JourneySubmissionTrigger != nil {
+				additionalTriggers.JourneySubmissionTrigger = &tfTypes.JourneySubmissionTrigger{}
+				additionalTriggers.JourneySubmissionTrigger.AutomationID = types.StringPointerValue(additionalTriggersItem.JourneySubmissionTrigger.AutomationID)
+				additionalTriggers.JourneySubmissionTrigger.ID = types.StringPointerValue(additionalTriggersItem.JourneySubmissionTrigger.ID)
+				additionalTriggers.JourneySubmissionTrigger.JourneyID = types.StringValue(additionalTriggersItem.JourneySubmissionTrigger.JourneyID)
+				additionalTriggers.JourneySubmissionTrigger.JourneyName = types.StringPointerValue(additionalTriggersItem.JourneySubmissionTrigger.JourneyName)
+				additionalTriggers.JourneySubmissionTrigger.Type = types.StringValue(string(additionalTriggersItem.JourneySubmissionTrigger.Type))
+			}
+			if additionalTriggersItem.ManualTrigger != nil {
+				additionalTriggers.ManualTrigger = &tfTypes.JourneyAutomationTrigger{}
+				additionalTriggers.ManualTrigger.EntitySchema = types.StringPointerValue(additionalTriggersItem.ManualTrigger.EntitySchema)
+				additionalTriggers.ManualTrigger.ID = types.StringPointerValue(additionalTriggersItem.ManualTrigger.ID)
+				additionalTriggers.ManualTrigger.Type = types.StringValue(string(additionalTriggersItem.ManualTrigger.Type))
+			}
+
+			r.AdditionalTriggers = append(r.AdditionalTriggers, additionalTriggers)
+		}
+		r.AssignedTo = []tfTypes.FlowTemplateAssignedTo{}
+
+		for _, assignedToItem := range resp.AssignedTo {
+			var assignedTo tfTypes.FlowTemplateAssignedTo
+
+			if assignedToItem.Str != nil {
+				assignedTo.Str = types.StringPointerValue(assignedToItem.Str)
+			}
+			if assignedToItem.VariableAssignment != nil {
+				assignedTo.VariableAssignment = &tfTypes.VariableAssignment{}
+				assignedTo.VariableAssignment.Value = make([]types.String, 0, len(assignedToItem.VariableAssignment.Value))
+				for _, v := range assignedToItem.VariableAssignment.Value {
+					assignedTo.VariableAssignment.Value = append(assignedTo.VariableAssignment.Value, types.StringValue(v))
+				}
+				assignedTo.VariableAssignment.Variable = types.StringValue(assignedToItem.VariableAssignment.Variable)
+			}
+
+			r.AssignedTo = append(r.AssignedTo, assignedTo)
 		}
 		r.AvailableInEcp = types.BoolPointerValue(resp.AvailableInEcp)
 		r.ClosingReasons = []tfTypes.ClosingReason1{}
@@ -57,7 +128,7 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 			edges.FromID = types.StringValue(edgesItem.FromID)
 			edges.ID = types.StringValue(edgesItem.ID)
 			edges.NoneMet = types.BoolPointerValue(edgesItem.NoneMet)
-			edges.ToID = types.StringValue(edgesItem.ToID)
+			edges.ToID = types.StringPointerValue(edgesItem.ToID)
 
 			r.Edges = append(r.Edges, edges)
 		}
@@ -67,8 +138,10 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 		for _, entitySyncItem := range resp.EntitySync {
 			var entitySync tfTypes.EntitySync
 
+			entitySync.Target = &tfTypes.Target{}
 			entitySync.Target.EntityAttribute = types.StringValue(entitySyncItem.Target.EntityAttribute)
 			entitySync.Target.EntitySchema = types.StringValue(entitySyncItem.Target.EntitySchema)
+			entitySync.Trigger = &tfTypes.EntitySyncTrigger{}
 			entitySync.Trigger.Event = types.StringValue(string(entitySyncItem.Trigger.Event))
 			if entitySyncItem.Trigger.Filter == nil {
 				entitySync.Trigger.Filter = nil
@@ -77,6 +150,7 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 				entitySync.Trigger.Filter.PhaseTemplateID = types.StringPointerValue(entitySyncItem.Trigger.Filter.PhaseTemplateID)
 				entitySync.Trigger.Filter.TaskTemplateID = types.StringPointerValue(entitySyncItem.Trigger.Filter.TaskTemplateID)
 			}
+			entitySync.Value = &tfTypes.Value{}
 			entitySync.Value.Source = types.StringValue(string(entitySyncItem.Value.Source))
 			entitySync.Value.Value = types.StringPointerValue(entitySyncItem.Value.Value)
 
@@ -90,9 +164,24 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 		for _, phasesItem := range resp.Phases {
 			var phases tfTypes.Phase
 
-			phases.AssignedTo = make([]types.String, 0, len(phasesItem.AssignedTo))
-			for _, v := range phasesItem.AssignedTo {
-				phases.AssignedTo = append(phases.AssignedTo, types.StringValue(v))
+			phases.AssignedTo = []tfTypes.FlowTemplateAssignedTo{}
+
+			for _, assignedToItem1 := range phasesItem.AssignedTo {
+				var assignedTo1 tfTypes.FlowTemplateAssignedTo
+
+				if assignedToItem1.Str != nil {
+					assignedTo1.Str = types.StringPointerValue(assignedToItem1.Str)
+				}
+				if assignedToItem1.VariableAssignment != nil {
+					assignedTo1.VariableAssignment = &tfTypes.VariableAssignment{}
+					assignedTo1.VariableAssignment.Value = make([]types.String, 0, len(assignedToItem1.VariableAssignment.Value))
+					for _, v := range assignedToItem1.VariableAssignment.Value {
+						assignedTo1.VariableAssignment.Value = append(assignedTo1.VariableAssignment.Value, types.StringValue(v))
+					}
+					assignedTo1.VariableAssignment.Variable = types.StringValue(assignedToItem1.VariableAssignment.Variable)
+				}
+
+				phases.AssignedTo = append(phases.AssignedTo, assignedTo1)
 			}
 			phases.DueDate = types.StringPointerValue(phasesItem.DueDate)
 			if phasesItem.DueDateConfig == nil {
@@ -129,14 +218,29 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 					if tasksItem.AiAgentTask.AgentConfig.AdditionalProperties == nil {
 						tasks.AiAgentTask.AgentConfig.AdditionalProperties = jsontypes.NewNormalizedNull()
 					} else {
-						additionalPropertiesResult, _ := json.Marshal(tasksItem.AiAgentTask.AgentConfig.AdditionalProperties)
-						tasks.AiAgentTask.AgentConfig.AdditionalProperties = jsontypes.NewNormalizedValue(string(additionalPropertiesResult))
+						additionalPropertiesResult1, _ := json.Marshal(tasksItem.AiAgentTask.AgentConfig.AdditionalProperties)
+						tasks.AiAgentTask.AgentConfig.AdditionalProperties = jsontypes.NewNormalizedValue(string(additionalPropertiesResult1))
 					}
 					tasks.AiAgentTask.AgentConfig.AgentID = types.StringValue(tasksItem.AiAgentTask.AgentConfig.AgentID)
 				}
-				tasks.AiAgentTask.AssignedTo = make([]types.String, 0, len(tasksItem.AiAgentTask.AssignedTo))
-				for _, v := range tasksItem.AiAgentTask.AssignedTo {
-					tasks.AiAgentTask.AssignedTo = append(tasks.AiAgentTask.AssignedTo, types.StringValue(v))
+				tasks.AiAgentTask.AssignedTo = []tfTypes.FlowTemplateAssignedTo{}
+
+				for _, assignedToItem2 := range tasksItem.AiAgentTask.AssignedTo {
+					var assignedTo2 tfTypes.FlowTemplateAssignedTo
+
+					if assignedToItem2.Str != nil {
+						assignedTo2.Str = types.StringPointerValue(assignedToItem2.Str)
+					}
+					if assignedToItem2.VariableAssignment != nil {
+						assignedTo2.VariableAssignment = &tfTypes.VariableAssignment{}
+						assignedTo2.VariableAssignment.Value = make([]types.String, 0, len(assignedToItem2.VariableAssignment.Value))
+						for _, v := range assignedToItem2.VariableAssignment.Value {
+							assignedTo2.VariableAssignment.Value = append(assignedTo2.VariableAssignment.Value, types.StringValue(v))
+						}
+						assignedTo2.VariableAssignment.Variable = types.StringValue(assignedToItem2.VariableAssignment.Variable)
+					}
+
+					tasks.AiAgentTask.AssignedTo = append(tasks.AiAgentTask.AssignedTo, assignedTo2)
 				}
 				if tasksItem.AiAgentTask.Description == nil {
 					tasks.AiAgentTask.Description = nil
@@ -221,11 +325,46 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 			}
 			if tasksItem.AutomationTask != nil {
 				tasks.AutomationTask = &tfTypes.AutomationTask{}
-				tasks.AutomationTask.AssignedTo = make([]types.String, 0, len(tasksItem.AutomationTask.AssignedTo))
-				for _, v := range tasksItem.AutomationTask.AssignedTo {
-					tasks.AutomationTask.AssignedTo = append(tasks.AutomationTask.AssignedTo, types.StringValue(v))
+				tasks.AutomationTask.AssignedTo = []tfTypes.FlowTemplateAssignedTo{}
+
+				for _, assignedToItem3 := range tasksItem.AutomationTask.AssignedTo {
+					var assignedTo3 tfTypes.FlowTemplateAssignedTo
+
+					if assignedToItem3.Str != nil {
+						assignedTo3.Str = types.StringPointerValue(assignedToItem3.Str)
+					}
+					if assignedToItem3.VariableAssignment != nil {
+						assignedTo3.VariableAssignment = &tfTypes.VariableAssignment{}
+						assignedTo3.VariableAssignment.Value = make([]types.String, 0, len(assignedToItem3.VariableAssignment.Value))
+						for _, v := range assignedToItem3.VariableAssignment.Value {
+							assignedTo3.VariableAssignment.Value = append(assignedTo3.VariableAssignment.Value, types.StringValue(v))
+						}
+						assignedTo3.VariableAssignment.Variable = types.StringValue(assignedToItem3.VariableAssignment.Variable)
+					}
+
+					tasks.AutomationTask.AssignedTo = append(tasks.AutomationTask.AssignedTo, assignedTo3)
 				}
-				tasks.AutomationTask.AutomationConfig.FlowID = types.StringValue(tasksItem.AutomationTask.AutomationConfig.FlowID)
+				tasks.AutomationTask.AutomationConfig = &tfTypes.AutomationConfig{}
+				if tasksItem.AutomationTask.AutomationConfig.ActionConfig == nil {
+					tasks.AutomationTask.AutomationConfig.ActionConfig = nil
+				} else {
+					tasks.AutomationTask.AutomationConfig.ActionConfig = &tfTypes.ActionConfig{}
+					if tasksItem.AutomationTask.AutomationConfig.ActionConfig.AdditionalProperties == nil {
+						tasks.AutomationTask.AutomationConfig.ActionConfig.AdditionalProperties = jsontypes.NewNormalizedNull()
+					} else {
+						additionalPropertiesResult2, _ := json.Marshal(tasksItem.AutomationTask.AutomationConfig.ActionConfig.AdditionalProperties)
+						tasks.AutomationTask.AutomationConfig.ActionConfig.AdditionalProperties = jsontypes.NewNormalizedValue(string(additionalPropertiesResult2))
+					}
+					if len(tasksItem.AutomationTask.AutomationConfig.ActionConfig.Config) > 0 {
+						tasks.AutomationTask.AutomationConfig.ActionConfig.Config = make(map[string]jsontypes.Normalized, len(tasksItem.AutomationTask.AutomationConfig.ActionConfig.Config))
+						for key1, value1 := range tasksItem.AutomationTask.AutomationConfig.ActionConfig.Config {
+							result1, _ := json.Marshal(value1)
+							tasks.AutomationTask.AutomationConfig.ActionConfig.Config[key1] = jsontypes.NewNormalizedValue(string(result1))
+						}
+					}
+					tasks.AutomationTask.AutomationConfig.ActionConfig.Type = types.StringValue(tasksItem.AutomationTask.AutomationConfig.ActionConfig.Type)
+				}
+				tasks.AutomationTask.AutomationConfig.FlowID = types.StringPointerValue(tasksItem.AutomationTask.AutomationConfig.FlowID)
 				tasks.AutomationTask.CreatedAutomatically = types.BoolPointerValue(tasksItem.AutomationTask.CreatedAutomatically)
 				if tasksItem.AutomationTask.Description == nil {
 					tasks.AutomationTask.Description = nil
@@ -323,6 +462,7 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 						tasks.AutomationTask.Schedule.RelativeSchedule.Direction = types.StringValue(string(tasksItem.AutomationTask.Schedule.RelativeSchedule.Direction))
 						tasks.AutomationTask.Schedule.RelativeSchedule.Duration = types.Float64Value(tasksItem.AutomationTask.Schedule.RelativeSchedule.Duration)
 						tasks.AutomationTask.Schedule.RelativeSchedule.Mode = types.StringValue(string(tasksItem.AutomationTask.Schedule.RelativeSchedule.Mode))
+						tasks.AutomationTask.Schedule.RelativeSchedule.Reference = &tfTypes.Reference{}
 						tasks.AutomationTask.Schedule.RelativeSchedule.Reference.Attribute = types.StringPointerValue(tasksItem.AutomationTask.Schedule.RelativeSchedule.Reference.Attribute)
 						tasks.AutomationTask.Schedule.RelativeSchedule.Reference.ID = types.StringValue(tasksItem.AutomationTask.Schedule.RelativeSchedule.Reference.ID)
 						tasks.AutomationTask.Schedule.RelativeSchedule.Reference.Origin = types.StringValue(string(tasksItem.AutomationTask.Schedule.RelativeSchedule.Reference.Origin))
@@ -343,9 +483,24 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 			}
 			if tasksItem.DecisionTask != nil {
 				tasks.DecisionTask = &tfTypes.DecisionTask{}
-				tasks.DecisionTask.AssignedTo = make([]types.String, 0, len(tasksItem.DecisionTask.AssignedTo))
-				for _, v := range tasksItem.DecisionTask.AssignedTo {
-					tasks.DecisionTask.AssignedTo = append(tasks.DecisionTask.AssignedTo, types.StringValue(v))
+				tasks.DecisionTask.AssignedTo = []tfTypes.FlowTemplateAssignedTo{}
+
+				for _, assignedToItem4 := range tasksItem.DecisionTask.AssignedTo {
+					var assignedTo4 tfTypes.FlowTemplateAssignedTo
+
+					if assignedToItem4.Str != nil {
+						assignedTo4.Str = types.StringPointerValue(assignedToItem4.Str)
+					}
+					if assignedToItem4.VariableAssignment != nil {
+						assignedTo4.VariableAssignment = &tfTypes.VariableAssignment{}
+						assignedTo4.VariableAssignment.Value = make([]types.String, 0, len(assignedToItem4.VariableAssignment.Value))
+						for _, v := range assignedToItem4.VariableAssignment.Value {
+							assignedTo4.VariableAssignment.Value = append(assignedTo4.VariableAssignment.Value, types.StringValue(v))
+						}
+						assignedTo4.VariableAssignment.Variable = types.StringValue(assignedToItem4.VariableAssignment.Variable)
+					}
+
+					tasks.DecisionTask.AssignedTo = append(tasks.DecisionTask.AssignedTo, assignedTo4)
 				}
 				tasks.DecisionTask.Conditions = []tfTypes.Condition{}
 
@@ -362,6 +517,7 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 
 						statements.ID = types.StringValue(statementsItem.ID)
 						statements.Operator = types.StringValue(string(statementsItem.Operator))
+						statements.Source = &tfTypes.EvaluationSource{}
 						statements.Source.Attribute = types.StringPointerValue(statementsItem.Source.Attribute)
 						if statementsItem.Source.AttributeOperation != nil {
 							statements.Source.AttributeOperation = types.StringValue(string(*statementsItem.Source.AttributeOperation))
@@ -369,10 +525,22 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 							statements.Source.AttributeOperation = types.StringNull()
 						}
 						statements.Source.AttributeRepeatable = types.BoolPointerValue(statementsItem.Source.AttributeRepeatable)
+						statements.Source.AttributeSubField = types.StringPointerValue(statementsItem.Source.AttributeSubField)
 						if statementsItem.Source.AttributeType != nil {
 							statements.Source.AttributeType = types.StringValue(string(*statementsItem.Source.AttributeType))
 						} else {
 							statements.Source.AttributeType = types.StringNull()
+						}
+						if statementsItem.Source.DateOffset == nil {
+							statements.Source.DateOffset = nil
+						} else {
+							statements.Source.DateOffset = &tfTypes.DateOffset{}
+							statements.Source.DateOffset.Amount = types.Int64PointerValue(statementsItem.Source.DateOffset.Amount)
+							if statementsItem.Source.DateOffset.Unit != nil {
+								statements.Source.DateOffset.Unit = types.StringValue(string(*statementsItem.Source.DateOffset.Unit))
+							} else {
+								statements.Source.DateOffset.Unit = types.StringNull()
+							}
 						}
 						statements.Source.ID = types.StringPointerValue(statementsItem.Source.ID)
 						if statementsItem.Source.Origin != nil {
@@ -386,6 +554,11 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 							statements.Source.OriginType = types.StringNull()
 						}
 						statements.Source.Schema = types.StringPointerValue(statementsItem.Source.Schema)
+						if statementsItem.ValueType != nil {
+							statements.ValueType = types.StringValue(string(*statementsItem.ValueType))
+						} else {
+							statements.ValueType = types.StringNull()
+						}
 						statements.Values = make([]types.String, 0, len(statementsItem.Values))
 						for _, v := range statementsItem.Values {
 							statements.Values = append(statements.Values, types.StringValue(v))
@@ -492,6 +665,7 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 						tasks.DecisionTask.Schedule.RelativeSchedule.Direction = types.StringValue(string(tasksItem.DecisionTask.Schedule.RelativeSchedule.Direction))
 						tasks.DecisionTask.Schedule.RelativeSchedule.Duration = types.Float64Value(tasksItem.DecisionTask.Schedule.RelativeSchedule.Duration)
 						tasks.DecisionTask.Schedule.RelativeSchedule.Mode = types.StringValue(string(tasksItem.DecisionTask.Schedule.RelativeSchedule.Mode))
+						tasks.DecisionTask.Schedule.RelativeSchedule.Reference = &tfTypes.Reference{}
 						tasks.DecisionTask.Schedule.RelativeSchedule.Reference.Attribute = types.StringPointerValue(tasksItem.DecisionTask.Schedule.RelativeSchedule.Reference.Attribute)
 						tasks.DecisionTask.Schedule.RelativeSchedule.Reference.ID = types.StringValue(tasksItem.DecisionTask.Schedule.RelativeSchedule.Reference.ID)
 						tasks.DecisionTask.Schedule.RelativeSchedule.Reference.Origin = types.StringValue(string(tasksItem.DecisionTask.Schedule.RelativeSchedule.Reference.Origin))
@@ -508,9 +682,24 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 			}
 			if tasksItem.TaskBase != nil {
 				tasks.TaskBase = &tfTypes.TaskBase{}
-				tasks.TaskBase.AssignedTo = make([]types.String, 0, len(tasksItem.TaskBase.AssignedTo))
-				for _, v := range tasksItem.TaskBase.AssignedTo {
-					tasks.TaskBase.AssignedTo = append(tasks.TaskBase.AssignedTo, types.StringValue(v))
+				tasks.TaskBase.AssignedTo = []tfTypes.FlowTemplateAssignedTo{}
+
+				for _, assignedToItem5 := range tasksItem.TaskBase.AssignedTo {
+					var assignedTo5 tfTypes.FlowTemplateAssignedTo
+
+					if assignedToItem5.Str != nil {
+						assignedTo5.Str = types.StringPointerValue(assignedToItem5.Str)
+					}
+					if assignedToItem5.VariableAssignment != nil {
+						assignedTo5.VariableAssignment = &tfTypes.VariableAssignment{}
+						assignedTo5.VariableAssignment.Value = make([]types.String, 0, len(assignedToItem5.VariableAssignment.Value))
+						for _, v := range assignedToItem5.VariableAssignment.Value {
+							assignedTo5.VariableAssignment.Value = append(assignedTo5.VariableAssignment.Value, types.StringValue(v))
+						}
+						assignedTo5.VariableAssignment.Variable = types.StringValue(assignedToItem5.VariableAssignment.Variable)
+					}
+
+					tasks.TaskBase.AssignedTo = append(tasks.TaskBase.AssignedTo, assignedTo5)
 				}
 				if tasksItem.TaskBase.Description == nil {
 					tasks.TaskBase.Description = nil
@@ -604,8 +793,30 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 			r.Trigger = &tfTypes.Trigger{}
 			if resp.Trigger.AutomationTrigger != nil {
 				r.Trigger.AutomationTrigger = &tfTypes.AutomationTrigger{}
-				r.Trigger.AutomationTrigger.AutomationID = types.StringValue(resp.Trigger.AutomationTrigger.AutomationID)
+				r.Trigger.AutomationTrigger.AutomationID = types.StringPointerValue(resp.Trigger.AutomationTrigger.AutomationID)
 				r.Trigger.AutomationTrigger.ID = types.StringPointerValue(resp.Trigger.AutomationTrigger.ID)
+				r.Trigger.AutomationTrigger.TriggerConfig = []tfTypes.TriggerConfig{}
+
+				for _, triggerConfigItem1 := range resp.Trigger.AutomationTrigger.TriggerConfig {
+					var triggerConfig1 tfTypes.TriggerConfig
+
+					if triggerConfigItem1.AdditionalProperties == nil {
+						triggerConfig1.AdditionalProperties = jsontypes.NewNormalizedNull()
+					} else {
+						additionalPropertiesResult3, _ := json.Marshal(triggerConfigItem1.AdditionalProperties)
+						triggerConfig1.AdditionalProperties = jsontypes.NewNormalizedValue(string(additionalPropertiesResult3))
+					}
+					if len(triggerConfigItem1.Configuration) > 0 {
+						triggerConfig1.Configuration = make(map[string]jsontypes.Normalized, len(triggerConfigItem1.Configuration))
+						for key2, value2 := range triggerConfigItem1.Configuration {
+							result2, _ := json.Marshal(value2)
+							triggerConfig1.Configuration[key2] = jsontypes.NewNormalizedValue(string(result2))
+						}
+					}
+					triggerConfig1.Type = types.StringValue(triggerConfigItem1.Type)
+
+					r.Trigger.AutomationTrigger.TriggerConfig = append(r.Trigger.AutomationTrigger.TriggerConfig, triggerConfig1)
+				}
 				r.Trigger.AutomationTrigger.Type = types.StringValue(string(resp.Trigger.AutomationTrigger.Type))
 			}
 			if resp.Trigger.JourneyAutomationTrigger != nil {

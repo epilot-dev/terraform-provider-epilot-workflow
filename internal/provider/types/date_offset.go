@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-type UpdateEntityAttributes struct {
-	Source types.String `tfsdk:"source"`
-	Target *Target      `tfsdk:"target"`
+type DateOffset struct {
+	Amount types.Int64  `tfsdk:"amount"`
+	Unit   types.String `tfsdk:"unit"`
 }

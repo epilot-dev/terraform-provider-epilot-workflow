@@ -3,11 +3,104 @@
 package shared
 
 import (
+	"errors"
+	"fmt"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
 )
 
+type FlowTemplateAssignedToType string
+
+const (
+	FlowTemplateAssignedToTypeStr                FlowTemplateAssignedToType = "str"
+	FlowTemplateAssignedToTypeVariableAssignment FlowTemplateAssignedToType = "VariableAssignment"
+)
+
+type FlowTemplateAssignedTo struct {
+	Str                *string             `queryParam:"inline" union:"member"`
+	VariableAssignment *VariableAssignment `queryParam:"inline" union:"member"`
+
+	Type FlowTemplateAssignedToType
+}
+
+func CreateFlowTemplateAssignedToStr(str string) FlowTemplateAssignedTo {
+	typ := FlowTemplateAssignedToTypeStr
+
+	return FlowTemplateAssignedTo{
+		Str:  &str,
+		Type: typ,
+	}
+}
+
+func CreateFlowTemplateAssignedToVariableAssignment(variableAssignment VariableAssignment) FlowTemplateAssignedTo {
+	typ := FlowTemplateAssignedToTypeVariableAssignment
+
+	return FlowTemplateAssignedTo{
+		VariableAssignment: &variableAssignment,
+		Type:               typ,
+	}
+}
+
+func (u *FlowTemplateAssignedTo) UnmarshalJSON(data []byte) error {
+
+	var candidates []utils.UnionCandidate
+
+	// Collect all valid candidates
+	var str string = ""
+	if err := utils.UnmarshalJSON(data, &str, "", true, nil); err == nil {
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  FlowTemplateAssignedToTypeStr,
+			Value: &str,
+		})
+	}
+
+	var variableAssignment VariableAssignment = VariableAssignment{}
+	if err := utils.UnmarshalJSON(data, &variableAssignment, "", true, nil); err == nil {
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  FlowTemplateAssignedToTypeVariableAssignment,
+			Value: &variableAssignment,
+		})
+	}
+
+	if len(candidates) == 0 {
+		return fmt.Errorf("could not unmarshal `%s` into any supported union types for FlowTemplateAssignedTo", string(data))
+	}
+
+	// Pick the best candidate using multi-stage filtering
+	best := utils.PickBestUnionCandidate(candidates, data)
+	if best == nil {
+		return fmt.Errorf("could not unmarshal `%s` into any supported union types for FlowTemplateAssignedTo", string(data))
+	}
+
+	// Set the union type and value based on the best candidate
+	u.Type = best.Type.(FlowTemplateAssignedToType)
+	switch best.Type {
+	case FlowTemplateAssignedToTypeStr:
+		u.Str = best.Value.(*string)
+		return nil
+	case FlowTemplateAssignedToTypeVariableAssignment:
+		u.VariableAssignment = best.Value.(*VariableAssignment)
+		return nil
+	}
+
+	return fmt.Errorf("could not unmarshal `%s` into any supported union types for FlowTemplateAssignedTo", string(data))
+}
+
+func (u FlowTemplateAssignedTo) MarshalJSON() ([]byte, error) {
+	if u.Str != nil {
+		return utils.MarshalJSON(u.Str, "", true)
+	}
+
+	if u.VariableAssignment != nil {
+		return utils.MarshalJSON(u.VariableAssignment, "", true)
+	}
+
+	return nil, errors.New("could not marshal union type FlowTemplateAssignedTo: all fields are null")
+}
+
 type FlowTemplate struct {
-	AssignedTo []string `json:"assigned_to,omitempty"`
+	// Additional trigger configurations that can also start this flow. Useful for flows that should be startable via multiple methods (e.g., both automation AND manual).
+	AdditionalTriggers []Trigger                `json:"additional_triggers,omitempty"`
+	AssignedTo         []FlowTemplateAssignedTo `json:"assigned_to,omitempty"`
 	// Indicates whether this workflow is available for End Customer Portal or not. By default it's not.
 	AvailableInEcp *bool           `json:"available_in_ecp,omitempty"`
 	ClosingReasons []ClosingReason `json:"closing_reasons,omitempty"`
@@ -53,7 +146,14 @@ func (f *FlowTemplate) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (f *FlowTemplate) GetAssignedTo() []string {
+func (f *FlowTemplate) GetAdditionalTriggers() []Trigger {
+	if f == nil {
+		return nil
+	}
+	return f.AdditionalTriggers
+}
+
+func (f *FlowTemplate) GetAssignedTo() []FlowTemplateAssignedTo {
 	if f == nil {
 		return nil
 	}
@@ -187,6 +287,202 @@ func (f *FlowTemplate) GetUpdatedAt() *string {
 }
 
 func (f *FlowTemplate) GetVersion() *Version {
+	if f == nil {
+		return nil
+	}
+	return f.Version
+}
+
+type FlowTemplateInput struct {
+	// Additional trigger configurations that can also start this flow. Useful for flows that should be startable via multiple methods (e.g., both automation AND manual).
+	AdditionalTriggers []Trigger                `json:"additional_triggers,omitempty"`
+	AssignedTo         []FlowTemplateAssignedTo `json:"assigned_to,omitempty"`
+	// Indicates whether this workflow is available for End Customer Portal or not. By default it's not.
+	AvailableInEcp *bool                `json:"available_in_ecp,omitempty"`
+	ClosingReasons []ClosingReasonInput `json:"closing_reasons,omitempty"`
+	// ISO String Date & Time
+	CreatedAt   *string `json:"created_at,omitempty"`
+	Description *string `json:"description,omitempty"`
+	DueDate     *string `json:"due_date,omitempty"`
+	// Set due date for the task based on a dynamic condition
+	DueDateConfig *DueDateConfig `json:"due_date_config,omitempty"`
+	Edges         []Edge         `json:"edges"`
+	// Whether the workflow is enabled or not
+	Enabled    *bool        `default:"true" json:"enabled"`
+	EntitySync []EntitySync `json:"entity_sync,omitempty"`
+	ID         *string      `json:"id,omitempty"`
+	Name       string       `json:"name"`
+	OrgID      *string      `json:"org_id,omitempty"`
+	Phases     []Phase      `json:"phases,omitempty"`
+	// Whether only a single closing reason can be selected
+	SingleClosingReasonSelection *bool  `json:"singleClosingReasonSelection,omitempty"`
+	Tasks                        []Task `json:"tasks"`
+	// Taxonomy ids that are associated with this workflow and used for filtering
+	Taxonomies []string `json:"taxonomies,omitempty"`
+	Trigger    *Trigger `json:"trigger,omitempty"`
+	// ISO String Date & Time
+	UpdatedAt *string `json:"updated_at,omitempty"`
+	// Version of the workflow schema.
+	//
+	// - `v1` – *Deprecated*. The initial version of workflows with limited structure and automation capabilities.
+	// - `v2` – Linear workflows. Supports sequential task execution with basic automation triggers.
+	// - `v3` – Advanced workflows. Adds support for branching logic (conditions), parallel paths, and enhanced automation features such as dynamic triggers and flow control.
+	//
+	Version *Version `json:"version,omitempty"`
+}
+
+func (f FlowTemplateInput) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(f, "", false)
+}
+
+func (f *FlowTemplateInput) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &f, "", false, nil); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (f *FlowTemplateInput) GetAdditionalTriggers() []Trigger {
+	if f == nil {
+		return nil
+	}
+	return f.AdditionalTriggers
+}
+
+func (f *FlowTemplateInput) GetAssignedTo() []FlowTemplateAssignedTo {
+	if f == nil {
+		return nil
+	}
+	return f.AssignedTo
+}
+
+func (f *FlowTemplateInput) GetAvailableInEcp() *bool {
+	if f == nil {
+		return nil
+	}
+	return f.AvailableInEcp
+}
+
+func (f *FlowTemplateInput) GetClosingReasons() []ClosingReasonInput {
+	if f == nil {
+		return nil
+	}
+	return f.ClosingReasons
+}
+
+func (f *FlowTemplateInput) GetCreatedAt() *string {
+	if f == nil {
+		return nil
+	}
+	return f.CreatedAt
+}
+
+func (f *FlowTemplateInput) GetDescription() *string {
+	if f == nil {
+		return nil
+	}
+	return f.Description
+}
+
+func (f *FlowTemplateInput) GetDueDate() *string {
+	if f == nil {
+		return nil
+	}
+	return f.DueDate
+}
+
+func (f *FlowTemplateInput) GetDueDateConfig() *DueDateConfig {
+	if f == nil {
+		return nil
+	}
+	return f.DueDateConfig
+}
+
+func (f *FlowTemplateInput) GetEdges() []Edge {
+	if f == nil {
+		return []Edge{}
+	}
+	return f.Edges
+}
+
+func (f *FlowTemplateInput) GetEnabled() *bool {
+	if f == nil {
+		return nil
+	}
+	return f.Enabled
+}
+
+func (f *FlowTemplateInput) GetEntitySync() []EntitySync {
+	if f == nil {
+		return nil
+	}
+	return f.EntitySync
+}
+
+func (f *FlowTemplateInput) GetID() *string {
+	if f == nil {
+		return nil
+	}
+	return f.ID
+}
+
+func (f *FlowTemplateInput) GetName() string {
+	if f == nil {
+		return ""
+	}
+	return f.Name
+}
+
+func (f *FlowTemplateInput) GetOrgID() *string {
+	if f == nil {
+		return nil
+	}
+	return f.OrgID
+}
+
+func (f *FlowTemplateInput) GetPhases() []Phase {
+	if f == nil {
+		return nil
+	}
+	return f.Phases
+}
+
+func (f *FlowTemplateInput) GetSingleClosingReasonSelection() *bool {
+	if f == nil {
+		return nil
+	}
+	return f.SingleClosingReasonSelection
+}
+
+func (f *FlowTemplateInput) GetTasks() []Task {
+	if f == nil {
+		return []Task{}
+	}
+	return f.Tasks
+}
+
+func (f *FlowTemplateInput) GetTaxonomies() []string {
+	if f == nil {
+		return nil
+	}
+	return f.Taxonomies
+}
+
+func (f *FlowTemplateInput) GetTrigger() *Trigger {
+	if f == nil {
+		return nil
+	}
+	return f.Trigger
+}
+
+func (f *FlowTemplateInput) GetUpdatedAt() *string {
+	if f == nil {
+		return nil
+	}
+	return f.UpdatedAt
+}
+
+func (f *FlowTemplateInput) GetVersion() *Version {
 	if f == nil {
 		return nil
 	}

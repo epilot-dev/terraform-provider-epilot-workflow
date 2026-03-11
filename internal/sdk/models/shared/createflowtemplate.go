@@ -3,8 +3,99 @@
 package shared
 
 import (
+	"errors"
+	"fmt"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
 )
+
+type CreateFlowTemplateAssignedToType string
+
+const (
+	CreateFlowTemplateAssignedToTypeStr                CreateFlowTemplateAssignedToType = "str"
+	CreateFlowTemplateAssignedToTypeVariableAssignment CreateFlowTemplateAssignedToType = "VariableAssignment"
+)
+
+type CreateFlowTemplateAssignedTo struct {
+	Str                *string             `queryParam:"inline" union:"member"`
+	VariableAssignment *VariableAssignment `queryParam:"inline" union:"member"`
+
+	Type CreateFlowTemplateAssignedToType
+}
+
+func CreateCreateFlowTemplateAssignedToStr(str string) CreateFlowTemplateAssignedTo {
+	typ := CreateFlowTemplateAssignedToTypeStr
+
+	return CreateFlowTemplateAssignedTo{
+		Str:  &str,
+		Type: typ,
+	}
+}
+
+func CreateCreateFlowTemplateAssignedToVariableAssignment(variableAssignment VariableAssignment) CreateFlowTemplateAssignedTo {
+	typ := CreateFlowTemplateAssignedToTypeVariableAssignment
+
+	return CreateFlowTemplateAssignedTo{
+		VariableAssignment: &variableAssignment,
+		Type:               typ,
+	}
+}
+
+func (u *CreateFlowTemplateAssignedTo) UnmarshalJSON(data []byte) error {
+
+	var candidates []utils.UnionCandidate
+
+	// Collect all valid candidates
+	var str string = ""
+	if err := utils.UnmarshalJSON(data, &str, "", true, nil); err == nil {
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  CreateFlowTemplateAssignedToTypeStr,
+			Value: &str,
+		})
+	}
+
+	var variableAssignment VariableAssignment = VariableAssignment{}
+	if err := utils.UnmarshalJSON(data, &variableAssignment, "", true, nil); err == nil {
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  CreateFlowTemplateAssignedToTypeVariableAssignment,
+			Value: &variableAssignment,
+		})
+	}
+
+	if len(candidates) == 0 {
+		return fmt.Errorf("could not unmarshal `%s` into any supported union types for CreateFlowTemplateAssignedTo", string(data))
+	}
+
+	// Pick the best candidate using multi-stage filtering
+	best := utils.PickBestUnionCandidate(candidates, data)
+	if best == nil {
+		return fmt.Errorf("could not unmarshal `%s` into any supported union types for CreateFlowTemplateAssignedTo", string(data))
+	}
+
+	// Set the union type and value based on the best candidate
+	u.Type = best.Type.(CreateFlowTemplateAssignedToType)
+	switch best.Type {
+	case CreateFlowTemplateAssignedToTypeStr:
+		u.Str = best.Value.(*string)
+		return nil
+	case CreateFlowTemplateAssignedToTypeVariableAssignment:
+		u.VariableAssignment = best.Value.(*VariableAssignment)
+		return nil
+	}
+
+	return fmt.Errorf("could not unmarshal `%s` into any supported union types for CreateFlowTemplateAssignedTo", string(data))
+}
+
+func (u CreateFlowTemplateAssignedTo) MarshalJSON() ([]byte, error) {
+	if u.Str != nil {
+		return utils.MarshalJSON(u.Str, "", true)
+	}
+
+	if u.VariableAssignment != nil {
+		return utils.MarshalJSON(u.VariableAssignment, "", true)
+	}
+
+	return nil, errors.New("could not marshal union type CreateFlowTemplateAssignedTo: all fields are null")
+}
 
 type CreateFlowTemplateClosingReasons struct {
 	ID string `json:"id"`
@@ -18,7 +109,9 @@ func (c *CreateFlowTemplateClosingReasons) GetID() string {
 }
 
 type CreateFlowTemplate struct {
-	AssignedTo []string `json:"assigned_to,omitempty"`
+	// Additional trigger configurations that can also start this flow. Useful for flows that should be startable via multiple methods (e.g., both automation AND manual).
+	AdditionalTriggers []Trigger                      `json:"additional_triggers,omitempty"`
+	AssignedTo         []CreateFlowTemplateAssignedTo `json:"assigned_to,omitempty"`
 	// Indicates whether this workflow is available for End Customer Portal or not. By default it's not.
 	AvailableInEcp *bool                              `json:"available_in_ecp,omitempty"`
 	ClosingReasons []CreateFlowTemplateClosingReasons `json:"closing_reasons,omitempty"`
@@ -64,7 +157,14 @@ func (c *CreateFlowTemplate) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (c *CreateFlowTemplate) GetAssignedTo() []string {
+func (c *CreateFlowTemplate) GetAdditionalTriggers() []Trigger {
+	if c == nil {
+		return nil
+	}
+	return c.AdditionalTriggers
+}
+
+func (c *CreateFlowTemplate) GetAssignedTo() []CreateFlowTemplateAssignedTo {
 	if c == nil {
 		return nil
 	}

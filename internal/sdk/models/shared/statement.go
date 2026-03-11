@@ -3,14 +3,45 @@
 package shared
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
 )
+
+// ValueType - How to interpret values. "static" (default) means literal values. "relative_date" means values[0] is a dynamic date token like "today".
+type ValueType string
+
+const (
+	ValueTypeStatic       ValueType = "static"
+	ValueTypeRelativeDate ValueType = "relative_date"
+)
+
+func (e ValueType) ToPointer() *ValueType {
+	return &e
+}
+func (e *ValueType) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "static":
+		fallthrough
+	case "relative_date":
+		*e = ValueType(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for ValueType: %v", v)
+	}
+}
 
 type Statement struct {
 	ID       string           `json:"id"`
 	Operator Operator         `json:"operator"`
 	Source   EvaluationSource `json:"source"`
-	Values   []string         `json:"values"`
+	// How to interpret values. "static" (default) means literal values. "relative_date" means values[0] is a dynamic date token like "today".
+	ValueType *ValueType `json:"value_type,omitempty"`
+	Values    []string   `json:"values"`
 }
 
 func (s Statement) MarshalJSON() ([]byte, error) {
@@ -43,6 +74,13 @@ func (s *Statement) GetSource() EvaluationSource {
 		return EvaluationSource{}
 	}
 	return s.Source
+}
+
+func (s *Statement) GetValueType() *ValueType {
+	if s == nil {
+		return nil
+	}
+	return s.ValueType
 }
 
 func (s *Statement) GetValues() []string {

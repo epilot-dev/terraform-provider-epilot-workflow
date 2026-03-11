@@ -1,6 +1,26 @@
 resource "epilot-workflow_flow_template" "my_flowtemplate" {
+  additional_triggers = [
+    {
+      automation_trigger = {
+        automation_id = "...my_automation_id..."
+        id            = "...my_id..."
+        trigger_config = [
+          {
+            additional_properties = "{ \"see\": \"documentation\" }"
+            configuration = {
+              key = jsonencode("value")
+            }
+            type = "...my_type..."
+          }
+        ]
+        type = "automation"
+      }
+    }
+  ]
   assigned_to = [
-    "..."
+    {
+      str = "...my_str..."
+    }
   ]
   available_in_ecp = true
   closing_reasons = [
@@ -15,7 +35,7 @@ resource "epilot-workflow_flow_template" "my_flowtemplate" {
     duration = 0.19
     phase_id = "...my_phase_id..."
     task_id  = "...my_task_id..."
-    type     = "PHASE_FINISHED"
+    type     = "A_PRECEDING_TASK_COMPLETED"
     unit     = "hours"
   }
   edges = [
@@ -35,7 +55,7 @@ resource "epilot-workflow_flow_template" "my_flowtemplate" {
         entity_schema    = "opportunity"
       }
       trigger = {
-        event = "FlowDueDateChanged"
+        event = "FlowContextsChanged"
         filter = {
           phase_template_id = "...my_phase_template_id..."
           task_template_id  = "...my_task_template_id..."
@@ -53,7 +73,9 @@ resource "epilot-workflow_flow_template" "my_flowtemplate" {
   phases = [
     {
       assigned_to = [
-        "..."
+        {
+          str = "...my_str..."
+        }
       ]
       due_date = "2021-04-27T12:00:00.000Z"
       due_date_config = {
@@ -79,7 +101,9 @@ resource "epilot-workflow_flow_template" "my_flowtemplate" {
           agent_id              = "...my_agent_id..."
         }
         assigned_to = [
-          "..."
+          {
+            str = "...my_str..."
+          }
         ]
         description = {
           enabled = false
@@ -90,7 +114,7 @@ resource "epilot-workflow_flow_template" "my_flowtemplate" {
           duration = 3.61
           phase_id = "...my_phase_id..."
           task_id  = "...my_task_id..."
-          type     = "PHASE_FINISHED"
+          type     = "ALL_PRECEDING_TASKS_COMPLETED"
           unit     = "months"
         }
         ecp = {

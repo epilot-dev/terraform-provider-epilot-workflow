@@ -6,10 +6,54 @@ import (
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
 )
 
+// ActionConfig - Transient field. The full automation action configuration following the automation API action schema. Processed by the backend during create/update and stripped before storage. When present without a flow_id, a new automation flow is created. When present with a flow_id, the existing automation flow is updated.
+type ActionConfig struct {
+	AdditionalProperties any `additionalProperties:"true" json:"-"`
+	// Action-specific configuration
+	Config map[string]any `json:"config,omitempty"`
+	// The action type (e.g. send-email, trigger-workflow)
+	Type string `json:"type"`
+}
+
+func (a ActionConfig) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(a, "", false)
+}
+
+func (a *ActionConfig) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &a, "", false, nil); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (a *ActionConfig) GetAdditionalProperties() any {
+	if a == nil {
+		return nil
+	}
+	return a.AdditionalProperties
+}
+
+func (a *ActionConfig) GetConfig() map[string]any {
+	if a == nil {
+		return nil
+	}
+	return a.Config
+}
+
+func (a *ActionConfig) GetType() string {
+	if a == nil {
+		return ""
+	}
+	return a.Type
+}
+
 // AutomationConfig - Configuration for automation execution to run
 type AutomationConfig struct {
+	// Transient field. The full automation action configuration following the automation API action schema. Processed by the backend during create/update and stripped before storage. When present without a flow_id, a new automation flow is created. When present with a flow_id, the existing automation flow is updated.
+	//
+	ActionConfig *ActionConfig `json:"action_config,omitempty"`
 	// Id of the configured automation to run
-	FlowID string `json:"flow_id"`
+	FlowID *string `json:"flow_id,omitempty"`
 }
 
 func (a AutomationConfig) MarshalJSON() ([]byte, error) {
@@ -23,9 +67,16 @@ func (a *AutomationConfig) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (a *AutomationConfig) GetFlowID() string {
+func (a *AutomationConfig) GetActionConfig() *ActionConfig {
 	if a == nil {
-		return ""
+		return nil
+	}
+	return a.ActionConfig
+}
+
+func (a *AutomationConfig) GetFlowID() *string {
+	if a == nil {
+		return nil
 	}
 	return a.FlowID
 }

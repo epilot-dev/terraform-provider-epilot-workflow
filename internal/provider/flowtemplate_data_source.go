@@ -30,26 +30,27 @@ type FlowTemplateDataSource struct {
 
 // FlowTemplateDataSourceModel describes the data model.
 type FlowTemplateDataSourceModel struct {
-	AssignedTo                   []types.String           `tfsdk:"assigned_to"`
-	AvailableInEcp               types.Bool               `tfsdk:"available_in_ecp"`
-	ClosingReasons               []tfTypes.ClosingReason1 `tfsdk:"closing_reasons"`
-	CreatedAt                    types.String             `tfsdk:"created_at"`
-	Description                  types.String             `tfsdk:"description"`
-	DueDate                      types.String             `tfsdk:"due_date"`
-	DueDateConfig                *tfTypes.DueDateConfig   `tfsdk:"due_date_config"`
-	Edges                        []tfTypes.Edge           `tfsdk:"edges"`
-	Enabled                      types.Bool               `tfsdk:"enabled"`
-	EntitySync                   []tfTypes.EntitySync     `tfsdk:"entity_sync"`
-	ID                           types.String             `tfsdk:"id"`
-	Name                         types.String             `tfsdk:"name"`
-	OrgID                        types.String             `tfsdk:"org_id"`
-	Phases                       []tfTypes.Phase          `tfsdk:"phases"`
-	SingleClosingReasonSelection types.Bool               `tfsdk:"single_closing_reason_selection"`
-	Tasks                        []tfTypes.Task           `tfsdk:"tasks"`
-	Taxonomies                   []types.String           `tfsdk:"taxonomies"`
-	Trigger                      *tfTypes.Trigger         `tfsdk:"trigger"`
-	UpdatedAt                    types.String             `tfsdk:"updated_at"`
-	Version                      types.String             `tfsdk:"version"`
+	AdditionalTriggers           []tfTypes.Trigger                `tfsdk:"additional_triggers"`
+	AssignedTo                   []tfTypes.FlowTemplateAssignedTo `tfsdk:"assigned_to"`
+	AvailableInEcp               types.Bool                       `tfsdk:"available_in_ecp"`
+	ClosingReasons               []tfTypes.ClosingReason1         `tfsdk:"closing_reasons"`
+	CreatedAt                    types.String                     `tfsdk:"created_at"`
+	Description                  types.String                     `tfsdk:"description"`
+	DueDate                      types.String                     `tfsdk:"due_date"`
+	DueDateConfig                *tfTypes.DueDateConfig           `tfsdk:"due_date_config"`
+	Edges                        []tfTypes.Edge                   `tfsdk:"edges"`
+	Enabled                      types.Bool                       `tfsdk:"enabled"`
+	EntitySync                   []tfTypes.EntitySync             `tfsdk:"entity_sync"`
+	ID                           types.String                     `tfsdk:"id"`
+	Name                         types.String                     `tfsdk:"name"`
+	OrgID                        types.String                     `tfsdk:"org_id"`
+	Phases                       []tfTypes.Phase                  `tfsdk:"phases"`
+	SingleClosingReasonSelection types.Bool                       `tfsdk:"single_closing_reason_selection"`
+	Tasks                        []tfTypes.Task                   `tfsdk:"tasks"`
+	Taxonomies                   []types.String                   `tfsdk:"taxonomies"`
+	Trigger                      *tfTypes.Trigger                 `tfsdk:"trigger"`
+	UpdatedAt                    types.String                     `tfsdk:"updated_at"`
+	Version                      types.String                     `tfsdk:"version"`
 }
 
 // Metadata returns the data source type name.
@@ -63,9 +64,126 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 		MarkdownDescription: "FlowTemplate DataSource",
 
 		Attributes: map[string]schema.Attribute{
-			"assigned_to": schema.ListAttribute{
-				Computed:    true,
-				ElementType: types.StringType,
+			"additional_triggers": schema.ListNestedAttribute{
+				Computed: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"automation_trigger": schema.SingleNestedAttribute{
+							Computed: true,
+							Attributes: map[string]schema.Attribute{
+								"automation_id": schema.StringAttribute{
+									Computed:    true,
+									Description: `Id of the automation config that triggers this workflow`,
+								},
+								"id": schema.StringAttribute{
+									Computed: true,
+								},
+								"trigger_config": schema.ListNestedAttribute{
+									Computed: true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"additional_properties": schema.StringAttribute{
+												CustomType:  jsontypes.NormalizedType{},
+												Computed:    true,
+												Description: `Parsed as JSON.`,
+											},
+											"configuration": schema.MapAttribute{
+												Computed:    true,
+												ElementType: jsontypes.NormalizedType{},
+												Description: `Trigger-specific configuration`,
+											},
+											"type": schema.StringAttribute{
+												Computed:    true,
+												Description: `The trigger type (e.g. entity_operation, activity)`,
+											},
+										},
+									},
+									Description: `Transient field. Trigger configurations for creating or updating the trigger automation flow. Each item follows the automation API trigger schema. Processed by the backend during create/update and stripped before storage.`,
+								},
+								"type": schema.StringAttribute{
+									Computed: true,
+								},
+							},
+						},
+						"journey_automation_trigger": schema.SingleNestedAttribute{
+							Computed: true,
+							Attributes: map[string]schema.Attribute{
+								"entity_schema": schema.StringAttribute{
+									Computed:    true,
+									Description: `Schema of the main entity where flow will be triggered. The entity will be picked from automation context.`,
+								},
+								"id": schema.StringAttribute{
+									Computed: true,
+								},
+								"type": schema.StringAttribute{
+									Computed: true,
+								},
+							},
+						},
+						"journey_submission_trigger": schema.SingleNestedAttribute{
+							Computed: true,
+							Attributes: map[string]schema.Attribute{
+								"automation_id": schema.StringAttribute{
+									Computed: true,
+								},
+								"id": schema.StringAttribute{
+									Computed: true,
+								},
+								"journey_id": schema.StringAttribute{
+									Computed:    true,
+									Description: `ID of the journey that will trigger this flow`,
+								},
+								"journey_name": schema.StringAttribute{
+									Computed:    true,
+									Description: `Name of the journey that will trigger this flow`,
+								},
+								"type": schema.StringAttribute{
+									Computed: true,
+								},
+							},
+						},
+						"manual_trigger": schema.SingleNestedAttribute{
+							Computed: true,
+							Attributes: map[string]schema.Attribute{
+								"entity_schema": schema.StringAttribute{
+									Computed: true,
+								},
+								"id": schema.StringAttribute{
+									Computed: true,
+								},
+								"type": schema.StringAttribute{
+									Computed: true,
+								},
+							},
+						},
+					},
+				},
+				Description: `Additional trigger configurations that can also start this flow. Useful for flows that should be startable via multiple methods (e.g., both automation AND manual).`,
+			},
+			"assigned_to": schema.ListNestedAttribute{
+				Computed: true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"str": schema.StringAttribute{
+							Computed: true,
+						},
+						"variable_assignment": schema.SingleNestedAttribute{
+							Computed: true,
+							Attributes: map[string]schema.Attribute{
+								"value": schema.ListAttribute{
+									Computed:    true,
+									ElementType: types.StringType,
+									Description: `The resolved values after variable evaluation (populated during execution)`,
+								},
+								"variable": schema.StringAttribute{
+									Computed:    true,
+									Description: `The variable expression, e.g., "{{entity.owner}}"`,
+								},
+							},
+							Description: `Represents a variable assignment with its expression and optional resolved value. Used for dynamic user assignments that get resolved during workflow execution.`,
+						},
+					},
+				},
 			},
 			"available_in_ecp": schema.BoolAttribute{
 				Computed:    true,
@@ -211,6 +329,7 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 			},
 			"id": schema.StringAttribute{
 				Computed: true,
+				Optional: true,
 			},
 			"name": schema.StringAttribute{
 				Computed: true,
@@ -222,9 +341,30 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"assigned_to": schema.ListAttribute{
-							Computed:    true,
-							ElementType: types.StringType,
+						"assigned_to": schema.ListNestedAttribute{
+							Computed: true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"str": schema.StringAttribute{
+										Computed: true,
+									},
+									"variable_assignment": schema.SingleNestedAttribute{
+										Computed: true,
+										Attributes: map[string]schema.Attribute{
+											"value": schema.ListAttribute{
+												Computed:    true,
+												ElementType: types.StringType,
+												Description: `The resolved values after variable evaluation (populated during execution)`,
+											},
+											"variable": schema.StringAttribute{
+												Computed:    true,
+												Description: `The variable expression, e.g., "{{entity.owner}}"`,
+											},
+										},
+										Description: `Represents a variable assignment with its expression and optional resolved value. Used for dynamic user assignments that get resolved during workflow execution.`,
+									},
+								},
+							},
 						},
 						"due_date": schema.StringAttribute{
 							Computed: true,
@@ -290,9 +430,30 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 									},
 									Description: `Configuration for AI Agent to run`,
 								},
-								"assigned_to": schema.ListAttribute{
-									Computed:    true,
-									ElementType: types.StringType,
+								"assigned_to": schema.ListNestedAttribute{
+									Computed: true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"str": schema.StringAttribute{
+												Computed: true,
+											},
+											"variable_assignment": schema.SingleNestedAttribute{
+												Computed: true,
+												Attributes: map[string]schema.Attribute{
+													"value": schema.ListAttribute{
+														Computed:    true,
+														ElementType: types.StringType,
+														Description: `The resolved values after variable evaluation (populated during execution)`,
+													},
+													"variable": schema.StringAttribute{
+														Computed:    true,
+														Description: `The variable expression, e.g., "{{entity.owner}}"`,
+													},
+												},
+												Description: `Represents a variable assignment with its expression and optional resolved value. Used for dynamic user assignments that get resolved during workflow execution.`,
+											},
+										},
+									},
 								},
 								"description": schema.SingleNestedAttribute{
 									Computed: true,
@@ -455,13 +616,54 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 						"automation_task": schema.SingleNestedAttribute{
 							Computed: true,
 							Attributes: map[string]schema.Attribute{
-								"assigned_to": schema.ListAttribute{
-									Computed:    true,
-									ElementType: types.StringType,
+								"assigned_to": schema.ListNestedAttribute{
+									Computed: true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"str": schema.StringAttribute{
+												Computed: true,
+											},
+											"variable_assignment": schema.SingleNestedAttribute{
+												Computed: true,
+												Attributes: map[string]schema.Attribute{
+													"value": schema.ListAttribute{
+														Computed:    true,
+														ElementType: types.StringType,
+														Description: `The resolved values after variable evaluation (populated during execution)`,
+													},
+													"variable": schema.StringAttribute{
+														Computed:    true,
+														Description: `The variable expression, e.g., "{{entity.owner}}"`,
+													},
+												},
+												Description: `Represents a variable assignment with its expression and optional resolved value. Used for dynamic user assignments that get resolved during workflow execution.`,
+											},
+										},
+									},
 								},
 								"automation_config": schema.SingleNestedAttribute{
 									Computed: true,
 									Attributes: map[string]schema.Attribute{
+										"action_config": schema.SingleNestedAttribute{
+											Computed: true,
+											Attributes: map[string]schema.Attribute{
+												"additional_properties": schema.StringAttribute{
+													CustomType:  jsontypes.NormalizedType{},
+													Computed:    true,
+													Description: `Parsed as JSON.`,
+												},
+												"config": schema.MapAttribute{
+													Computed:    true,
+													ElementType: jsontypes.NormalizedType{},
+													Description: `Action-specific configuration`,
+												},
+												"type": schema.StringAttribute{
+													Computed:    true,
+													Description: `The action type (e.g. send-email, trigger-workflow)`,
+												},
+											},
+											Description: `Transient field. The full automation action configuration following the automation API action schema. Processed by the backend during create/update and stripped before storage. When present without a flow_id, a new automation flow is created. When present with a flow_id, the existing automation flow is updated.`,
+										},
 										"flow_id": schema.StringAttribute{
 											Computed:    true,
 											Description: `Id of the configured automation to run`,
@@ -667,7 +869,7 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 														},
 														"id": schema.StringAttribute{
 															Computed:    true,
-															Description: `The id of the entity / workflow / task, based on the origin of the schedule`,
+															Description: `The id of the entity / workflow / task, based on the origin of the schedule. For all_preceding_tasks_completed, use the sentinel value 'all_preceding_tasks_completed'.`,
 														},
 														"origin": schema.StringAttribute{
 															Computed: true,
@@ -701,9 +903,30 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 						"decision_task": schema.SingleNestedAttribute{
 							Computed: true,
 							Attributes: map[string]schema.Attribute{
-								"assigned_to": schema.ListAttribute{
-									Computed:    true,
-									ElementType: types.StringType,
+								"assigned_to": schema.ListNestedAttribute{
+									Computed: true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"str": schema.StringAttribute{
+												Computed: true,
+											},
+											"variable_assignment": schema.SingleNestedAttribute{
+												Computed: true,
+												Attributes: map[string]schema.Attribute{
+													"value": schema.ListAttribute{
+														Computed:    true,
+														ElementType: types.StringType,
+														Description: `The resolved values after variable evaluation (populated during execution)`,
+													},
+													"variable": schema.StringAttribute{
+														Computed:    true,
+														Description: `The variable expression, e.g., "{{entity.owner}}"`,
+													},
+												},
+												Description: `Represents a variable assignment with its expression and optional resolved value. Used for dynamic user assignments that get resolved during workflow execution.`,
+											},
+										},
+									},
 								},
 								"conditions": schema.ListNestedAttribute{
 									Computed: true,
@@ -741,8 +964,26 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 																"attribute_repeatable": schema.BoolAttribute{
 																	Computed: true,
 																},
+																"attribute_sub_field": schema.StringAttribute{
+																	Computed:    true,
+																	Description: `For complex attribute types, specifies which sub-field to extract (e.g., 'address', 'name', 'email_type')`,
+																},
 																"attribute_type": schema.StringAttribute{
 																	Computed: true,
+																},
+																"date_offset": schema.SingleNestedAttribute{
+																	Computed: true,
+																	Attributes: map[string]schema.Attribute{
+																		"amount": schema.Int64Attribute{
+																			Computed:    true,
+																			Description: `Number of units to offset`,
+																		},
+																		"unit": schema.StringAttribute{
+																			Computed:    true,
+																			Description: `Unit of the offset`,
+																		},
+																	},
+																	Description: `Offset to apply to the source date value before comparison (e.g., +18 years for age check, +30 days for expiry)`,
 																},
 																"id": schema.StringAttribute{
 																	Computed:    true,
@@ -758,6 +999,10 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 																	Computed: true,
 																},
 															},
+														},
+														"value_type": schema.StringAttribute{
+															Computed:    true,
+															Description: `How to interpret values. "static" (default) means literal values. "relative_date" means values[0] is a dynamic date token like "today".`,
 														},
 														"values": schema.ListAttribute{
 															Computed:    true,
@@ -972,7 +1217,7 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 														},
 														"id": schema.StringAttribute{
 															Computed:    true,
-															Description: `The id of the entity / workflow / task, based on the origin of the schedule`,
+															Description: `The id of the entity / workflow / task, based on the origin of the schedule. For all_preceding_tasks_completed, use the sentinel value 'all_preceding_tasks_completed'.`,
 														},
 														"origin": schema.StringAttribute{
 															Computed: true,
@@ -1006,9 +1251,30 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 						"task_base": schema.SingleNestedAttribute{
 							Computed: true,
 							Attributes: map[string]schema.Attribute{
-								"assigned_to": schema.ListAttribute{
-									Computed:    true,
-									ElementType: types.StringType,
+								"assigned_to": schema.ListNestedAttribute{
+									Computed: true,
+									NestedObject: schema.NestedAttributeObject{
+										Attributes: map[string]schema.Attribute{
+											"str": schema.StringAttribute{
+												Computed: true,
+											},
+											"variable_assignment": schema.SingleNestedAttribute{
+												Computed: true,
+												Attributes: map[string]schema.Attribute{
+													"value": schema.ListAttribute{
+														Computed:    true,
+														ElementType: types.StringType,
+														Description: `The resolved values after variable evaluation (populated during execution)`,
+													},
+													"variable": schema.StringAttribute{
+														Computed:    true,
+														Description: `The variable expression, e.g., "{{entity.owner}}"`,
+													},
+												},
+												Description: `Represents a variable assignment with its expression and optional resolved value. Used for dynamic user assignments that get resolved during workflow execution.`,
+											},
+										},
+									},
 								},
 								"description": schema.SingleNestedAttribute{
 									Computed: true,
@@ -1189,6 +1455,28 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 							"id": schema.StringAttribute{
 								Computed: true,
 							},
+							"trigger_config": schema.ListNestedAttribute{
+								Computed: true,
+								NestedObject: schema.NestedAttributeObject{
+									Attributes: map[string]schema.Attribute{
+										"additional_properties": schema.StringAttribute{
+											CustomType:  jsontypes.NormalizedType{},
+											Computed:    true,
+											Description: `Parsed as JSON.`,
+										},
+										"configuration": schema.MapAttribute{
+											Computed:    true,
+											ElementType: jsontypes.NormalizedType{},
+											Description: `Trigger-specific configuration`,
+										},
+										"type": schema.StringAttribute{
+											Computed:    true,
+											Description: `The trigger type (e.g. entity_operation, activity)`,
+										},
+									},
+								},
+								Description: `Transient field. Trigger configurations for creating or updating the trigger automation flow. Each item follows the automation API trigger schema. Processed by the backend during create/update and stripped before storage.`,
+							},
 							"type": schema.StringAttribute{
 								Computed: true,
 							},
@@ -1255,8 +1543,8 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 				Computed: true,
 				MarkdownDescription: `Version of the workflow schema.` + "\n" +
 					`` + "\n" +
-					`- ` + "`" + `v1` + "`" + ` – *Deprecated*. The initial version of workflows with limited structure and automation capabilities.  ` + "\n" +
-					`- ` + "`" + `v2` + "`" + ` – Linear workflows. Supports sequential task execution with basic automation triggers.  ` + "\n" +
+					`- ` + "`" + `v1` + "`" + ` – *Deprecated*. The initial version of workflows with limited structure and automation capabilities.` + "\n" +
+					`- ` + "`" + `v2` + "`" + ` – Linear workflows. Supports sequential task execution with basic automation triggers.` + "\n" +
 					`- ` + "`" + `v3` + "`" + ` – Advanced workflows. Adds support for branching logic (conditions), parallel paths, and enhanced automation features such as dynamic triggers and flow control.`,
 			},
 		},

@@ -8,6 +8,95 @@ import (
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
 )
 
+type DecisionTaskAssignedToType string
+
+const (
+	DecisionTaskAssignedToTypeStr                DecisionTaskAssignedToType = "str"
+	DecisionTaskAssignedToTypeVariableAssignment DecisionTaskAssignedToType = "VariableAssignment"
+)
+
+type DecisionTaskAssignedTo struct {
+	Str                *string             `queryParam:"inline" union:"member"`
+	VariableAssignment *VariableAssignment `queryParam:"inline" union:"member"`
+
+	Type DecisionTaskAssignedToType
+}
+
+func CreateDecisionTaskAssignedToStr(str string) DecisionTaskAssignedTo {
+	typ := DecisionTaskAssignedToTypeStr
+
+	return DecisionTaskAssignedTo{
+		Str:  &str,
+		Type: typ,
+	}
+}
+
+func CreateDecisionTaskAssignedToVariableAssignment(variableAssignment VariableAssignment) DecisionTaskAssignedTo {
+	typ := DecisionTaskAssignedToTypeVariableAssignment
+
+	return DecisionTaskAssignedTo{
+		VariableAssignment: &variableAssignment,
+		Type:               typ,
+	}
+}
+
+func (u *DecisionTaskAssignedTo) UnmarshalJSON(data []byte) error {
+
+	var candidates []utils.UnionCandidate
+
+	// Collect all valid candidates
+	var str string = ""
+	if err := utils.UnmarshalJSON(data, &str, "", true, nil); err == nil {
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  DecisionTaskAssignedToTypeStr,
+			Value: &str,
+		})
+	}
+
+	var variableAssignment VariableAssignment = VariableAssignment{}
+	if err := utils.UnmarshalJSON(data, &variableAssignment, "", true, nil); err == nil {
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  DecisionTaskAssignedToTypeVariableAssignment,
+			Value: &variableAssignment,
+		})
+	}
+
+	if len(candidates) == 0 {
+		return fmt.Errorf("could not unmarshal `%s` into any supported union types for DecisionTaskAssignedTo", string(data))
+	}
+
+	// Pick the best candidate using multi-stage filtering
+	best := utils.PickBestUnionCandidate(candidates, data)
+	if best == nil {
+		return fmt.Errorf("could not unmarshal `%s` into any supported union types for DecisionTaskAssignedTo", string(data))
+	}
+
+	// Set the union type and value based on the best candidate
+	u.Type = best.Type.(DecisionTaskAssignedToType)
+	switch best.Type {
+	case DecisionTaskAssignedToTypeStr:
+		u.Str = best.Value.(*string)
+		return nil
+	case DecisionTaskAssignedToTypeVariableAssignment:
+		u.VariableAssignment = best.Value.(*VariableAssignment)
+		return nil
+	}
+
+	return fmt.Errorf("could not unmarshal `%s` into any supported union types for DecisionTaskAssignedTo", string(data))
+}
+
+func (u DecisionTaskAssignedTo) MarshalJSON() ([]byte, error) {
+	if u.Str != nil {
+		return utils.MarshalJSON(u.Str, "", true)
+	}
+
+	if u.VariableAssignment != nil {
+		return utils.MarshalJSON(u.VariableAssignment, "", true)
+	}
+
+	return nil, errors.New("could not marshal union type DecisionTaskAssignedTo: all fields are null")
+}
+
 type LoopConfig struct {
 	// The id of the branch that will be used to exit the loop
 	ExitBranchID string `json:"exit_branch_id"`
@@ -139,8 +228,8 @@ func (u Schedule) MarshalJSON() ([]byte, error) {
 }
 
 type DecisionTask struct {
-	AssignedTo []string    `json:"assigned_to,omitempty"`
-	Conditions []Condition `json:"conditions"`
+	AssignedTo []DecisionTaskAssignedTo `json:"assigned_to,omitempty"`
+	Conditions []Condition              `json:"conditions"`
 	// Longer information regarding Task
 	Description *StepDescription `json:"description,omitempty"`
 	DueDate     *string          `json:"due_date,omitempty"`
@@ -175,7 +264,7 @@ func (d *DecisionTask) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (d *DecisionTask) GetAssignedTo() []string {
+func (d *DecisionTask) GetAssignedTo() []DecisionTaskAssignedTo {
 	if d == nil {
 		return nil
 	}

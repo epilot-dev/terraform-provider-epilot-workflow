@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-type UpdateEntityAttributes struct {
-	Source types.String `tfsdk:"source"`
-	Target *Target      `tfsdk:"target"`
+type VariableAssignment struct {
+	Value    []types.String `tfsdk:"value"`
+	Variable types.String   `tfsdk:"variable"`
 }

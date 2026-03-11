@@ -10,7 +10,9 @@ type EvaluationSource struct {
 	Attribute           types.String `tfsdk:"attribute"`
 	AttributeOperation  types.String `tfsdk:"attribute_operation"`
 	AttributeRepeatable types.Bool   `tfsdk:"attribute_repeatable"`
+	AttributeSubField   types.String `tfsdk:"attribute_sub_field"`
 	AttributeType       types.String `tfsdk:"attribute_type"`
+	DateOffset          *DateOffset  `tfsdk:"date_offset"`
 	ID                  types.String `tfsdk:"id"`
 	Origin              types.String `tfsdk:"origin"`
 	OriginType          types.String `tfsdk:"origin_type"`

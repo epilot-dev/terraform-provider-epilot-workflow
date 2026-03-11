@@ -10,9 +10,11 @@ import (
 type DueDateConfigType string
 
 const (
-	DueDateConfigTypeWorkflowStarted DueDateConfigType = "WORKFLOW_STARTED"
-	DueDateConfigTypeTaskFinished    DueDateConfigType = "TASK_FINISHED"
-	DueDateConfigTypePhaseFinished   DueDateConfigType = "PHASE_FINISHED"
+	DueDateConfigTypeWorkflowStarted            DueDateConfigType = "WORKFLOW_STARTED"
+	DueDateConfigTypeTaskFinished               DueDateConfigType = "TASK_FINISHED"
+	DueDateConfigTypePhaseFinished              DueDateConfigType = "PHASE_FINISHED"
+	DueDateConfigTypeAPrecedingTaskCompleted    DueDateConfigType = "A_PRECEDING_TASK_COMPLETED"
+	DueDateConfigTypeAllPrecedingTasksCompleted DueDateConfigType = "ALL_PRECEDING_TASKS_COMPLETED"
 )
 
 func (e DueDateConfigType) ToPointer() *DueDateConfigType {
@@ -29,6 +31,10 @@ func (e *DueDateConfigType) UnmarshalJSON(data []byte) error {
 	case "TASK_FINISHED":
 		fallthrough
 	case "PHASE_FINISHED":
+		fallthrough
+	case "A_PRECEDING_TASK_COMPLETED":
+		fallthrough
+	case "ALL_PRECEDING_TASKS_COMPLETED":
 		*e = DueDateConfigType(v)
 		return nil
 	default:

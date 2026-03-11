@@ -3,11 +3,102 @@
 package shared
 
 import (
+	"errors"
+	"fmt"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
 )
 
+type AutomationTaskAssignedToType string
+
+const (
+	AutomationTaskAssignedToTypeStr                AutomationTaskAssignedToType = "str"
+	AutomationTaskAssignedToTypeVariableAssignment AutomationTaskAssignedToType = "VariableAssignment"
+)
+
+type AutomationTaskAssignedTo struct {
+	Str                *string             `queryParam:"inline" union:"member"`
+	VariableAssignment *VariableAssignment `queryParam:"inline" union:"member"`
+
+	Type AutomationTaskAssignedToType
+}
+
+func CreateAutomationTaskAssignedToStr(str string) AutomationTaskAssignedTo {
+	typ := AutomationTaskAssignedToTypeStr
+
+	return AutomationTaskAssignedTo{
+		Str:  &str,
+		Type: typ,
+	}
+}
+
+func CreateAutomationTaskAssignedToVariableAssignment(variableAssignment VariableAssignment) AutomationTaskAssignedTo {
+	typ := AutomationTaskAssignedToTypeVariableAssignment
+
+	return AutomationTaskAssignedTo{
+		VariableAssignment: &variableAssignment,
+		Type:               typ,
+	}
+}
+
+func (u *AutomationTaskAssignedTo) UnmarshalJSON(data []byte) error {
+
+	var candidates []utils.UnionCandidate
+
+	// Collect all valid candidates
+	var str string = ""
+	if err := utils.UnmarshalJSON(data, &str, "", true, nil); err == nil {
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  AutomationTaskAssignedToTypeStr,
+			Value: &str,
+		})
+	}
+
+	var variableAssignment VariableAssignment = VariableAssignment{}
+	if err := utils.UnmarshalJSON(data, &variableAssignment, "", true, nil); err == nil {
+		candidates = append(candidates, utils.UnionCandidate{
+			Type:  AutomationTaskAssignedToTypeVariableAssignment,
+			Value: &variableAssignment,
+		})
+	}
+
+	if len(candidates) == 0 {
+		return fmt.Errorf("could not unmarshal `%s` into any supported union types for AutomationTaskAssignedTo", string(data))
+	}
+
+	// Pick the best candidate using multi-stage filtering
+	best := utils.PickBestUnionCandidate(candidates, data)
+	if best == nil {
+		return fmt.Errorf("could not unmarshal `%s` into any supported union types for AutomationTaskAssignedTo", string(data))
+	}
+
+	// Set the union type and value based on the best candidate
+	u.Type = best.Type.(AutomationTaskAssignedToType)
+	switch best.Type {
+	case AutomationTaskAssignedToTypeStr:
+		u.Str = best.Value.(*string)
+		return nil
+	case AutomationTaskAssignedToTypeVariableAssignment:
+		u.VariableAssignment = best.Value.(*VariableAssignment)
+		return nil
+	}
+
+	return fmt.Errorf("could not unmarshal `%s` into any supported union types for AutomationTaskAssignedTo", string(data))
+}
+
+func (u AutomationTaskAssignedTo) MarshalJSON() ([]byte, error) {
+	if u.Str != nil {
+		return utils.MarshalJSON(u.Str, "", true)
+	}
+
+	if u.VariableAssignment != nil {
+		return utils.MarshalJSON(u.VariableAssignment, "", true)
+	}
+
+	return nil, errors.New("could not marshal union type AutomationTaskAssignedTo: all fields are null")
+}
+
 type AutomationTask struct {
-	AssignedTo []string `json:"assigned_to,omitempty"`
+	AssignedTo []AutomationTaskAssignedTo `json:"assigned_to,omitempty"`
 	// Configuration for automation execution to run
 	AutomationConfig AutomationConfig `json:"automation_config"`
 	// Indicates whether this task was created automatically by journeys or manually by an user
@@ -45,7 +136,7 @@ func (a *AutomationTask) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (a *AutomationTask) GetAssignedTo() []string {
+func (a *AutomationTask) GetAssignedTo() []AutomationTaskAssignedTo {
 	if a == nil {
 		return nil
 	}

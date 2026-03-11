@@ -8,6 +8,46 @@ import (
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
 )
 
+type TriggerConfig struct {
+	AdditionalProperties any `additionalProperties:"true" json:"-"`
+	// Trigger-specific configuration
+	Configuration map[string]any `json:"configuration,omitempty"`
+	// The trigger type (e.g. entity_operation, activity)
+	Type string `json:"type"`
+}
+
+func (t TriggerConfig) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(t, "", false)
+}
+
+func (t *TriggerConfig) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &t, "", false, nil); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (t *TriggerConfig) GetAdditionalProperties() any {
+	if t == nil {
+		return nil
+	}
+	return t.AdditionalProperties
+}
+
+func (t *TriggerConfig) GetConfiguration() map[string]any {
+	if t == nil {
+		return nil
+	}
+	return t.Configuration
+}
+
+func (t *TriggerConfig) GetType() string {
+	if t == nil {
+		return ""
+	}
+	return t.Type
+}
+
 type Type string
 
 const (
@@ -33,9 +73,12 @@ func (e *Type) UnmarshalJSON(data []byte) error {
 
 type AutomationTrigger struct {
 	// Id of the automation config that triggers this workflow
-	AutomationID string  `json:"automation_id"`
+	AutomationID *string `json:"automation_id,omitempty"`
 	ID           *string `json:"id,omitempty"`
-	Type         Type    `json:"type"`
+	// Transient field. Trigger configurations for creating or updating the trigger automation flow. Each item follows the automation API trigger schema. Processed by the backend during create/update and stripped before storage.
+	//
+	TriggerConfig []TriggerConfig `json:"trigger_config,omitempty"`
+	Type          Type            `json:"type"`
 }
 
 func (a AutomationTrigger) MarshalJSON() ([]byte, error) {
@@ -49,9 +92,9 @@ func (a *AutomationTrigger) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (a *AutomationTrigger) GetAutomationID() string {
+func (a *AutomationTrigger) GetAutomationID() *string {
 	if a == nil {
-		return ""
+		return nil
 	}
 	return a.AutomationID
 }
@@ -61,6 +104,13 @@ func (a *AutomationTrigger) GetID() *string {
 		return nil
 	}
 	return a.ID
+}
+
+func (a *AutomationTrigger) GetTriggerConfig() []TriggerConfig {
+	if a == nil {
+		return nil
+	}
+	return a.TriggerConfig
 }
 
 func (a *AutomationTrigger) GetType() Type {

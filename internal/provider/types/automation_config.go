@@ -7,5 +7,6 @@ import (
 )
 
 type AutomationConfig struct {
-	FlowID types.String `tfsdk:"flow_id"`
+	ActionConfig *ActionConfig `tfsdk:"action_config"`
+	FlowID       types.String  `tfsdk:"flow_id"`
 }

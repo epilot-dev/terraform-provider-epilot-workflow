@@ -43,26 +43,27 @@ func (e *AttributeOperation) UnmarshalJSON(data []byte) error {
 type AttributeType string
 
 const (
-	AttributeTypeString       AttributeType = "string"
-	AttributeTypeText         AttributeType = "text"
-	AttributeTypeNumber       AttributeType = "number"
-	AttributeTypeBoolean      AttributeType = "boolean"
-	AttributeTypeDate         AttributeType = "date"
-	AttributeTypeDatetime     AttributeType = "datetime"
-	AttributeTypeTags         AttributeType = "tags"
-	AttributeTypeCountry      AttributeType = "country"
-	AttributeTypeEmail        AttributeType = "email"
-	AttributeTypePhone        AttributeType = "phone"
-	AttributeTypeProduct      AttributeType = "product"
-	AttributeTypePrice        AttributeType = "price"
-	AttributeTypeStatus       AttributeType = "status"
-	AttributeTypeRelation     AttributeType = "relation"
-	AttributeTypeMultiselect  AttributeType = "multiselect"
-	AttributeTypeSelect       AttributeType = "select"
-	AttributeTypeRadio        AttributeType = "radio"
-	AttributeTypeRelationUser AttributeType = "relation_user"
-	AttributeTypePurpose      AttributeType = "purpose"
-	AttributeTypeLabel        AttributeType = "label"
+	AttributeTypeString              AttributeType = "string"
+	AttributeTypeText                AttributeType = "text"
+	AttributeTypeNumber              AttributeType = "number"
+	AttributeTypeBoolean             AttributeType = "boolean"
+	AttributeTypeDate                AttributeType = "date"
+	AttributeTypeDatetime            AttributeType = "datetime"
+	AttributeTypeTags                AttributeType = "tags"
+	AttributeTypeCountry             AttributeType = "country"
+	AttributeTypeEmail               AttributeType = "email"
+	AttributeTypePhone               AttributeType = "phone"
+	AttributeTypeProduct             AttributeType = "product"
+	AttributeTypePrice               AttributeType = "price"
+	AttributeTypeStatus              AttributeType = "status"
+	AttributeTypeRelation            AttributeType = "relation"
+	AttributeTypeMultiselect         AttributeType = "multiselect"
+	AttributeTypeSelect              AttributeType = "select"
+	AttributeTypeRadio               AttributeType = "radio"
+	AttributeTypeRelationUser        AttributeType = "relation_user"
+	AttributeTypePurpose             AttributeType = "purpose"
+	AttributeTypeLabel               AttributeType = "label"
+	AttributeTypeMessageEmailAddress AttributeType = "message_email_address"
 )
 
 func (e AttributeType) ToPointer() *AttributeType {
@@ -113,11 +114,76 @@ func (e *AttributeType) UnmarshalJSON(data []byte) error {
 	case "purpose":
 		fallthrough
 	case "label":
+		fallthrough
+	case "message_email_address":
 		*e = AttributeType(v)
 		return nil
 	default:
 		return fmt.Errorf("invalid value for AttributeType: %v", v)
 	}
+}
+
+// Unit of the offset
+type Unit string
+
+const (
+	UnitDays   Unit = "days"
+	UnitMonths Unit = "months"
+	UnitYears  Unit = "years"
+)
+
+func (e Unit) ToPointer() *Unit {
+	return &e
+}
+func (e *Unit) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "days":
+		fallthrough
+	case "months":
+		fallthrough
+	case "years":
+		*e = Unit(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for Unit: %v", v)
+	}
+}
+
+// DateOffset - Offset to apply to the source date value before comparison (e.g., +18 years for age check, +30 days for expiry)
+type DateOffset struct {
+	// Number of units to offset
+	Amount *int64 `json:"amount,omitempty"`
+	// Unit of the offset
+	Unit *Unit `json:"unit,omitempty"`
+}
+
+func (d DateOffset) MarshalJSON() ([]byte, error) {
+	return utils.MarshalJSON(d, "", false)
+}
+
+func (d *DateOffset) UnmarshalJSON(data []byte) error {
+	if err := utils.UnmarshalJSON(data, &d, "", false, nil); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (d *DateOffset) GetAmount() *int64 {
+	if d == nil {
+		return nil
+	}
+	return d.Amount
+}
+
+func (d *DateOffset) GetUnit() *Unit {
+	if d == nil {
+		return nil
+	}
+	return d.Unit
 }
 
 type Origin string
@@ -179,7 +245,11 @@ type EvaluationSource struct {
 	Attribute           *string             `json:"attribute,omitempty"`
 	AttributeOperation  *AttributeOperation `json:"attribute_operation,omitempty"`
 	AttributeRepeatable *bool               `json:"attribute_repeatable,omitempty"`
-	AttributeType       *AttributeType      `json:"attribute_type,omitempty"`
+	// For complex attribute types, specifies which sub-field to extract (e.g., 'address', 'name', 'email_type')
+	AttributeSubField *string        `json:"attribute_sub_field,omitempty"`
+	AttributeType     *AttributeType `json:"attribute_type,omitempty"`
+	// Offset to apply to the source date value before comparison (e.g., +18 years for age check, +30 days for expiry)
+	DateOffset *DateOffset `json:"date_offset,omitempty"`
 	// The id of the action or trigger
 	ID         *string     `json:"id,omitempty"`
 	Origin     *Origin     `json:"origin,omitempty"`
@@ -219,11 +289,25 @@ func (e *EvaluationSource) GetAttributeRepeatable() *bool {
 	return e.AttributeRepeatable
 }
 
+func (e *EvaluationSource) GetAttributeSubField() *string {
+	if e == nil {
+		return nil
+	}
+	return e.AttributeSubField
+}
+
 func (e *EvaluationSource) GetAttributeType() *AttributeType {
 	if e == nil {
 		return nil
 	}
 	return e.AttributeType
+}
+
+func (e *EvaluationSource) GetDateOffset() *DateOffset {
+	if e == nil {
+		return nil
+	}
+	return e.DateOffset
 }
 
 func (e *EvaluationSource) GetID() *string {

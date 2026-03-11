@@ -7,18 +7,18 @@ import (
 )
 
 type AiAgentTask struct {
-	AgentConfig   *AgentConfig        `tfsdk:"agent_config"`
-	AssignedTo    []types.String      `tfsdk:"assigned_to"`
-	Description   *StepDescription    `tfsdk:"description"`
-	DueDate       types.String        `tfsdk:"due_date"`
-	DueDateConfig *DueDateConfig      `tfsdk:"due_date_config"`
-	Ecp           *ECPDetails         `tfsdk:"ecp"`
-	ID            types.String        `tfsdk:"id"`
-	Installer     *ECPDetails         `tfsdk:"installer"`
-	Journey       *StepJourney        `tfsdk:"journey"`
-	Name          types.String        `tfsdk:"name"`
-	PhaseID       types.String        `tfsdk:"phase_id"`
-	Requirements  []EnableRequirement `tfsdk:"requirements"`
-	TaskType      types.String        `tfsdk:"task_type"`
-	Taxonomies    []types.String      `tfsdk:"taxonomies"`
+	AgentConfig   *AgentConfig             `tfsdk:"agent_config"`
+	AssignedTo    []FlowTemplateAssignedTo `tfsdk:"assigned_to"`
+	Description   *StepDescription         `tfsdk:"description"`
+	DueDate       types.String             `tfsdk:"due_date"`
+	DueDateConfig *DueDateConfig           `tfsdk:"due_date_config"`
+	Ecp           *ECPDetails              `tfsdk:"ecp"`
+	ID            types.String             `tfsdk:"id"`
+	Installer     *ECPDetails              `tfsdk:"installer"`
+	Journey       *StepJourney             `tfsdk:"journey"`
+	Name          types.String             `tfsdk:"name"`
+	PhaseID       types.String             `tfsdk:"phase_id"`
+	Requirements  []EnableRequirement      `tfsdk:"requirements"`
+	TaskType      types.String             `tfsdk:"task_type"`
+	Taxonomies    []types.String           `tfsdk:"taxonomies"`
 }
