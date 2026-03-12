@@ -61,7 +61,6 @@ func (r *WorkflowDefinitionDataSourceModel) RefreshFromSharedWorkflowDefinition(
 			var updateEntityAttributes tfTypes.UpdateEntityAttributes
 
 			updateEntityAttributes.Source = types.StringValue(string(updateEntityAttributesItem.Source))
-			updateEntityAttributes.Target = &tfTypes.Target{}
 			updateEntityAttributes.Target.EntityAttribute = types.StringValue(updateEntityAttributesItem.Target.EntityAttribute)
 			updateEntityAttributes.Target.EntitySchema = types.StringValue(updateEntityAttributesItem.Target.EntitySchema)
 

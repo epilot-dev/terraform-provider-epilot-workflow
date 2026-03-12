@@ -19,13 +19,13 @@ generation:
   schemas:
     allOfMergeStrategy: shallowMerge
   requestBodyFieldName: ""
-  versioningStrategy: automatic
   persistentEdits: {}
   tests:
     generateTests: true
     generateNewTests: false
     skipResponseBodyAssertions: false
   telemetryEnabled: false
+  versioningStrategy: automatic
 go:
   version: 0.0.1
   clientServerStatusCodesAsErrors: true
@@ -43,7 +43,7 @@ go:
   outputModelSuffix: output
   packageName: openapi
 terraform:
-  version: 0.28.15
+  version: 0.28.16
   additionalActions: []
   additionalDataSources: []
   additionalDependencies: {}

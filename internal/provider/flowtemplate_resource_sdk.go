@@ -142,10 +142,8 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 		for _, entitySyncItem := range resp.EntitySync {
 			var entitySync tfTypes.EntitySync
 
-			entitySync.Target = &tfTypes.Target{}
 			entitySync.Target.EntityAttribute = types.StringValue(entitySyncItem.Target.EntityAttribute)
 			entitySync.Target.EntitySchema = types.StringValue(entitySyncItem.Target.EntitySchema)
-			entitySync.Trigger = &tfTypes.EntitySyncTrigger{}
 			entitySync.Trigger.Event = types.StringValue(string(entitySyncItem.Trigger.Event))
 			if entitySyncItem.Trigger.Filter == nil {
 				entitySync.Trigger.Filter = nil
@@ -154,7 +152,6 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 				entitySync.Trigger.Filter.PhaseTemplateID = types.StringPointerValue(entitySyncItem.Trigger.Filter.PhaseTemplateID)
 				entitySync.Trigger.Filter.TaskTemplateID = types.StringPointerValue(entitySyncItem.Trigger.Filter.TaskTemplateID)
 			}
-			entitySync.Value = &tfTypes.Value{}
 			entitySync.Value.Source = types.StringValue(string(entitySyncItem.Value.Source))
 			entitySync.Value.Value = types.StringPointerValue(entitySyncItem.Value.Value)
 
@@ -348,7 +345,6 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 
 					tasks.AutomationTask.AssignedTo = append(tasks.AutomationTask.AssignedTo, assignedTo3)
 				}
-				tasks.AutomationTask.AutomationConfig = &tfTypes.AutomationConfig{}
 				if tasksItem.AutomationTask.AutomationConfig.ActionConfig == nil {
 					tasks.AutomationTask.AutomationConfig.ActionConfig = nil
 				} else {
@@ -466,7 +462,6 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 						tasks.AutomationTask.Schedule.RelativeSchedule.Direction = types.StringValue(string(tasksItem.AutomationTask.Schedule.RelativeSchedule.Direction))
 						tasks.AutomationTask.Schedule.RelativeSchedule.Duration = types.Float64Value(tasksItem.AutomationTask.Schedule.RelativeSchedule.Duration)
 						tasks.AutomationTask.Schedule.RelativeSchedule.Mode = types.StringValue(string(tasksItem.AutomationTask.Schedule.RelativeSchedule.Mode))
-						tasks.AutomationTask.Schedule.RelativeSchedule.Reference = &tfTypes.Reference{}
 						tasks.AutomationTask.Schedule.RelativeSchedule.Reference.Attribute = types.StringPointerValue(tasksItem.AutomationTask.Schedule.RelativeSchedule.Reference.Attribute)
 						tasks.AutomationTask.Schedule.RelativeSchedule.Reference.ID = types.StringValue(tasksItem.AutomationTask.Schedule.RelativeSchedule.Reference.ID)
 						tasks.AutomationTask.Schedule.RelativeSchedule.Reference.Origin = types.StringValue(string(tasksItem.AutomationTask.Schedule.RelativeSchedule.Reference.Origin))
@@ -522,7 +517,6 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 
 							statements.ID = types.StringValue(statementsItem.ID)
 							statements.Operator = types.StringValue(string(statementsItem.Operator))
-							statements.Source = &tfTypes.EvaluationSource{}
 							statements.Source.Attribute = types.StringPointerValue(statementsItem.Source.Attribute)
 							if statementsItem.Source.AttributeOperation != nil {
 								statements.Source.AttributeOperation = types.StringValue(string(*statementsItem.Source.AttributeOperation))
@@ -571,8 +565,6 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 
 							conditions.Statements = append(conditions.Statements, statements)
 						}
-					} else {
-						conditions.Statements = nil
 					}
 
 					tasks.DecisionTask.Conditions = append(tasks.DecisionTask.Conditions, conditions)
@@ -673,7 +665,6 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 						tasks.DecisionTask.Schedule.RelativeSchedule.Direction = types.StringValue(string(tasksItem.DecisionTask.Schedule.RelativeSchedule.Direction))
 						tasks.DecisionTask.Schedule.RelativeSchedule.Duration = types.Float64Value(tasksItem.DecisionTask.Schedule.RelativeSchedule.Duration)
 						tasks.DecisionTask.Schedule.RelativeSchedule.Mode = types.StringValue(string(tasksItem.DecisionTask.Schedule.RelativeSchedule.Mode))
-						tasks.DecisionTask.Schedule.RelativeSchedule.Reference = &tfTypes.Reference{}
 						tasks.DecisionTask.Schedule.RelativeSchedule.Reference.Attribute = types.StringPointerValue(tasksItem.DecisionTask.Schedule.RelativeSchedule.Reference.Attribute)
 						tasks.DecisionTask.Schedule.RelativeSchedule.Reference.ID = types.StringValue(tasksItem.DecisionTask.Schedule.RelativeSchedule.Reference.ID)
 						tasks.DecisionTask.Schedule.RelativeSchedule.Reference.Origin = types.StringValue(string(tasksItem.DecisionTask.Schedule.RelativeSchedule.Reference.Origin))

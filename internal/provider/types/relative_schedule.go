@@ -10,6 +10,6 @@ type RelativeSchedule struct {
 	Direction types.String  `tfsdk:"direction"`
 	Duration  types.Float64 `tfsdk:"duration"`
 	Mode      types.String  `tfsdk:"mode"`
-	Reference *Reference    `tfsdk:"reference"`
+	Reference Reference     `tfsdk:"reference"`
 	Unit      types.String  `tfsdk:"unit"`
 }

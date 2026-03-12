@@ -119,7 +119,6 @@ func (r *WorkflowDefinitionDataSource) Schema(ctx context.Context, req datasourc
 			},
 			"id": schema.StringAttribute{
 				Computed: true,
-				Optional: true,
 			},
 			"last_update_time": schema.StringAttribute{
 				Computed:    true,

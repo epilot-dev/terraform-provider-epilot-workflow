@@ -5,18 +5,10 @@ resource "epilot-workflow_flow_template" "my_epilot-workflow_flow_template" {
     available_in_ecp    = true
     closing_reasons     = [
         {
-            creation_time    = "2024-05-24T14:52:33.620Z"
             id               = "1gNTrk7Kx50g7EKGPc5GR"
-            last_update_time = "2024-05-24T14:52:33.620Z"
-            status           = "ACTIVE"
-            title            = "This is expensive"
         },
         {
-            creation_time    = "2024-05-06T14:03:02.993Z"
             id               = "qgK9sGbKoS7NxlAbNReVn"
-            last_update_time = "2024-05-06T14:03:02.993Z"
-            status           = "ACTIVE"
-            title            = "Client didn't want our services"
         },
     ]
     description         = "Testing blueprint migration heyo"

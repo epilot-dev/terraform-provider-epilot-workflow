@@ -6,10 +6,8 @@ import (
 	"context"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/models/shared"
-	"github.com/hashicorp/terraform-plugin-framework/action"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/ephemeral"
-	"github.com/hashicorp/terraform-plugin-framework/function"
 	"github.com/hashicorp/terraform-plugin-framework/list"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
@@ -19,9 +17,7 @@ import (
 )
 
 var _ provider.Provider = (*EpilotWorkflowProvider)(nil)
-var _ provider.ProviderWithActions = (*EpilotWorkflowProvider)(nil)
 var _ provider.ProviderWithEphemeralResources = (*EpilotWorkflowProvider)(nil)
-var _ provider.ProviderWithFunctions = (*EpilotWorkflowProvider)(nil)
 
 type EpilotWorkflowProvider struct {
 	// version is set to the provider version on release, "dev" when the
@@ -101,19 +97,10 @@ func (p *EpilotWorkflowProvider) Configure(ctx context.Context, req provider.Con
 	}
 
 	client := sdk.New(opts...)
-	resp.ActionData = client
 	resp.DataSourceData = client
 	resp.EphemeralResourceData = client
 	resp.ListResourceData = client
 	resp.ResourceData = client
-}
-
-func (p *EpilotWorkflowProvider) Functions(_ context.Context) []func() function.Function {
-	return []func() function.Function{}
-}
-
-func (p *EpilotWorkflowProvider) Actions(_ context.Context) []func() action.Action {
-	return []func() action.Action{}
 }
 
 func (p *EpilotWorkflowProvider) Resources(ctx context.Context) []func() resource.Resource {

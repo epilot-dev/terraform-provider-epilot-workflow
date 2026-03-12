@@ -329,7 +329,6 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 			},
 			"id": schema.StringAttribute{
 				Computed: true,
-				Optional: true,
 			},
 			"name": schema.StringAttribute{
 				Computed: true,
