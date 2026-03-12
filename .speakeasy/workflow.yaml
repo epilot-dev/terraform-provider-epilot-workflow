@@ -4,6 +4,8 @@ sources:
     my-source:
         inputs:
             - location: https://docs.api.epilot.io/workflows-definition.yaml
+        overlays:
+            - location: overlay.yaml
         output: final.yaml
         registry:
             location: registry.speakeasyapi.dev/epilot/epilot/my-source

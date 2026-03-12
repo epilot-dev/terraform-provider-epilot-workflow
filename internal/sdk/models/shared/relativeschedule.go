@@ -92,7 +92,7 @@ func (e *RelativeScheduleOrigin) UnmarshalJSON(data []byte) error {
 type Reference struct {
 	// An entity attribute that identifies a date / datetime
 	Attribute *string `json:"attribute,omitempty"`
-	// The id of the entity / workflow / task, based on the origin of the schedule. For all_preceding_tasks_completed, use the sentinel value 'all_preceding_tasks_completed'.
+	// The id of the entity / workflow / task, based on the origin of the schedule. For all_preceding_tasks_completed, use the sentinel value "all_preceding_tasks_completed".
 	ID     string                 `json:"id"`
 	Origin RelativeScheduleOrigin `json:"origin"`
 	// The schema of the entity

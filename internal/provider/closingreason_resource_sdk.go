@@ -17,8 +17,12 @@ func (r *ClosingReasonResourceModel) RefreshFromSharedClosingReason(ctx context.
 		r.CreationTime = types.StringPointerValue(resp.CreationTime)
 		r.ID = types.StringPointerValue(resp.ID)
 		r.LastUpdateTime = types.StringPointerValue(resp.LastUpdateTime)
-		r.Status = types.StringValue(string(resp.Status))
-		r.Title = types.StringValue(resp.Title)
+		if resp.Status != nil {
+			r.Status = types.StringValue(string(*resp.Status))
+		} else {
+			r.Status = types.StringNull()
+		}
+		r.Title = types.StringPointerValue(resp.Title)
 	}
 
 	return diags
@@ -74,11 +78,26 @@ func (r *ClosingReasonResourceModel) ToOperationsUpdateClosingReasonRequest(ctx 
 func (r *ClosingReasonResourceModel) ToSharedClosingReasonInput(ctx context.Context) (*shared.ClosingReasonInput, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	status := shared.ClosingReasonsStatus(r.Status.ValueString())
-	var title string
-	title = r.Title.ValueString()
-
+	id := new(string)
+	if !r.ID.IsUnknown() && !r.ID.IsNull() {
+		*id = r.ID.ValueString()
+	} else {
+		id = nil
+	}
+	status := new(shared.ClosingReasonsStatus)
+	if !r.Status.IsUnknown() && !r.Status.IsNull() {
+		*status = shared.ClosingReasonsStatus(r.Status.ValueString())
+	} else {
+		status = nil
+	}
+	title := new(string)
+	if !r.Title.IsUnknown() && !r.Title.IsNull() {
+		*title = r.Title.ValueString()
+	} else {
+		title = nil
+	}
 	out := shared.ClosingReasonInput{
+		ID:     id,
 		Status: status,
 		Title:  title,
 	}

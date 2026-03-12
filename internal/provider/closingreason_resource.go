@@ -51,12 +51,14 @@ func (r *ClosingReasonResource) Schema(ctx context.Context, req resource.SchemaR
 			},
 			"id": schema.StringAttribute{
 				Computed: true,
+				Optional: true,
 			},
 			"last_update_time": schema.StringAttribute{
 				Computed: true,
 			},
 			"status": schema.StringAttribute{
-				Required:    true,
+				Computed:    true,
+				Optional:    true,
 				Description: `must be one of ["ACTIVE", "INACTIVE"]`,
 				Validators: []validator.String{
 					stringvalidator.OneOf(
@@ -66,7 +68,8 @@ func (r *ClosingReasonResource) Schema(ctx context.Context, req resource.SchemaR
 				},
 			},
 			"title": schema.StringAttribute{
-				Required: true,
+				Computed: true,
+				Optional: true,
 			},
 		},
 	}

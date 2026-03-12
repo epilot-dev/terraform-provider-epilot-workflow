@@ -1,19 +1,19 @@
 lockVersion: 2.0.0
 id: 5a857039-7f4b-42d5-86fd-449767242ed2
 management:
-  docChecksum: c37cae31872a352f8ead7114120bb361
+  docChecksum: 3a4819349f99f0beed414fab573f25d9
   docVersion: 1.0.0
-  speakeasyVersion: 1.750.0
-  generationVersion: 2.856.1
-  releaseVersion: 0.22.1
-  configChecksum: 5abe3c2a631a90b80ad85a4979f66fa8
+  speakeasyVersion: 1.752.0
+  generationVersion: 2.859.2
+  releaseVersion: 0.28.8
+  configChecksum: 222d9c1d2d4ef5d6538de070621b411c
   repoURL: https://github.com/epilot-dev/terraform-provider-epilot-workflow.git
   repoSubDirectory: .
   published: true
 persistentEdits:
-  generation_id: 7943abb5-a233-404b-b5a5-d67c87358186
-  pristine_commit_hash: ea916b994e63e332ad83b9996289c04f00029ebd
-  pristine_tree_hash: 9de3dd9ad5b54c7e7d9307aa737f9af620081418
+  generation_id: 086afc1c-a541-4729-babd-14bfad635cdc
+  pristine_commit_hash: ab7f3cccd0c9a19f81515b3c41e925f115f71f9d
+  pristine_tree_hash: 8cddf3ef5b4be589bc48b99226f07651400515ba
 features:
   go:
     additionalProperties: 0.1.1
@@ -27,7 +27,7 @@ features:
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.4
     constsAndDefaults: 0.3.2
-    core: 3.46.50
+    core: 3.46.52
     deprecations: 2.82.0
     globalSecurity: 2.82.2
     globalServerURLs: 2.83.2
@@ -59,8 +59,8 @@ trackedFiles:
     pristine_git_object: 38491662220645d5a33eb955e6c06d459459434a
   examples/provider/provider.tf:
     id: 954e955c0240
-    last_write_checksum: sha1:b1acc7adc5c8a9c5888beb9851ef0ff9ebf8e2c5
-    pristine_git_object: ae29b076277d5d4b8aef1c32edb2eaf43ee37db4
+    last_write_checksum: sha1:308eb6b353838eeccbc951cc6e39113abe9639a1
+    pristine_git_object: e470f2d151c521f8a539b7afb281b6b13fc9783c
   examples/resources/epilot-workflow_closing_reason/import-by-string-id.tf:
     id: 6a55cbc44ab7
     last_write_checksum: sha1:fa5f76e472bd939b11d68877f3c14e48e08c16f5
@@ -71,8 +71,8 @@ trackedFiles:
     pristine_git_object: 2c59e717885301167ce40ad467adcf53c66db8d3
   examples/resources/epilot-workflow_closing_reason/resource.tf:
     id: 5f5d6b4a2e5f
-    last_write_checksum: sha1:a9bea4dbe03c80362f238570f1d85847f3a3d231
-    pristine_git_object: 725e50f8f24de334acc4c40183a1306ddc383623
+    last_write_checksum: sha1:5f7918e43d61314331f2a8f1eb02c9da5a6542b8
+    pristine_git_object: 8573a4cd58a8029f0d311d27b4eee5abdab6be5b
   examples/resources/epilot-workflow_flow_template/import-by-string-id.tf:
     id: 8913b490a3f9
     last_write_checksum: sha1:ad83fd31485ae578abfc5be6b4c3f546bd59944b
@@ -247,32 +247,32 @@ trackedFiles:
     pristine_git_object: f1f13f0e4d2255347c5b10d6d88de1aca0d98644
   internal/provider/closingreason_data_source_sdk.go:
     id: 66e84cfdc077
-    last_write_checksum: sha1:2871b2a9261c74adb0060223746bc84c711d738d
-    pristine_git_object: 0b1fc642d71481519f51e31c61aa3d0fc6cba09c
+    last_write_checksum: sha1:581d943889daef350a214ef6c8581ded5e4dc58e
+    pristine_git_object: 3266ab55ab994942465b98c0fb2f1685ad633bd4
   internal/provider/closingreason_resource.go:
     id: 8a85bc2acfd3
-    last_write_checksum: sha1:b66857554470bbbd3bdd5dab1c55b575e3aef5a7
-    pristine_git_object: 2bc77676cc5c536bf5335b6f113d6199a3665ec2
+    last_write_checksum: sha1:03d70a5db4ddc91bd77f640d1b365a4464a9ff95
+    pristine_git_object: a71c02a35999c800482737b62d816367f1add6e6
   internal/provider/closingreason_resource_sdk.go:
     id: 162edc1eef2e
-    last_write_checksum: sha1:83181f8860a5d151e644a98531dd03eab88de831
-    pristine_git_object: 010cb4bd13ef80297cb6b7dd1adae1a97030a0fe
+    last_write_checksum: sha1:f6d152ab5939fa187bd6400658fd2e7ec630d18b
+    pristine_git_object: 2e5b91dd9313bfc51b56dc533b2976cb8faa0a00
   internal/provider/flowtemplate_data_source.go:
     id: 2384d9860e7a
-    last_write_checksum: sha1:fdb16e28b2292699d9f97292369c9e7c66bdb4da
-    pristine_git_object: 89971b6ec164815cb4574043fe4bd534243a2e1a
+    last_write_checksum: sha1:07691f0d116dde81e2c4262101fd58064f1f0af1
+    pristine_git_object: f8fb17342effd9009ade91f339c5feca7b665b6c
   internal/provider/flowtemplate_data_source_sdk.go:
     id: 45ac3ac81349
-    last_write_checksum: sha1:e5a9b6af583019e1a34bef08ea04af977ff18d30
-    pristine_git_object: 884e89395f8ad9a2d6b88d917055d319944319ac
+    last_write_checksum: sha1:863b63850bb2aecc35564256575c999716a9a77f
+    pristine_git_object: 78e2d2519264fec0540a1f0d68b2e9c55e6c8adb
   internal/provider/flowtemplate_resource.go:
     id: 1c30a2f5f636
-    last_write_checksum: sha1:80b4359faf503cf55b2fd79df5f7dbeb83e9ba84
-    pristine_git_object: 30d8e9e9bd8ead91e6ed1c65d92d54943a25980c
+    last_write_checksum: sha1:94f622e6c652b69257747520af1878b7010dd025
+    pristine_git_object: 456146d456fc9f6eaf2a3616ba08c6d6be45dbc0
   internal/provider/flowtemplate_resource_sdk.go:
     id: caa858453756
-    last_write_checksum: sha1:84a70f4b52a401574199eda31a192ca4b2965742
-    pristine_git_object: 780a2f51626c9a28a0b23f197e399c663286617c
+    last_write_checksum: sha1:c0736172223ecb37c5a1fc44681fdb04a2441d30
+    pristine_git_object: 4e2597577d2f3cd106a21b4210741d3afb4c7769
   internal/provider/provider.go:
     id: 1e7e86841cf3
     last_write_checksum: sha1:c2a37291035c0f20465d2192339c7a1f3a146069
@@ -523,16 +523,16 @@ trackedFiles:
     pristine_git_object: 9f166e2ea18ff8578487c2a024c44a77ffc22ead
   internal/provider/workflowdefinition_data_source.go:
     id: a8a4913d7963
-    last_write_checksum: sha1:11d17d35de84defcfac23b363e0db2744499e542
-    pristine_git_object: 900938ae60c1a569f109062e850815ebd941d679
+    last_write_checksum: sha1:555874789a74207930a4acd9c8b5acd5e0101b3e
+    pristine_git_object: 89c4e95e0b2272b2731a9d429ddd210d978f8abd
   internal/provider/workflowdefinition_data_source_sdk.go:
     id: 2708e5c13411
     last_write_checksum: sha1:711dc499955ce0e0f7e3c0de8472df469ddf790b
     pristine_git_object: 25f004a600e8b1fadc10be043edf5ab94d77c96b
   internal/provider/workflowdefinition_resource.go:
     id: 726805bf32c9
-    last_write_checksum: sha1:b8d22bdba3475c7a75f42e46732d4dd9c69ec605
-    pristine_git_object: a6674eb77de73542c65956d7cb8180d63772dc67
+    last_write_checksum: sha1:4ee213dc947608321779be7e029c3b9296c1f27f
+    pristine_git_object: ae126b19baeff72cd2c37f47057cc1b0fd67de86
   internal/provider/workflowdefinition_resource_sdk.go:
     id: b1941fabec7c
     last_write_checksum: sha1:0a6d84bde8a589de9b9a61e6a3a948e969c56d3f
@@ -575,12 +575,12 @@ trackedFiles:
     pristine_git_object: d84223f08b4550e9df88eb95ee7076453a293e94
   internal/sdk/internal/utils/headers.go:
     id: f035883ac0ff
-    last_write_checksum: sha1:1f8c1760183a3e266930099b8d1aa98b3320b435
-    pristine_git_object: 7a08892f3c2d3ed5d36aa6913da5971c0f71d0e0
+    last_write_checksum: sha1:d6f9df8f60a0d9058228916a7a0c5d56325dedf5
+    pristine_git_object: 6e3bc3df0a0d13d4153ce0f6bfa4de941a7661c0
   internal/sdk/internal/utils/json.go:
     id: 2231afac3add
-    last_write_checksum: sha1:850c2c1a2bd570c3552542caa2b6673a7c4f952c
-    pristine_git_object: 5ee215fad78f6e6cd4a3b7adbf1279dd86f12af3
+    last_write_checksum: sha1:c8c6238c9e7adb6075d5cd4547004be139023995
+    pristine_git_object: b8e7b51deb41ce6175606cf9b7c5f492b968d28f
   internal/sdk/internal/utils/pathparams.go:
     id: e7fec2afe4a6
     last_write_checksum: sha1:fd894e429b02ccaaac51dec8c6fd9e70042888c8
@@ -591,12 +591,12 @@ trackedFiles:
     pristine_git_object: 068e77c79cdc38c7db27535f876aa6ded9018dfb
   internal/sdk/internal/utils/requestbody.go:
     id: c971a8b3bbf5
-    last_write_checksum: sha1:90d1e0c31f79ba2832ac3e5a65d9cbda8dd0904b
-    pristine_git_object: 67e78934a73b74128ee91ef78de562b6bb318f77
+    last_write_checksum: sha1:57c084095f689ae61cec2a9a23d02831f260a884
+    pristine_git_object: 1dcd9fae725a576604408bb73768fa7a59f790e8
   internal/sdk/internal/utils/retries.go:
     id: 6832c2142453
-    last_write_checksum: sha1:beccc609e5a25902e16d5cff92cc0fc91468a320
-    pristine_git_object: 13db62aaa59ae097eb6aaa0ed78b1b2620eea1c3
+    last_write_checksum: sha1:cab6525aa12579b1cc04554a9f0a26497a1d114d
+    pristine_git_object: 24b3435ec74c25bc31da1660f4967fdd5bcac942
   internal/sdk/internal/utils/security.go:
     id: 6ebe9eaeb99b
     last_write_checksum: sha1:573140faaff017cb3bd31e579c6b3949f3d8365b
@@ -611,8 +611,8 @@ trackedFiles:
     pristine_git_object: f66814c73ace94d8e71d785fd6161fb405745754
   internal/sdk/internal/utils/utils.go:
     id: feefcdf75dbd
-    last_write_checksum: sha1:22e28614144c04201e6cf662643d96a0416f7d8c
-    pristine_git_object: 4f35c6b5ed8d47d0ac4a904f540a24b524cf2312
+    last_write_checksum: sha1:c03378176a107205b8938606faef3fd8fb8f91a0
+    pristine_git_object: a614e37673d3ea81eabc6139236edfb22a15dc55
   internal/sdk/models/errors/sdkerror.go:
     id: 19b5a8d3586b
     last_write_checksum: sha1:5d65fce5049df7c5113e11c9ccb1e4c46b91901c
@@ -659,8 +659,8 @@ trackedFiles:
     pristine_git_object: eb42c0423a2f05b8c0fff1d1be7e3c881ba3ed5e
   internal/sdk/models/operations/getclosingreasonv1.go:
     id: 1d5f1eaba0ee
-    last_write_checksum: sha1:ca206f00e75727ac795938f06802502baf26596a
-    pristine_git_object: 81a4a63c2ea1beb7a3a4df7bc2715a20db4777a0
+    last_write_checksum: sha1:1623f8a2f065e7bb093fa537aace3ce03544f8d2
+    pristine_git_object: 4e03003b7b56253e54f41b8a7c3fb9b99f6d5e7f
   internal/sdk/models/operations/getdefinition.go:
     id: 803405070a47
     last_write_checksum: sha1:871e6d3e1224e5d09fb6250e5a6fdb549324c2ce
@@ -739,16 +739,16 @@ trackedFiles:
     pristine_git_object: 8391d27d0503baee11d2da0af2d9d18f291a0265
   internal/sdk/models/shared/closingreason.go:
     id: "67098074e137"
-    last_write_checksum: sha1:31533b16c840776c23ce095cd8be5a62f4c550fe
-    pristine_git_object: 29306ef2df8a2843716599b960f1a3929ab69bce
+    last_write_checksum: sha1:6fe1238aae4d051563d409a26b779ad86c904f8c
+    pristine_git_object: 8d3d818beaaa2ab3fe7fa6abca5ce46b327cdbc4
   internal/sdk/models/shared/closingreasonid.go:
     id: d7461d6b0bbe
     last_write_checksum: sha1:f584f1d945562d3585991c356741d55a56ee1c2b
     pristine_git_object: 4a04589f2cc0eeb10993db52c7c65601e05a2b7e
   internal/sdk/models/shared/closingreasoninput.go:
     id: d95b6f6413d6
-    last_write_checksum: sha1:aba7957a698d8fb036117aeec09920e6db768b3e
-    pristine_git_object: fa6309c4d3312f7b5b966f663dcca52cc063141b
+    last_write_checksum: sha1:183dd14e9061c722424b83795c7c4109ac7545a4
+    pristine_git_object: 83b8b24d605b30dd084020a0fdcc2c5259d5e83f
   internal/sdk/models/shared/closingreasonnotfoundresp.go:
     id: 263d9d075e1a
     last_write_checksum: sha1:907cce9a5f504c29a779148e4bc6b7b9afa15052
@@ -767,12 +767,12 @@ trackedFiles:
     pristine_git_object: 1e61607a9157e41b7d349a34de33d35ab17cb846
   internal/sdk/models/shared/condition.go:
     id: 56f72fe38174
-    last_write_checksum: sha1:36797bb00539a4f18d3a3127236ff282ab9d902e
-    pristine_git_object: 7706239833a886bb9294cf51f66a596a48d003fa
+    last_write_checksum: sha1:17a12f71aacef77fa69577706e9dbf1a63e254fb
+    pristine_git_object: 25843d4a26269e67af1c5d53c88f81fa969f21fb
   internal/sdk/models/shared/createflowtemplate.go:
     id: 37dacf4b38d3
-    last_write_checksum: sha1:6502ee308b9c10514eab4a0bda907c5a9b9fb49c
-    pristine_git_object: 26f86151637b264dae3a6cfaa8dc64fc4837425b
+    last_write_checksum: sha1:742036f904f9390b2ad9269860583a22bf017ab3
+    pristine_git_object: 32e35a5dcf944e05eeebb5fc3f806711aaf0a381
   internal/sdk/models/shared/decisiontask.go:
     id: 9e76ea6ecca9
     last_write_checksum: sha1:8788986b39c51e25fcaaefb3a6abc1e5e6d7e538
@@ -815,12 +815,12 @@ trackedFiles:
     pristine_git_object: 5e7b1d68d07fa09ac42c7e7e83963db98ea657a4
   internal/sdk/models/shared/evaluationsource.go:
     id: e847a21faffd
-    last_write_checksum: sha1:158993481cd93e03553a5dbf395e72e6b5ef4473
-    pristine_git_object: 4ae32556edbf4e5370a44ecbc0564a8f288904ad
+    last_write_checksum: sha1:9ad1cf0486f4ee6468b1e8f3d8ebdd328d5f43b1
+    pristine_git_object: 16eef5bbf5de4d3df701c5fb8bdfde2e5f9be156
   internal/sdk/models/shared/flowtemplate.go:
     id: 8cfcc782203b
-    last_write_checksum: sha1:6b7c62cbe817f1873d4ee1dbbd3267de93f63836
-    pristine_git_object: 70aa8695b44ceb090bc12dba8cb383bcd6345423
+    last_write_checksum: sha1:895d9a16eee8b3b5d3d43d21ff76149805d1b52b
+    pristine_git_object: 5784fdd9bbdc05653dd1bf3785dd68b30857f3c4
   internal/sdk/models/shared/flowtemplateslist.go:
     id: f1873a29c881
     last_write_checksum: sha1:4472a3ad474dff253eb85166bff64fb14f9f617e
@@ -855,8 +855,8 @@ trackedFiles:
     pristine_git_object: ca6b61f755c23c1acbf38f5383d70d986f5f273f
   internal/sdk/models/shared/relativeschedule.go:
     id: 21671e29891e
-    last_write_checksum: sha1:44ad4ff49a9ca3ef5999deb2c64c876c3add2f81
-    pristine_git_object: deea53a8b40d40823544100d868e76ed587f06f4
+    last_write_checksum: sha1:ca20757d9247b4d31d68a83eeace1ad3fc387b04
+    pristine_git_object: 2a4edc2696b8d5ee6529db8e5f3c201bb366e658
   internal/sdk/models/shared/searchflowtemplates.go:
     id: b4c04b09a97b
     last_write_checksum: sha1:bf89e57e370dd0336aead6fb3aec8458774d8dd4
@@ -915,8 +915,8 @@ trackedFiles:
     pristine_git_object: 0a4ebad3962f9a02860ddce4f24e48cea6ebfe6d
   internal/sdk/models/shared/workflowdefinition.go:
     id: a080a969679b
-    last_write_checksum: sha1:3121f359316a01a425a33cd453fe455007e9997c
-    pristine_git_object: fd1c21f333546ab9fde1f95a3e2cbde78202c626
+    last_write_checksum: sha1:45206191587d41ba4cfa0c7ef0a96489d36de0ac
+    pristine_git_object: 67111fa470b02daf575df1e394f069f68e37a2b8
   internal/sdk/optionalnullable/optionalnullable.go:
     id: 4b83aa3f3df3
     last_write_checksum: sha1:d6aff1a420c31e025ea21d46cf056e305ae76fe8
@@ -927,12 +927,12 @@ trackedFiles:
     pristine_git_object: e6e5a01c6e721e879e24a38a1f97e3e27d4686d4
   internal/sdk/retry/config.go:
     id: 7ea5fa9128b6
-    last_write_checksum: sha1:f565273be789ffe0e3c160de1ac72a63cfe67fbe
-    pristine_git_object: aa809fccb3445b1e2530a979dad620512f50e70f
+    last_write_checksum: sha1:7f7d96b59a18e95bac847ae09c63bbd911ee8432
+    pristine_git_object: 5b3dc7c122d8ab08905485342d7474f8f163888d
   internal/sdk/sdk.go:
     id: 02d7190ee502
-    last_write_checksum: sha1:21c3dd10346ae2062707af26a5779b0ce831de3c
-    pristine_git_object: b622ec6c60cf19f3939e8558d23079ee9d1ddfa7
+    last_write_checksum: sha1:6f581e28cc97fccab1255cd2cfafad9a2cb007e5
+    pristine_git_object: b6b4ec12f29eea7e4e99b69edcb4268772127d8a
   internal/sdk/types/bigint.go:
     id: fc530b70337e
     last_write_checksum: sha1:49b004005d0461fb04b846eca062b070b0360b31
@@ -1039,10 +1039,10 @@ examples:
   createClosingReason:
     speakeasy-default-create-closing-reason:
       requestBody:
-        application/json: {"status": "INACTIVE", "title": "<value>"}
+        application/json: {}
       responses:
         "201":
-          application/json: {"status": "ACTIVE", "title": "<value>"}
+          application/json: {}
   getAllClosingReasons:
     speakeasy-default-get-all-closing-reasons:
       parameters:
@@ -1063,7 +1063,7 @@ examples:
         "500":
           application/json: {}
         "201":
-          application/json: {"closingReasons": [{"id": "x739cew"}], "creationTime": "2021-04-27T12:01:13.000Z", "dueDate": "2021-04-27T12:00:00.000Z", "enabled": true, "flow": "<value>", "lastUpdateTime": "2021-04-27T12:01:13.000Z", "name": "<value>", "updateEntityAttributes": [{"source": "current_section", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}]}
+          application/json: {"closingReasons": [{"id": "x739cew"}], "creationTime": "2021-04-27T12:01:13.000Z", "dueDate": "2021-04-27T12:00:00.000Z", "enabled": true, "flow": [{"dueDate": "2021-04-27T12:00:00.000Z", "name": "<value>", "order": 3330.41, "type": "SECTION"}], "lastUpdateTime": "2021-04-27T12:01:13.000Z", "name": "<value>", "updateEntityAttributes": [{"source": "current_section", "target": {"entityAttribute": "my_status", "entitySchema": "opportunity"}}]}
   deleteDefinition:
     speakeasy-default-delete-definition:
       parameters:
@@ -1146,7 +1146,7 @@ examples:
           reasonId: "x739cew"
       responses:
         "200":
-          application/json: {"status": "ACTIVE", "title": "<value>"}
+          application/json: {}
         "400":
           application/json: {}
         "404":
@@ -1158,7 +1158,7 @@ examples:
           reasonId: "-poOAPBa-jFZA_AWV3zN0"
       responses:
         "200":
-          application/json: {"status": "INACTIVE", "title": "<value>"}
+          application/json: {}
         "400":
           application/json: {}
         "404":
@@ -1171,10 +1171,10 @@ examples:
         path:
           reasonId: "x739cew"
       requestBody:
-        application/json: {"status": "ACTIVE", "title": "<value>"}
+        application/json: {}
       responses:
         "200":
-          application/json: {"status": "INACTIVE", "title": "<value>"}
+          application/json: {}
         "400":
           application/json: {}
         "404":
@@ -1182,10 +1182,10 @@ examples:
   createFlowTemplate:
     speakeasy-default-create-flow-template:
       requestBody:
-        application/json: {"additional_triggers": [{"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}], "assigned_to": ["<value>"], "created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [], "enabled": true, "entity_sync": [{"target": {"entityAttribute": "title", "entitySchema": "opportunity"}, "trigger": {"event": "FlowStarted"}, "value": {"source": "workflow_name"}}], "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"automation_config": {"flow_id": "<id>"}, "created_automatically": false, "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "DECISION"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "updated_at": "2021-04-27T12:01:13.000Z", "version": "v3"}
+        application/json: {"additional_triggers": [{"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}], "assigned_to": ["<value>"], "created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [], "enabled": true, "entity_sync": [{"target": {"entityAttribute": "title", "entitySchema": "opportunity"}, "trigger": {"event": "FlowStarted"}, "value": {"source": "workflow_name"}}], "name": "<value>", "phases": [{"assigned_to": ["<value>"], "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"automation_config": {"flow_id": "<id>"}, "created_automatically": false, "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "DECISION"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "updated_at": "2021-04-27T12:01:13.000Z", "version": "v3"}
       responses:
         "201":
-          application/json: {"additional_triggers": [{"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}], "assigned_to": [{"value": ["user_12345"], "variable": "{{entity.owner}}"}], "created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [{"from_id": "<id>", "id": "<id>", "to_id": "<id>"}], "enabled": true, "entity_sync": [{"target": {"entityAttribute": "title", "entitySchema": "opportunity"}, "trigger": {"event": "FlowStarted"}, "value": {"source": "workflow_name"}}], "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"automation_config": {"flow_id": "<id>"}, "created_automatically": false, "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "MANUAL"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "updated_at": "2021-04-27T12:01:13.000Z", "version": "v1"}
+          application/json: {"additional_triggers": [{"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}], "assigned_to": [{"value": ["user_12345"], "variable": "{{entity.owner}}"}], "created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [{"from_id": "<id>", "id": "<id>", "to_id": "<id>"}], "enabled": true, "entity_sync": [{"target": {"entityAttribute": "title", "entitySchema": "opportunity"}, "trigger": {"event": "FlowStarted"}, "value": {"source": "workflow_name"}}], "name": "<value>", "phases": [{"assigned_to": ["<value>"], "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"automation_config": {"flow_id": "<id>"}, "created_automatically": false, "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "MANUAL"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "updated_at": "2021-04-27T12:01:13.000Z", "version": "v1"}
         "400":
           application/json: {}
         "500":
@@ -1205,7 +1205,7 @@ examples:
           flowId: "7hj28akg"
       responses:
         "200":
-          application/json: {"additional_triggers": [{"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}], "assigned_to": ["<value>"], "created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [], "enabled": true, "entity_sync": [{"target": {"entityAttribute": "title", "entitySchema": "opportunity"}, "trigger": {"event": "FlowStarted"}, "value": {"source": "workflow_name"}}], "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"automation_config": {"flow_id": "<id>"}, "created_automatically": false, "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "MANUAL"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "updated_at": "2021-04-27T12:01:13.000Z", "version": "v1"}
+          application/json: {"additional_triggers": [{"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}], "assigned_to": ["<value>"], "created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [], "enabled": true, "entity_sync": [{"target": {"entityAttribute": "title", "entitySchema": "opportunity"}, "trigger": {"event": "FlowStarted"}, "value": {"source": "workflow_name"}}], "name": "<value>", "phases": [{"assigned_to": ["<value>"], "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"automation_config": {"flow_id": "<id>"}, "created_automatically": false, "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "MANUAL"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "updated_at": "2021-04-27T12:01:13.000Z", "version": "v1"}
         "400":
           application/json: {}
         "404":
@@ -1230,10 +1230,10 @@ examples:
         path:
           flowId: "7hj28akg"
       requestBody:
-        application/json: {"additional_triggers": [{"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}], "assigned_to": ["<value>"], "created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [], "enabled": true, "entity_sync": [{"target": {"entityAttribute": "title", "entitySchema": "opportunity"}, "trigger": {"event": "FlowStarted"}, "value": {"source": "workflow_name"}}], "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"automation_config": {"flow_id": "<id>"}, "created_automatically": false, "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "DECISION"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "updated_at": "2021-04-27T12:01:13.000Z", "version": "v2"}
+        application/json: {"additional_triggers": [{"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}], "assigned_to": ["<value>"], "created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [], "enabled": true, "entity_sync": [{"target": {"entityAttribute": "title", "entitySchema": "opportunity"}, "trigger": {"event": "FlowStarted"}, "value": {"source": "workflow_name"}}], "name": "<value>", "phases": [{"assigned_to": ["<value>"], "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"automation_config": {"flow_id": "<id>"}, "created_automatically": false, "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "DECISION"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "updated_at": "2021-04-27T12:01:13.000Z", "version": "v2"}
       responses:
         "200":
-          application/json: {"additional_triggers": [{"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}], "assigned_to": [{"value": ["user_12345"], "variable": "{{entity.owner}}"}], "created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [{"from_id": "<id>", "id": "<id>", "to_id": "<id>"}], "enabled": true, "entity_sync": [{"target": {"entityAttribute": "title", "entitySchema": "opportunity"}, "trigger": {"event": "FlowStarted"}, "value": {"source": "workflow_name"}}], "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "MANUAL"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "updated_at": "2021-04-27T12:01:13.000Z", "version": "v3"}
+          application/json: {"additional_triggers": [{"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}], "assigned_to": [{"value": ["user_12345"], "variable": "{{entity.owner}}"}], "created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [{"from_id": "<id>", "id": "<id>", "to_id": "<id>"}], "enabled": true, "entity_sync": [{"target": {"entityAttribute": "title", "entitySchema": "opportunity"}, "trigger": {"event": "FlowStarted"}, "value": {"source": "workflow_name"}}], "name": "<value>", "phases": [{"assigned_to": ["<value>"], "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>", "task_type": "MANUAL"}], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "updated_at": "2021-04-27T12:01:13.000Z", "version": "v3"}
         "400":
           application/json: {}
         "500":
@@ -1245,7 +1245,7 @@ examples:
           flowId: "7hj28akg"
       responses:
         "201":
-          application/json: {"additional_triggers": [{"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}], "assigned_to": ["<value>"], "created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [], "enabled": true, "entity_sync": [{"target": {"entityAttribute": "title", "entitySchema": "opportunity"}, "trigger": {"event": "FlowStarted"}, "value": {"source": "workflow_name"}}], "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "updated_at": "2021-04-27T12:01:13.000Z", "version": "v1"}
+          application/json: {"additional_triggers": [{"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}], "assigned_to": ["<value>"], "created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [], "enabled": true, "entity_sync": [{"target": {"entityAttribute": "title", "entitySchema": "opportunity"}, "trigger": {"event": "FlowStarted"}, "value": {"source": "workflow_name"}}], "name": "<value>", "phases": [{"assigned_to": ["<value>"], "due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "updated_at": "2021-04-27T12:01:13.000Z", "version": "v1"}
         "400":
           application/json: {}
         "500":
@@ -1256,7 +1256,7 @@ examples:
         application/json: {"sort_by": "updated_at", "sort_order": "desc"}
       responses:
         "200":
-          application/json: {"results": [{"created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [{"from_id": "<id>", "id": "<id>", "to_id": "<id>"}], "enabled": true, "entity_sync": [{"target": {"entityAttribute": "title", "entitySchema": "opportunity"}, "trigger": {"event": "FlowStarted"}, "value": {"source": "workflow_name"}}], "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "updated_at": "2021-04-27T12:01:13.000Z", "version": "v2"}]}
+          application/json: {"results": [{"closing_reasons": [{"id": "<id>", "status": "INACTIVE", "title": "<value>"}], "created_at": "2021-04-27T12:01:13.000Z", "due_date": "2021-04-27T12:00:00.000Z", "edges": [{"from_id": "<id>", "id": "<id>", "to_id": "<id>"}], "enabled": true, "entity_sync": [{"target": {"entityAttribute": "title", "entitySchema": "opportunity"}, "trigger": {"event": "FlowStarted"}, "value": {"source": "workflow_name"}}], "name": "<value>", "phases": [{"due_date": "2021-04-27T12:00:00.000Z", "id": "<id>", "name": "<value>"}], "tasks": [], "trigger": {"automation_id": "g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg", "type": "automation"}, "updated_at": "2021-04-27T12:01:13.000Z", "version": "v2"}]}
         "500":
           application/json: {}
 examplesVersion: 1.0.2

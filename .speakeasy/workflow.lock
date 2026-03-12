@@ -1,4 +1,4 @@
-speakeasyVersion: 1.606.10
+speakeasyVersion: 1.752.0
 sources:
     my-source:
         sourceNamespace: my-source
@@ -20,6 +20,8 @@ workflow:
         my-source:
             inputs:
                 - location: https://docs.api.epilot.io/workflows-definition.yaml
+            overlays:
+                - location: overlay.yaml
             output: final.yaml
             registry:
                 location: registry.speakeasyapi.dev/epilot/epilot/my-source

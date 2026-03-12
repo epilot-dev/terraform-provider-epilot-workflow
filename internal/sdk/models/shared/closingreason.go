@@ -4,11 +4,11 @@ package shared
 
 // ClosingReason - One Closing reason for a workflow
 type ClosingReason struct {
-	CreationTime   *string              `json:"creationTime,omitempty"`
-	ID             *string              `json:"id,omitempty"`
-	LastUpdateTime *string              `json:"lastUpdateTime,omitempty"`
-	Status         ClosingReasonsStatus `json:"status"`
-	Title          string               `json:"title"`
+	CreationTime   *string               `json:"creationTime,omitempty"`
+	ID             *string               `json:"id,omitempty"`
+	LastUpdateTime *string               `json:"lastUpdateTime,omitempty"`
+	Status         *ClosingReasonsStatus `json:"status,omitempty"`
+	Title          *string               `json:"title,omitempty"`
 }
 
 func (c *ClosingReason) GetCreationTime() *string {
@@ -32,16 +32,16 @@ func (c *ClosingReason) GetLastUpdateTime() *string {
 	return c.LastUpdateTime
 }
 
-func (c *ClosingReason) GetStatus() ClosingReasonsStatus {
+func (c *ClosingReason) GetStatus() *ClosingReasonsStatus {
 	if c == nil {
-		return ClosingReasonsStatus("")
+		return nil
 	}
 	return c.Status
 }
 
-func (c *ClosingReason) GetTitle() string {
+func (c *ClosingReason) GetTitle() *string {
 	if c == nil {
-		return ""
+		return nil
 	}
 	return c.Title
 }

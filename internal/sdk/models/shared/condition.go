@@ -76,7 +76,7 @@ func (c *Condition) GetLogicalOperator() LogicalOperator {
 
 func (c *Condition) GetStatements() []Statement {
 	if c == nil {
-		return []Statement{}
+		return nil
 	}
 	return c.Statements
 }

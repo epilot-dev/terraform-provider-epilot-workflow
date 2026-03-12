@@ -1,13 +1,17 @@
 openapi: 3.0.0
+
 info:
   title: Workflows Definitions
   version: 1.0.0
   description: |
     Service for Workflow Definitions for different processes inside of an Organization
+
 servers:
   - url: https://workflows-definition.sls.epilot.io
+
 security:
   - BearerAuth: []
+
 paths:
   /v1/workflows/limits/max-allowed:
     get:
@@ -32,6 +36,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
+
   /v1/workflows/definitions:
     get:
       operationId: getDefinitions
@@ -192,7 +197,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-      x-speakeasy-entity-operation: WorkflowDefinition#create
+
   /v2/flows/templates:
     get:
       operationId: listFlowTemplates
@@ -225,7 +230,6 @@ paths:
             - **journey_submission**: use a `{journey_id}` value
 
             - **manual**: this parameter is ignored; you can optionally filter by `{trigger_schema}`
-
           example: j208g0aj-08g9agajggak-g9aug9-892kgl1m
         - in: query
           name: trigger_schema
@@ -234,8 +238,8 @@ paths:
           required: false
           description: >
             Schema of the trigger source to filter flow templates. This parameter only makes sense when **trigger_type** is `manual`
-
           example: opportunity
+
       responses:
         200:
           description: Success - flow templates loaded with success. Empty array if customer has no flows defined.
@@ -287,7 +291,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-      x-speakeasy-entity-operation: FlowTemplate#create
   /v2/flows/templates:search:
     post:
       operationId: searchFlowTemplates
@@ -329,6 +332,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
+
   /v2/flows/templates/{flowId}:
     get:
       operationId: getFlowTemplate
@@ -342,7 +346,6 @@ paths:
           schema:
             $ref: "#/components/schemas/FlowTemplateId"
           required: true
-          x-speakeasy-match: id
       responses:
         200:
           description: Returns the Flow Template
@@ -374,7 +377,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-      x-speakeasy-entity-operation: FlowTemplate#get
     put:
       operationId: updateFlowTemplate
       summary: updateFlowTemplate
@@ -387,7 +389,6 @@ paths:
           schema:
             $ref: "#/components/schemas/FlowTemplateId"
           required: true
-          x-speakeasy-match: id
       requestBody:
         description: Flow Template payload
         required: true
@@ -420,7 +421,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-      x-speakeasy-entity-operation: FlowTemplate#update
     delete:
       operationId: deleteFlowTemplate
       summary: deleteFlowTemplate
@@ -434,7 +434,6 @@ paths:
             $ref: "#/components/schemas/FlowTemplateId"
           required: true
           description: Id of the flow template to de deleted.
-          x-speakeasy-match: id
       responses:
         204:
           description: Flow template has been deleted successfully
@@ -446,7 +445,7 @@ paths:
                 $ref: "#/components/schemas/ErrorResp"
         404:
           description: No definition found
-      x-speakeasy-entity-operation: FlowTemplate#delete
+
   /v2/flows/templates/{flowId}/duplicate:
     post:
       operationId: duplicateFlowTemplate
@@ -485,6 +484,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
+
   /v1/workflows/definitions/{definitionId}:
     get:
       operationId: getDefinition
@@ -500,7 +500,6 @@ paths:
           required: true
           description: Short uuid (length 8) to identify the Workflow Definition.
           example: 7hj28a
-          x-speakeasy-match: id
       responses:
         200:
           description: Returns the Workflow definition
@@ -543,7 +542,12 @@ paths:
                     type: STEP
                     order: 2
                     assignedTo: ["8988"]
-                closingReasons: [{id: ffoowef, title: test}, {id: "hebwoeu", title: Closing because all}, {id: "mbnoenq", title: Better offer}]
+                closingReasons:
+                  [
+                    { id: ffoowef, title: test },
+                    { id: "hebwoeu", title: Closing because all },
+                    { id: "mbnoenq", title: Better offer },
+                  ]
         400:
           description: Validation Errors
           content:
@@ -568,7 +572,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-      x-speakeasy-entity-operation: WorkflowDefinition#get
     put:
       operationId: updateDefinition
       summary: updateDefinition
@@ -583,7 +586,6 @@ paths:
           required: true
           description: Short uuid (length 8) to identify the Workflow Definition.
           example: 7hj28a
-          x-speakeasy-match: id
       requestBody:
         description: Workflow Definition payload
         required: true
@@ -686,7 +688,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
-      x-speakeasy-entity-operation: WorkflowDefinition#update
     delete:
       operationId: deleteDefinition
       summary: deleteDefinition
@@ -701,7 +702,6 @@ paths:
           required: true
           description: Id of the definition to de deleted.
           example: CustomerRequest
-          x-speakeasy-match: id
       responses:
         204:
           description: Success - if the definition is deleted successfully
@@ -713,7 +713,7 @@ paths:
                 $ref: "#/components/schemas/ErrorResp"
         404:
           description: No definition found
-      x-speakeasy-entity-operation: WorkflowDefinition#delete
+
   /v1/workflows/closing-reasons:
     get:
       operationId: getAllClosingReasons
@@ -759,7 +759,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ClosingReason"
-      x-speakeasy-entity-operation: ClosingReason#create
+
   /v2/workflows/closing-reasons/{reasonId}:
     get:
       operationId: getClosingReason
@@ -775,7 +775,6 @@ paths:
             example: "x739cew"
           required: true
           description: unique id to identify the closing reason.
-          x-speakeasy-match: id
       responses:
         200:
           description: Returns the closing reason
@@ -801,7 +800,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ClosingReasonNotFoundResp"
-      x-speakeasy-entity-operation: ClosingReason#get
+
     patch:
       operationId: updateClosingReason
       summary: updateClosingReason
@@ -816,7 +815,6 @@ paths:
             example: "x739cew"
           required: true
           description: unique id to identify the closing reason.
-          x-speakeasy-match: id
       requestBody:
         description: Updated closing reason fields
         required: true
@@ -849,7 +847,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ClosingReasonNotFoundResp"
-      x-speakeasy-entity-operation: ClosingReason#update
+
     delete:
       operationId: deleteClosingReason
       summary: deleteClosingReason
@@ -864,7 +862,6 @@ paths:
             example: "x739cew"
           required: true
           description: unique id to identify the closing reason.
-          x-speakeasy-match: id
       responses:
         204:
           description: Closing reason deleted successfully
@@ -880,7 +877,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ClosingReasonNotFoundResp"
-      x-speakeasy-entity-operation: ClosingReason#delete
+
   /v1/workflows/closing-reasons/{reasonId}:
     get:
       deprecated: true
@@ -952,6 +949,7 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/ChangeReasonStatusReq"
+
       responses:
         202:
           description: The status change was accepted
@@ -967,6 +965,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResp"
+
   /v1/workflows/definitions/{definitionId}/closing-reasons:
     get:
       operationId: getWorkflowClosingReasons
@@ -1013,12 +1012,14 @@ paths:
       responses:
         201:
           description: closing reasons are set for this workflow
+
 components:
   securitySchemes:
     BearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
+
   schemas:
     # ------------------------- #
     #    V2 data structures
@@ -1029,10 +1030,6 @@ components:
         - name
         - tasks
         - edges
-        - name
-        - tasks
-        - edges
-        - closing_reasons
       properties:
         id:
           type: string
@@ -1071,7 +1068,7 @@ components:
               - $ref: "#/components/schemas/VariableAssignment"
         available_in_ecp:
           type: boolean
-          description: Indicates whether this workflow is available for End Customer Portal or not. By default it's not.
+          description: Indicates whether this workflow is available for End Customer Portal or not. By default it"s not.
         additional_triggers:
           type: array
           description: Additional trigger configurations that can also start this flow. Useful for flows that should be startable via multiple methods (e.g., both automation AND manual).
@@ -1081,26 +1078,18 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Phase"
-          x-speakeasy-type-override: any
         tasks:
           type: array
           items:
             $ref: "#/components/schemas/Task"
-          x-speakeasy-type-override: any
         edges:
           type: array
           items:
             $ref: "#/components/schemas/Edge"
-          x-speakeasy-type-override: any
         closing_reasons:
           type: array
           items:
-            type: object
-            required:
-              - id
-            properties:
-              id:
-                type: string
+            $ref: "#/components/schemas/ClosingReason"
         entity_sync:
           type: array
           items:
@@ -1113,6 +1102,7 @@ components:
         singleClosingReasonSelection:
           type: boolean
           description: Whether only a single closing reason can be selected
+
     FlowTemplate:
       allOf:
         - $ref: "#/components/schemas/FlowTemplateBase"
@@ -1121,13 +1111,8 @@ components:
             closing_reasons:
               type: array
               items:
-                type: object
-                required:
-                  - id
-                properties:
-                  id:
-                    type: string
-      x-speakeasy-entity: FlowTemplate
+                $ref: "#/components/schemas/ClosingReason"
+
     Version:
       type: string
       enum:
@@ -1141,15 +1126,17 @@ components:
         - `v2` – Linear workflows. Supports sequential task execution with basic automation triggers.
         - `v3` – Advanced workflows. Adds support for branching logic (conditions), parallel paths, and enhanced automation features such as dynamic triggers and flow control.
       example: 2
+
     Trigger:
       anyOf:
         - $ref: "#/components/schemas/ManualTrigger"
         - $ref: "#/components/schemas/AutomationTrigger"
-        - $ref: '#/components/schemas/JourneySubmissionTrigger'
-        - $ref: '#/components/schemas/JourneyAutomationTrigger'
+        - $ref: "#/components/schemas/JourneySubmissionTrigger"
+        - $ref: "#/components/schemas/JourneyAutomationTrigger"
       example:
         type: automation
         automation_id: g92j2-sg9ug92hjt1gh-9s9gajgs-a979gg
+
     ManualTrigger:
       type: object
       required:
@@ -1163,7 +1150,7 @@ components:
             - manual
         entity_schema:
           type: string
-      x-speakeasy-type-override: any
+
     AutomationTrigger:
       type: object
       required:
@@ -1194,7 +1181,9 @@ components:
                 description: Trigger-specific configuration
             additionalProperties: true
           description: >
-            Transient field. Trigger configurations for creating or updating the trigger automation flow. Each item follows the automation API trigger schema. Processed by the backend during create/update and stripped before storage.
+            Transient field. Trigger configurations for creating or updating the trigger automation flow.
+            Each item follows the automation API trigger schema.
+            Processed by the backend during create/update and stripped before storage.
 
     JourneyAutomationTrigger:
       type: object
@@ -1210,6 +1199,7 @@ components:
         entity_schema:
           type: string
           description: Schema of the main entity where flow will be triggered. The entity will be picked from automation context.
+
     JourneySubmissionTrigger:
       type: object
       required:
@@ -1230,6 +1220,7 @@ components:
           description: Name of the journey that will trigger this flow
         automation_id:
           type: string
+
     CreateFlowTemplate:
       allOf:
         - $ref: "#/components/schemas/FlowTemplateBase"
@@ -1244,8 +1235,6 @@ components:
                 properties:
                   id:
                     type: string
-          required:
-            - closing_reasons
     SearchFlowTemplates:
       type: object
       properties:
@@ -1286,19 +1275,23 @@ components:
             $ref: "#/components/schemas/FlowTemplate"
       required:
         - results
+
     FlowTemplateId:
       type: string
       description: Short unique id (length 8) to identify the Flow Template.
       example: 7hj28akg
+
     Task:
       anyOf:
         - $ref: "#/components/schemas/ManualTask"
         - $ref: "#/components/schemas/AutomationTask"
         - $ref: "#/components/schemas/DecisionTask"
         - $ref: "#/components/schemas/AiAgentTask"
+
     ManualTask:
       allOf:
         - $ref: "#/components/schemas/TaskBase"
+
     AutomationTask:
       allOf:
         - $ref: "#/components/schemas/TaskBase"
@@ -1316,6 +1309,7 @@ components:
               type: boolean
               description: Indicates whether this task was created automatically by journeys or manually by an user
               default: false
+
     AutomationConfig:
       type: object
       description: Configuration for automation execution to run
@@ -1337,7 +1331,10 @@ components:
               description: Action-specific configuration
           additionalProperties: true
           description: >
-            Transient field. The full automation action configuration following the automation API action schema. Processed by the backend during create/update and stripped before storage. When present without a flow_id, a new automation flow is created. When present with a flow_id, the existing automation flow is updated.
+            Transient field. The full automation action configuration following the automation API action schema.
+            Processed by the backend during create/update and stripped before storage.
+            When present without a flow_id, a new automation flow is created.
+            When present with a flow_id, the existing automation flow is updated.
 
     AiAgentTask:
       allOf:
@@ -1346,6 +1343,7 @@ components:
           properties:
             agent_config:
               $ref: "#/components/schemas/AgentConfig"
+
     AgentConfig:
       type: object
       description: Configuration for AI Agent to run
@@ -1356,22 +1354,26 @@ components:
           type: string
           description: Id of the configured AI Agent to run
       additionalProperties: true
+
     TriggerMode:
       type: string
       enum:
         - manual
         - automatic
+
     ActionSchedule:
       anyOf:
         - $ref: "#/components/schemas/ImmediateSchedule"
         - $ref: "#/components/schemas/DelayedSchedule"
         - $ref: "#/components/schemas/RelativeSchedule"
+
     ImmediateSchedule:
       type: object
       properties:
         mode:
           enum:
             - immediate
+
     DelayedSchedule:
       type: object
       required:
@@ -1386,6 +1388,7 @@ components:
           type: number
         unit:
           $ref: "#/components/schemas/TimeUnit"
+
     RelativeSchedule:
       type: object
       properties:
@@ -1409,7 +1412,7 @@ components:
           properties:
             id:
               type: string
-              description: The id of the entity / workflow / task, based on the origin of the schedule. For all_preceding_tasks_completed, use the sentinel value 'all_preceding_tasks_completed'.
+              description: The id of the entity / workflow / task, based on the origin of the schedule. For all_preceding_tasks_completed, use the sentinel value "all_preceding_tasks_completed".
             origin:
               type: string
               enum:
@@ -1429,6 +1432,7 @@ components:
         - duration
         - unit
         - reference
+
     DecisionTask:
       allOf:
         - $ref: "#/components/schemas/TaskBase"
@@ -1466,6 +1470,7 @@ components:
           required:
             - trigger_mode
             - conditions
+
     TaskBase:
       type: object
       properties:
@@ -1512,6 +1517,7 @@ components:
         - id
         - name
         - task_type
+
     Phase:
       type: object
       properties:
@@ -1538,6 +1544,7 @@ components:
       required:
         - id
         - name
+
     VariableAssignment:
       type: object
       description: Represents a variable assignment with its expression and optional resolved value. Used for dynamic user assignments that get resolved during workflow execution.
@@ -1554,6 +1561,7 @@ components:
           example: ["user_12345"]
       required:
         - variable
+
     TaskType:
       type: string
       enum:
@@ -1561,6 +1569,7 @@ components:
         - AUTOMATION
         - DECISION
         - AI_AGENT
+
     Edge:
       type: object
       properties:
@@ -1579,6 +1588,7 @@ components:
       required:
         - id
         - from_id
+
     Condition:
       type: object
       properties:
@@ -1596,6 +1606,7 @@ components:
             - OR
         statements:
           type: array
+          nullable: true
           items:
             $ref: "#/components/schemas/Statement"
       required:
@@ -1603,6 +1614,7 @@ components:
         - branch_name
         - logical_operator
         - statements
+
     Statement:
       type: object
       properties:
@@ -1627,6 +1639,7 @@ components:
         - source
         - operator
         - values
+
     EvaluationSource:
       type: object
       properties:
@@ -1682,7 +1695,7 @@ components:
             - deleted
         attribute_sub_field:
           type: string
-          description: For complex attribute types, specifies which sub-field to extract (e.g., 'address', 'name', 'email_type')
+          description: For complex attribute types, specifies which sub-field to extract (e.g., "address", "name", "email_type")
         date_offset:
           type: object
           description: Offset to apply to the source date value before comparison (e.g., +18 years for age check, +30 days for expiry)
@@ -1697,6 +1710,7 @@ components:
                 - months
                 - years
               description: Unit of the offset
+
     Operator:
       type: string
       enum:
@@ -1714,6 +1728,7 @@ components:
         - less_than_or_equals
         - is_empty
         - is_not_empty
+
     DueDateConfig:
       description: Set due date for the task based on a dynamic condition
       type: object
@@ -1738,6 +1753,7 @@ components:
         - duration
         - unit
         - type
+
     TimeUnit:
       type: string
       enum:
@@ -1746,6 +1762,7 @@ components:
         - days
         - weeks
         - months
+
     EnableRequirement:
       description: describe the requirement for a task to be enabled
       type: object
@@ -1763,9 +1780,11 @@ components:
             - PHASE_FINISHED
       required:
         - when
+
     # ------------------------- #
     #    V1 data structures
     # ------------------------- #
+
     WorkflowDefinition:
       type: object
       properties:
@@ -1804,14 +1823,13 @@ components:
             type: string
         enableECPWorkflow:
           type: boolean
-          description: Indicates whether this workflow is available for End Customer Portal or not. By default it's not.
+          description: Indicates whether this workflow is available for End Customer Portal or not. By default it"s not.
         flow:
           type: array
           items:
             anyOf:
               - $ref: "#/components/schemas/Section"
               - $ref: "#/components/schemas/Step"
-          x-speakeasy-type-override: any
         closingReasons:
           type: array
           items:
@@ -1831,7 +1849,7 @@ components:
       required:
         - name
         - flow
-      x-speakeasy-entity: WorkflowDefinition
+
     Step:
       type: object
       description: Action that needs to be done in a Workflow
@@ -1891,6 +1909,7 @@ components:
         - name
         - order
         - type
+
     Section:
       type: object
       description: A group of Steps that define the progress of the Workflow
@@ -1926,21 +1945,25 @@ components:
         - order
         - type
         - steps
+
     TriggerType:
       type: string
       enum:
         - MANUAL
         - AUTOMATIC
+
     ItemType:
       type: string
       enum:
         - STEP
         - SECTION
+
     StepType:
       type: string
       enum:
         - MANUAL
         - AUTOMATION
+
     StepJourney:
       type: object
       properties:
@@ -1954,6 +1977,7 @@ components:
           type: boolean
           default: true
           description: If true, the task be auto completed when the journey is completed. By default it is true.
+
     ECPDetails:
       type: object
       description: Details regarding ECP for the workflow step
@@ -1966,6 +1990,7 @@ components:
           type: string
         journey:
           $ref: "#/components/schemas/StepJourney"
+
     StepDescription:
       type: object
       description: Longer information regarding Task
@@ -1974,6 +1999,7 @@ components:
           type: boolean
         value:
           type: string
+
     MaxAllowedLimit:
       type: object
       properties:
@@ -1981,16 +2007,19 @@ components:
           type: number
         maxAllowed:
           type: number
+
     DefinitionNotFoundResp:
       description: Definition could be not found
       properties:
         message:
           type: string
+
     ClosingReasonNotFoundResp:
       description: Closing reason could be not found
       properties:
         message:
           type: string
+
     ChangeReasonStatusReq:
       type: object
       properties:
@@ -1998,6 +2027,7 @@ components:
           $ref: "#/components/schemas/ClosingReasonsStatus"
       required:
         - status
+
     ClosingReasons:
       type: object
       properties:
@@ -2007,16 +2037,13 @@ components:
             $ref: "#/components/schemas/ClosingReason"
       required:
         - reasons
+
     ClosingReason:
       type: object
       description: One Closing reason for a workflow
-      required:
-        - title
-        - status
       properties:
         id:
           type: string
-          readOnly: true
         title:
           type: string
         status:
@@ -2027,12 +2054,13 @@ components:
         creationTime:
           type: string
           readOnly: true
-      x-speakeasy-entity: ClosingReason
+
     ClosingReasonsStatus:
       type: string
       enum:
         - ACTIVE
         - INACTIVE
+
     ClosingReasonsIds:
       type: object
       properties:
@@ -2042,6 +2070,7 @@ components:
             $ref: "#/components/schemas/ClosingReasonId"
       required:
         - reasons
+
     ClosingReasonId:
       type: object
       properties:
@@ -2050,11 +2079,13 @@ components:
           example: "x739cew"
       required:
         - id
+
     ErrorResp:
       type: object
       properties:
         message:
           type: string
+
     # TODO: remove this once we deprecate wf v1
     UpdateEntityAttributes:
       type: object
@@ -2082,6 +2113,7 @@ components:
       required:
         - source
         - target
+
     EntitySync:
       type: object
       properties:
@@ -2109,6 +2141,7 @@ components:
                 - "FlowAssigned"
                 - "FlowDueDateChanged"
                 - "FlowContextsChanged"
+
                 # Task
                 - "TaskUpdated"
                 - "CurrTaskChanged"
@@ -2117,6 +2150,7 @@ components:
                 - "TaskSkipped"
                 - "TaskMarkedInProgress"
                 - "TaskMarkedOnHold"
+
                 # Phase
                 - "PhaseUpdated"
                 # Status-based deduced triggers - Phase (no explicit events, deduced from PhaseUpdated + status)
@@ -2184,6 +2218,7 @@ components:
         - trigger
         - target
         - value
+
     DynamicDueDate:
       description: set a Duedate for a step then a specific
       type: object
@@ -2206,6 +2241,7 @@ components:
         - numberOfUnits
         - timePeriod
         - actionTypeCondition
+
     StepRequirement:
       description: describe the requirement for step enablement
       type: object
@@ -2222,13 +2258,3 @@ components:
         - definitionId
         - type
         - condition
-x-speakeasy-retries:
-  strategy: backoff
-  backoff:
-    initialInterval: 5000 # 5 seconds
-    maxInterval: 60000 # 60 seconds
-    maxElapsedTime: 3600000 # 5 minutes
-    exponent: 1.5
-  statusCodes:
-    - 5XX
-  retryConnectionErrors: true

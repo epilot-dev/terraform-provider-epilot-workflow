@@ -5,7 +5,6 @@ package provider
 import (
 	"context"
 	"fmt"
-	speakeasy_stringplanmodifier "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/provider/types"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/validators"
@@ -23,8 +22,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
@@ -308,7 +305,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 			"available_in_ecp": schema.BoolAttribute{
 				Computed:    true,
 				Optional:    true,
-				Description: `Indicates whether this workflow is available for End Customer Portal or not. By default it's not.`,
+				Description: `Indicates whether this workflow is available for End Customer Portal or not. By default it"s not.`,
 			},
 			"closing_reasons": schema.ListNestedAttribute{
 				Computed: true,
@@ -322,13 +319,9 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 							Computed: true,
 						},
 						"id": schema.StringAttribute{
-							Computed: true,
-							Optional: true,
-							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.RequiresReplaceIfConfigured(),
-								speakeasy_stringplanmodifier.SuppressDiff(speakeasy_stringplanmodifier.ExplicitSuppress),
-							},
-							Description: `Not Null; Requires replacement if changed.`,
+							Computed:    true,
+							Optional:    true,
+							Description: `Not Null`,
 							Validators: []validator.String{
 								speakeasy_stringvalidators.NotNull(),
 							},
@@ -1525,7 +1518,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 														"id": schema.StringAttribute{
 															Computed:    true,
 															Optional:    true,
-															Description: `The id of the entity / workflow / task, based on the origin of the schedule. For all_preceding_tasks_completed, use the sentinel value 'all_preceding_tasks_completed'. Not Null`,
+															Description: `The id of the entity / workflow / task, based on the origin of the schedule. For all_preceding_tasks_completed, use the sentinel value "all_preceding_tasks_completed". Not Null`,
 															Validators: []validator.String{
 																speakeasy_stringvalidators.NotNull(),
 															},
@@ -1772,7 +1765,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 																"attribute_sub_field": schema.StringAttribute{
 																	Computed:    true,
 																	Optional:    true,
-																	Description: `For complex attribute types, specifies which sub-field to extract (e.g., 'address', 'name', 'email_type')`,
+																	Description: `For complex attribute types, specifies which sub-field to extract (e.g., "address", "name", "email_type")`,
 																},
 																"attribute_type": schema.StringAttribute{
 																	Computed:    true,
@@ -1887,10 +1880,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 															},
 														},
 													},
-												},
-												Description: `Not Null`,
-												Validators: []validator.List{
-													speakeasy_listvalidators.NotNull(),
 												},
 											},
 										},
@@ -2257,7 +2246,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 														"id": schema.StringAttribute{
 															Computed:    true,
 															Optional:    true,
-															Description: `The id of the entity / workflow / task, based on the origin of the schedule. For all_preceding_tasks_completed, use the sentinel value 'all_preceding_tasks_completed'. Not Null`,
+															Description: `The id of the entity / workflow / task, based on the origin of the schedule. For all_preceding_tasks_completed, use the sentinel value "all_preceding_tasks_completed". Not Null`,
 															Validators: []validator.String{
 																speakeasy_stringvalidators.NotNull(),
 															},

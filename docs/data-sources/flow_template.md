@@ -14,6 +14,7 @@ FlowTemplate DataSource
 
 ```terraform
 data "epilot-workflow_flow_template" "my_flowtemplate" {
+  id = "...my_id..."
 }
 ```
 
@@ -22,8 +23,9 @@ data "epilot-workflow_flow_template" "my_flowtemplate" {
 
 ### Read-Only
 
-- `assigned_to` (List of String)
-- `available_in_ecp` (Boolean) Indicates whether this workflow is available for End Customer Portal or not. By default it's not.
+- `additional_triggers` (Attributes List) Additional trigger configurations that can also start this flow. Useful for flows that should be startable via multiple methods (e.g., both automation AND manual). (see [below for nested schema](#nestedatt--additional_triggers))
+- `assigned_to` (Attributes List) (see [below for nested schema](#nestedatt--assigned_to))
+- `available_in_ecp` (Boolean) Indicates whether this workflow is available for End Customer Portal or not. By default it"s not.
 - `closing_reasons` (Attributes List) (see [below for nested schema](#nestedatt--closing_reasons))
 - `created_at` (String) ISO String Date & Time
 - `description` (String)
@@ -43,9 +45,91 @@ data "epilot-workflow_flow_template" "my_flowtemplate" {
 - `updated_at` (String) ISO String Date & Time
 - `version` (String) Version of the workflow schema.
 
-- `v1` – *Deprecated*. The initial version of workflows with limited structure and automation capabilities.  
-- `v2` – Linear workflows. Supports sequential task execution with basic automation triggers.  
+- `v1` – *Deprecated*. The initial version of workflows with limited structure and automation capabilities.
+- `v2` – Linear workflows. Supports sequential task execution with basic automation triggers.
 - `v3` – Advanced workflows. Adds support for branching logic (conditions), parallel paths, and enhanced automation features such as dynamic triggers and flow control.
+
+<a id="nestedatt--additional_triggers"></a>
+### Nested Schema for `additional_triggers`
+
+Read-Only:
+
+- `automation_trigger` (Attributes) (see [below for nested schema](#nestedatt--additional_triggers--automation_trigger))
+- `journey_automation_trigger` (Attributes) (see [below for nested schema](#nestedatt--additional_triggers--journey_automation_trigger))
+- `journey_submission_trigger` (Attributes) (see [below for nested schema](#nestedatt--additional_triggers--journey_submission_trigger))
+- `manual_trigger` (Attributes) (see [below for nested schema](#nestedatt--additional_triggers--manual_trigger))
+
+<a id="nestedatt--additional_triggers--automation_trigger"></a>
+### Nested Schema for `additional_triggers.automation_trigger`
+
+Read-Only:
+
+- `automation_id` (String) Id of the automation config that triggers this workflow
+- `id` (String)
+- `trigger_config` (Attributes List) Transient field. Trigger configurations for creating or updating the trigger automation flow. Each item follows the automation API trigger schema. Processed by the backend during create/update and stripped before storage. (see [below for nested schema](#nestedatt--additional_triggers--automation_trigger--trigger_config))
+- `type` (String)
+
+<a id="nestedatt--additional_triggers--automation_trigger--trigger_config"></a>
+### Nested Schema for `additional_triggers.automation_trigger.trigger_config`
+
+Read-Only:
+
+- `additional_properties` (String) Parsed as JSON.
+- `configuration` (Map of String) Trigger-specific configuration
+- `type` (String) The trigger type (e.g. entity_operation, activity)
+
+
+
+<a id="nestedatt--additional_triggers--journey_automation_trigger"></a>
+### Nested Schema for `additional_triggers.journey_automation_trigger`
+
+Read-Only:
+
+- `entity_schema` (String) Schema of the main entity where flow will be triggered. The entity will be picked from automation context.
+- `id` (String)
+- `type` (String)
+
+
+<a id="nestedatt--additional_triggers--journey_submission_trigger"></a>
+### Nested Schema for `additional_triggers.journey_submission_trigger`
+
+Read-Only:
+
+- `automation_id` (String)
+- `id` (String)
+- `journey_id` (String) ID of the journey that will trigger this flow
+- `journey_name` (String) Name of the journey that will trigger this flow
+- `type` (String)
+
+
+<a id="nestedatt--additional_triggers--manual_trigger"></a>
+### Nested Schema for `additional_triggers.manual_trigger`
+
+Read-Only:
+
+- `entity_schema` (String)
+- `id` (String)
+- `type` (String)
+
+
+
+<a id="nestedatt--assigned_to"></a>
+### Nested Schema for `assigned_to`
+
+Read-Only:
+
+- `str` (String)
+- `variable_assignment` (Attributes) Represents a variable assignment with its expression and optional resolved value. Used for dynamic user assignments that get resolved during workflow execution. (see [below for nested schema](#nestedatt--assigned_to--variable_assignment))
+
+<a id="nestedatt--assigned_to--variable_assignment"></a>
+### Nested Schema for `assigned_to.variable_assignment`
+
+Read-Only:
+
+- `value` (List of String) The resolved values after variable evaluation (populated during execution)
+- `variable` (String) The variable expression, e.g., "{{entity.owner}}"
+
+
 
 <a id="nestedatt--closing_reasons"></a>
 ### Nested Schema for `closing_reasons`
@@ -139,12 +223,30 @@ Read-Only:
 
 Read-Only:
 
-- `assigned_to` (List of String)
+- `assigned_to` (Attributes List) (see [below for nested schema](#nestedatt--phases--assigned_to))
 - `due_date` (String)
 - `due_date_config` (Attributes) Set due date for the task based on a dynamic condition (see [below for nested schema](#nestedatt--phases--due_date_config))
 - `id` (String)
 - `name` (String)
 - `taxonomies` (List of String) Taxonomy ids that are associated with this workflow and used for filtering
+
+<a id="nestedatt--phases--assigned_to"></a>
+### Nested Schema for `phases.assigned_to`
+
+Read-Only:
+
+- `str` (String)
+- `variable_assignment` (Attributes) Represents a variable assignment with its expression and optional resolved value. Used for dynamic user assignments that get resolved during workflow execution. (see [below for nested schema](#nestedatt--phases--assigned_to--variable_assignment))
+
+<a id="nestedatt--phases--assigned_to--variable_assignment"></a>
+### Nested Schema for `phases.assigned_to.variable_assignment`
+
+Read-Only:
+
+- `value` (List of String) The resolved values after variable evaluation (populated during execution)
+- `variable` (String) The variable expression, e.g., "{{entity.owner}}"
+
+
 
 <a id="nestedatt--phases--due_date_config"></a>
 ### Nested Schema for `phases.due_date_config`
@@ -175,7 +277,7 @@ Read-Only:
 Read-Only:
 
 - `agent_config` (Attributes) Configuration for AI Agent to run (see [below for nested schema](#nestedatt--tasks--ai_agent_task--agent_config))
-- `assigned_to` (List of String)
+- `assigned_to` (Attributes List) (see [below for nested schema](#nestedatt--tasks--ai_agent_task--assigned_to))
 - `description` (Attributes) Longer information regarding Task (see [below for nested schema](#nestedatt--tasks--ai_agent_task--description))
 - `due_date` (String)
 - `due_date_config` (Attributes) Set due date for the task based on a dynamic condition (see [below for nested schema](#nestedatt--tasks--ai_agent_task--due_date_config))
@@ -196,6 +298,24 @@ Read-Only:
 
 - `additional_properties` (String) Parsed as JSON.
 - `agent_id` (String) Id of the configured AI Agent to run
+
+
+<a id="nestedatt--tasks--ai_agent_task--assigned_to"></a>
+### Nested Schema for `tasks.ai_agent_task.assigned_to`
+
+Read-Only:
+
+- `str` (String)
+- `variable_assignment` (Attributes) Represents a variable assignment with its expression and optional resolved value. Used for dynamic user assignments that get resolved during workflow execution. (see [below for nested schema](#nestedatt--tasks--ai_agent_task--assigned_to--variable_assignment))
+
+<a id="nestedatt--tasks--ai_agent_task--assigned_to--variable_assignment"></a>
+### Nested Schema for `tasks.ai_agent_task.assigned_to.variable_assignment`
+
+Read-Only:
+
+- `value` (List of String) The resolved values after variable evaluation (populated during execution)
+- `variable` (String) The variable expression, e.g., "{{entity.owner}}"
+
 
 
 <a id="nestedatt--tasks--ai_agent_task--description"></a>
@@ -290,7 +410,7 @@ Read-Only:
 
 Read-Only:
 
-- `assigned_to` (List of String)
+- `assigned_to` (Attributes List) (see [below for nested schema](#nestedatt--tasks--automation_task--assigned_to))
 - `automation_config` (Attributes) Configuration for automation execution to run (see [below for nested schema](#nestedatt--tasks--automation_task--automation_config))
 - `created_automatically` (Boolean) Indicates whether this task was created automatically by journeys or manually by an user
 - `description` (Attributes) Longer information regarding Task (see [below for nested schema](#nestedatt--tasks--automation_task--description))
@@ -308,12 +428,41 @@ Read-Only:
 - `taxonomies` (List of String) Taxonomy ids that are associated with this workflow and used for filtering
 - `trigger_mode` (String)
 
+<a id="nestedatt--tasks--automation_task--assigned_to"></a>
+### Nested Schema for `tasks.automation_task.assigned_to`
+
+Read-Only:
+
+- `str` (String)
+- `variable_assignment` (Attributes) Represents a variable assignment with its expression and optional resolved value. Used for dynamic user assignments that get resolved during workflow execution. (see [below for nested schema](#nestedatt--tasks--automation_task--assigned_to--variable_assignment))
+
+<a id="nestedatt--tasks--automation_task--assigned_to--variable_assignment"></a>
+### Nested Schema for `tasks.automation_task.assigned_to.variable_assignment`
+
+Read-Only:
+
+- `value` (List of String) The resolved values after variable evaluation (populated during execution)
+- `variable` (String) The variable expression, e.g., "{{entity.owner}}"
+
+
+
 <a id="nestedatt--tasks--automation_task--automation_config"></a>
 ### Nested Schema for `tasks.automation_task.automation_config`
 
 Read-Only:
 
+- `action_config` (Attributes) Transient field. The full automation action configuration following the automation API action schema. Processed by the backend during create/update and stripped before storage. When present without a flow_id, a new automation flow is created. When present with a flow_id, the existing automation flow is updated. (see [below for nested schema](#nestedatt--tasks--automation_task--automation_config--action_config))
 - `flow_id` (String) Id of the configured automation to run
+
+<a id="nestedatt--tasks--automation_task--automation_config--action_config"></a>
+### Nested Schema for `tasks.automation_task.automation_config.action_config`
+
+Read-Only:
+
+- `additional_properties` (String) Parsed as JSON.
+- `config` (Map of String) Action-specific configuration
+- `type` (String) The action type (e.g. send-email, trigger-workflow)
+
 
 
 <a id="nestedatt--tasks--automation_task--description"></a>
@@ -446,7 +595,7 @@ Read-Only:
 Read-Only:
 
 - `attribute` (String) An entity attribute that identifies a date / datetime
-- `id` (String) The id of the entity / workflow / task, based on the origin of the schedule
+- `id` (String) The id of the entity / workflow / task, based on the origin of the schedule. For all_preceding_tasks_completed, use the sentinel value "all_preceding_tasks_completed".
 - `origin` (String)
 - `schema` (String) The schema of the entity
 
@@ -459,7 +608,7 @@ Read-Only:
 
 Read-Only:
 
-- `assigned_to` (List of String)
+- `assigned_to` (Attributes List) (see [below for nested schema](#nestedatt--tasks--decision_task--assigned_to))
 - `conditions` (Attributes List) (see [below for nested schema](#nestedatt--tasks--decision_task--conditions))
 - `description` (Attributes) Longer information regarding Task (see [below for nested schema](#nestedatt--tasks--decision_task--description))
 - `due_date` (String)
@@ -476,6 +625,24 @@ Read-Only:
 - `task_type` (String)
 - `taxonomies` (List of String) Taxonomy ids that are associated with this workflow and used for filtering
 - `trigger_mode` (String)
+
+<a id="nestedatt--tasks--decision_task--assigned_to"></a>
+### Nested Schema for `tasks.decision_task.assigned_to`
+
+Read-Only:
+
+- `str` (String)
+- `variable_assignment` (Attributes) Represents a variable assignment with its expression and optional resolved value. Used for dynamic user assignments that get resolved during workflow execution. (see [below for nested schema](#nestedatt--tasks--decision_task--assigned_to--variable_assignment))
+
+<a id="nestedatt--tasks--decision_task--assigned_to--variable_assignment"></a>
+### Nested Schema for `tasks.decision_task.assigned_to.variable_assignment`
+
+Read-Only:
+
+- `value` (List of String) The resolved values after variable evaluation (populated during execution)
+- `variable` (String) The variable expression, e.g., "{{entity.owner}}"
+
+
 
 <a id="nestedatt--tasks--decision_task--conditions"></a>
 ### Nested Schema for `tasks.decision_task.conditions`
@@ -495,6 +662,7 @@ Read-Only:
 - `id` (String)
 - `operator` (String)
 - `source` (Attributes) (see [below for nested schema](#nestedatt--tasks--decision_task--conditions--statements--source))
+- `value_type` (String) How to interpret values. "static" (default) means literal values. "relative_date" means values[0] is a dynamic date token like "today".
 - `values` (List of String)
 
 <a id="nestedatt--tasks--decision_task--conditions--statements--source"></a>
@@ -505,11 +673,22 @@ Read-Only:
 - `attribute` (String)
 - `attribute_operation` (String)
 - `attribute_repeatable` (Boolean)
+- `attribute_sub_field` (String) For complex attribute types, specifies which sub-field to extract (e.g., "address", "name", "email_type")
 - `attribute_type` (String)
+- `date_offset` (Attributes) Offset to apply to the source date value before comparison (e.g., +18 years for age check, +30 days for expiry) (see [below for nested schema](#nestedatt--tasks--decision_task--conditions--statements--source--date_offset))
 - `id` (String) The id of the action or trigger
 - `origin` (String)
 - `origin_type` (String)
 - `schema` (String)
+
+<a id="nestedatt--tasks--decision_task--conditions--statements--source--date_offset"></a>
+### Nested Schema for `tasks.decision_task.conditions.statements.source.date_offset`
+
+Read-Only:
+
+- `amount` (Number) Number of units to offset
+- `unit` (String) Unit of the offset
+
 
 
 
@@ -645,7 +824,7 @@ Read-Only:
 Read-Only:
 
 - `attribute` (String) An entity attribute that identifies a date / datetime
-- `id` (String) The id of the entity / workflow / task, based on the origin of the schedule
+- `id` (String) The id of the entity / workflow / task, based on the origin of the schedule. For all_preceding_tasks_completed, use the sentinel value "all_preceding_tasks_completed".
 - `origin` (String)
 - `schema` (String) The schema of the entity
 
@@ -658,7 +837,7 @@ Read-Only:
 
 Read-Only:
 
-- `assigned_to` (List of String)
+- `assigned_to` (Attributes List) (see [below for nested schema](#nestedatt--tasks--task_base--assigned_to))
 - `description` (Attributes) Longer information regarding Task (see [below for nested schema](#nestedatt--tasks--task_base--description))
 - `due_date` (String)
 - `due_date_config` (Attributes) Set due date for the task based on a dynamic condition (see [below for nested schema](#nestedatt--tasks--task_base--due_date_config))
@@ -671,6 +850,24 @@ Read-Only:
 - `requirements` (Attributes List) requirements that need to be fulfilled in order to enable the task while flow instances are running (see [below for nested schema](#nestedatt--tasks--task_base--requirements))
 - `task_type` (String)
 - `taxonomies` (List of String) Taxonomy ids that are associated with this workflow and used for filtering
+
+<a id="nestedatt--tasks--task_base--assigned_to"></a>
+### Nested Schema for `tasks.task_base.assigned_to`
+
+Read-Only:
+
+- `str` (String)
+- `variable_assignment` (Attributes) Represents a variable assignment with its expression and optional resolved value. Used for dynamic user assignments that get resolved during workflow execution. (see [below for nested schema](#nestedatt--tasks--task_base--assigned_to--variable_assignment))
+
+<a id="nestedatt--tasks--task_base--assigned_to--variable_assignment"></a>
+### Nested Schema for `tasks.task_base.assigned_to.variable_assignment`
+
+Read-Only:
+
+- `value` (List of String) The resolved values after variable evaluation (populated during execution)
+- `variable` (String) The variable expression, e.g., "{{entity.owner}}"
+
+
 
 <a id="nestedatt--tasks--task_base--description"></a>
 ### Nested Schema for `tasks.task_base.description`
@@ -777,7 +974,18 @@ Read-Only:
 
 - `automation_id` (String) Id of the automation config that triggers this workflow
 - `id` (String)
+- `trigger_config` (Attributes List) Transient field. Trigger configurations for creating or updating the trigger automation flow. Each item follows the automation API trigger schema. Processed by the backend during create/update and stripped before storage. (see [below for nested schema](#nestedatt--trigger--automation_trigger--trigger_config))
 - `type` (String)
+
+<a id="nestedatt--trigger--automation_trigger--trigger_config"></a>
+### Nested Schema for `trigger.automation_trigger.trigger_config`
+
+Read-Only:
+
+- `additional_properties` (String) Parsed as JSON.
+- `configuration` (Map of String) Trigger-specific configuration
+- `type` (String) The trigger type (e.g. entity_operation, activity)
+
 
 
 <a id="nestedatt--trigger--journey_automation_trigger"></a>

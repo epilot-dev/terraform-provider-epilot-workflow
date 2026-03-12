@@ -73,7 +73,7 @@ resource "epilot-workflow_workflow_definition" "my_workflowdefinition" {
 - `description` (String)
 - `due_date` (String)
 - `dynamic_due_date` (Attributes) set a Duedate for a step then a specific (see [below for nested schema](#nestedatt--dynamic_due_date))
-- `enable_ecp_workflow` (Boolean) Indicates whether this workflow is available for End Customer Portal or not. By default it's not.
+- `enable_ecp_workflow` (Boolean) Indicates whether this workflow is available for End Customer Portal or not. By default it"s not.
 - `enabled` (Boolean) Whether the workflow is enabled or not. Default: true
 - `last_update_time` (String) ISO String Date & Time
 - `single_closing_reason_selection` (Boolean) Whether only a single closing reason can be selected

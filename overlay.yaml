@@ -42,11 +42,10 @@ actions:
     update:
       x-speakeasy-match: id
 
- # jsonencode workflows definiton flows due to type incompatibilities
+  # jsonencode workflows definiton flows due to type incompatibilities
   - target: $["components"]["schemas"]["WorkflowDefinition"]["properties"]["flow"]
     update:
       x-speakeasy-type-override: any
-
 
   # Closing reasons
   - target: $["paths"]["/v1/workflows/closing-reasons"]["post"]
@@ -74,6 +73,7 @@ actions:
     update:
       x-speakeasy-entity: ClosingReason
 
+  # Flow Templates
   - target: $["paths"]["/v2/flows/templates/{flowId}"]["get"]
     update:
       x-speakeasy-entity-operation: FlowTemplate#get

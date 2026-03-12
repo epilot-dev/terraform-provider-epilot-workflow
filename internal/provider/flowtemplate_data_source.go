@@ -187,7 +187,7 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 			},
 			"available_in_ecp": schema.BoolAttribute{
 				Computed:    true,
-				Description: `Indicates whether this workflow is available for End Customer Portal or not. By default it's not.`,
+				Description: `Indicates whether this workflow is available for End Customer Portal or not. By default it"s not.`,
 			},
 			"closing_reasons": schema.ListNestedAttribute{
 				Computed: true,
@@ -869,7 +869,7 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 														},
 														"id": schema.StringAttribute{
 															Computed:    true,
-															Description: `The id of the entity / workflow / task, based on the origin of the schedule. For all_preceding_tasks_completed, use the sentinel value 'all_preceding_tasks_completed'.`,
+															Description: `The id of the entity / workflow / task, based on the origin of the schedule. For all_preceding_tasks_completed, use the sentinel value "all_preceding_tasks_completed".`,
 														},
 														"origin": schema.StringAttribute{
 															Computed: true,
@@ -966,7 +966,7 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 																},
 																"attribute_sub_field": schema.StringAttribute{
 																	Computed:    true,
-																	Description: `For complex attribute types, specifies which sub-field to extract (e.g., 'address', 'name', 'email_type')`,
+																	Description: `For complex attribute types, specifies which sub-field to extract (e.g., "address", "name", "email_type")`,
 																},
 																"attribute_type": schema.StringAttribute{
 																	Computed: true,
@@ -1217,7 +1217,7 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 														},
 														"id": schema.StringAttribute{
 															Computed:    true,
-															Description: `The id of the entity / workflow / task, based on the origin of the schedule. For all_preceding_tasks_completed, use the sentinel value 'all_preceding_tasks_completed'.`,
+															Description: `The id of the entity / workflow / task, based on the origin of the schedule. For all_preceding_tasks_completed, use the sentinel value "all_preceding_tasks_completed".`,
 														},
 														"origin": schema.StringAttribute{
 															Computed: true,

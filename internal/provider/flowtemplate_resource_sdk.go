@@ -101,8 +101,12 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 			closingReasons.CreationTime = types.StringPointerValue(closingReasonsItem.CreationTime)
 			closingReasons.ID = types.StringPointerValue(closingReasonsItem.ID)
 			closingReasons.LastUpdateTime = types.StringPointerValue(closingReasonsItem.LastUpdateTime)
-			closingReasons.Status = types.StringValue(string(closingReasonsItem.Status))
-			closingReasons.Title = types.StringValue(closingReasonsItem.Title)
+			if closingReasonsItem.Status != nil {
+				closingReasons.Status = types.StringValue(string(*closingReasonsItem.Status))
+			} else {
+				closingReasons.Status = types.StringNull()
+			}
+			closingReasons.Title = types.StringPointerValue(closingReasonsItem.Title)
 
 			r.ClosingReasons = append(r.ClosingReasons, closingReasons)
 		}
@@ -510,61 +514,65 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 					conditions.BranchName = types.StringValue(conditionsItem.BranchName)
 					conditions.ID = types.StringValue(conditionsItem.ID)
 					conditions.LogicalOperator = types.StringValue(string(conditionsItem.LogicalOperator))
-					conditions.Statements = []tfTypes.Statement{}
+					if conditionsItem.Statements != nil {
+						conditions.Statements = []tfTypes.Statement{}
 
-					for _, statementsItem := range conditionsItem.Statements {
-						var statements tfTypes.Statement
+						for _, statementsItem := range conditionsItem.Statements {
+							var statements tfTypes.Statement
 
-						statements.ID = types.StringValue(statementsItem.ID)
-						statements.Operator = types.StringValue(string(statementsItem.Operator))
-						statements.Source = &tfTypes.EvaluationSource{}
-						statements.Source.Attribute = types.StringPointerValue(statementsItem.Source.Attribute)
-						if statementsItem.Source.AttributeOperation != nil {
-							statements.Source.AttributeOperation = types.StringValue(string(*statementsItem.Source.AttributeOperation))
-						} else {
-							statements.Source.AttributeOperation = types.StringNull()
-						}
-						statements.Source.AttributeRepeatable = types.BoolPointerValue(statementsItem.Source.AttributeRepeatable)
-						statements.Source.AttributeSubField = types.StringPointerValue(statementsItem.Source.AttributeSubField)
-						if statementsItem.Source.AttributeType != nil {
-							statements.Source.AttributeType = types.StringValue(string(*statementsItem.Source.AttributeType))
-						} else {
-							statements.Source.AttributeType = types.StringNull()
-						}
-						if statementsItem.Source.DateOffset == nil {
-							statements.Source.DateOffset = nil
-						} else {
-							statements.Source.DateOffset = &tfTypes.DateOffset{}
-							statements.Source.DateOffset.Amount = types.Int64PointerValue(statementsItem.Source.DateOffset.Amount)
-							if statementsItem.Source.DateOffset.Unit != nil {
-								statements.Source.DateOffset.Unit = types.StringValue(string(*statementsItem.Source.DateOffset.Unit))
+							statements.ID = types.StringValue(statementsItem.ID)
+							statements.Operator = types.StringValue(string(statementsItem.Operator))
+							statements.Source = &tfTypes.EvaluationSource{}
+							statements.Source.Attribute = types.StringPointerValue(statementsItem.Source.Attribute)
+							if statementsItem.Source.AttributeOperation != nil {
+								statements.Source.AttributeOperation = types.StringValue(string(*statementsItem.Source.AttributeOperation))
 							} else {
-								statements.Source.DateOffset.Unit = types.StringNull()
+								statements.Source.AttributeOperation = types.StringNull()
 							}
-						}
-						statements.Source.ID = types.StringPointerValue(statementsItem.Source.ID)
-						if statementsItem.Source.Origin != nil {
-							statements.Source.Origin = types.StringValue(string(*statementsItem.Source.Origin))
-						} else {
-							statements.Source.Origin = types.StringNull()
-						}
-						if statementsItem.Source.OriginType != nil {
-							statements.Source.OriginType = types.StringValue(string(*statementsItem.Source.OriginType))
-						} else {
-							statements.Source.OriginType = types.StringNull()
-						}
-						statements.Source.Schema = types.StringPointerValue(statementsItem.Source.Schema)
-						if statementsItem.ValueType != nil {
-							statements.ValueType = types.StringValue(string(*statementsItem.ValueType))
-						} else {
-							statements.ValueType = types.StringNull()
-						}
-						statements.Values = make([]types.String, 0, len(statementsItem.Values))
-						for _, v := range statementsItem.Values {
-							statements.Values = append(statements.Values, types.StringValue(v))
-						}
+							statements.Source.AttributeRepeatable = types.BoolPointerValue(statementsItem.Source.AttributeRepeatable)
+							statements.Source.AttributeSubField = types.StringPointerValue(statementsItem.Source.AttributeSubField)
+							if statementsItem.Source.AttributeType != nil {
+								statements.Source.AttributeType = types.StringValue(string(*statementsItem.Source.AttributeType))
+							} else {
+								statements.Source.AttributeType = types.StringNull()
+							}
+							if statementsItem.Source.DateOffset == nil {
+								statements.Source.DateOffset = nil
+							} else {
+								statements.Source.DateOffset = &tfTypes.DateOffset{}
+								statements.Source.DateOffset.Amount = types.Int64PointerValue(statementsItem.Source.DateOffset.Amount)
+								if statementsItem.Source.DateOffset.Unit != nil {
+									statements.Source.DateOffset.Unit = types.StringValue(string(*statementsItem.Source.DateOffset.Unit))
+								} else {
+									statements.Source.DateOffset.Unit = types.StringNull()
+								}
+							}
+							statements.Source.ID = types.StringPointerValue(statementsItem.Source.ID)
+							if statementsItem.Source.Origin != nil {
+								statements.Source.Origin = types.StringValue(string(*statementsItem.Source.Origin))
+							} else {
+								statements.Source.Origin = types.StringNull()
+							}
+							if statementsItem.Source.OriginType != nil {
+								statements.Source.OriginType = types.StringValue(string(*statementsItem.Source.OriginType))
+							} else {
+								statements.Source.OriginType = types.StringNull()
+							}
+							statements.Source.Schema = types.StringPointerValue(statementsItem.Source.Schema)
+							if statementsItem.ValueType != nil {
+								statements.ValueType = types.StringValue(string(*statementsItem.ValueType))
+							} else {
+								statements.ValueType = types.StringNull()
+							}
+							statements.Values = make([]types.String, 0, len(statementsItem.Values))
+							for _, v := range statementsItem.Values {
+								statements.Values = append(statements.Values, types.StringValue(v))
+							}
 
-						conditions.Statements = append(conditions.Statements, statements)
+							conditions.Statements = append(conditions.Statements, statements)
+						}
+					} else {
+						conditions.Statements = nil
 					}
 
 					tasks.DecisionTask.Conditions = append(tasks.DecisionTask.Conditions, conditions)
@@ -2058,114 +2066,117 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 				id17 = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].ID.ValueString()
 
 				logicalOperator := shared.LogicalOperator(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].LogicalOperator.ValueString())
-				statements := make([]shared.Statement, 0, len(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements))
-				for statementsIndex := range r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements {
-					var id18 string
-					id18 = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].ID.ValueString()
+				var statements []shared.Statement
+				if r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements != nil {
+					statements = make([]shared.Statement, 0, len(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements))
+					for statementsIndex := range r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements {
+						var id18 string
+						id18 = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].ID.ValueString()
 
-					operator := shared.Operator(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Operator.ValueString())
-					attribute1 := new(string)
-					if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Attribute.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Attribute.IsNull() {
-						*attribute1 = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Attribute.ValueString()
-					} else {
-						attribute1 = nil
-					}
-					attributeOperation := new(shared.AttributeOperation)
-					if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeOperation.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeOperation.IsNull() {
-						*attributeOperation = shared.AttributeOperation(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeOperation.ValueString())
-					} else {
-						attributeOperation = nil
-					}
-					attributeRepeatable := new(bool)
-					if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeRepeatable.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeRepeatable.IsNull() {
-						*attributeRepeatable = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeRepeatable.ValueBool()
-					} else {
-						attributeRepeatable = nil
-					}
-					attributeSubField := new(string)
-					if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeSubField.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeSubField.IsNull() {
-						*attributeSubField = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeSubField.ValueString()
-					} else {
-						attributeSubField = nil
-					}
-					attributeType := new(shared.AttributeType)
-					if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeType.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeType.IsNull() {
-						*attributeType = shared.AttributeType(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeType.ValueString())
-					} else {
-						attributeType = nil
-					}
-					var dateOffset *shared.DateOffset
-					if r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset != nil {
-						amount := new(int64)
-						if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset.Amount.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset.Amount.IsNull() {
-							*amount = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset.Amount.ValueInt64()
+						operator := shared.Operator(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Operator.ValueString())
+						attribute1 := new(string)
+						if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Attribute.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Attribute.IsNull() {
+							*attribute1 = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Attribute.ValueString()
 						} else {
-							amount = nil
+							attribute1 = nil
 						}
-						unit6 := new(shared.Unit)
-						if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset.Unit.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset.Unit.IsNull() {
-							*unit6 = shared.Unit(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset.Unit.ValueString())
+						attributeOperation := new(shared.AttributeOperation)
+						if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeOperation.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeOperation.IsNull() {
+							*attributeOperation = shared.AttributeOperation(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeOperation.ValueString())
 						} else {
-							unit6 = nil
+							attributeOperation = nil
 						}
-						dateOffset = &shared.DateOffset{
-							Amount: amount,
-							Unit:   unit6,
+						attributeRepeatable := new(bool)
+						if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeRepeatable.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeRepeatable.IsNull() {
+							*attributeRepeatable = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeRepeatable.ValueBool()
+						} else {
+							attributeRepeatable = nil
 						}
+						attributeSubField := new(string)
+						if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeSubField.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeSubField.IsNull() {
+							*attributeSubField = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeSubField.ValueString()
+						} else {
+							attributeSubField = nil
+						}
+						attributeType := new(shared.AttributeType)
+						if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeType.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeType.IsNull() {
+							*attributeType = shared.AttributeType(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeType.ValueString())
+						} else {
+							attributeType = nil
+						}
+						var dateOffset *shared.DateOffset
+						if r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset != nil {
+							amount := new(int64)
+							if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset.Amount.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset.Amount.IsNull() {
+								*amount = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset.Amount.ValueInt64()
+							} else {
+								amount = nil
+							}
+							unit6 := new(shared.Unit)
+							if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset.Unit.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset.Unit.IsNull() {
+								*unit6 = shared.Unit(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset.Unit.ValueString())
+							} else {
+								unit6 = nil
+							}
+							dateOffset = &shared.DateOffset{
+								Amount: amount,
+								Unit:   unit6,
+							}
+						}
+						id19 := new(string)
+						if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.ID.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.ID.IsNull() {
+							*id19 = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.ID.ValueString()
+						} else {
+							id19 = nil
+						}
+						origin1 := new(shared.Origin)
+						if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Origin.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Origin.IsNull() {
+							*origin1 = shared.Origin(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Origin.ValueString())
+						} else {
+							origin1 = nil
+						}
+						originType := new(shared.OriginType)
+						if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.OriginType.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.OriginType.IsNull() {
+							*originType = shared.OriginType(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.OriginType.ValueString())
+						} else {
+							originType = nil
+						}
+						schema1 := new(string)
+						if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Schema.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Schema.IsNull() {
+							*schema1 = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Schema.ValueString()
+						} else {
+							schema1 = nil
+						}
+						source1 := shared.EvaluationSource{
+							Attribute:           attribute1,
+							AttributeOperation:  attributeOperation,
+							AttributeRepeatable: attributeRepeatable,
+							AttributeSubField:   attributeSubField,
+							AttributeType:       attributeType,
+							DateOffset:          dateOffset,
+							ID:                  id19,
+							Origin:              origin1,
+							OriginType:          originType,
+							Schema:              schema1,
+						}
+						valueType := new(shared.ValueType)
+						if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].ValueType.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].ValueType.IsNull() {
+							*valueType = shared.ValueType(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].ValueType.ValueString())
+						} else {
+							valueType = nil
+						}
+						values := make([]string, 0, len(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Values))
+						for valuesIndex := range r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Values {
+							values = append(values, r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Values[valuesIndex].ValueString())
+						}
+						statements = append(statements, shared.Statement{
+							ID:        id18,
+							Operator:  operator,
+							Source:    source1,
+							ValueType: valueType,
+							Values:    values,
+						})
 					}
-					id19 := new(string)
-					if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.ID.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.ID.IsNull() {
-						*id19 = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.ID.ValueString()
-					} else {
-						id19 = nil
-					}
-					origin1 := new(shared.Origin)
-					if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Origin.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Origin.IsNull() {
-						*origin1 = shared.Origin(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Origin.ValueString())
-					} else {
-						origin1 = nil
-					}
-					originType := new(shared.OriginType)
-					if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.OriginType.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.OriginType.IsNull() {
-						*originType = shared.OriginType(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.OriginType.ValueString())
-					} else {
-						originType = nil
-					}
-					schema1 := new(string)
-					if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Schema.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Schema.IsNull() {
-						*schema1 = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Schema.ValueString()
-					} else {
-						schema1 = nil
-					}
-					source1 := shared.EvaluationSource{
-						Attribute:           attribute1,
-						AttributeOperation:  attributeOperation,
-						AttributeRepeatable: attributeRepeatable,
-						AttributeSubField:   attributeSubField,
-						AttributeType:       attributeType,
-						DateOffset:          dateOffset,
-						ID:                  id19,
-						Origin:              origin1,
-						OriginType:          originType,
-						Schema:              schema1,
-					}
-					valueType := new(shared.ValueType)
-					if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].ValueType.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].ValueType.IsNull() {
-						*valueType = shared.ValueType(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].ValueType.ValueString())
-					} else {
-						valueType = nil
-					}
-					values := make([]string, 0, len(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Values))
-					for valuesIndex := range r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Values {
-						values = append(values, r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Values[valuesIndex].ValueString())
-					}
-					statements = append(statements, shared.Statement{
-						ID:        id18,
-						Operator:  operator,
-						Source:    source1,
-						ValueType: valueType,
-						Values:    values,
-					})
 				}
 				conditions = append(conditions, shared.Condition{
 					BranchName:      branchName,
@@ -3180,11 +3191,26 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 	}
 	closingReasons := make([]shared.ClosingReasonInput, 0, len(r.ClosingReasons))
 	for closingReasonsIndex := range r.ClosingReasons {
-		status := shared.ClosingReasonsStatus(r.ClosingReasons[closingReasonsIndex].Status.ValueString())
-		var title string
-		title = r.ClosingReasons[closingReasonsIndex].Title.ValueString()
-
+		id4 := new(string)
+		if !r.ClosingReasons[closingReasonsIndex].ID.IsUnknown() && !r.ClosingReasons[closingReasonsIndex].ID.IsNull() {
+			*id4 = r.ClosingReasons[closingReasonsIndex].ID.ValueString()
+		} else {
+			id4 = nil
+		}
+		status := new(shared.ClosingReasonsStatus)
+		if !r.ClosingReasons[closingReasonsIndex].Status.IsUnknown() && !r.ClosingReasons[closingReasonsIndex].Status.IsNull() {
+			*status = shared.ClosingReasonsStatus(r.ClosingReasons[closingReasonsIndex].Status.ValueString())
+		} else {
+			status = nil
+		}
+		title := new(string)
+		if !r.ClosingReasons[closingReasonsIndex].Title.IsUnknown() && !r.ClosingReasons[closingReasonsIndex].Title.IsNull() {
+			*title = r.ClosingReasons[closingReasonsIndex].Title.ValueString()
+		} else {
+			title = nil
+		}
 		closingReasons = append(closingReasons, shared.ClosingReasonInput{
+			ID:     id4,
 			Status: status,
 			Title:  title,
 		})
@@ -3245,8 +3271,8 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 		var fromID string
 		fromID = r.Edges[edgesIndex].FromID.ValueString()
 
-		var id4 string
-		id4 = r.Edges[edgesIndex].ID.ValueString()
+		var id5 string
+		id5 = r.Edges[edgesIndex].ID.ValueString()
 
 		noneMet := new(bool)
 		if !r.Edges[edgesIndex].NoneMet.IsUnknown() && !r.Edges[edgesIndex].NoneMet.IsNull() {
@@ -3263,7 +3289,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 		edges = append(edges, shared.Edge{
 			ConditionID: conditionID,
 			FromID:      fromID,
-			ID:          id4,
+			ID:          id5,
 			NoneMet:     noneMet,
 			ToID:        toID,
 		})
@@ -3327,11 +3353,11 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			Value:   value1,
 		})
 	}
-	id5 := new(string)
+	id6 := new(string)
 	if !r.ID.IsUnknown() && !r.ID.IsNull() {
-		*id5 = r.ID.ValueString()
+		*id6 = r.ID.ValueString()
 	} else {
-		id5 = nil
+		id6 = nil
 	}
 	var name string
 	name = r.Name.ValueString()
@@ -3404,8 +3430,8 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 				Unit:     unit1,
 			}
 		}
-		var id6 string
-		id6 = r.Phases[phasesIndex].ID.ValueString()
+		var id7 string
+		id7 = r.Phases[phasesIndex].ID.ValueString()
 
 		var name1 string
 		name1 = r.Phases[phasesIndex].Name.ValueString()
@@ -3418,7 +3444,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			AssignedTo:    assignedTo1,
 			DueDate:       dueDate1,
 			DueDateConfig: dueDateConfig1,
-			ID:            id6,
+			ID:            id7,
 			Name:          name1,
 			Taxonomies:    taxonomies,
 		})
@@ -3533,11 +3559,11 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 					} else {
 						completeTaskAutomatically = nil
 					}
-					id7 := new(string)
+					id8 := new(string)
 					if !r.Tasks[tasksItem].TaskBase.Ecp.Journey.ID.IsUnknown() && !r.Tasks[tasksItem].TaskBase.Ecp.Journey.ID.IsNull() {
-						*id7 = r.Tasks[tasksItem].TaskBase.Ecp.Journey.ID.ValueString()
+						*id8 = r.Tasks[tasksItem].TaskBase.Ecp.Journey.ID.ValueString()
 					} else {
-						id7 = nil
+						id8 = nil
 					}
 					journeyId1 := new(string)
 					if !r.Tasks[tasksItem].TaskBase.Ecp.Journey.JourneyID.IsUnknown() && !r.Tasks[tasksItem].TaskBase.Ecp.Journey.JourneyID.IsNull() {
@@ -3553,7 +3579,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 					}
 					journey = &shared.StepJourney{
 						CompleteTaskAutomatically: completeTaskAutomatically,
-						ID:                        id7,
+						ID:                        id8,
 						JourneyID:                 journeyId1,
 						Name:                      name2,
 					}
@@ -3571,8 +3597,8 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 					Label:       label,
 				}
 			}
-			var id8 string
-			id8 = r.Tasks[tasksItem].TaskBase.ID.ValueString()
+			var id9 string
+			id9 = r.Tasks[tasksItem].TaskBase.ID.ValueString()
 
 			var installer *shared.ECPDetails
 			if r.Tasks[tasksItem].TaskBase.Installer != nil {
@@ -3596,11 +3622,11 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 					} else {
 						completeTaskAutomatically1 = nil
 					}
-					id9 := new(string)
+					id10 := new(string)
 					if !r.Tasks[tasksItem].TaskBase.Installer.Journey.ID.IsUnknown() && !r.Tasks[tasksItem].TaskBase.Installer.Journey.ID.IsNull() {
-						*id9 = r.Tasks[tasksItem].TaskBase.Installer.Journey.ID.ValueString()
+						*id10 = r.Tasks[tasksItem].TaskBase.Installer.Journey.ID.ValueString()
 					} else {
-						id9 = nil
+						id10 = nil
 					}
 					journeyId2 := new(string)
 					if !r.Tasks[tasksItem].TaskBase.Installer.Journey.JourneyID.IsUnknown() && !r.Tasks[tasksItem].TaskBase.Installer.Journey.JourneyID.IsNull() {
@@ -3616,7 +3642,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 					}
 					journey1 = &shared.StepJourney{
 						CompleteTaskAutomatically: completeTaskAutomatically1,
-						ID:                        id9,
+						ID:                        id10,
 						JourneyID:                 journeyId2,
 						Name:                      name3,
 					}
@@ -3642,11 +3668,11 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 				} else {
 					completeTaskAutomatically2 = nil
 				}
-				id10 := new(string)
+				id11 := new(string)
 				if !r.Tasks[tasksItem].TaskBase.Journey.ID.IsUnknown() && !r.Tasks[tasksItem].TaskBase.Journey.ID.IsNull() {
-					*id10 = r.Tasks[tasksItem].TaskBase.Journey.ID.ValueString()
+					*id11 = r.Tasks[tasksItem].TaskBase.Journey.ID.ValueString()
 				} else {
-					id10 = nil
+					id11 = nil
 				}
 				journeyId3 := new(string)
 				if !r.Tasks[tasksItem].TaskBase.Journey.JourneyID.IsUnknown() && !r.Tasks[tasksItem].TaskBase.Journey.JourneyID.IsNull() {
@@ -3662,7 +3688,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 				}
 				journey2 = &shared.StepJourney{
 					CompleteTaskAutomatically: completeTaskAutomatically2,
-					ID:                        id10,
+					ID:                        id11,
 					JourneyID:                 journeyId3,
 					Name:                      name4,
 				}
@@ -3708,7 +3734,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 				DueDate:       dueDate2,
 				DueDateConfig: dueDateConfig2,
 				Ecp:           ecp,
-				ID:            id8,
+				ID:            id9,
 				Installer:     installer,
 				Journey:       journey2,
 				Name:          name5,
@@ -3860,11 +3886,11 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 					} else {
 						completeTaskAutomatically3 = nil
 					}
-					id11 := new(string)
+					id12 := new(string)
 					if !r.Tasks[tasksItem].AutomationTask.Ecp.Journey.ID.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Ecp.Journey.ID.IsNull() {
-						*id11 = r.Tasks[tasksItem].AutomationTask.Ecp.Journey.ID.ValueString()
+						*id12 = r.Tasks[tasksItem].AutomationTask.Ecp.Journey.ID.ValueString()
 					} else {
-						id11 = nil
+						id12 = nil
 					}
 					journeyId4 := new(string)
 					if !r.Tasks[tasksItem].AutomationTask.Ecp.Journey.JourneyID.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Ecp.Journey.JourneyID.IsNull() {
@@ -3880,7 +3906,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 					}
 					journey3 = &shared.StepJourney{
 						CompleteTaskAutomatically: completeTaskAutomatically3,
-						ID:                        id11,
+						ID:                        id12,
 						JourneyID:                 journeyId4,
 						Name:                      name6,
 					}
@@ -3898,8 +3924,8 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 					Label:       label2,
 				}
 			}
-			var id12 string
-			id12 = r.Tasks[tasksItem].AutomationTask.ID.ValueString()
+			var id13 string
+			id13 = r.Tasks[tasksItem].AutomationTask.ID.ValueString()
 
 			var installer1 *shared.ECPDetails
 			if r.Tasks[tasksItem].AutomationTask.Installer != nil {
@@ -3923,11 +3949,11 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 					} else {
 						completeTaskAutomatically4 = nil
 					}
-					id13 := new(string)
+					id14 := new(string)
 					if !r.Tasks[tasksItem].AutomationTask.Installer.Journey.ID.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Installer.Journey.ID.IsNull() {
-						*id13 = r.Tasks[tasksItem].AutomationTask.Installer.Journey.ID.ValueString()
+						*id14 = r.Tasks[tasksItem].AutomationTask.Installer.Journey.ID.ValueString()
 					} else {
-						id13 = nil
+						id14 = nil
 					}
 					journeyId5 := new(string)
 					if !r.Tasks[tasksItem].AutomationTask.Installer.Journey.JourneyID.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Installer.Journey.JourneyID.IsNull() {
@@ -3943,7 +3969,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 					}
 					journey4 = &shared.StepJourney{
 						CompleteTaskAutomatically: completeTaskAutomatically4,
-						ID:                        id13,
+						ID:                        id14,
 						JourneyID:                 journeyId5,
 						Name:                      name7,
 					}
@@ -3969,11 +3995,11 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 				} else {
 					completeTaskAutomatically5 = nil
 				}
-				id14 := new(string)
+				id15 := new(string)
 				if !r.Tasks[tasksItem].AutomationTask.Journey.ID.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Journey.ID.IsNull() {
-					*id14 = r.Tasks[tasksItem].AutomationTask.Journey.ID.ValueString()
+					*id15 = r.Tasks[tasksItem].AutomationTask.Journey.ID.ValueString()
 				} else {
-					id14 = nil
+					id15 = nil
 				}
 				journeyId6 := new(string)
 				if !r.Tasks[tasksItem].AutomationTask.Journey.JourneyID.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Journey.JourneyID.IsNull() {
@@ -3989,7 +4015,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 				}
 				journey5 = &shared.StepJourney{
 					CompleteTaskAutomatically: completeTaskAutomatically5,
-					ID:                        id14,
+					ID:                        id15,
 					JourneyID:                 journeyId6,
 					Name:                      name8,
 				}
@@ -4074,8 +4100,8 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 					} else {
 						attribute = nil
 					}
-					var id15 string
-					id15 = r.Tasks[tasksItem].AutomationTask.Schedule.RelativeSchedule.Reference.ID.ValueString()
+					var id16 string
+					id16 = r.Tasks[tasksItem].AutomationTask.Schedule.RelativeSchedule.Reference.ID.ValueString()
 
 					origin := shared.RelativeScheduleOrigin(r.Tasks[tasksItem].AutomationTask.Schedule.RelativeSchedule.Reference.Origin.ValueString())
 					schema := new(string)
@@ -4086,7 +4112,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 					}
 					reference := shared.Reference{
 						Attribute: attribute,
-						ID:        id15,
+						ID:        id16,
 						Origin:    origin,
 						Schema:    schema,
 					}
@@ -4124,7 +4150,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 				DueDate:              dueDate3,
 				DueDateConfig:        dueDateConfig3,
 				Ecp:                  ecp1,
-				ID:                   id12,
+				ID:                   id13,
 				Installer:            installer1,
 				Journey:              journey5,
 				Name:                 name9,
@@ -4172,122 +4198,125 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 				var branchName string
 				branchName = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].BranchName.ValueString()
 
-				var id16 string
-				id16 = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].ID.ValueString()
+				var id17 string
+				id17 = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].ID.ValueString()
 
 				logicalOperator := shared.LogicalOperator(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].LogicalOperator.ValueString())
-				statements := make([]shared.Statement, 0, len(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements))
-				for statementsIndex := range r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements {
-					var id17 string
-					id17 = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].ID.ValueString()
+				var statements []shared.Statement
+				if r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements != nil {
+					statements = make([]shared.Statement, 0, len(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements))
+					for statementsIndex := range r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements {
+						var id18 string
+						id18 = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].ID.ValueString()
 
-					operator := shared.Operator(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Operator.ValueString())
-					attribute1 := new(string)
-					if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Attribute.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Attribute.IsNull() {
-						*attribute1 = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Attribute.ValueString()
-					} else {
-						attribute1 = nil
-					}
-					attributeOperation := new(shared.AttributeOperation)
-					if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeOperation.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeOperation.IsNull() {
-						*attributeOperation = shared.AttributeOperation(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeOperation.ValueString())
-					} else {
-						attributeOperation = nil
-					}
-					attributeRepeatable := new(bool)
-					if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeRepeatable.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeRepeatable.IsNull() {
-						*attributeRepeatable = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeRepeatable.ValueBool()
-					} else {
-						attributeRepeatable = nil
-					}
-					attributeSubField := new(string)
-					if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeSubField.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeSubField.IsNull() {
-						*attributeSubField = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeSubField.ValueString()
-					} else {
-						attributeSubField = nil
-					}
-					attributeType := new(shared.AttributeType)
-					if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeType.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeType.IsNull() {
-						*attributeType = shared.AttributeType(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeType.ValueString())
-					} else {
-						attributeType = nil
-					}
-					var dateOffset *shared.DateOffset
-					if r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset != nil {
-						amount := new(int64)
-						if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset.Amount.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset.Amount.IsNull() {
-							*amount = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset.Amount.ValueInt64()
+						operator := shared.Operator(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Operator.ValueString())
+						attribute1 := new(string)
+						if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Attribute.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Attribute.IsNull() {
+							*attribute1 = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Attribute.ValueString()
 						} else {
-							amount = nil
+							attribute1 = nil
 						}
-						unit6 := new(shared.Unit)
-						if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset.Unit.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset.Unit.IsNull() {
-							*unit6 = shared.Unit(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset.Unit.ValueString())
+						attributeOperation := new(shared.AttributeOperation)
+						if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeOperation.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeOperation.IsNull() {
+							*attributeOperation = shared.AttributeOperation(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeOperation.ValueString())
 						} else {
-							unit6 = nil
+							attributeOperation = nil
 						}
-						dateOffset = &shared.DateOffset{
-							Amount: amount,
-							Unit:   unit6,
+						attributeRepeatable := new(bool)
+						if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeRepeatable.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeRepeatable.IsNull() {
+							*attributeRepeatable = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeRepeatable.ValueBool()
+						} else {
+							attributeRepeatable = nil
 						}
+						attributeSubField := new(string)
+						if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeSubField.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeSubField.IsNull() {
+							*attributeSubField = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeSubField.ValueString()
+						} else {
+							attributeSubField = nil
+						}
+						attributeType := new(shared.AttributeType)
+						if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeType.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeType.IsNull() {
+							*attributeType = shared.AttributeType(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.AttributeType.ValueString())
+						} else {
+							attributeType = nil
+						}
+						var dateOffset *shared.DateOffset
+						if r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset != nil {
+							amount := new(int64)
+							if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset.Amount.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset.Amount.IsNull() {
+								*amount = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset.Amount.ValueInt64()
+							} else {
+								amount = nil
+							}
+							unit6 := new(shared.Unit)
+							if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset.Unit.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset.Unit.IsNull() {
+								*unit6 = shared.Unit(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.DateOffset.Unit.ValueString())
+							} else {
+								unit6 = nil
+							}
+							dateOffset = &shared.DateOffset{
+								Amount: amount,
+								Unit:   unit6,
+							}
+						}
+						id19 := new(string)
+						if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.ID.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.ID.IsNull() {
+							*id19 = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.ID.ValueString()
+						} else {
+							id19 = nil
+						}
+						origin1 := new(shared.Origin)
+						if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Origin.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Origin.IsNull() {
+							*origin1 = shared.Origin(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Origin.ValueString())
+						} else {
+							origin1 = nil
+						}
+						originType := new(shared.OriginType)
+						if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.OriginType.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.OriginType.IsNull() {
+							*originType = shared.OriginType(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.OriginType.ValueString())
+						} else {
+							originType = nil
+						}
+						schema1 := new(string)
+						if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Schema.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Schema.IsNull() {
+							*schema1 = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Schema.ValueString()
+						} else {
+							schema1 = nil
+						}
+						source1 := shared.EvaluationSource{
+							Attribute:           attribute1,
+							AttributeOperation:  attributeOperation,
+							AttributeRepeatable: attributeRepeatable,
+							AttributeSubField:   attributeSubField,
+							AttributeType:       attributeType,
+							DateOffset:          dateOffset,
+							ID:                  id19,
+							Origin:              origin1,
+							OriginType:          originType,
+							Schema:              schema1,
+						}
+						valueType := new(shared.ValueType)
+						if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].ValueType.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].ValueType.IsNull() {
+							*valueType = shared.ValueType(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].ValueType.ValueString())
+						} else {
+							valueType = nil
+						}
+						values := make([]string, 0, len(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Values))
+						for valuesIndex := range r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Values {
+							values = append(values, r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Values[valuesIndex].ValueString())
+						}
+						statements = append(statements, shared.Statement{
+							ID:        id18,
+							Operator:  operator,
+							Source:    source1,
+							ValueType: valueType,
+							Values:    values,
+						})
 					}
-					id18 := new(string)
-					if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.ID.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.ID.IsNull() {
-						*id18 = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.ID.ValueString()
-					} else {
-						id18 = nil
-					}
-					origin1 := new(shared.Origin)
-					if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Origin.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Origin.IsNull() {
-						*origin1 = shared.Origin(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Origin.ValueString())
-					} else {
-						origin1 = nil
-					}
-					originType := new(shared.OriginType)
-					if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.OriginType.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.OriginType.IsNull() {
-						*originType = shared.OriginType(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.OriginType.ValueString())
-					} else {
-						originType = nil
-					}
-					schema1 := new(string)
-					if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Schema.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Schema.IsNull() {
-						*schema1 = r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Source.Schema.ValueString()
-					} else {
-						schema1 = nil
-					}
-					source1 := shared.EvaluationSource{
-						Attribute:           attribute1,
-						AttributeOperation:  attributeOperation,
-						AttributeRepeatable: attributeRepeatable,
-						AttributeSubField:   attributeSubField,
-						AttributeType:       attributeType,
-						DateOffset:          dateOffset,
-						ID:                  id18,
-						Origin:              origin1,
-						OriginType:          originType,
-						Schema:              schema1,
-					}
-					valueType := new(shared.ValueType)
-					if !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].ValueType.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].ValueType.IsNull() {
-						*valueType = shared.ValueType(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].ValueType.ValueString())
-					} else {
-						valueType = nil
-					}
-					values := make([]string, 0, len(r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Values))
-					for valuesIndex := range r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Values {
-						values = append(values, r.Tasks[tasksItem].DecisionTask.Conditions[conditionsIndex].Statements[statementsIndex].Values[valuesIndex].ValueString())
-					}
-					statements = append(statements, shared.Statement{
-						ID:        id17,
-						Operator:  operator,
-						Source:    source1,
-						ValueType: valueType,
-						Values:    values,
-					})
 				}
 				conditions = append(conditions, shared.Condition{
 					BranchName:      branchName,
-					ID:              id16,
+					ID:              id17,
 					LogicalOperator: logicalOperator,
 					Statements:      statements,
 				})
@@ -4366,11 +4395,11 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 					} else {
 						completeTaskAutomatically6 = nil
 					}
-					id19 := new(string)
+					id20 := new(string)
 					if !r.Tasks[tasksItem].DecisionTask.Ecp.Journey.ID.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Ecp.Journey.ID.IsNull() {
-						*id19 = r.Tasks[tasksItem].DecisionTask.Ecp.Journey.ID.ValueString()
+						*id20 = r.Tasks[tasksItem].DecisionTask.Ecp.Journey.ID.ValueString()
 					} else {
-						id19 = nil
+						id20 = nil
 					}
 					journeyId7 := new(string)
 					if !r.Tasks[tasksItem].DecisionTask.Ecp.Journey.JourneyID.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Ecp.Journey.JourneyID.IsNull() {
@@ -4386,7 +4415,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 					}
 					journey6 = &shared.StepJourney{
 						CompleteTaskAutomatically: completeTaskAutomatically6,
-						ID:                        id19,
+						ID:                        id20,
 						JourneyID:                 journeyId7,
 						Name:                      name10,
 					}
@@ -4404,8 +4433,8 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 					Label:       label4,
 				}
 			}
-			var id20 string
-			id20 = r.Tasks[tasksItem].DecisionTask.ID.ValueString()
+			var id21 string
+			id21 = r.Tasks[tasksItem].DecisionTask.ID.ValueString()
 
 			var installer2 *shared.ECPDetails
 			if r.Tasks[tasksItem].DecisionTask.Installer != nil {
@@ -4429,11 +4458,11 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 					} else {
 						completeTaskAutomatically7 = nil
 					}
-					id21 := new(string)
+					id22 := new(string)
 					if !r.Tasks[tasksItem].DecisionTask.Installer.Journey.ID.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Installer.Journey.ID.IsNull() {
-						*id21 = r.Tasks[tasksItem].DecisionTask.Installer.Journey.ID.ValueString()
+						*id22 = r.Tasks[tasksItem].DecisionTask.Installer.Journey.ID.ValueString()
 					} else {
-						id21 = nil
+						id22 = nil
 					}
 					journeyId8 := new(string)
 					if !r.Tasks[tasksItem].DecisionTask.Installer.Journey.JourneyID.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Installer.Journey.JourneyID.IsNull() {
@@ -4449,7 +4478,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 					}
 					journey7 = &shared.StepJourney{
 						CompleteTaskAutomatically: completeTaskAutomatically7,
-						ID:                        id21,
+						ID:                        id22,
 						JourneyID:                 journeyId8,
 						Name:                      name11,
 					}
@@ -4475,11 +4504,11 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 				} else {
 					completeTaskAutomatically8 = nil
 				}
-				id22 := new(string)
+				id23 := new(string)
 				if !r.Tasks[tasksItem].DecisionTask.Journey.ID.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Journey.ID.IsNull() {
-					*id22 = r.Tasks[tasksItem].DecisionTask.Journey.ID.ValueString()
+					*id23 = r.Tasks[tasksItem].DecisionTask.Journey.ID.ValueString()
 				} else {
-					id22 = nil
+					id23 = nil
 				}
 				journeyId9 := new(string)
 				if !r.Tasks[tasksItem].DecisionTask.Journey.JourneyID.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Journey.JourneyID.IsNull() {
@@ -4495,7 +4524,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 				}
 				journey8 = &shared.StepJourney{
 					CompleteTaskAutomatically: completeTaskAutomatically8,
-					ID:                        id22,
+					ID:                        id23,
 					JourneyID:                 journeyId9,
 					Name:                      name12,
 				}
@@ -4583,8 +4612,8 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 					} else {
 						attribute2 = nil
 					}
-					var id23 string
-					id23 = r.Tasks[tasksItem].DecisionTask.Schedule.RelativeSchedule.Reference.ID.ValueString()
+					var id24 string
+					id24 = r.Tasks[tasksItem].DecisionTask.Schedule.RelativeSchedule.Reference.ID.ValueString()
 
 					origin2 := shared.RelativeScheduleOrigin(r.Tasks[tasksItem].DecisionTask.Schedule.RelativeSchedule.Reference.Origin.ValueString())
 					schema2 := new(string)
@@ -4595,7 +4624,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 					}
 					reference1 := shared.Reference{
 						Attribute: attribute2,
-						ID:        id23,
+						ID:        id24,
 						Origin:    origin2,
 						Schema:    schema2,
 					}
@@ -4627,7 +4656,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 				DueDate:       dueDate4,
 				DueDateConfig: dueDateConfig4,
 				Ecp:           ecp2,
-				ID:            id20,
+				ID:            id21,
 				Installer:     installer2,
 				Journey:       journey8,
 				LoopConfig:    loopConfig,
@@ -4759,11 +4788,11 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 					} else {
 						completeTaskAutomatically9 = nil
 					}
-					id24 := new(string)
+					id25 := new(string)
 					if !r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.ID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.ID.IsNull() {
-						*id24 = r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.ID.ValueString()
+						*id25 = r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.ID.ValueString()
 					} else {
-						id24 = nil
+						id25 = nil
 					}
 					journeyId10 := new(string)
 					if !r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.JourneyID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Ecp.Journey.JourneyID.IsNull() {
@@ -4779,7 +4808,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 					}
 					journey9 = &shared.StepJourney{
 						CompleteTaskAutomatically: completeTaskAutomatically9,
-						ID:                        id24,
+						ID:                        id25,
 						JourneyID:                 journeyId10,
 						Name:                      name14,
 					}
@@ -4797,8 +4826,8 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 					Label:       label6,
 				}
 			}
-			var id25 string
-			id25 = r.Tasks[tasksItem].AiAgentTask.ID.ValueString()
+			var id26 string
+			id26 = r.Tasks[tasksItem].AiAgentTask.ID.ValueString()
 
 			var installer3 *shared.ECPDetails
 			if r.Tasks[tasksItem].AiAgentTask.Installer != nil {
@@ -4822,11 +4851,11 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 					} else {
 						completeTaskAutomatically10 = nil
 					}
-					id26 := new(string)
+					id27 := new(string)
 					if !r.Tasks[tasksItem].AiAgentTask.Installer.Journey.ID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Installer.Journey.ID.IsNull() {
-						*id26 = r.Tasks[tasksItem].AiAgentTask.Installer.Journey.ID.ValueString()
+						*id27 = r.Tasks[tasksItem].AiAgentTask.Installer.Journey.ID.ValueString()
 					} else {
-						id26 = nil
+						id27 = nil
 					}
 					journeyId11 := new(string)
 					if !r.Tasks[tasksItem].AiAgentTask.Installer.Journey.JourneyID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Installer.Journey.JourneyID.IsNull() {
@@ -4842,7 +4871,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 					}
 					journey10 = &shared.StepJourney{
 						CompleteTaskAutomatically: completeTaskAutomatically10,
-						ID:                        id26,
+						ID:                        id27,
 						JourneyID:                 journeyId11,
 						Name:                      name15,
 					}
@@ -4868,11 +4897,11 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 				} else {
 					completeTaskAutomatically11 = nil
 				}
-				id27 := new(string)
+				id28 := new(string)
 				if !r.Tasks[tasksItem].AiAgentTask.Journey.ID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Journey.ID.IsNull() {
-					*id27 = r.Tasks[tasksItem].AiAgentTask.Journey.ID.ValueString()
+					*id28 = r.Tasks[tasksItem].AiAgentTask.Journey.ID.ValueString()
 				} else {
-					id27 = nil
+					id28 = nil
 				}
 				journeyId12 := new(string)
 				if !r.Tasks[tasksItem].AiAgentTask.Journey.JourneyID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Journey.JourneyID.IsNull() {
@@ -4888,7 +4917,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 				}
 				journey11 = &shared.StepJourney{
 					CompleteTaskAutomatically: completeTaskAutomatically11,
-					ID:                        id27,
+					ID:                        id28,
 					JourneyID:                 journeyId12,
 					Name:                      name16,
 				}
@@ -4935,7 +4964,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 				DueDate:       dueDate5,
 				DueDateConfig: dueDateConfig5,
 				Ecp:           ecp3,
-				ID:            id25,
+				ID:            id26,
 				Installer:     installer3,
 				Journey:       journey11,
 				Name:          name17,
@@ -4963,16 +4992,16 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			} else {
 				entitySchema3 = nil
 			}
-			id28 := new(string)
+			id29 := new(string)
 			if !r.Trigger.ManualTrigger.ID.IsUnknown() && !r.Trigger.ManualTrigger.ID.IsNull() {
-				*id28 = r.Trigger.ManualTrigger.ID.ValueString()
+				*id29 = r.Trigger.ManualTrigger.ID.ValueString()
 			} else {
-				id28 = nil
+				id29 = nil
 			}
 			typeVar11 := shared.ManualTriggerType(r.Trigger.ManualTrigger.Type.ValueString())
 			manualTrigger1 = &shared.ManualTrigger{
 				EntitySchema: entitySchema3,
-				ID:           id28,
+				ID:           id29,
 				Type:         typeVar11,
 			}
 		}
@@ -4989,11 +5018,11 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			} else {
 				automationId2 = nil
 			}
-			id29 := new(string)
+			id30 := new(string)
 			if !r.Trigger.AutomationTrigger.ID.IsUnknown() && !r.Trigger.AutomationTrigger.ID.IsNull() {
-				*id29 = r.Trigger.AutomationTrigger.ID.ValueString()
+				*id30 = r.Trigger.AutomationTrigger.ID.ValueString()
 			} else {
-				id29 = nil
+				id30 = nil
 			}
 			triggerConfig1 := make([]shared.TriggerConfig, 0, len(r.Trigger.AutomationTrigger.TriggerConfig))
 			for triggerConfigIndex1 := range r.Trigger.AutomationTrigger.TriggerConfig {
@@ -5019,7 +5048,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			typeVar12 := shared.Type(r.Trigger.AutomationTrigger.Type.ValueString())
 			automationTrigger1 = &shared.AutomationTrigger{
 				AutomationID:  automationId2,
-				ID:            id29,
+				ID:            id30,
 				TriggerConfig: triggerConfig1,
 				Type:          typeVar12,
 			}
@@ -5037,11 +5066,11 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			} else {
 				automationId3 = nil
 			}
-			id30 := new(string)
+			id31 := new(string)
 			if !r.Trigger.JourneySubmissionTrigger.ID.IsUnknown() && !r.Trigger.JourneySubmissionTrigger.ID.IsNull() {
-				*id30 = r.Trigger.JourneySubmissionTrigger.ID.ValueString()
+				*id31 = r.Trigger.JourneySubmissionTrigger.ID.ValueString()
 			} else {
-				id30 = nil
+				id31 = nil
 			}
 			var journeyId13 string
 			journeyId13 = r.Trigger.JourneySubmissionTrigger.JourneyID.ValueString()
@@ -5055,7 +5084,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			typeVar13 := shared.JourneySubmissionTriggerType(r.Trigger.JourneySubmissionTrigger.Type.ValueString())
 			journeySubmissionTrigger1 = &shared.JourneySubmissionTrigger{
 				AutomationID: automationId3,
-				ID:           id30,
+				ID:           id31,
 				JourneyID:    journeyId13,
 				JourneyName:  journeyName1,
 				Type:         typeVar13,
@@ -5074,16 +5103,16 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			} else {
 				entitySchema4 = nil
 			}
-			id31 := new(string)
+			id32 := new(string)
 			if !r.Trigger.JourneyAutomationTrigger.ID.IsUnknown() && !r.Trigger.JourneyAutomationTrigger.ID.IsNull() {
-				*id31 = r.Trigger.JourneyAutomationTrigger.ID.ValueString()
+				*id32 = r.Trigger.JourneyAutomationTrigger.ID.ValueString()
 			} else {
-				id31 = nil
+				id32 = nil
 			}
 			typeVar14 := shared.JourneyAutomationTriggerType(r.Trigger.JourneyAutomationTrigger.Type.ValueString())
 			journeyAutomationTrigger1 = &shared.JourneyAutomationTrigger{
 				EntitySchema: entitySchema4,
-				ID:           id31,
+				ID:           id32,
 				Type:         typeVar14,
 			}
 		}
@@ -5117,7 +5146,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 		Edges:                        edges,
 		Enabled:                      enabled,
 		EntitySync:                   entitySync,
-		ID:                           id5,
+		ID:                           id6,
 		Name:                         name,
 		OrgID:                        orgID,
 		Phases:                       phases,

@@ -101,8 +101,12 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 			closingReasons.CreationTime = types.StringPointerValue(closingReasonsItem.CreationTime)
 			closingReasons.ID = types.StringPointerValue(closingReasonsItem.ID)
 			closingReasons.LastUpdateTime = types.StringPointerValue(closingReasonsItem.LastUpdateTime)
-			closingReasons.Status = types.StringValue(string(closingReasonsItem.Status))
-			closingReasons.Title = types.StringValue(closingReasonsItem.Title)
+			if closingReasonsItem.Status != nil {
+				closingReasons.Status = types.StringValue(string(*closingReasonsItem.Status))
+			} else {
+				closingReasons.Status = types.StringNull()
+			}
+			closingReasons.Title = types.StringPointerValue(closingReasonsItem.Title)
 
 			r.ClosingReasons = append(r.ClosingReasons, closingReasons)
 		}
@@ -510,61 +514,65 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 					conditions.BranchName = types.StringValue(conditionsItem.BranchName)
 					conditions.ID = types.StringValue(conditionsItem.ID)
 					conditions.LogicalOperator = types.StringValue(string(conditionsItem.LogicalOperator))
-					conditions.Statements = []tfTypes.Statement{}
+					if conditionsItem.Statements != nil {
+						conditions.Statements = []tfTypes.Statement{}
 
-					for _, statementsItem := range conditionsItem.Statements {
-						var statements tfTypes.Statement
+						for _, statementsItem := range conditionsItem.Statements {
+							var statements tfTypes.Statement
 
-						statements.ID = types.StringValue(statementsItem.ID)
-						statements.Operator = types.StringValue(string(statementsItem.Operator))
-						statements.Source = &tfTypes.EvaluationSource{}
-						statements.Source.Attribute = types.StringPointerValue(statementsItem.Source.Attribute)
-						if statementsItem.Source.AttributeOperation != nil {
-							statements.Source.AttributeOperation = types.StringValue(string(*statementsItem.Source.AttributeOperation))
-						} else {
-							statements.Source.AttributeOperation = types.StringNull()
-						}
-						statements.Source.AttributeRepeatable = types.BoolPointerValue(statementsItem.Source.AttributeRepeatable)
-						statements.Source.AttributeSubField = types.StringPointerValue(statementsItem.Source.AttributeSubField)
-						if statementsItem.Source.AttributeType != nil {
-							statements.Source.AttributeType = types.StringValue(string(*statementsItem.Source.AttributeType))
-						} else {
-							statements.Source.AttributeType = types.StringNull()
-						}
-						if statementsItem.Source.DateOffset == nil {
-							statements.Source.DateOffset = nil
-						} else {
-							statements.Source.DateOffset = &tfTypes.DateOffset{}
-							statements.Source.DateOffset.Amount = types.Int64PointerValue(statementsItem.Source.DateOffset.Amount)
-							if statementsItem.Source.DateOffset.Unit != nil {
-								statements.Source.DateOffset.Unit = types.StringValue(string(*statementsItem.Source.DateOffset.Unit))
+							statements.ID = types.StringValue(statementsItem.ID)
+							statements.Operator = types.StringValue(string(statementsItem.Operator))
+							statements.Source = &tfTypes.EvaluationSource{}
+							statements.Source.Attribute = types.StringPointerValue(statementsItem.Source.Attribute)
+							if statementsItem.Source.AttributeOperation != nil {
+								statements.Source.AttributeOperation = types.StringValue(string(*statementsItem.Source.AttributeOperation))
 							} else {
-								statements.Source.DateOffset.Unit = types.StringNull()
+								statements.Source.AttributeOperation = types.StringNull()
 							}
-						}
-						statements.Source.ID = types.StringPointerValue(statementsItem.Source.ID)
-						if statementsItem.Source.Origin != nil {
-							statements.Source.Origin = types.StringValue(string(*statementsItem.Source.Origin))
-						} else {
-							statements.Source.Origin = types.StringNull()
-						}
-						if statementsItem.Source.OriginType != nil {
-							statements.Source.OriginType = types.StringValue(string(*statementsItem.Source.OriginType))
-						} else {
-							statements.Source.OriginType = types.StringNull()
-						}
-						statements.Source.Schema = types.StringPointerValue(statementsItem.Source.Schema)
-						if statementsItem.ValueType != nil {
-							statements.ValueType = types.StringValue(string(*statementsItem.ValueType))
-						} else {
-							statements.ValueType = types.StringNull()
-						}
-						statements.Values = make([]types.String, 0, len(statementsItem.Values))
-						for _, v := range statementsItem.Values {
-							statements.Values = append(statements.Values, types.StringValue(v))
-						}
+							statements.Source.AttributeRepeatable = types.BoolPointerValue(statementsItem.Source.AttributeRepeatable)
+							statements.Source.AttributeSubField = types.StringPointerValue(statementsItem.Source.AttributeSubField)
+							if statementsItem.Source.AttributeType != nil {
+								statements.Source.AttributeType = types.StringValue(string(*statementsItem.Source.AttributeType))
+							} else {
+								statements.Source.AttributeType = types.StringNull()
+							}
+							if statementsItem.Source.DateOffset == nil {
+								statements.Source.DateOffset = nil
+							} else {
+								statements.Source.DateOffset = &tfTypes.DateOffset{}
+								statements.Source.DateOffset.Amount = types.Int64PointerValue(statementsItem.Source.DateOffset.Amount)
+								if statementsItem.Source.DateOffset.Unit != nil {
+									statements.Source.DateOffset.Unit = types.StringValue(string(*statementsItem.Source.DateOffset.Unit))
+								} else {
+									statements.Source.DateOffset.Unit = types.StringNull()
+								}
+							}
+							statements.Source.ID = types.StringPointerValue(statementsItem.Source.ID)
+							if statementsItem.Source.Origin != nil {
+								statements.Source.Origin = types.StringValue(string(*statementsItem.Source.Origin))
+							} else {
+								statements.Source.Origin = types.StringNull()
+							}
+							if statementsItem.Source.OriginType != nil {
+								statements.Source.OriginType = types.StringValue(string(*statementsItem.Source.OriginType))
+							} else {
+								statements.Source.OriginType = types.StringNull()
+							}
+							statements.Source.Schema = types.StringPointerValue(statementsItem.Source.Schema)
+							if statementsItem.ValueType != nil {
+								statements.ValueType = types.StringValue(string(*statementsItem.ValueType))
+							} else {
+								statements.ValueType = types.StringNull()
+							}
+							statements.Values = make([]types.String, 0, len(statementsItem.Values))
+							for _, v := range statementsItem.Values {
+								statements.Values = append(statements.Values, types.StringValue(v))
+							}
 
-						conditions.Statements = append(conditions.Statements, statements)
+							conditions.Statements = append(conditions.Statements, statements)
+						}
+					} else {
+						conditions.Statements = nil
 					}
 
 					tasks.DecisionTask.Conditions = append(tasks.DecisionTask.Conditions, conditions)

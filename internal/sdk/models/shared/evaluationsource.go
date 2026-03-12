@@ -245,7 +245,7 @@ type EvaluationSource struct {
 	Attribute           *string             `json:"attribute,omitempty"`
 	AttributeOperation  *AttributeOperation `json:"attribute_operation,omitempty"`
 	AttributeRepeatable *bool               `json:"attribute_repeatable,omitempty"`
-	// For complex attribute types, specifies which sub-field to extract (e.g., 'address', 'name', 'email_type')
+	// For complex attribute types, specifies which sub-field to extract (e.g., "address", "name", "email_type")
 	AttributeSubField *string        `json:"attribute_sub_field,omitempty"`
 	AttributeType     *AttributeType `json:"attribute_type,omitempty"`
 	// Offset to apply to the source date value before comparison (e.g., +18 years for age check, +30 days for expiry)

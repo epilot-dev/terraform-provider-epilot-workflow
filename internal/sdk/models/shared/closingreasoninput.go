@@ -4,20 +4,28 @@ package shared
 
 // ClosingReasonInput - One Closing reason for a workflow
 type ClosingReasonInput struct {
-	Status ClosingReasonsStatus `json:"status"`
-	Title  string               `json:"title"`
+	ID     *string               `json:"id,omitempty"`
+	Status *ClosingReasonsStatus `json:"status,omitempty"`
+	Title  *string               `json:"title,omitempty"`
 }
 
-func (c *ClosingReasonInput) GetStatus() ClosingReasonsStatus {
+func (c *ClosingReasonInput) GetID() *string {
 	if c == nil {
-		return ClosingReasonsStatus("")
+		return nil
+	}
+	return c.ID
+}
+
+func (c *ClosingReasonInput) GetStatus() *ClosingReasonsStatus {
+	if c == nil {
+		return nil
 	}
 	return c.Status
 }
 
-func (c *ClosingReasonInput) GetTitle() string {
+func (c *ClosingReasonInput) GetTitle() *string {
 	if c == nil {
-		return ""
+		return nil
 	}
 	return c.Title
 }
