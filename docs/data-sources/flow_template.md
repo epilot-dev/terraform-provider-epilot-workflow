@@ -25,7 +25,7 @@ data "epilot-workflow_flow_template" "my_flowtemplate" {
 
 - `additional_triggers` (Attributes List) Additional trigger configurations that can also start this flow. Useful for flows that should be startable via multiple methods (e.g., both automation AND manual). (see [below for nested schema](#nestedatt--additional_triggers))
 - `assigned_to` (Attributes List) (see [below for nested schema](#nestedatt--assigned_to))
-- `available_in_ecp` (Boolean) Indicates whether this workflow is available for End Customer Portal or not. By default it"s not.
+- `available_in_ecp` (Boolean) Indicates whether this workflow is available for End Customer Portal or not. By default it's not.
 - `closing_reasons` (Attributes List) (see [below for nested schema](#nestedatt--closing_reasons))
 - `created_at` (String) ISO String Date & Time
 - `description` (String)

@@ -101,7 +101,7 @@ type FlowTemplate struct {
 	// Additional trigger configurations that can also start this flow. Useful for flows that should be startable via multiple methods (e.g., both automation AND manual).
 	AdditionalTriggers []Trigger                `json:"additional_triggers,omitempty"`
 	AssignedTo         []FlowTemplateAssignedTo `json:"assigned_to,omitempty"`
-	// Indicates whether this workflow is available for End Customer Portal or not. By default it"s not.
+	// Indicates whether this workflow is available for End Customer Portal or not. By default it's not.
 	AvailableInEcp *bool           `json:"available_in_ecp,omitempty"`
 	ClosingReasons []ClosingReason `json:"closing_reasons,omitempty"`
 	// ISO String Date & Time
@@ -297,7 +297,7 @@ type FlowTemplateInput struct {
 	// Additional trigger configurations that can also start this flow. Useful for flows that should be startable via multiple methods (e.g., both automation AND manual).
 	AdditionalTriggers []Trigger                `json:"additional_triggers,omitempty"`
 	AssignedTo         []FlowTemplateAssignedTo `json:"assigned_to,omitempty"`
-	// Indicates whether this workflow is available for End Customer Portal or not. By default it"s not.
+	// Indicates whether this workflow is available for End Customer Portal or not. By default it's not.
 	AvailableInEcp *bool                `json:"available_in_ecp,omitempty"`
 	ClosingReasons []ClosingReasonInput `json:"closing_reasons,omitempty"`
 	// ISO String Date & Time

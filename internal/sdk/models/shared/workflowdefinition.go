@@ -15,7 +15,7 @@ type WorkflowDefinition struct {
 	DueDate      *string `json:"dueDate,omitempty"`
 	// set a Duedate for a step then a specific
 	DynamicDueDate *DynamicDueDate `json:"dynamicDueDate,omitempty"`
-	// Indicates whether this workflow is available for End Customer Portal or not. By default it"s not.
+	// Indicates whether this workflow is available for End Customer Portal or not. By default it's not.
 	EnableECPWorkflow *bool `json:"enableECPWorkflow,omitempty"`
 	// Whether the workflow is enabled or not
 	Enabled *bool   `default:"true" json:"enabled"`

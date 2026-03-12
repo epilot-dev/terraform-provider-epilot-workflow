@@ -5,10 +5,18 @@ resource "epilot-workflow_flow_template" "my_epilot-workflow_flow_template" {
     available_in_ecp    = true
     closing_reasons     = [
         {
-            id               = "qgK9sGbKoS7NxlAbNReVn"
+            creation_time    = "2024-05-24T14:52:33.620Z"
+            id               = "1gNTrk7Kx50g7EKGPc5GR"
+            last_update_time = "2024-05-24T14:52:33.620Z"
+            status           = "ACTIVE"
+            title            = "This is expensive"
         },
         {
-            id               = "1gNTrk7Kx50g7EKGPc5GR"
+            creation_time    = "2024-05-06T14:03:02.993Z"
+            id               = "qgK9sGbKoS7NxlAbNReVn"
+            last_update_time = "2024-05-06T14:03:02.993Z"
+            status           = "ACTIVE"
+            title            = "Client didn't want our services"
         },
     ]
     description         = "Testing blueprint migration heyo"
@@ -115,7 +123,11 @@ resource "epilot-workflow_flow_template" "my_epilot-workflow_flow_template" {
     name                = "Daniel Test Blueprint"
     phases              = [
         {
-            assigned_to     = []
+            assigned_to     = [
+                {
+                    str = "10010728"
+                },
+            ]
             due_date_config = {
                 duration = 2
                 type     = "WORKFLOW_STARTED"

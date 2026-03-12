@@ -106,7 +106,7 @@ func (r *WorkflowDefinitionDataSource) Schema(ctx context.Context, req datasourc
 			},
 			"enable_ecp_workflow": schema.BoolAttribute{
 				Computed:    true,
-				Description: `Indicates whether this workflow is available for End Customer Portal or not. By default it"s not.`,
+				Description: `Indicates whether this workflow is available for End Customer Portal or not. By default it's not.`,
 			},
 			"enabled": schema.BoolAttribute{
 				Computed:    true,

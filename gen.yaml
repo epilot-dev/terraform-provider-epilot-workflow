@@ -43,7 +43,7 @@ go:
   outputModelSuffix: output
   packageName: openapi
 terraform:
-  version: 0.28.8
+  version: 0.28.15
   additionalActions: []
   additionalDataSources: []
   additionalDependencies: {}

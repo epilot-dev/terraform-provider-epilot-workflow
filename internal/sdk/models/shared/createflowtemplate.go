@@ -112,7 +112,7 @@ type CreateFlowTemplate struct {
 	// Additional trigger configurations that can also start this flow. Useful for flows that should be startable via multiple methods (e.g., both automation AND manual).
 	AdditionalTriggers []Trigger                      `json:"additional_triggers,omitempty"`
 	AssignedTo         []CreateFlowTemplateAssignedTo `json:"assigned_to,omitempty"`
-	// Indicates whether this workflow is available for End Customer Portal or not. By default it"s not.
+	// Indicates whether this workflow is available for End Customer Portal or not. By default it's not.
 	AvailableInEcp *bool                              `json:"available_in_ecp,omitempty"`
 	ClosingReasons []CreateFlowTemplateClosingReasons `json:"closing_reasons,omitempty"`
 	// ISO String Date & Time

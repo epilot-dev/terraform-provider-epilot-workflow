@@ -305,7 +305,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 			"available_in_ecp": schema.BoolAttribute{
 				Computed:    true,
 				Optional:    true,
-				Description: `Indicates whether this workflow is available for End Customer Portal or not. By default it"s not.`,
+				Description: `Indicates whether this workflow is available for End Customer Portal or not. By default it's not.`,
 			},
 			"closing_reasons": schema.ListNestedAttribute{
 				Computed: true,
