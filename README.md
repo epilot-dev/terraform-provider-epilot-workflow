@@ -63,7 +63,7 @@ terraform {
   required_providers {
     epilot-workflow = {
       source  = "epilot-dev/epilot-workflow"
-      version = "0.28.16"
+      version = "0.28.17"
     }
   }
 }
@@ -132,11 +132,12 @@ Available configuration:
 <!-- Start Available Resources and Data Sources [operations] -->
 ## Available Resources and Data Sources
 
-### Resources
+### Managed Resources
 
 * [epilot-workflow_closing_reason](docs/resources/closing_reason.md)
 * [epilot-workflow_flow_template](docs/resources/flow_template.md)
 * [epilot-workflow_workflow_definition](docs/resources/workflow_definition.md)
+
 ### Data Sources
 
 * [epilot-workflow_closing_reason](docs/data-sources/closing_reason.md)

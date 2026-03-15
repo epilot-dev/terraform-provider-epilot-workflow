@@ -5,8 +5,6 @@ package provider
 import (
 	"context"
 	"fmt"
-	speakeasy_objectplanmodifier "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/planmodifiers/objectplanmodifier"
-	speakeasy_stringplanmodifier "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/provider/types"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/validators"
@@ -24,7 +22,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
@@ -87,9 +84,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 					Attributes: map[string]schema.Attribute{
 						"automation_trigger": schema.SingleNestedAttribute{
 							Optional: true,
-							PlanModifiers: []planmodifier.Object{
-								speakeasy_objectplanmodifier.UseConfigValue(),
-							},
 							Attributes: map[string]schema.Attribute{
 								"automation_id": schema.StringAttribute{
 									Computed:    true,
@@ -157,9 +151,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 						},
 						"journey_automation_trigger": schema.SingleNestedAttribute{
 							Optional: true,
-							PlanModifiers: []planmodifier.Object{
-								speakeasy_objectplanmodifier.UseConfigValue(),
-							},
 							Attributes: map[string]schema.Attribute{
 								"entity_schema": schema.StringAttribute{
 									Computed:    true,
@@ -192,9 +183,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 						},
 						"journey_submission_trigger": schema.SingleNestedAttribute{
 							Optional: true,
-							PlanModifiers: []planmodifier.Object{
-								speakeasy_objectplanmodifier.UseConfigValue(),
-							},
 							Attributes: map[string]schema.Attribute{
 								"automation_id": schema.StringAttribute{
 									Computed: true,
@@ -239,9 +227,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 						},
 						"manual_trigger": schema.SingleNestedAttribute{
 							Optional: true,
-							PlanModifiers: []planmodifier.Object{
-								speakeasy_objectplanmodifier.UseConfigValue(),
-							},
 							Attributes: map[string]schema.Attribute{
 								"entity_schema": schema.StringAttribute{
 									Computed: true,
@@ -283,9 +268,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 					Attributes: map[string]schema.Attribute{
 						"str": schema.StringAttribute{
 							Optional: true,
-							PlanModifiers: []planmodifier.String{
-								speakeasy_stringplanmodifier.UseConfigValue(),
-							},
 							Validators: []validator.String{
 								stringvalidator.ConflictsWith(path.Expressions{
 									path.MatchRelative().AtParent().AtName("variable_assignment"),
@@ -294,9 +276,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 						},
 						"variable_assignment": schema.SingleNestedAttribute{
 							Optional: true,
-							PlanModifiers: []planmodifier.Object{
-								speakeasy_objectplanmodifier.UseConfigValue(),
-							},
 							Attributes: map[string]schema.Attribute{
 								"value": schema.ListAttribute{
 									Computed:    true,
@@ -632,9 +611,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 								Attributes: map[string]schema.Attribute{
 									"str": schema.StringAttribute{
 										Optional: true,
-										PlanModifiers: []planmodifier.String{
-											speakeasy_stringplanmodifier.UseConfigValue(),
-										},
 										Validators: []validator.String{
 											stringvalidator.ConflictsWith(path.Expressions{
 												path.MatchRelative().AtParent().AtName("variable_assignment"),
@@ -643,9 +619,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 									},
 									"variable_assignment": schema.SingleNestedAttribute{
 										Optional: true,
-										PlanModifiers: []planmodifier.Object{
-											speakeasy_objectplanmodifier.UseConfigValue(),
-										},
 										Attributes: map[string]schema.Attribute{
 											"value": schema.ListAttribute{
 												Computed:    true,
@@ -768,9 +741,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 					Attributes: map[string]schema.Attribute{
 						"ai_agent_task": schema.SingleNestedAttribute{
 							Optional: true,
-							PlanModifiers: []planmodifier.Object{
-								speakeasy_objectplanmodifier.UseConfigValue(),
-							},
 							Attributes: map[string]schema.Attribute{
 								"agent_config": schema.SingleNestedAttribute{
 									Computed: true,
@@ -803,9 +773,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 										Attributes: map[string]schema.Attribute{
 											"str": schema.StringAttribute{
 												Optional: true,
-												PlanModifiers: []planmodifier.String{
-													speakeasy_stringplanmodifier.UseConfigValue(),
-												},
 												Validators: []validator.String{
 													stringvalidator.ConflictsWith(path.Expressions{
 														path.MatchRelative().AtParent().AtName("variable_assignment"),
@@ -814,9 +781,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 											},
 											"variable_assignment": schema.SingleNestedAttribute{
 												Optional: true,
-												PlanModifiers: []planmodifier.Object{
-													speakeasy_objectplanmodifier.UseConfigValue(),
-												},
 												Attributes: map[string]schema.Attribute{
 													"value": schema.ListAttribute{
 														Computed:    true,
@@ -1110,9 +1074,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 						},
 						"automation_task": schema.SingleNestedAttribute{
 							Optional: true,
-							PlanModifiers: []planmodifier.Object{
-								speakeasy_objectplanmodifier.UseConfigValue(),
-							},
 							Attributes: map[string]schema.Attribute{
 								"assigned_to": schema.ListNestedAttribute{
 									Computed: true,
@@ -1124,9 +1085,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 										Attributes: map[string]schema.Attribute{
 											"str": schema.StringAttribute{
 												Optional: true,
-												PlanModifiers: []planmodifier.String{
-													speakeasy_stringplanmodifier.UseConfigValue(),
-												},
 												Validators: []validator.String{
 													stringvalidator.ConflictsWith(path.Expressions{
 														path.MatchRelative().AtParent().AtName("variable_assignment"),
@@ -1135,9 +1093,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 											},
 											"variable_assignment": schema.SingleNestedAttribute{
 												Optional: true,
-												PlanModifiers: []planmodifier.Object{
-													speakeasy_objectplanmodifier.UseConfigValue(),
-												},
 												Attributes: map[string]schema.Attribute{
 													"value": schema.ListAttribute{
 														Computed:    true,
@@ -1457,9 +1412,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 									Attributes: map[string]schema.Attribute{
 										"delayed_schedule": schema.SingleNestedAttribute{
 											Optional: true,
-											PlanModifiers: []planmodifier.Object{
-												speakeasy_objectplanmodifier.UseConfigValue(),
-											},
 											Attributes: map[string]schema.Attribute{
 												"duration": schema.Float64Attribute{
 													Computed:    true,
@@ -1503,9 +1455,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 										},
 										"immediate_schedule": schema.SingleNestedAttribute{
 											Optional: true,
-											PlanModifiers: []planmodifier.Object{
-												speakeasy_objectplanmodifier.UseConfigValue(),
-											},
 											Attributes: map[string]schema.Attribute{
 												"mode": schema.StringAttribute{
 													Computed:    true,
@@ -1527,9 +1476,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 										},
 										"relative_schedule": schema.SingleNestedAttribute{
 											Optional: true,
-											PlanModifiers: []planmodifier.Object{
-												speakeasy_objectplanmodifier.UseConfigValue(),
-											},
 											Attributes: map[string]schema.Attribute{
 												"direction": schema.StringAttribute{
 													Computed:    true,
@@ -1669,9 +1615,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 						},
 						"decision_task": schema.SingleNestedAttribute{
 							Optional: true,
-							PlanModifiers: []planmodifier.Object{
-								speakeasy_objectplanmodifier.UseConfigValue(),
-							},
 							Attributes: map[string]schema.Attribute{
 								"assigned_to": schema.ListNestedAttribute{
 									Computed: true,
@@ -1683,9 +1626,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 										Attributes: map[string]schema.Attribute{
 											"str": schema.StringAttribute{
 												Optional: true,
-												PlanModifiers: []planmodifier.String{
-													speakeasy_stringplanmodifier.UseConfigValue(),
-												},
 												Validators: []validator.String{
 													stringvalidator.ConflictsWith(path.Expressions{
 														path.MatchRelative().AtParent().AtName("variable_assignment"),
@@ -1694,9 +1634,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 											},
 											"variable_assignment": schema.SingleNestedAttribute{
 												Optional: true,
-												PlanModifiers: []planmodifier.Object{
-													speakeasy_objectplanmodifier.UseConfigValue(),
-												},
 												Attributes: map[string]schema.Attribute{
 													"value": schema.ListAttribute{
 														Computed:    true,
@@ -2225,9 +2162,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 									Attributes: map[string]schema.Attribute{
 										"delayed_schedule": schema.SingleNestedAttribute{
 											Optional: true,
-											PlanModifiers: []planmodifier.Object{
-												speakeasy_objectplanmodifier.UseConfigValue(),
-											},
 											Attributes: map[string]schema.Attribute{
 												"duration": schema.Float64Attribute{
 													Computed:    true,
@@ -2270,9 +2204,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 										},
 										"relative_schedule": schema.SingleNestedAttribute{
 											Optional: true,
-											PlanModifiers: []planmodifier.Object{
-												speakeasy_objectplanmodifier.UseConfigValue(),
-											},
 											Attributes: map[string]schema.Attribute{
 												"direction": schema.StringAttribute{
 													Computed:    true,
@@ -2412,9 +2343,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 						},
 						"task_base": schema.SingleNestedAttribute{
 							Optional: true,
-							PlanModifiers: []planmodifier.Object{
-								speakeasy_objectplanmodifier.UseConfigValue(),
-							},
 							Attributes: map[string]schema.Attribute{
 								"assigned_to": schema.ListNestedAttribute{
 									Computed: true,
@@ -2426,9 +2354,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 										Attributes: map[string]schema.Attribute{
 											"str": schema.StringAttribute{
 												Optional: true,
-												PlanModifiers: []planmodifier.String{
-													speakeasy_stringplanmodifier.UseConfigValue(),
-												},
 												Validators: []validator.String{
 													stringvalidator.ConflictsWith(path.Expressions{
 														path.MatchRelative().AtParent().AtName("variable_assignment"),
@@ -2437,9 +2362,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 											},
 											"variable_assignment": schema.SingleNestedAttribute{
 												Optional: true,
-												PlanModifiers: []planmodifier.Object{
-													speakeasy_objectplanmodifier.UseConfigValue(),
-												},
 												Attributes: map[string]schema.Attribute{
 													"value": schema.ListAttribute{
 														Computed:    true,
@@ -2746,9 +2668,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 				Attributes: map[string]schema.Attribute{
 					"automation_trigger": schema.SingleNestedAttribute{
 						Optional: true,
-						PlanModifiers: []planmodifier.Object{
-							speakeasy_objectplanmodifier.UseConfigValue(),
-						},
 						Attributes: map[string]schema.Attribute{
 							"automation_id": schema.StringAttribute{
 								Computed:    true,
@@ -2816,9 +2735,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 					},
 					"journey_automation_trigger": schema.SingleNestedAttribute{
 						Optional: true,
-						PlanModifiers: []planmodifier.Object{
-							speakeasy_objectplanmodifier.UseConfigValue(),
-						},
 						Attributes: map[string]schema.Attribute{
 							"entity_schema": schema.StringAttribute{
 								Computed:    true,
@@ -2851,9 +2767,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 					},
 					"journey_submission_trigger": schema.SingleNestedAttribute{
 						Optional: true,
-						PlanModifiers: []planmodifier.Object{
-							speakeasy_objectplanmodifier.UseConfigValue(),
-						},
 						Attributes: map[string]schema.Attribute{
 							"automation_id": schema.StringAttribute{
 								Computed: true,
@@ -2898,9 +2811,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 					},
 					"manual_trigger": schema.SingleNestedAttribute{
 						Optional: true,
-						PlanModifiers: []planmodifier.Object{
-							speakeasy_objectplanmodifier.UseConfigValue(),
-						},
 						Attributes: map[string]schema.Attribute{
 							"entity_schema": schema.StringAttribute{
 								Computed: true,
