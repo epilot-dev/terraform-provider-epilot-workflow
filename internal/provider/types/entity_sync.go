@@ -3,7 +3,7 @@
 package types
 
 type EntitySync struct {
-	Target  Target            `tfsdk:"target"`
-	Trigger EntitySyncTrigger `tfsdk:"trigger"`
-	Value   Value             `tfsdk:"value"`
+	Target  *Target            `tfsdk:"target"`
+	Trigger *EntitySyncTrigger `tfsdk:"trigger"`
+	Value   *Value             `tfsdk:"value"`
 }

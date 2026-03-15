@@ -1,9 +1,9 @@
-speakeasyVersion: 1.752.0
+speakeasyVersion: 1.755.0
 sources:
     my-source:
         sourceNamespace: my-source
-        sourceRevisionDigest: sha256:2ee81d075cfd43eeb48662bce1ecc240dd0dd642c3f5a17946ecdd6902fea272
-        sourceBlobDigest: sha256:ca57c9f570036cc2e6be6bc717859bdf514add526b696920bca75f1801c7cace
+        sourceRevisionDigest: sha256:1921c1ddd82d4be493c7bde40dabbfab78ed2ea4ba3e38485570e2520759d5b9
+        sourceBlobDigest: sha256:f9538c65e6d55eeca1095a3eddbe743e0d3755beb5ed0c9a4ee2444a581ff316
         tags:
             - latest
             - 1.0.0
@@ -11,8 +11,8 @@ targets:
     terraform:
         source: my-source
         sourceNamespace: my-source
-        sourceRevisionDigest: sha256:2ee81d075cfd43eeb48662bce1ecc240dd0dd642c3f5a17946ecdd6902fea272
-        sourceBlobDigest: sha256:ca57c9f570036cc2e6be6bc717859bdf514add526b696920bca75f1801c7cace
+        sourceRevisionDigest: sha256:1921c1ddd82d4be493c7bde40dabbfab78ed2ea4ba3e38485570e2520759d5b9
+        sourceBlobDigest: sha256:f9538c65e6d55eeca1095a3eddbe743e0d3755beb5ed0c9a4ee2444a581ff316
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest
