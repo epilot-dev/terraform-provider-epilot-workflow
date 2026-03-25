@@ -8,7 +8,7 @@ import (
 
 type AutomationTask struct {
 	AssignedTo           []FlowTemplateAssignedTo `tfsdk:"assigned_to"`
-	AutomationConfig     AutomationConfig         `tfsdk:"automation_config"`
+	AutomationConfig     *AutomationConfig        `tfsdk:"automation_config"`
 	CreatedAutomatically types.Bool               `tfsdk:"created_automatically"`
 	Description          *StepDescription         `tfsdk:"description"`
 	DueDate              types.String             `tfsdk:"due_date"`
