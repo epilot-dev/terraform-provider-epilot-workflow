@@ -8,5 +8,5 @@ import (
 
 type UpdateEntityAttributes struct {
 	Source types.String `tfsdk:"source"`
-	Target Target       `tfsdk:"target"`
+	Target *Target      `tfsdk:"target"`
 }

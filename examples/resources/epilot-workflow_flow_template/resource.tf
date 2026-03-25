@@ -133,7 +133,7 @@ resource "epilot-workflow_flow_template" "my_flowtemplate" {
           description = "...my_description..."
           enabled     = true
           journey = {
-            complete_task_automatically = false
+            complete_task_automatically = true
             id                          = "...my_id..."
             journey_id                  = "...my_journey_id..."
             name                        = "...my_name..."
@@ -141,7 +141,7 @@ resource "epilot-workflow_flow_template" "my_flowtemplate" {
           label = "...my_label..."
         }
         journey = {
-          complete_task_automatically = false
+          complete_task_automatically = true
           id                          = "...my_id..."
           journey_id                  = "...my_journey_id..."
           name                        = "...my_name..."
