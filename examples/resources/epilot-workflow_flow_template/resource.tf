@@ -67,7 +67,10 @@ resource "epilot-workflow_flow_template" "my_flowtemplate" {
       }
     }
   ]
-  id     = "...my_id..."
+  id = "...my_id..."
+  manifest = [
+    "..."
+  ]
   name   = "...my_name..."
   org_id = "...my_org_id..."
   phases = [
@@ -133,7 +136,7 @@ resource "epilot-workflow_flow_template" "my_flowtemplate" {
           description = "...my_description..."
           enabled     = true
           journey = {
-            complete_task_automatically = true
+            complete_task_automatically = false
             id                          = "...my_id..."
             journey_id                  = "...my_journey_id..."
             name                        = "...my_name..."
@@ -141,12 +144,17 @@ resource "epilot-workflow_flow_template" "my_flowtemplate" {
           label = "...my_label..."
         }
         journey = {
-          complete_task_automatically = true
+          complete_task_automatically = false
           id                          = "...my_id..."
           journey_id                  = "...my_journey_id..."
           name                        = "...my_name..."
         }
-        name     = "...my_name..."
+        name = "...my_name..."
+        partner = {
+          description = "...my_description..."
+          enabled     = false
+          label       = "...my_label..."
+        }
         phase_id = "...my_phase_id..."
         requirements = [
           {

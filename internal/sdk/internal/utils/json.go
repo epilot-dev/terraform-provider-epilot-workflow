@@ -76,13 +76,6 @@ func MarshalJSON(v interface{}, tag reflect.StructTag, topLevel bool) ([]byte, e
 					continue
 				}
 
-				if omitEmpty && fieldVal.Kind() != reflect.Struct && fieldVal.IsZero() {
-					continue
-				}
-
-				if omitEmpty && isEmptyContainer(field.Type, fieldVal) {
-					continue
-				}
 			}
 
 			if !field.IsExported() && field.Tag.Get("const") == "" {
@@ -532,11 +525,6 @@ func unmarshalValue(value json.RawMessage, v reflect.Value, tag reflect.StructTa
 			m.SetMapIndex(reflect.ValueOf(k), itemVal.Elem())
 		}
 
-		// Dereference pointer before setting the map value.
-		// v may be a pointer to a map (e.g., from reflect.ValueOf(&mapVar)).
-		if v.Kind() == reflect.Ptr {
-			v = v.Elem()
-		}
 		v.Set(m)
 		return nil
 	case reflect.Slice, reflect.Array:
@@ -581,7 +569,7 @@ func unmarshalValue(value json.RawMessage, v reflect.Value, tag reflect.StructTa
 			}
 
 			if v.Kind() == reflect.Ptr {
-				if v.IsNil() && v.CanSet() {
+				if v.IsNil() {
 					v.Set(reflect.New(typ))
 				}
 				v = v.Elem()
@@ -629,7 +617,7 @@ func unmarshalValue(value json.RawMessage, v reflect.Value, tag reflect.StructTa
 			}
 
 			if v.Kind() == reflect.Ptr {
-				if v.IsNil() && v.CanSet() {
+				if v.IsNil() {
 					v.Set(reflect.New(typ))
 				}
 				v = v.Elem()

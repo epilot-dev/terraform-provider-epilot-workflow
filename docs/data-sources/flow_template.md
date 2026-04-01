@@ -14,7 +14,6 @@ FlowTemplate DataSource
 
 ```terraform
 data "epilot-workflow_flow_template" "my_flowtemplate" {
-  id = "...my_id..."
 }
 ```
 
@@ -35,6 +34,7 @@ data "epilot-workflow_flow_template" "my_flowtemplate" {
 - `enabled` (Boolean) Whether the workflow is enabled or not
 - `entity_sync` (Attributes List) (see [below for nested schema](#nestedatt--entity_sync))
 - `id` (String) The ID of this resource.
+- `manifest` (List of String) The manifest IDs associated with this workflow
 - `name` (String)
 - `org_id` (String)
 - `phases` (Attributes List) (see [below for nested schema](#nestedatt--phases))
@@ -286,6 +286,7 @@ Read-Only:
 - `installer` (Attributes) Details regarding ECP for the workflow step (see [below for nested schema](#nestedatt--tasks--ai_agent_task--installer))
 - `journey` (Attributes) (see [below for nested schema](#nestedatt--tasks--ai_agent_task--journey))
 - `name` (String)
+- `partner` (Attributes) Details regarding partner for the workflow step (see [below for nested schema](#nestedatt--tasks--ai_agent_task--partner))
 - `phase_id` (String)
 - `requirements` (Attributes List) requirements that need to be fulfilled in order to enable the task while flow instances are running (see [below for nested schema](#nestedatt--tasks--ai_agent_task--requirements))
 - `task_type` (String)
@@ -394,6 +395,16 @@ Read-Only:
 - `name` (String)
 
 
+<a id="nestedatt--tasks--ai_agent_task--partner"></a>
+### Nested Schema for `tasks.ai_agent_task.partner`
+
+Read-Only:
+
+- `description` (String)
+- `enabled` (Boolean)
+- `label` (String)
+
+
 <a id="nestedatt--tasks--ai_agent_task--requirements"></a>
 ### Nested Schema for `tasks.ai_agent_task.requirements`
 
@@ -421,6 +432,7 @@ Read-Only:
 - `installer` (Attributes) Details regarding ECP for the workflow step (see [below for nested schema](#nestedatt--tasks--automation_task--installer))
 - `journey` (Attributes) (see [below for nested schema](#nestedatt--tasks--automation_task--journey))
 - `name` (String)
+- `partner` (Attributes) Details regarding partner for the workflow step (see [below for nested schema](#nestedatt--tasks--automation_task--partner))
 - `phase_id` (String)
 - `requirements` (Attributes List) requirements that need to be fulfilled in order to enable the task while flow instances are running (see [below for nested schema](#nestedatt--tasks--automation_task--requirements))
 - `schedule` (Attributes) (see [below for nested schema](#nestedatt--tasks--automation_task--schedule))
@@ -541,6 +553,16 @@ Read-Only:
 - `name` (String)
 
 
+<a id="nestedatt--tasks--automation_task--partner"></a>
+### Nested Schema for `tasks.automation_task.partner`
+
+Read-Only:
+
+- `description` (String)
+- `enabled` (Boolean)
+- `label` (String)
+
+
 <a id="nestedatt--tasks--automation_task--requirements"></a>
 ### Nested Schema for `tasks.automation_task.requirements`
 
@@ -619,6 +641,7 @@ Read-Only:
 - `journey` (Attributes) (see [below for nested schema](#nestedatt--tasks--decision_task--journey))
 - `loop_config` (Attributes) (see [below for nested schema](#nestedatt--tasks--decision_task--loop_config))
 - `name` (String)
+- `partner` (Attributes) Details regarding partner for the workflow step (see [below for nested schema](#nestedatt--tasks--decision_task--partner))
 - `phase_id` (String)
 - `requirements` (Attributes List) requirements that need to be fulfilled in order to enable the task while flow instances are running (see [below for nested schema](#nestedatt--tasks--decision_task--requirements))
 - `schedule` (Attributes) (see [below for nested schema](#nestedatt--tasks--decision_task--schedule))
@@ -779,6 +802,16 @@ Read-Only:
 - `max_iterations` (Number) Maximum number of iterations for the loop branch
 
 
+<a id="nestedatt--tasks--decision_task--partner"></a>
+### Nested Schema for `tasks.decision_task.partner`
+
+Read-Only:
+
+- `description` (String)
+- `enabled` (Boolean)
+- `label` (String)
+
+
 <a id="nestedatt--tasks--decision_task--requirements"></a>
 ### Nested Schema for `tasks.decision_task.requirements`
 
@@ -846,6 +879,7 @@ Read-Only:
 - `installer` (Attributes) Details regarding ECP for the workflow step (see [below for nested schema](#nestedatt--tasks--task_base--installer))
 - `journey` (Attributes) (see [below for nested schema](#nestedatt--tasks--task_base--journey))
 - `name` (String)
+- `partner` (Attributes) Details regarding partner for the workflow step (see [below for nested schema](#nestedatt--tasks--task_base--partner))
 - `phase_id` (String)
 - `requirements` (Attributes List) requirements that need to be fulfilled in order to enable the task while flow instances are running (see [below for nested schema](#nestedatt--tasks--task_base--requirements))
 - `task_type` (String)
@@ -943,6 +977,16 @@ Read-Only:
 - `id` (String)
 - `journey_id` (String)
 - `name` (String)
+
+
+<a id="nestedatt--tasks--task_base--partner"></a>
+### Nested Schema for `tasks.task_base.partner`
+
+Read-Only:
+
+- `description` (String)
+- `enabled` (Boolean)
+- `label` (String)
 
 
 <a id="nestedatt--tasks--task_base--requirements"></a>

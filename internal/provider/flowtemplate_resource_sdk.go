@@ -17,6 +17,10 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 	var diags diag.Diagnostics
 
 	if resp != nil {
+		r.Manifest = make([]types.String, 0, len(resp.Manifest))
+		for _, v := range resp.Manifest {
+			r.Manifest = append(r.Manifest, types.StringValue(v))
+		}
 		r.AdditionalTriggers = []tfTypes.Trigger{}
 
 		for _, additionalTriggersItem := range resp.AdditionalTriggers {
@@ -142,10 +146,8 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 		for _, entitySyncItem := range resp.EntitySync {
 			var entitySync tfTypes.EntitySync
 
-			entitySync.Target = &tfTypes.Target{}
 			entitySync.Target.EntityAttribute = types.StringValue(entitySyncItem.Target.EntityAttribute)
 			entitySync.Target.EntitySchema = types.StringValue(entitySyncItem.Target.EntitySchema)
-			entitySync.Trigger = &tfTypes.EntitySyncTrigger{}
 			entitySync.Trigger.Event = types.StringValue(string(entitySyncItem.Trigger.Event))
 			if entitySyncItem.Trigger.Filter == nil {
 				entitySync.Trigger.Filter = nil
@@ -154,7 +156,6 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 				entitySync.Trigger.Filter.PhaseTemplateID = types.StringPointerValue(entitySyncItem.Trigger.Filter.PhaseTemplateID)
 				entitySync.Trigger.Filter.TaskTemplateID = types.StringPointerValue(entitySyncItem.Trigger.Filter.TaskTemplateID)
 			}
-			entitySync.Value = &tfTypes.Value{}
 			entitySync.Value.Source = types.StringValue(string(entitySyncItem.Value.Source))
 			entitySync.Value.Value = types.StringPointerValue(entitySyncItem.Value.Value)
 
@@ -309,6 +310,14 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 					tasks.AiAgentTask.Journey.Name = types.StringPointerValue(tasksItem.AiAgentTask.Journey.Name)
 				}
 				tasks.AiAgentTask.Name = types.StringValue(tasksItem.AiAgentTask.Name)
+				if tasksItem.AiAgentTask.Partner == nil {
+					tasks.AiAgentTask.Partner = nil
+				} else {
+					tasks.AiAgentTask.Partner = &tfTypes.PartnerDetails{}
+					tasks.AiAgentTask.Partner.Description = types.StringPointerValue(tasksItem.AiAgentTask.Partner.Description)
+					tasks.AiAgentTask.Partner.Enabled = types.BoolPointerValue(tasksItem.AiAgentTask.Partner.Enabled)
+					tasks.AiAgentTask.Partner.Label = types.StringPointerValue(tasksItem.AiAgentTask.Partner.Label)
+				}
 				tasks.AiAgentTask.PhaseID = types.StringPointerValue(tasksItem.AiAgentTask.PhaseID)
 				tasks.AiAgentTask.Requirements = []tfTypes.EnableRequirement{}
 
@@ -348,7 +357,6 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 
 					tasks.AutomationTask.AssignedTo = append(tasks.AutomationTask.AssignedTo, assignedTo3)
 				}
-				tasks.AutomationTask.AutomationConfig = &tfTypes.AutomationConfig{}
 				if tasksItem.AutomationTask.AutomationConfig.ActionConfig == nil {
 					tasks.AutomationTask.AutomationConfig.ActionConfig = nil
 				} else {
@@ -433,6 +441,14 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 					tasks.AutomationTask.Journey.Name = types.StringPointerValue(tasksItem.AutomationTask.Journey.Name)
 				}
 				tasks.AutomationTask.Name = types.StringValue(tasksItem.AutomationTask.Name)
+				if tasksItem.AutomationTask.Partner == nil {
+					tasks.AutomationTask.Partner = nil
+				} else {
+					tasks.AutomationTask.Partner = &tfTypes.PartnerDetails{}
+					tasks.AutomationTask.Partner.Description = types.StringPointerValue(tasksItem.AutomationTask.Partner.Description)
+					tasks.AutomationTask.Partner.Enabled = types.BoolPointerValue(tasksItem.AutomationTask.Partner.Enabled)
+					tasks.AutomationTask.Partner.Label = types.StringPointerValue(tasksItem.AutomationTask.Partner.Label)
+				}
 				tasks.AutomationTask.PhaseID = types.StringPointerValue(tasksItem.AutomationTask.PhaseID)
 				tasks.AutomationTask.Requirements = []tfTypes.EnableRequirement{}
 
@@ -466,7 +482,6 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 						tasks.AutomationTask.Schedule.RelativeSchedule.Direction = types.StringValue(string(tasksItem.AutomationTask.Schedule.RelativeSchedule.Direction))
 						tasks.AutomationTask.Schedule.RelativeSchedule.Duration = types.Float64Value(tasksItem.AutomationTask.Schedule.RelativeSchedule.Duration)
 						tasks.AutomationTask.Schedule.RelativeSchedule.Mode = types.StringValue(string(tasksItem.AutomationTask.Schedule.RelativeSchedule.Mode))
-						tasks.AutomationTask.Schedule.RelativeSchedule.Reference = &tfTypes.Reference{}
 						tasks.AutomationTask.Schedule.RelativeSchedule.Reference.Attribute = types.StringPointerValue(tasksItem.AutomationTask.Schedule.RelativeSchedule.Reference.Attribute)
 						tasks.AutomationTask.Schedule.RelativeSchedule.Reference.ID = types.StringValue(tasksItem.AutomationTask.Schedule.RelativeSchedule.Reference.ID)
 						tasks.AutomationTask.Schedule.RelativeSchedule.Reference.Origin = types.StringValue(string(tasksItem.AutomationTask.Schedule.RelativeSchedule.Reference.Origin))
@@ -522,7 +537,6 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 
 							statements.ID = types.StringValue(statementsItem.ID)
 							statements.Operator = types.StringValue(string(statementsItem.Operator))
-							statements.Source = &tfTypes.EvaluationSource{}
 							statements.Source.Attribute = types.StringPointerValue(statementsItem.Source.Attribute)
 							if statementsItem.Source.AttributeOperation != nil {
 								statements.Source.AttributeOperation = types.StringValue(string(*statementsItem.Source.AttributeOperation))
@@ -571,8 +585,6 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 
 							conditions.Statements = append(conditions.Statements, statements)
 						}
-					} else {
-						conditions.Statements = nil
 					}
 
 					tasks.DecisionTask.Conditions = append(tasks.DecisionTask.Conditions, conditions)
@@ -648,6 +660,14 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 					tasks.DecisionTask.LoopConfig.MaxIterations = types.Int64PointerValue(tasksItem.DecisionTask.LoopConfig.MaxIterations)
 				}
 				tasks.DecisionTask.Name = types.StringValue(tasksItem.DecisionTask.Name)
+				if tasksItem.DecisionTask.Partner == nil {
+					tasks.DecisionTask.Partner = nil
+				} else {
+					tasks.DecisionTask.Partner = &tfTypes.PartnerDetails{}
+					tasks.DecisionTask.Partner.Description = types.StringPointerValue(tasksItem.DecisionTask.Partner.Description)
+					tasks.DecisionTask.Partner.Enabled = types.BoolPointerValue(tasksItem.DecisionTask.Partner.Enabled)
+					tasks.DecisionTask.Partner.Label = types.StringPointerValue(tasksItem.DecisionTask.Partner.Label)
+				}
 				tasks.DecisionTask.PhaseID = types.StringPointerValue(tasksItem.DecisionTask.PhaseID)
 				tasks.DecisionTask.Requirements = []tfTypes.EnableRequirement{}
 
@@ -673,7 +693,6 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 						tasks.DecisionTask.Schedule.RelativeSchedule.Direction = types.StringValue(string(tasksItem.DecisionTask.Schedule.RelativeSchedule.Direction))
 						tasks.DecisionTask.Schedule.RelativeSchedule.Duration = types.Float64Value(tasksItem.DecisionTask.Schedule.RelativeSchedule.Duration)
 						tasks.DecisionTask.Schedule.RelativeSchedule.Mode = types.StringValue(string(tasksItem.DecisionTask.Schedule.RelativeSchedule.Mode))
-						tasks.DecisionTask.Schedule.RelativeSchedule.Reference = &tfTypes.Reference{}
 						tasks.DecisionTask.Schedule.RelativeSchedule.Reference.Attribute = types.StringPointerValue(tasksItem.DecisionTask.Schedule.RelativeSchedule.Reference.Attribute)
 						tasks.DecisionTask.Schedule.RelativeSchedule.Reference.ID = types.StringValue(tasksItem.DecisionTask.Schedule.RelativeSchedule.Reference.ID)
 						tasks.DecisionTask.Schedule.RelativeSchedule.Reference.Origin = types.StringValue(string(tasksItem.DecisionTask.Schedule.RelativeSchedule.Reference.Origin))
@@ -772,6 +791,14 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 					tasks.TaskBase.Journey.Name = types.StringPointerValue(tasksItem.TaskBase.Journey.Name)
 				}
 				tasks.TaskBase.Name = types.StringValue(tasksItem.TaskBase.Name)
+				if tasksItem.TaskBase.Partner == nil {
+					tasks.TaskBase.Partner = nil
+				} else {
+					tasks.TaskBase.Partner = &tfTypes.PartnerDetails{}
+					tasks.TaskBase.Partner.Description = types.StringPointerValue(tasksItem.TaskBase.Partner.Description)
+					tasks.TaskBase.Partner.Enabled = types.BoolPointerValue(tasksItem.TaskBase.Partner.Enabled)
+					tasks.TaskBase.Partner.Label = types.StringPointerValue(tasksItem.TaskBase.Partner.Label)
+				}
 				tasks.TaskBase.PhaseID = types.StringPointerValue(tasksItem.TaskBase.PhaseID)
 				tasks.TaskBase.Requirements = []tfTypes.EnableRequirement{}
 
@@ -909,6 +936,10 @@ func (r *FlowTemplateResourceModel) ToOperationsUpdateFlowTemplateRequest(ctx co
 func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Context) (*shared.CreateFlowTemplate, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	manifest := make([]string, 0, len(r.Manifest))
+	for manifestIndex := range r.Manifest {
+		manifest = append(manifest, r.Manifest[manifestIndex].ValueString())
+	}
 	additionalTriggers := make([]shared.Trigger, 0, len(r.AdditionalTriggers))
 	for additionalTriggersItem := range r.AdditionalTriggers {
 		if r.AdditionalTriggers[additionalTriggersItem].ManualTrigger != nil {
@@ -1560,6 +1591,32 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 			var name5 string
 			name5 = r.Tasks[tasksItem].TaskBase.Name.ValueString()
 
+			var partner *shared.PartnerDetails
+			if r.Tasks[tasksItem].TaskBase.Partner != nil {
+				description4 := new(string)
+				if !r.Tasks[tasksItem].TaskBase.Partner.Description.IsUnknown() && !r.Tasks[tasksItem].TaskBase.Partner.Description.IsNull() {
+					*description4 = r.Tasks[tasksItem].TaskBase.Partner.Description.ValueString()
+				} else {
+					description4 = nil
+				}
+				enabled4 := new(bool)
+				if !r.Tasks[tasksItem].TaskBase.Partner.Enabled.IsUnknown() && !r.Tasks[tasksItem].TaskBase.Partner.Enabled.IsNull() {
+					*enabled4 = r.Tasks[tasksItem].TaskBase.Partner.Enabled.ValueBool()
+				} else {
+					enabled4 = nil
+				}
+				label2 := new(string)
+				if !r.Tasks[tasksItem].TaskBase.Partner.Label.IsUnknown() && !r.Tasks[tasksItem].TaskBase.Partner.Label.IsNull() {
+					*label2 = r.Tasks[tasksItem].TaskBase.Partner.Label.ValueString()
+				} else {
+					label2 = nil
+				}
+				partner = &shared.PartnerDetails{
+					Description: description4,
+					Enabled:     enabled4,
+					Label:       label2,
+				}
+			}
 			phaseId3 := new(string)
 			if !r.Tasks[tasksItem].TaskBase.PhaseID.IsUnknown() && !r.Tasks[tasksItem].TaskBase.PhaseID.IsNull() {
 				*phaseId3 = r.Tasks[tasksItem].TaskBase.PhaseID.ValueString()
@@ -1602,6 +1659,7 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 				Installer:     installer,
 				Journey:       journey2,
 				Name:          name5,
+				Partner:       partner,
 				PhaseID:       phaseId3,
 				Requirements:  requirements,
 				TaskType:      taskType,
@@ -1676,13 +1734,13 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 			} else {
 				createdAutomatically = nil
 			}
-			var description4 *shared.StepDescription
+			var description5 *shared.StepDescription
 			if r.Tasks[tasksItem].AutomationTask.Description != nil {
-				enabled4 := new(bool)
+				enabled5 := new(bool)
 				if !r.Tasks[tasksItem].AutomationTask.Description.Enabled.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Description.Enabled.IsNull() {
-					*enabled4 = r.Tasks[tasksItem].AutomationTask.Description.Enabled.ValueBool()
+					*enabled5 = r.Tasks[tasksItem].AutomationTask.Description.Enabled.ValueBool()
 				} else {
-					enabled4 = nil
+					enabled5 = nil
 				}
 				value7 := new(string)
 				if !r.Tasks[tasksItem].AutomationTask.Description.Value.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Description.Value.IsNull() {
@@ -1690,8 +1748,8 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 				} else {
 					value7 = nil
 				}
-				description4 = &shared.StepDescription{
-					Enabled: enabled4,
+				description5 = &shared.StepDescription{
+					Enabled: enabled5,
 					Value:   value7,
 				}
 			}
@@ -1730,17 +1788,17 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 			}
 			var ecp1 *shared.ECPDetails
 			if r.Tasks[tasksItem].AutomationTask.Ecp != nil {
-				description5 := new(string)
+				description6 := new(string)
 				if !r.Tasks[tasksItem].AutomationTask.Ecp.Description.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Ecp.Description.IsNull() {
-					*description5 = r.Tasks[tasksItem].AutomationTask.Ecp.Description.ValueString()
+					*description6 = r.Tasks[tasksItem].AutomationTask.Ecp.Description.ValueString()
 				} else {
-					description5 = nil
+					description6 = nil
 				}
-				enabled5 := new(bool)
+				enabled6 := new(bool)
 				if !r.Tasks[tasksItem].AutomationTask.Ecp.Enabled.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Ecp.Enabled.IsNull() {
-					*enabled5 = r.Tasks[tasksItem].AutomationTask.Ecp.Enabled.ValueBool()
+					*enabled6 = r.Tasks[tasksItem].AutomationTask.Ecp.Enabled.ValueBool()
 				} else {
-					enabled5 = nil
+					enabled6 = nil
 				}
 				var journey3 *shared.StepJourney
 				if r.Tasks[tasksItem].AutomationTask.Ecp.Journey != nil {
@@ -1775,17 +1833,17 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 						Name:                      name6,
 					}
 				}
-				label2 := new(string)
+				label3 := new(string)
 				if !r.Tasks[tasksItem].AutomationTask.Ecp.Label.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Ecp.Label.IsNull() {
-					*label2 = r.Tasks[tasksItem].AutomationTask.Ecp.Label.ValueString()
+					*label3 = r.Tasks[tasksItem].AutomationTask.Ecp.Label.ValueString()
 				} else {
-					label2 = nil
+					label3 = nil
 				}
 				ecp1 = &shared.ECPDetails{
-					Description: description5,
-					Enabled:     enabled5,
+					Description: description6,
+					Enabled:     enabled6,
 					Journey:     journey3,
-					Label:       label2,
+					Label:       label3,
 				}
 			}
 			var id13 string
@@ -1793,17 +1851,17 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 
 			var installer1 *shared.ECPDetails
 			if r.Tasks[tasksItem].AutomationTask.Installer != nil {
-				description6 := new(string)
+				description7 := new(string)
 				if !r.Tasks[tasksItem].AutomationTask.Installer.Description.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Installer.Description.IsNull() {
-					*description6 = r.Tasks[tasksItem].AutomationTask.Installer.Description.ValueString()
+					*description7 = r.Tasks[tasksItem].AutomationTask.Installer.Description.ValueString()
 				} else {
-					description6 = nil
+					description7 = nil
 				}
-				enabled6 := new(bool)
+				enabled7 := new(bool)
 				if !r.Tasks[tasksItem].AutomationTask.Installer.Enabled.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Installer.Enabled.IsNull() {
-					*enabled6 = r.Tasks[tasksItem].AutomationTask.Installer.Enabled.ValueBool()
+					*enabled7 = r.Tasks[tasksItem].AutomationTask.Installer.Enabled.ValueBool()
 				} else {
-					enabled6 = nil
+					enabled7 = nil
 				}
 				var journey4 *shared.StepJourney
 				if r.Tasks[tasksItem].AutomationTask.Installer.Journey != nil {
@@ -1838,17 +1896,17 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 						Name:                      name7,
 					}
 				}
-				label3 := new(string)
+				label4 := new(string)
 				if !r.Tasks[tasksItem].AutomationTask.Installer.Label.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Installer.Label.IsNull() {
-					*label3 = r.Tasks[tasksItem].AutomationTask.Installer.Label.ValueString()
+					*label4 = r.Tasks[tasksItem].AutomationTask.Installer.Label.ValueString()
 				} else {
-					label3 = nil
+					label4 = nil
 				}
 				installer1 = &shared.ECPDetails{
-					Description: description6,
-					Enabled:     enabled6,
+					Description: description7,
+					Enabled:     enabled7,
 					Journey:     journey4,
-					Label:       label3,
+					Label:       label4,
 				}
 			}
 			var journey5 *shared.StepJourney
@@ -1887,6 +1945,32 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 			var name9 string
 			name9 = r.Tasks[tasksItem].AutomationTask.Name.ValueString()
 
+			var partner1 *shared.PartnerDetails
+			if r.Tasks[tasksItem].AutomationTask.Partner != nil {
+				description8 := new(string)
+				if !r.Tasks[tasksItem].AutomationTask.Partner.Description.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Partner.Description.IsNull() {
+					*description8 = r.Tasks[tasksItem].AutomationTask.Partner.Description.ValueString()
+				} else {
+					description8 = nil
+				}
+				enabled8 := new(bool)
+				if !r.Tasks[tasksItem].AutomationTask.Partner.Enabled.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Partner.Enabled.IsNull() {
+					*enabled8 = r.Tasks[tasksItem].AutomationTask.Partner.Enabled.ValueBool()
+				} else {
+					enabled8 = nil
+				}
+				label5 := new(string)
+				if !r.Tasks[tasksItem].AutomationTask.Partner.Label.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Partner.Label.IsNull() {
+					*label5 = r.Tasks[tasksItem].AutomationTask.Partner.Label.ValueString()
+				} else {
+					label5 = nil
+				}
+				partner1 = &shared.PartnerDetails{
+					Description: description8,
+					Enabled:     enabled8,
+					Label:       label5,
+				}
+			}
 			phaseId6 := new(string)
 			if !r.Tasks[tasksItem].AutomationTask.PhaseID.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.PhaseID.IsNull() {
 				*phaseId6 = r.Tasks[tasksItem].AutomationTask.PhaseID.ValueString()
@@ -2010,7 +2094,7 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 				AssignedTo:           assignedTo3,
 				AutomationConfig:     automationConfig,
 				CreatedAutomatically: createdAutomatically,
-				Description:          description4,
+				Description:          description5,
 				DueDate:              dueDate3,
 				DueDateConfig:        dueDateConfig3,
 				Ecp:                  ecp1,
@@ -2018,6 +2102,7 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 				Installer:            installer1,
 				Journey:              journey5,
 				Name:                 name9,
+				Partner:              partner1,
 				PhaseID:              phaseId6,
 				Requirements:         requirements1,
 				Schedule:             schedule,
@@ -2185,13 +2270,13 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 					Statements:      statements,
 				})
 			}
-			var description7 *shared.StepDescription
+			var description9 *shared.StepDescription
 			if r.Tasks[tasksItem].DecisionTask.Description != nil {
-				enabled7 := new(bool)
+				enabled9 := new(bool)
 				if !r.Tasks[tasksItem].DecisionTask.Description.Enabled.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Description.Enabled.IsNull() {
-					*enabled7 = r.Tasks[tasksItem].DecisionTask.Description.Enabled.ValueBool()
+					*enabled9 = r.Tasks[tasksItem].DecisionTask.Description.Enabled.ValueBool()
 				} else {
-					enabled7 = nil
+					enabled9 = nil
 				}
 				value9 := new(string)
 				if !r.Tasks[tasksItem].DecisionTask.Description.Value.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Description.Value.IsNull() {
@@ -2199,8 +2284,8 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 				} else {
 					value9 = nil
 				}
-				description7 = &shared.StepDescription{
-					Enabled: enabled7,
+				description9 = &shared.StepDescription{
+					Enabled: enabled9,
 					Value:   value9,
 				}
 			}
@@ -2239,17 +2324,17 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 			}
 			var ecp2 *shared.ECPDetails
 			if r.Tasks[tasksItem].DecisionTask.Ecp != nil {
-				description8 := new(string)
+				description10 := new(string)
 				if !r.Tasks[tasksItem].DecisionTask.Ecp.Description.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Ecp.Description.IsNull() {
-					*description8 = r.Tasks[tasksItem].DecisionTask.Ecp.Description.ValueString()
+					*description10 = r.Tasks[tasksItem].DecisionTask.Ecp.Description.ValueString()
 				} else {
-					description8 = nil
+					description10 = nil
 				}
-				enabled8 := new(bool)
+				enabled10 := new(bool)
 				if !r.Tasks[tasksItem].DecisionTask.Ecp.Enabled.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Ecp.Enabled.IsNull() {
-					*enabled8 = r.Tasks[tasksItem].DecisionTask.Ecp.Enabled.ValueBool()
+					*enabled10 = r.Tasks[tasksItem].DecisionTask.Ecp.Enabled.ValueBool()
 				} else {
-					enabled8 = nil
+					enabled10 = nil
 				}
 				var journey6 *shared.StepJourney
 				if r.Tasks[tasksItem].DecisionTask.Ecp.Journey != nil {
@@ -2284,17 +2369,17 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 						Name:                      name10,
 					}
 				}
-				label4 := new(string)
+				label6 := new(string)
 				if !r.Tasks[tasksItem].DecisionTask.Ecp.Label.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Ecp.Label.IsNull() {
-					*label4 = r.Tasks[tasksItem].DecisionTask.Ecp.Label.ValueString()
+					*label6 = r.Tasks[tasksItem].DecisionTask.Ecp.Label.ValueString()
 				} else {
-					label4 = nil
+					label6 = nil
 				}
 				ecp2 = &shared.ECPDetails{
-					Description: description8,
-					Enabled:     enabled8,
+					Description: description10,
+					Enabled:     enabled10,
 					Journey:     journey6,
-					Label:       label4,
+					Label:       label6,
 				}
 			}
 			var id21 string
@@ -2302,17 +2387,17 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 
 			var installer2 *shared.ECPDetails
 			if r.Tasks[tasksItem].DecisionTask.Installer != nil {
-				description9 := new(string)
+				description11 := new(string)
 				if !r.Tasks[tasksItem].DecisionTask.Installer.Description.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Installer.Description.IsNull() {
-					*description9 = r.Tasks[tasksItem].DecisionTask.Installer.Description.ValueString()
+					*description11 = r.Tasks[tasksItem].DecisionTask.Installer.Description.ValueString()
 				} else {
-					description9 = nil
+					description11 = nil
 				}
-				enabled9 := new(bool)
+				enabled11 := new(bool)
 				if !r.Tasks[tasksItem].DecisionTask.Installer.Enabled.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Installer.Enabled.IsNull() {
-					*enabled9 = r.Tasks[tasksItem].DecisionTask.Installer.Enabled.ValueBool()
+					*enabled11 = r.Tasks[tasksItem].DecisionTask.Installer.Enabled.ValueBool()
 				} else {
-					enabled9 = nil
+					enabled11 = nil
 				}
 				var journey7 *shared.StepJourney
 				if r.Tasks[tasksItem].DecisionTask.Installer.Journey != nil {
@@ -2347,17 +2432,17 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 						Name:                      name11,
 					}
 				}
-				label5 := new(string)
+				label7 := new(string)
 				if !r.Tasks[tasksItem].DecisionTask.Installer.Label.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Installer.Label.IsNull() {
-					*label5 = r.Tasks[tasksItem].DecisionTask.Installer.Label.ValueString()
+					*label7 = r.Tasks[tasksItem].DecisionTask.Installer.Label.ValueString()
 				} else {
-					label5 = nil
+					label7 = nil
 				}
 				installer2 = &shared.ECPDetails{
-					Description: description9,
-					Enabled:     enabled9,
+					Description: description11,
+					Enabled:     enabled11,
 					Journey:     journey7,
-					Label:       label5,
+					Label:       label7,
 				}
 			}
 			var journey8 *shared.StepJourney
@@ -2416,6 +2501,32 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 			var name13 string
 			name13 = r.Tasks[tasksItem].DecisionTask.Name.ValueString()
 
+			var partner2 *shared.PartnerDetails
+			if r.Tasks[tasksItem].DecisionTask.Partner != nil {
+				description12 := new(string)
+				if !r.Tasks[tasksItem].DecisionTask.Partner.Description.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Partner.Description.IsNull() {
+					*description12 = r.Tasks[tasksItem].DecisionTask.Partner.Description.ValueString()
+				} else {
+					description12 = nil
+				}
+				enabled12 := new(bool)
+				if !r.Tasks[tasksItem].DecisionTask.Partner.Enabled.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Partner.Enabled.IsNull() {
+					*enabled12 = r.Tasks[tasksItem].DecisionTask.Partner.Enabled.ValueBool()
+				} else {
+					enabled12 = nil
+				}
+				label8 := new(string)
+				if !r.Tasks[tasksItem].DecisionTask.Partner.Label.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Partner.Label.IsNull() {
+					*label8 = r.Tasks[tasksItem].DecisionTask.Partner.Label.ValueString()
+				} else {
+					label8 = nil
+				}
+				partner2 = &shared.PartnerDetails{
+					Description: description12,
+					Enabled:     enabled12,
+					Label:       label8,
+				}
+			}
 			phaseId9 := new(string)
 			if !r.Tasks[tasksItem].DecisionTask.PhaseID.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.PhaseID.IsNull() {
 				*phaseId9 = r.Tasks[tasksItem].DecisionTask.PhaseID.ValueString()
@@ -2516,7 +2627,7 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 			decisionTask := shared.DecisionTask{
 				AssignedTo:    assignedTo4,
 				Conditions:    conditions,
-				Description:   description7,
+				Description:   description9,
 				DueDate:       dueDate4,
 				DueDateConfig: dueDateConfig4,
 				Ecp:           ecp2,
@@ -2525,6 +2636,7 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 				Journey:       journey8,
 				LoopConfig:    loopConfig,
 				Name:          name13,
+				Partner:       partner2,
 				PhaseID:       phaseId9,
 				Requirements:  requirements2,
 				Schedule:      schedule1,
@@ -2578,13 +2690,13 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 					})
 				}
 			}
-			var description10 *shared.StepDescription
+			var description13 *shared.StepDescription
 			if r.Tasks[tasksItem].AiAgentTask.Description != nil {
-				enabled10 := new(bool)
+				enabled13 := new(bool)
 				if !r.Tasks[tasksItem].AiAgentTask.Description.Enabled.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Description.Enabled.IsNull() {
-					*enabled10 = r.Tasks[tasksItem].AiAgentTask.Description.Enabled.ValueBool()
+					*enabled13 = r.Tasks[tasksItem].AiAgentTask.Description.Enabled.ValueBool()
 				} else {
-					enabled10 = nil
+					enabled13 = nil
 				}
 				value11 := new(string)
 				if !r.Tasks[tasksItem].AiAgentTask.Description.Value.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Description.Value.IsNull() {
@@ -2592,8 +2704,8 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 				} else {
 					value11 = nil
 				}
-				description10 = &shared.StepDescription{
-					Enabled: enabled10,
+				description13 = &shared.StepDescription{
+					Enabled: enabled13,
 					Value:   value11,
 				}
 			}
@@ -2632,17 +2744,17 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 			}
 			var ecp3 *shared.ECPDetails
 			if r.Tasks[tasksItem].AiAgentTask.Ecp != nil {
-				description11 := new(string)
+				description14 := new(string)
 				if !r.Tasks[tasksItem].AiAgentTask.Ecp.Description.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Ecp.Description.IsNull() {
-					*description11 = r.Tasks[tasksItem].AiAgentTask.Ecp.Description.ValueString()
+					*description14 = r.Tasks[tasksItem].AiAgentTask.Ecp.Description.ValueString()
 				} else {
-					description11 = nil
+					description14 = nil
 				}
-				enabled11 := new(bool)
+				enabled14 := new(bool)
 				if !r.Tasks[tasksItem].AiAgentTask.Ecp.Enabled.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Ecp.Enabled.IsNull() {
-					*enabled11 = r.Tasks[tasksItem].AiAgentTask.Ecp.Enabled.ValueBool()
+					*enabled14 = r.Tasks[tasksItem].AiAgentTask.Ecp.Enabled.ValueBool()
 				} else {
-					enabled11 = nil
+					enabled14 = nil
 				}
 				var journey9 *shared.StepJourney
 				if r.Tasks[tasksItem].AiAgentTask.Ecp.Journey != nil {
@@ -2677,17 +2789,17 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 						Name:                      name14,
 					}
 				}
-				label6 := new(string)
+				label9 := new(string)
 				if !r.Tasks[tasksItem].AiAgentTask.Ecp.Label.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Ecp.Label.IsNull() {
-					*label6 = r.Tasks[tasksItem].AiAgentTask.Ecp.Label.ValueString()
+					*label9 = r.Tasks[tasksItem].AiAgentTask.Ecp.Label.ValueString()
 				} else {
-					label6 = nil
+					label9 = nil
 				}
 				ecp3 = &shared.ECPDetails{
-					Description: description11,
-					Enabled:     enabled11,
+					Description: description14,
+					Enabled:     enabled14,
 					Journey:     journey9,
-					Label:       label6,
+					Label:       label9,
 				}
 			}
 			var id26 string
@@ -2695,17 +2807,17 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 
 			var installer3 *shared.ECPDetails
 			if r.Tasks[tasksItem].AiAgentTask.Installer != nil {
-				description12 := new(string)
+				description15 := new(string)
 				if !r.Tasks[tasksItem].AiAgentTask.Installer.Description.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Installer.Description.IsNull() {
-					*description12 = r.Tasks[tasksItem].AiAgentTask.Installer.Description.ValueString()
+					*description15 = r.Tasks[tasksItem].AiAgentTask.Installer.Description.ValueString()
 				} else {
-					description12 = nil
+					description15 = nil
 				}
-				enabled12 := new(bool)
+				enabled15 := new(bool)
 				if !r.Tasks[tasksItem].AiAgentTask.Installer.Enabled.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Installer.Enabled.IsNull() {
-					*enabled12 = r.Tasks[tasksItem].AiAgentTask.Installer.Enabled.ValueBool()
+					*enabled15 = r.Tasks[tasksItem].AiAgentTask.Installer.Enabled.ValueBool()
 				} else {
-					enabled12 = nil
+					enabled15 = nil
 				}
 				var journey10 *shared.StepJourney
 				if r.Tasks[tasksItem].AiAgentTask.Installer.Journey != nil {
@@ -2740,17 +2852,17 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 						Name:                      name15,
 					}
 				}
-				label7 := new(string)
+				label10 := new(string)
 				if !r.Tasks[tasksItem].AiAgentTask.Installer.Label.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Installer.Label.IsNull() {
-					*label7 = r.Tasks[tasksItem].AiAgentTask.Installer.Label.ValueString()
+					*label10 = r.Tasks[tasksItem].AiAgentTask.Installer.Label.ValueString()
 				} else {
-					label7 = nil
+					label10 = nil
 				}
 				installer3 = &shared.ECPDetails{
-					Description: description12,
-					Enabled:     enabled12,
+					Description: description15,
+					Enabled:     enabled15,
 					Journey:     journey10,
-					Label:       label7,
+					Label:       label10,
 				}
 			}
 			var journey11 *shared.StepJourney
@@ -2789,6 +2901,32 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 			var name17 string
 			name17 = r.Tasks[tasksItem].AiAgentTask.Name.ValueString()
 
+			var partner3 *shared.PartnerDetails
+			if r.Tasks[tasksItem].AiAgentTask.Partner != nil {
+				description16 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.Partner.Description.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Partner.Description.IsNull() {
+					*description16 = r.Tasks[tasksItem].AiAgentTask.Partner.Description.ValueString()
+				} else {
+					description16 = nil
+				}
+				enabled16 := new(bool)
+				if !r.Tasks[tasksItem].AiAgentTask.Partner.Enabled.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Partner.Enabled.IsNull() {
+					*enabled16 = r.Tasks[tasksItem].AiAgentTask.Partner.Enabled.ValueBool()
+				} else {
+					enabled16 = nil
+				}
+				label11 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.Partner.Label.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Partner.Label.IsNull() {
+					*label11 = r.Tasks[tasksItem].AiAgentTask.Partner.Label.ValueString()
+				} else {
+					label11 = nil
+				}
+				partner3 = &shared.PartnerDetails{
+					Description: description16,
+					Enabled:     enabled16,
+					Label:       label11,
+				}
+			}
 			phaseId12 := new(string)
 			if !r.Tasks[tasksItem].AiAgentTask.PhaseID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.PhaseID.IsNull() {
 				*phaseId12 = r.Tasks[tasksItem].AiAgentTask.PhaseID.ValueString()
@@ -2824,7 +2962,7 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 			aiAgentTask := shared.AiAgentTask{
 				AgentConfig:   agentConfig,
 				AssignedTo:    assignedTo5,
-				Description:   description10,
+				Description:   description13,
 				DueDate:       dueDate5,
 				DueDateConfig: dueDateConfig5,
 				Ecp:           ecp3,
@@ -2832,6 +2970,7 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 				Installer:     installer3,
 				Journey:       journey11,
 				Name:          name17,
+				Partner:       partner3,
 				PhaseID:       phaseId12,
 				Requirements:  requirements3,
 				TaskType:      taskType3,
@@ -2999,6 +3138,7 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 		version = nil
 	}
 	out := shared.CreateFlowTemplate{
+		Manifest:                     manifest,
 		AdditionalTriggers:           additionalTriggers,
 		AssignedTo:                   assignedTo,
 		AvailableInEcp:               availableInEcp,
@@ -3028,6 +3168,10 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Context) (*shared.FlowTemplateInput, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	manifest := make([]string, 0, len(r.Manifest))
+	for manifestIndex := range r.Manifest {
+		manifest = append(manifest, r.Manifest[manifestIndex].ValueString())
+	}
 	additionalTriggers := make([]shared.Trigger, 0, len(r.AdditionalTriggers))
 	for additionalTriggersItem := range r.AdditionalTriggers {
 		if r.AdditionalTriggers[additionalTriggersItem].ManualTrigger != nil {
@@ -3696,6 +3840,32 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			var name5 string
 			name5 = r.Tasks[tasksItem].TaskBase.Name.ValueString()
 
+			var partner *shared.PartnerDetails
+			if r.Tasks[tasksItem].TaskBase.Partner != nil {
+				description4 := new(string)
+				if !r.Tasks[tasksItem].TaskBase.Partner.Description.IsUnknown() && !r.Tasks[tasksItem].TaskBase.Partner.Description.IsNull() {
+					*description4 = r.Tasks[tasksItem].TaskBase.Partner.Description.ValueString()
+				} else {
+					description4 = nil
+				}
+				enabled4 := new(bool)
+				if !r.Tasks[tasksItem].TaskBase.Partner.Enabled.IsUnknown() && !r.Tasks[tasksItem].TaskBase.Partner.Enabled.IsNull() {
+					*enabled4 = r.Tasks[tasksItem].TaskBase.Partner.Enabled.ValueBool()
+				} else {
+					enabled4 = nil
+				}
+				label2 := new(string)
+				if !r.Tasks[tasksItem].TaskBase.Partner.Label.IsUnknown() && !r.Tasks[tasksItem].TaskBase.Partner.Label.IsNull() {
+					*label2 = r.Tasks[tasksItem].TaskBase.Partner.Label.ValueString()
+				} else {
+					label2 = nil
+				}
+				partner = &shared.PartnerDetails{
+					Description: description4,
+					Enabled:     enabled4,
+					Label:       label2,
+				}
+			}
 			phaseId3 := new(string)
 			if !r.Tasks[tasksItem].TaskBase.PhaseID.IsUnknown() && !r.Tasks[tasksItem].TaskBase.PhaseID.IsNull() {
 				*phaseId3 = r.Tasks[tasksItem].TaskBase.PhaseID.ValueString()
@@ -3738,6 +3908,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 				Installer:     installer,
 				Journey:       journey2,
 				Name:          name5,
+				Partner:       partner,
 				PhaseID:       phaseId3,
 				Requirements:  requirements,
 				TaskType:      taskType,
@@ -3812,13 +3983,13 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			} else {
 				createdAutomatically = nil
 			}
-			var description4 *shared.StepDescription
+			var description5 *shared.StepDescription
 			if r.Tasks[tasksItem].AutomationTask.Description != nil {
-				enabled4 := new(bool)
+				enabled5 := new(bool)
 				if !r.Tasks[tasksItem].AutomationTask.Description.Enabled.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Description.Enabled.IsNull() {
-					*enabled4 = r.Tasks[tasksItem].AutomationTask.Description.Enabled.ValueBool()
+					*enabled5 = r.Tasks[tasksItem].AutomationTask.Description.Enabled.ValueBool()
 				} else {
-					enabled4 = nil
+					enabled5 = nil
 				}
 				value7 := new(string)
 				if !r.Tasks[tasksItem].AutomationTask.Description.Value.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Description.Value.IsNull() {
@@ -3826,8 +3997,8 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 				} else {
 					value7 = nil
 				}
-				description4 = &shared.StepDescription{
-					Enabled: enabled4,
+				description5 = &shared.StepDescription{
+					Enabled: enabled5,
 					Value:   value7,
 				}
 			}
@@ -3866,17 +4037,17 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			}
 			var ecp1 *shared.ECPDetails
 			if r.Tasks[tasksItem].AutomationTask.Ecp != nil {
-				description5 := new(string)
+				description6 := new(string)
 				if !r.Tasks[tasksItem].AutomationTask.Ecp.Description.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Ecp.Description.IsNull() {
-					*description5 = r.Tasks[tasksItem].AutomationTask.Ecp.Description.ValueString()
+					*description6 = r.Tasks[tasksItem].AutomationTask.Ecp.Description.ValueString()
 				} else {
-					description5 = nil
+					description6 = nil
 				}
-				enabled5 := new(bool)
+				enabled6 := new(bool)
 				if !r.Tasks[tasksItem].AutomationTask.Ecp.Enabled.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Ecp.Enabled.IsNull() {
-					*enabled5 = r.Tasks[tasksItem].AutomationTask.Ecp.Enabled.ValueBool()
+					*enabled6 = r.Tasks[tasksItem].AutomationTask.Ecp.Enabled.ValueBool()
 				} else {
-					enabled5 = nil
+					enabled6 = nil
 				}
 				var journey3 *shared.StepJourney
 				if r.Tasks[tasksItem].AutomationTask.Ecp.Journey != nil {
@@ -3911,17 +4082,17 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 						Name:                      name6,
 					}
 				}
-				label2 := new(string)
+				label3 := new(string)
 				if !r.Tasks[tasksItem].AutomationTask.Ecp.Label.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Ecp.Label.IsNull() {
-					*label2 = r.Tasks[tasksItem].AutomationTask.Ecp.Label.ValueString()
+					*label3 = r.Tasks[tasksItem].AutomationTask.Ecp.Label.ValueString()
 				} else {
-					label2 = nil
+					label3 = nil
 				}
 				ecp1 = &shared.ECPDetails{
-					Description: description5,
-					Enabled:     enabled5,
+					Description: description6,
+					Enabled:     enabled6,
 					Journey:     journey3,
-					Label:       label2,
+					Label:       label3,
 				}
 			}
 			var id13 string
@@ -3929,17 +4100,17 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 
 			var installer1 *shared.ECPDetails
 			if r.Tasks[tasksItem].AutomationTask.Installer != nil {
-				description6 := new(string)
+				description7 := new(string)
 				if !r.Tasks[tasksItem].AutomationTask.Installer.Description.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Installer.Description.IsNull() {
-					*description6 = r.Tasks[tasksItem].AutomationTask.Installer.Description.ValueString()
+					*description7 = r.Tasks[tasksItem].AutomationTask.Installer.Description.ValueString()
 				} else {
-					description6 = nil
+					description7 = nil
 				}
-				enabled6 := new(bool)
+				enabled7 := new(bool)
 				if !r.Tasks[tasksItem].AutomationTask.Installer.Enabled.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Installer.Enabled.IsNull() {
-					*enabled6 = r.Tasks[tasksItem].AutomationTask.Installer.Enabled.ValueBool()
+					*enabled7 = r.Tasks[tasksItem].AutomationTask.Installer.Enabled.ValueBool()
 				} else {
-					enabled6 = nil
+					enabled7 = nil
 				}
 				var journey4 *shared.StepJourney
 				if r.Tasks[tasksItem].AutomationTask.Installer.Journey != nil {
@@ -3974,17 +4145,17 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 						Name:                      name7,
 					}
 				}
-				label3 := new(string)
+				label4 := new(string)
 				if !r.Tasks[tasksItem].AutomationTask.Installer.Label.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Installer.Label.IsNull() {
-					*label3 = r.Tasks[tasksItem].AutomationTask.Installer.Label.ValueString()
+					*label4 = r.Tasks[tasksItem].AutomationTask.Installer.Label.ValueString()
 				} else {
-					label3 = nil
+					label4 = nil
 				}
 				installer1 = &shared.ECPDetails{
-					Description: description6,
-					Enabled:     enabled6,
+					Description: description7,
+					Enabled:     enabled7,
 					Journey:     journey4,
-					Label:       label3,
+					Label:       label4,
 				}
 			}
 			var journey5 *shared.StepJourney
@@ -4023,6 +4194,32 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			var name9 string
 			name9 = r.Tasks[tasksItem].AutomationTask.Name.ValueString()
 
+			var partner1 *shared.PartnerDetails
+			if r.Tasks[tasksItem].AutomationTask.Partner != nil {
+				description8 := new(string)
+				if !r.Tasks[tasksItem].AutomationTask.Partner.Description.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Partner.Description.IsNull() {
+					*description8 = r.Tasks[tasksItem].AutomationTask.Partner.Description.ValueString()
+				} else {
+					description8 = nil
+				}
+				enabled8 := new(bool)
+				if !r.Tasks[tasksItem].AutomationTask.Partner.Enabled.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Partner.Enabled.IsNull() {
+					*enabled8 = r.Tasks[tasksItem].AutomationTask.Partner.Enabled.ValueBool()
+				} else {
+					enabled8 = nil
+				}
+				label5 := new(string)
+				if !r.Tasks[tasksItem].AutomationTask.Partner.Label.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.Partner.Label.IsNull() {
+					*label5 = r.Tasks[tasksItem].AutomationTask.Partner.Label.ValueString()
+				} else {
+					label5 = nil
+				}
+				partner1 = &shared.PartnerDetails{
+					Description: description8,
+					Enabled:     enabled8,
+					Label:       label5,
+				}
+			}
 			phaseId6 := new(string)
 			if !r.Tasks[tasksItem].AutomationTask.PhaseID.IsUnknown() && !r.Tasks[tasksItem].AutomationTask.PhaseID.IsNull() {
 				*phaseId6 = r.Tasks[tasksItem].AutomationTask.PhaseID.ValueString()
@@ -4146,7 +4343,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 				AssignedTo:           assignedTo3,
 				AutomationConfig:     automationConfig,
 				CreatedAutomatically: createdAutomatically,
-				Description:          description4,
+				Description:          description5,
 				DueDate:              dueDate3,
 				DueDateConfig:        dueDateConfig3,
 				Ecp:                  ecp1,
@@ -4154,6 +4351,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 				Installer:            installer1,
 				Journey:              journey5,
 				Name:                 name9,
+				Partner:              partner1,
 				PhaseID:              phaseId6,
 				Requirements:         requirements1,
 				Schedule:             schedule,
@@ -4321,13 +4519,13 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 					Statements:      statements,
 				})
 			}
-			var description7 *shared.StepDescription
+			var description9 *shared.StepDescription
 			if r.Tasks[tasksItem].DecisionTask.Description != nil {
-				enabled7 := new(bool)
+				enabled9 := new(bool)
 				if !r.Tasks[tasksItem].DecisionTask.Description.Enabled.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Description.Enabled.IsNull() {
-					*enabled7 = r.Tasks[tasksItem].DecisionTask.Description.Enabled.ValueBool()
+					*enabled9 = r.Tasks[tasksItem].DecisionTask.Description.Enabled.ValueBool()
 				} else {
-					enabled7 = nil
+					enabled9 = nil
 				}
 				value9 := new(string)
 				if !r.Tasks[tasksItem].DecisionTask.Description.Value.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Description.Value.IsNull() {
@@ -4335,8 +4533,8 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 				} else {
 					value9 = nil
 				}
-				description7 = &shared.StepDescription{
-					Enabled: enabled7,
+				description9 = &shared.StepDescription{
+					Enabled: enabled9,
 					Value:   value9,
 				}
 			}
@@ -4375,17 +4573,17 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			}
 			var ecp2 *shared.ECPDetails
 			if r.Tasks[tasksItem].DecisionTask.Ecp != nil {
-				description8 := new(string)
+				description10 := new(string)
 				if !r.Tasks[tasksItem].DecisionTask.Ecp.Description.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Ecp.Description.IsNull() {
-					*description8 = r.Tasks[tasksItem].DecisionTask.Ecp.Description.ValueString()
+					*description10 = r.Tasks[tasksItem].DecisionTask.Ecp.Description.ValueString()
 				} else {
-					description8 = nil
+					description10 = nil
 				}
-				enabled8 := new(bool)
+				enabled10 := new(bool)
 				if !r.Tasks[tasksItem].DecisionTask.Ecp.Enabled.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Ecp.Enabled.IsNull() {
-					*enabled8 = r.Tasks[tasksItem].DecisionTask.Ecp.Enabled.ValueBool()
+					*enabled10 = r.Tasks[tasksItem].DecisionTask.Ecp.Enabled.ValueBool()
 				} else {
-					enabled8 = nil
+					enabled10 = nil
 				}
 				var journey6 *shared.StepJourney
 				if r.Tasks[tasksItem].DecisionTask.Ecp.Journey != nil {
@@ -4420,17 +4618,17 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 						Name:                      name10,
 					}
 				}
-				label4 := new(string)
+				label6 := new(string)
 				if !r.Tasks[tasksItem].DecisionTask.Ecp.Label.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Ecp.Label.IsNull() {
-					*label4 = r.Tasks[tasksItem].DecisionTask.Ecp.Label.ValueString()
+					*label6 = r.Tasks[tasksItem].DecisionTask.Ecp.Label.ValueString()
 				} else {
-					label4 = nil
+					label6 = nil
 				}
 				ecp2 = &shared.ECPDetails{
-					Description: description8,
-					Enabled:     enabled8,
+					Description: description10,
+					Enabled:     enabled10,
 					Journey:     journey6,
-					Label:       label4,
+					Label:       label6,
 				}
 			}
 			var id21 string
@@ -4438,17 +4636,17 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 
 			var installer2 *shared.ECPDetails
 			if r.Tasks[tasksItem].DecisionTask.Installer != nil {
-				description9 := new(string)
+				description11 := new(string)
 				if !r.Tasks[tasksItem].DecisionTask.Installer.Description.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Installer.Description.IsNull() {
-					*description9 = r.Tasks[tasksItem].DecisionTask.Installer.Description.ValueString()
+					*description11 = r.Tasks[tasksItem].DecisionTask.Installer.Description.ValueString()
 				} else {
-					description9 = nil
+					description11 = nil
 				}
-				enabled9 := new(bool)
+				enabled11 := new(bool)
 				if !r.Tasks[tasksItem].DecisionTask.Installer.Enabled.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Installer.Enabled.IsNull() {
-					*enabled9 = r.Tasks[tasksItem].DecisionTask.Installer.Enabled.ValueBool()
+					*enabled11 = r.Tasks[tasksItem].DecisionTask.Installer.Enabled.ValueBool()
 				} else {
-					enabled9 = nil
+					enabled11 = nil
 				}
 				var journey7 *shared.StepJourney
 				if r.Tasks[tasksItem].DecisionTask.Installer.Journey != nil {
@@ -4483,17 +4681,17 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 						Name:                      name11,
 					}
 				}
-				label5 := new(string)
+				label7 := new(string)
 				if !r.Tasks[tasksItem].DecisionTask.Installer.Label.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Installer.Label.IsNull() {
-					*label5 = r.Tasks[tasksItem].DecisionTask.Installer.Label.ValueString()
+					*label7 = r.Tasks[tasksItem].DecisionTask.Installer.Label.ValueString()
 				} else {
-					label5 = nil
+					label7 = nil
 				}
 				installer2 = &shared.ECPDetails{
-					Description: description9,
-					Enabled:     enabled9,
+					Description: description11,
+					Enabled:     enabled11,
 					Journey:     journey7,
-					Label:       label5,
+					Label:       label7,
 				}
 			}
 			var journey8 *shared.StepJourney
@@ -4552,6 +4750,32 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			var name13 string
 			name13 = r.Tasks[tasksItem].DecisionTask.Name.ValueString()
 
+			var partner2 *shared.PartnerDetails
+			if r.Tasks[tasksItem].DecisionTask.Partner != nil {
+				description12 := new(string)
+				if !r.Tasks[tasksItem].DecisionTask.Partner.Description.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Partner.Description.IsNull() {
+					*description12 = r.Tasks[tasksItem].DecisionTask.Partner.Description.ValueString()
+				} else {
+					description12 = nil
+				}
+				enabled12 := new(bool)
+				if !r.Tasks[tasksItem].DecisionTask.Partner.Enabled.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Partner.Enabled.IsNull() {
+					*enabled12 = r.Tasks[tasksItem].DecisionTask.Partner.Enabled.ValueBool()
+				} else {
+					enabled12 = nil
+				}
+				label8 := new(string)
+				if !r.Tasks[tasksItem].DecisionTask.Partner.Label.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.Partner.Label.IsNull() {
+					*label8 = r.Tasks[tasksItem].DecisionTask.Partner.Label.ValueString()
+				} else {
+					label8 = nil
+				}
+				partner2 = &shared.PartnerDetails{
+					Description: description12,
+					Enabled:     enabled12,
+					Label:       label8,
+				}
+			}
 			phaseId9 := new(string)
 			if !r.Tasks[tasksItem].DecisionTask.PhaseID.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.PhaseID.IsNull() {
 				*phaseId9 = r.Tasks[tasksItem].DecisionTask.PhaseID.ValueString()
@@ -4652,7 +4876,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			decisionTask := shared.DecisionTask{
 				AssignedTo:    assignedTo4,
 				Conditions:    conditions,
-				Description:   description7,
+				Description:   description9,
 				DueDate:       dueDate4,
 				DueDateConfig: dueDateConfig4,
 				Ecp:           ecp2,
@@ -4661,6 +4885,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 				Journey:       journey8,
 				LoopConfig:    loopConfig,
 				Name:          name13,
+				Partner:       partner2,
 				PhaseID:       phaseId9,
 				Requirements:  requirements2,
 				Schedule:      schedule1,
@@ -4714,13 +4939,13 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 					})
 				}
 			}
-			var description10 *shared.StepDescription
+			var description13 *shared.StepDescription
 			if r.Tasks[tasksItem].AiAgentTask.Description != nil {
-				enabled10 := new(bool)
+				enabled13 := new(bool)
 				if !r.Tasks[tasksItem].AiAgentTask.Description.Enabled.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Description.Enabled.IsNull() {
-					*enabled10 = r.Tasks[tasksItem].AiAgentTask.Description.Enabled.ValueBool()
+					*enabled13 = r.Tasks[tasksItem].AiAgentTask.Description.Enabled.ValueBool()
 				} else {
-					enabled10 = nil
+					enabled13 = nil
 				}
 				value11 := new(string)
 				if !r.Tasks[tasksItem].AiAgentTask.Description.Value.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Description.Value.IsNull() {
@@ -4728,8 +4953,8 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 				} else {
 					value11 = nil
 				}
-				description10 = &shared.StepDescription{
-					Enabled: enabled10,
+				description13 = &shared.StepDescription{
+					Enabled: enabled13,
 					Value:   value11,
 				}
 			}
@@ -4768,17 +4993,17 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			}
 			var ecp3 *shared.ECPDetails
 			if r.Tasks[tasksItem].AiAgentTask.Ecp != nil {
-				description11 := new(string)
+				description14 := new(string)
 				if !r.Tasks[tasksItem].AiAgentTask.Ecp.Description.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Ecp.Description.IsNull() {
-					*description11 = r.Tasks[tasksItem].AiAgentTask.Ecp.Description.ValueString()
+					*description14 = r.Tasks[tasksItem].AiAgentTask.Ecp.Description.ValueString()
 				} else {
-					description11 = nil
+					description14 = nil
 				}
-				enabled11 := new(bool)
+				enabled14 := new(bool)
 				if !r.Tasks[tasksItem].AiAgentTask.Ecp.Enabled.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Ecp.Enabled.IsNull() {
-					*enabled11 = r.Tasks[tasksItem].AiAgentTask.Ecp.Enabled.ValueBool()
+					*enabled14 = r.Tasks[tasksItem].AiAgentTask.Ecp.Enabled.ValueBool()
 				} else {
-					enabled11 = nil
+					enabled14 = nil
 				}
 				var journey9 *shared.StepJourney
 				if r.Tasks[tasksItem].AiAgentTask.Ecp.Journey != nil {
@@ -4813,17 +5038,17 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 						Name:                      name14,
 					}
 				}
-				label6 := new(string)
+				label9 := new(string)
 				if !r.Tasks[tasksItem].AiAgentTask.Ecp.Label.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Ecp.Label.IsNull() {
-					*label6 = r.Tasks[tasksItem].AiAgentTask.Ecp.Label.ValueString()
+					*label9 = r.Tasks[tasksItem].AiAgentTask.Ecp.Label.ValueString()
 				} else {
-					label6 = nil
+					label9 = nil
 				}
 				ecp3 = &shared.ECPDetails{
-					Description: description11,
-					Enabled:     enabled11,
+					Description: description14,
+					Enabled:     enabled14,
 					Journey:     journey9,
-					Label:       label6,
+					Label:       label9,
 				}
 			}
 			var id26 string
@@ -4831,17 +5056,17 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 
 			var installer3 *shared.ECPDetails
 			if r.Tasks[tasksItem].AiAgentTask.Installer != nil {
-				description12 := new(string)
+				description15 := new(string)
 				if !r.Tasks[tasksItem].AiAgentTask.Installer.Description.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Installer.Description.IsNull() {
-					*description12 = r.Tasks[tasksItem].AiAgentTask.Installer.Description.ValueString()
+					*description15 = r.Tasks[tasksItem].AiAgentTask.Installer.Description.ValueString()
 				} else {
-					description12 = nil
+					description15 = nil
 				}
-				enabled12 := new(bool)
+				enabled15 := new(bool)
 				if !r.Tasks[tasksItem].AiAgentTask.Installer.Enabled.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Installer.Enabled.IsNull() {
-					*enabled12 = r.Tasks[tasksItem].AiAgentTask.Installer.Enabled.ValueBool()
+					*enabled15 = r.Tasks[tasksItem].AiAgentTask.Installer.Enabled.ValueBool()
 				} else {
-					enabled12 = nil
+					enabled15 = nil
 				}
 				var journey10 *shared.StepJourney
 				if r.Tasks[tasksItem].AiAgentTask.Installer.Journey != nil {
@@ -4876,17 +5101,17 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 						Name:                      name15,
 					}
 				}
-				label7 := new(string)
+				label10 := new(string)
 				if !r.Tasks[tasksItem].AiAgentTask.Installer.Label.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Installer.Label.IsNull() {
-					*label7 = r.Tasks[tasksItem].AiAgentTask.Installer.Label.ValueString()
+					*label10 = r.Tasks[tasksItem].AiAgentTask.Installer.Label.ValueString()
 				} else {
-					label7 = nil
+					label10 = nil
 				}
 				installer3 = &shared.ECPDetails{
-					Description: description12,
-					Enabled:     enabled12,
+					Description: description15,
+					Enabled:     enabled15,
 					Journey:     journey10,
-					Label:       label7,
+					Label:       label10,
 				}
 			}
 			var journey11 *shared.StepJourney
@@ -4925,6 +5150,32 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			var name17 string
 			name17 = r.Tasks[tasksItem].AiAgentTask.Name.ValueString()
 
+			var partner3 *shared.PartnerDetails
+			if r.Tasks[tasksItem].AiAgentTask.Partner != nil {
+				description16 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.Partner.Description.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Partner.Description.IsNull() {
+					*description16 = r.Tasks[tasksItem].AiAgentTask.Partner.Description.ValueString()
+				} else {
+					description16 = nil
+				}
+				enabled16 := new(bool)
+				if !r.Tasks[tasksItem].AiAgentTask.Partner.Enabled.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Partner.Enabled.IsNull() {
+					*enabled16 = r.Tasks[tasksItem].AiAgentTask.Partner.Enabled.ValueBool()
+				} else {
+					enabled16 = nil
+				}
+				label11 := new(string)
+				if !r.Tasks[tasksItem].AiAgentTask.Partner.Label.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.Partner.Label.IsNull() {
+					*label11 = r.Tasks[tasksItem].AiAgentTask.Partner.Label.ValueString()
+				} else {
+					label11 = nil
+				}
+				partner3 = &shared.PartnerDetails{
+					Description: description16,
+					Enabled:     enabled16,
+					Label:       label11,
+				}
+			}
 			phaseId12 := new(string)
 			if !r.Tasks[tasksItem].AiAgentTask.PhaseID.IsUnknown() && !r.Tasks[tasksItem].AiAgentTask.PhaseID.IsNull() {
 				*phaseId12 = r.Tasks[tasksItem].AiAgentTask.PhaseID.ValueString()
@@ -4960,7 +5211,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			aiAgentTask := shared.AiAgentTask{
 				AgentConfig:   agentConfig,
 				AssignedTo:    assignedTo5,
-				Description:   description10,
+				Description:   description13,
 				DueDate:       dueDate5,
 				DueDateConfig: dueDateConfig5,
 				Ecp:           ecp3,
@@ -4968,6 +5219,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 				Installer:     installer3,
 				Journey:       journey11,
 				Name:          name17,
+				Partner:       partner3,
 				PhaseID:       phaseId12,
 				Requirements:  requirements3,
 				TaskType:      taskType3,
@@ -5135,6 +5387,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 		version = nil
 	}
 	out := shared.FlowTemplateInput{
+		Manifest:                     manifest,
 		AdditionalTriggers:           additionalTriggers,
 		AssignedTo:                   assignedTo,
 		AvailableInEcp:               availableInEcp,

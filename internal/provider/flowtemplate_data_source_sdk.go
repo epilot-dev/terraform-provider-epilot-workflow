@@ -17,6 +17,10 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 	var diags diag.Diagnostics
 
 	if resp != nil {
+		r.Manifest = make([]types.String, 0, len(resp.Manifest))
+		for _, v := range resp.Manifest {
+			r.Manifest = append(r.Manifest, types.StringValue(v))
+		}
 		r.AdditionalTriggers = []tfTypes.Trigger{}
 
 		for _, additionalTriggersItem := range resp.AdditionalTriggers {
@@ -142,10 +146,8 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 		for _, entitySyncItem := range resp.EntitySync {
 			var entitySync tfTypes.EntitySync
 
-			entitySync.Target = &tfTypes.Target{}
 			entitySync.Target.EntityAttribute = types.StringValue(entitySyncItem.Target.EntityAttribute)
 			entitySync.Target.EntitySchema = types.StringValue(entitySyncItem.Target.EntitySchema)
-			entitySync.Trigger = &tfTypes.EntitySyncTrigger{}
 			entitySync.Trigger.Event = types.StringValue(string(entitySyncItem.Trigger.Event))
 			if entitySyncItem.Trigger.Filter == nil {
 				entitySync.Trigger.Filter = nil
@@ -154,7 +156,6 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 				entitySync.Trigger.Filter.PhaseTemplateID = types.StringPointerValue(entitySyncItem.Trigger.Filter.PhaseTemplateID)
 				entitySync.Trigger.Filter.TaskTemplateID = types.StringPointerValue(entitySyncItem.Trigger.Filter.TaskTemplateID)
 			}
-			entitySync.Value = &tfTypes.Value{}
 			entitySync.Value.Source = types.StringValue(string(entitySyncItem.Value.Source))
 			entitySync.Value.Value = types.StringPointerValue(entitySyncItem.Value.Value)
 
@@ -309,6 +310,14 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 					tasks.AiAgentTask.Journey.Name = types.StringPointerValue(tasksItem.AiAgentTask.Journey.Name)
 				}
 				tasks.AiAgentTask.Name = types.StringValue(tasksItem.AiAgentTask.Name)
+				if tasksItem.AiAgentTask.Partner == nil {
+					tasks.AiAgentTask.Partner = nil
+				} else {
+					tasks.AiAgentTask.Partner = &tfTypes.PartnerDetails{}
+					tasks.AiAgentTask.Partner.Description = types.StringPointerValue(tasksItem.AiAgentTask.Partner.Description)
+					tasks.AiAgentTask.Partner.Enabled = types.BoolPointerValue(tasksItem.AiAgentTask.Partner.Enabled)
+					tasks.AiAgentTask.Partner.Label = types.StringPointerValue(tasksItem.AiAgentTask.Partner.Label)
+				}
 				tasks.AiAgentTask.PhaseID = types.StringPointerValue(tasksItem.AiAgentTask.PhaseID)
 				tasks.AiAgentTask.Requirements = []tfTypes.EnableRequirement{}
 
@@ -348,7 +357,6 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 
 					tasks.AutomationTask.AssignedTo = append(tasks.AutomationTask.AssignedTo, assignedTo3)
 				}
-				tasks.AutomationTask.AutomationConfig = &tfTypes.AutomationConfig{}
 				if tasksItem.AutomationTask.AutomationConfig.ActionConfig == nil {
 					tasks.AutomationTask.AutomationConfig.ActionConfig = nil
 				} else {
@@ -433,6 +441,14 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 					tasks.AutomationTask.Journey.Name = types.StringPointerValue(tasksItem.AutomationTask.Journey.Name)
 				}
 				tasks.AutomationTask.Name = types.StringValue(tasksItem.AutomationTask.Name)
+				if tasksItem.AutomationTask.Partner == nil {
+					tasks.AutomationTask.Partner = nil
+				} else {
+					tasks.AutomationTask.Partner = &tfTypes.PartnerDetails{}
+					tasks.AutomationTask.Partner.Description = types.StringPointerValue(tasksItem.AutomationTask.Partner.Description)
+					tasks.AutomationTask.Partner.Enabled = types.BoolPointerValue(tasksItem.AutomationTask.Partner.Enabled)
+					tasks.AutomationTask.Partner.Label = types.StringPointerValue(tasksItem.AutomationTask.Partner.Label)
+				}
 				tasks.AutomationTask.PhaseID = types.StringPointerValue(tasksItem.AutomationTask.PhaseID)
 				tasks.AutomationTask.Requirements = []tfTypes.EnableRequirement{}
 
@@ -466,7 +482,6 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 						tasks.AutomationTask.Schedule.RelativeSchedule.Direction = types.StringValue(string(tasksItem.AutomationTask.Schedule.RelativeSchedule.Direction))
 						tasks.AutomationTask.Schedule.RelativeSchedule.Duration = types.Float64Value(tasksItem.AutomationTask.Schedule.RelativeSchedule.Duration)
 						tasks.AutomationTask.Schedule.RelativeSchedule.Mode = types.StringValue(string(tasksItem.AutomationTask.Schedule.RelativeSchedule.Mode))
-						tasks.AutomationTask.Schedule.RelativeSchedule.Reference = &tfTypes.Reference{}
 						tasks.AutomationTask.Schedule.RelativeSchedule.Reference.Attribute = types.StringPointerValue(tasksItem.AutomationTask.Schedule.RelativeSchedule.Reference.Attribute)
 						tasks.AutomationTask.Schedule.RelativeSchedule.Reference.ID = types.StringValue(tasksItem.AutomationTask.Schedule.RelativeSchedule.Reference.ID)
 						tasks.AutomationTask.Schedule.RelativeSchedule.Reference.Origin = types.StringValue(string(tasksItem.AutomationTask.Schedule.RelativeSchedule.Reference.Origin))
@@ -522,7 +537,6 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 
 							statements.ID = types.StringValue(statementsItem.ID)
 							statements.Operator = types.StringValue(string(statementsItem.Operator))
-							statements.Source = &tfTypes.EvaluationSource{}
 							statements.Source.Attribute = types.StringPointerValue(statementsItem.Source.Attribute)
 							if statementsItem.Source.AttributeOperation != nil {
 								statements.Source.AttributeOperation = types.StringValue(string(*statementsItem.Source.AttributeOperation))
@@ -571,8 +585,6 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 
 							conditions.Statements = append(conditions.Statements, statements)
 						}
-					} else {
-						conditions.Statements = nil
 					}
 
 					tasks.DecisionTask.Conditions = append(tasks.DecisionTask.Conditions, conditions)
@@ -648,6 +660,14 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 					tasks.DecisionTask.LoopConfig.MaxIterations = types.Int64PointerValue(tasksItem.DecisionTask.LoopConfig.MaxIterations)
 				}
 				tasks.DecisionTask.Name = types.StringValue(tasksItem.DecisionTask.Name)
+				if tasksItem.DecisionTask.Partner == nil {
+					tasks.DecisionTask.Partner = nil
+				} else {
+					tasks.DecisionTask.Partner = &tfTypes.PartnerDetails{}
+					tasks.DecisionTask.Partner.Description = types.StringPointerValue(tasksItem.DecisionTask.Partner.Description)
+					tasks.DecisionTask.Partner.Enabled = types.BoolPointerValue(tasksItem.DecisionTask.Partner.Enabled)
+					tasks.DecisionTask.Partner.Label = types.StringPointerValue(tasksItem.DecisionTask.Partner.Label)
+				}
 				tasks.DecisionTask.PhaseID = types.StringPointerValue(tasksItem.DecisionTask.PhaseID)
 				tasks.DecisionTask.Requirements = []tfTypes.EnableRequirement{}
 
@@ -673,7 +693,6 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 						tasks.DecisionTask.Schedule.RelativeSchedule.Direction = types.StringValue(string(tasksItem.DecisionTask.Schedule.RelativeSchedule.Direction))
 						tasks.DecisionTask.Schedule.RelativeSchedule.Duration = types.Float64Value(tasksItem.DecisionTask.Schedule.RelativeSchedule.Duration)
 						tasks.DecisionTask.Schedule.RelativeSchedule.Mode = types.StringValue(string(tasksItem.DecisionTask.Schedule.RelativeSchedule.Mode))
-						tasks.DecisionTask.Schedule.RelativeSchedule.Reference = &tfTypes.Reference{}
 						tasks.DecisionTask.Schedule.RelativeSchedule.Reference.Attribute = types.StringPointerValue(tasksItem.DecisionTask.Schedule.RelativeSchedule.Reference.Attribute)
 						tasks.DecisionTask.Schedule.RelativeSchedule.Reference.ID = types.StringValue(tasksItem.DecisionTask.Schedule.RelativeSchedule.Reference.ID)
 						tasks.DecisionTask.Schedule.RelativeSchedule.Reference.Origin = types.StringValue(string(tasksItem.DecisionTask.Schedule.RelativeSchedule.Reference.Origin))
@@ -772,6 +791,14 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 					tasks.TaskBase.Journey.Name = types.StringPointerValue(tasksItem.TaskBase.Journey.Name)
 				}
 				tasks.TaskBase.Name = types.StringValue(tasksItem.TaskBase.Name)
+				if tasksItem.TaskBase.Partner == nil {
+					tasks.TaskBase.Partner = nil
+				} else {
+					tasks.TaskBase.Partner = &tfTypes.PartnerDetails{}
+					tasks.TaskBase.Partner.Description = types.StringPointerValue(tasksItem.TaskBase.Partner.Description)
+					tasks.TaskBase.Partner.Enabled = types.BoolPointerValue(tasksItem.TaskBase.Partner.Enabled)
+					tasks.TaskBase.Partner.Label = types.StringPointerValue(tasksItem.TaskBase.Partner.Label)
+				}
 				tasks.TaskBase.PhaseID = types.StringPointerValue(tasksItem.TaskBase.PhaseID)
 				tasks.TaskBase.Requirements = []tfTypes.EnableRequirement{}
 

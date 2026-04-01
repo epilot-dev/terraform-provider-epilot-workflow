@@ -18,6 +18,7 @@ type DecisionTask struct {
 	Journey       *StepJourney             `tfsdk:"journey"`
 	LoopConfig    *LoopConfig              `tfsdk:"loop_config"`
 	Name          types.String             `tfsdk:"name"`
+	Partner       *PartnerDetails          `tfsdk:"partner"`
 	PhaseID       types.String             `tfsdk:"phase_id"`
 	Requirements  []EnableRequirement      `tfsdk:"requirements"`
 	Schedule      *Schedule                `tfsdk:"schedule"`

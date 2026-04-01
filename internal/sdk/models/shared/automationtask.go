@@ -115,7 +115,9 @@ type AutomationTask struct {
 	Installer *ECPDetails  `json:"installer,omitempty"`
 	Journey   *StepJourney `json:"journey,omitempty"`
 	Name      string       `json:"name"`
-	PhaseID   *string      `json:"phase_id,omitempty"`
+	// Details regarding partner for the workflow step
+	Partner *PartnerDetails `json:"partner,omitempty"`
+	PhaseID *string         `json:"phase_id,omitempty"`
 	// requirements that need to be fulfilled in order to enable the task while flow instances are running
 	Requirements []EnableRequirement `json:"requirements,omitempty"`
 	Schedule     *ActionSchedule     `json:"schedule,omitempty"`
@@ -211,6 +213,13 @@ func (a *AutomationTask) GetName() string {
 		return ""
 	}
 	return a.Name
+}
+
+func (a *AutomationTask) GetPartner() *PartnerDetails {
+	if a == nil {
+		return nil
+	}
+	return a.Partner
 }
 
 func (a *AutomationTask) GetPhaseID() *string {

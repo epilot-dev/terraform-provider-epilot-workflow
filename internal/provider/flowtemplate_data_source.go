@@ -42,6 +42,7 @@ type FlowTemplateDataSourceModel struct {
 	Enabled                      types.Bool                       `tfsdk:"enabled"`
 	EntitySync                   []tfTypes.EntitySync             `tfsdk:"entity_sync"`
 	ID                           types.String                     `tfsdk:"id"`
+	Manifest                     []types.String                   `tfsdk:"manifest"`
 	Name                         types.String                     `tfsdk:"name"`
 	OrgID                        types.String                     `tfsdk:"org_id"`
 	Phases                       []tfTypes.Phase                  `tfsdk:"phases"`
@@ -329,7 +330,11 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 			},
 			"id": schema.StringAttribute{
 				Computed: true,
-				Optional: true,
+			},
+			"manifest": schema.ListAttribute{
+				Computed:    true,
+				ElementType: types.StringType,
+				Description: `The manifest IDs associated with this workflow`,
 			},
 			"name": schema.StringAttribute{
 				Computed: true,
@@ -581,6 +586,21 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 								"name": schema.StringAttribute{
 									Computed: true,
 								},
+								"partner": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"description": schema.StringAttribute{
+											Computed: true,
+										},
+										"enabled": schema.BoolAttribute{
+											Computed: true,
+										},
+										"label": schema.StringAttribute{
+											Computed: true,
+										},
+									},
+									Description: `Details regarding partner for the workflow step`,
+								},
 								"phase_id": schema.StringAttribute{
 									Computed: true,
 								},
@@ -800,6 +820,21 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 								},
 								"name": schema.StringAttribute{
 									Computed: true,
+								},
+								"partner": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"description": schema.StringAttribute{
+											Computed: true,
+										},
+										"enabled": schema.BoolAttribute{
+											Computed: true,
+										},
+										"label": schema.StringAttribute{
+											Computed: true,
+										},
+									},
+									Description: `Details regarding partner for the workflow step`,
 								},
 								"phase_id": schema.StringAttribute{
 									Computed: true,
@@ -1157,6 +1192,21 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 								"name": schema.StringAttribute{
 									Computed: true,
 								},
+								"partner": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"description": schema.StringAttribute{
+											Computed: true,
+										},
+										"enabled": schema.BoolAttribute{
+											Computed: true,
+										},
+										"label": schema.StringAttribute{
+											Computed: true,
+										},
+									},
+									Description: `Details regarding partner for the workflow step`,
+								},
 								"phase_id": schema.StringAttribute{
 									Computed: true,
 								},
@@ -1401,6 +1451,21 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 								},
 								"name": schema.StringAttribute{
 									Computed: true,
+								},
+								"partner": schema.SingleNestedAttribute{
+									Computed: true,
+									Attributes: map[string]schema.Attribute{
+										"description": schema.StringAttribute{
+											Computed: true,
+										},
+										"enabled": schema.BoolAttribute{
+											Computed: true,
+										},
+										"label": schema.StringAttribute{
+											Computed: true,
+										},
+									},
+									Description: `Details regarding partner for the workflow step`,
 								},
 								"phase_id": schema.StringAttribute{
 									Computed: true,

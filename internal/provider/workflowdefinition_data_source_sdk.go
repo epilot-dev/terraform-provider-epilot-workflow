@@ -17,6 +17,10 @@ func (r *WorkflowDefinitionDataSourceModel) RefreshFromSharedWorkflowDefinition(
 	var diags diag.Diagnostics
 
 	if resp != nil {
+		r.Manifest = make([]types.String, 0, len(resp.Manifest))
+		for _, v := range resp.Manifest {
+			r.Manifest = append(r.Manifest, types.StringValue(v))
+		}
 		r.AssignedTo = make([]types.String, 0, len(resp.AssignedTo))
 		for _, v := range resp.AssignedTo {
 			r.AssignedTo = append(r.AssignedTo, types.StringValue(v))
@@ -61,7 +65,6 @@ func (r *WorkflowDefinitionDataSourceModel) RefreshFromSharedWorkflowDefinition(
 			var updateEntityAttributes tfTypes.UpdateEntityAttributes
 
 			updateEntityAttributes.Source = types.StringValue(string(updateEntityAttributesItem.Source))
-			updateEntityAttributes.Target = &tfTypes.Target{}
 			updateEntityAttributes.Target.EntityAttribute = types.StringValue(updateEntityAttributesItem.Target.EntityAttribute)
 			updateEntityAttributes.Target.EntitySchema = types.StringValue(updateEntityAttributesItem.Target.EntitySchema)
 

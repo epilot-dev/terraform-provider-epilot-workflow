@@ -7,9 +7,9 @@ import (
 )
 
 type Statement struct {
-	ID        types.String      `tfsdk:"id"`
-	Operator  types.String      `tfsdk:"operator"`
-	Source    *EvaluationSource `tfsdk:"source"`
-	ValueType types.String      `tfsdk:"value_type"`
-	Values    []types.String    `tfsdk:"values"`
+	ID        types.String     `tfsdk:"id"`
+	Operator  types.String     `tfsdk:"operator"`
+	Source    EvaluationSource `tfsdk:"source"`
+	ValueType types.String     `tfsdk:"value_type"`
+	Values    []types.String   `tfsdk:"values"`
 }

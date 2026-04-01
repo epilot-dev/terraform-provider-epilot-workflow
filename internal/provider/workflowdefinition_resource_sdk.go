@@ -17,6 +17,10 @@ func (r *WorkflowDefinitionResourceModel) RefreshFromSharedWorkflowDefinition(ct
 	var diags diag.Diagnostics
 
 	if resp != nil {
+		r.Manifest = make([]types.String, 0, len(resp.Manifest))
+		for _, v := range resp.Manifest {
+			r.Manifest = append(r.Manifest, types.StringValue(v))
+		}
 		r.AssignedTo = make([]types.String, 0, len(resp.AssignedTo))
 		for _, v := range resp.AssignedTo {
 			r.AssignedTo = append(r.AssignedTo, types.StringValue(v))
@@ -61,7 +65,6 @@ func (r *WorkflowDefinitionResourceModel) RefreshFromSharedWorkflowDefinition(ct
 			var updateEntityAttributes tfTypes.UpdateEntityAttributes
 
 			updateEntityAttributes.Source = types.StringValue(string(updateEntityAttributesItem.Source))
-			updateEntityAttributes.Target = &tfTypes.Target{}
 			updateEntityAttributes.Target.EntityAttribute = types.StringValue(updateEntityAttributesItem.Target.EntityAttribute)
 			updateEntityAttributes.Target.EntitySchema = types.StringValue(updateEntityAttributesItem.Target.EntitySchema)
 
@@ -126,6 +129,10 @@ func (r *WorkflowDefinitionResourceModel) ToOperationsUpdateDefinitionRequest(ct
 func (r *WorkflowDefinitionResourceModel) ToSharedWorkflowDefinition(ctx context.Context) (*shared.WorkflowDefinition, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
+	manifest := make([]string, 0, len(r.Manifest))
+	for manifestIndex := range r.Manifest {
+		manifest = append(manifest, r.Manifest[manifestIndex].ValueString())
+	}
 	assignedTo := make([]string, 0, len(r.AssignedTo))
 	for assignedToIndex := range r.AssignedTo {
 		assignedTo = append(assignedTo, r.AssignedTo[assignedToIndex].ValueString())
@@ -246,6 +253,7 @@ func (r *WorkflowDefinitionResourceModel) ToSharedWorkflowDefinition(ctx context
 		userIds = append(userIds, r.UserIds[userIdsIndex].ValueFloat64())
 	}
 	out := shared.WorkflowDefinition{
+		Manifest:                     manifest,
 		AssignedTo:                   assignedTo,
 		ClosingReasons:               closingReasons,
 		CreationTime:                 creationTime,

@@ -16,6 +16,7 @@ type TaskBase struct {
 	Installer     *ECPDetails              `tfsdk:"installer"`
 	Journey       *StepJourney             `tfsdk:"journey"`
 	Name          types.String             `tfsdk:"name"`
+	Partner       *PartnerDetails          `tfsdk:"partner"`
 	PhaseID       types.String             `tfsdk:"phase_id"`
 	Requirements  []EnableRequirement      `tfsdk:"requirements"`
 	TaskType      types.String             `tfsdk:"task_type"`

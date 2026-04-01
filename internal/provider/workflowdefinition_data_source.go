@@ -41,6 +41,7 @@ type WorkflowDefinitionDataSourceModel struct {
 	Flow                         jsontypes.Normalized             `tfsdk:"flow"`
 	ID                           types.String                     `tfsdk:"id"`
 	LastUpdateTime               types.String                     `tfsdk:"last_update_time"`
+	Manifest                     []types.String                   `tfsdk:"manifest"`
 	Name                         types.String                     `tfsdk:"name"`
 	SingleClosingReasonSelection types.Bool                       `tfsdk:"single_closing_reason_selection"`
 	Taxonomies                   []types.String                   `tfsdk:"taxonomies"`
@@ -119,11 +120,15 @@ func (r *WorkflowDefinitionDataSource) Schema(ctx context.Context, req datasourc
 			},
 			"id": schema.StringAttribute{
 				Computed: true,
-				Optional: true,
 			},
 			"last_update_time": schema.StringAttribute{
 				Computed:    true,
 				Description: `ISO String Date & Time`,
+			},
+			"manifest": schema.ListAttribute{
+				Computed:    true,
+				ElementType: types.StringType,
+				Description: `The manifest IDs associated with this workflow`,
 			},
 			"name": schema.StringAttribute{
 				Computed: true,

@@ -14,7 +14,6 @@ WorkflowDefinition DataSource
 
 ```terraform
 data "epilot-workflow_workflow_definition" "my_workflowdefinition" {
-  id = "...my_id..."
 }
 ```
 
@@ -34,6 +33,7 @@ data "epilot-workflow_workflow_definition" "my_workflowdefinition" {
 - `flow` (String) Parsed as JSON.
 - `id` (String) The ID of this resource.
 - `last_update_time` (String) ISO String Date & Time
+- `manifest` (List of String) The manifest IDs associated with this workflow
 - `name` (String)
 - `single_closing_reason_selection` (Boolean) Whether only a single closing reason can be selected
 - `taxonomies` (List of String) Taxonomy ids that are associated with this workflow and used for filtering

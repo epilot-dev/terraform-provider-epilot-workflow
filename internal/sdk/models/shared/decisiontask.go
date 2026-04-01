@@ -243,7 +243,9 @@ type DecisionTask struct {
 	Journey    *StepJourney `json:"journey,omitempty"`
 	LoopConfig *LoopConfig  `json:"loop_config,omitempty"`
 	Name       string       `json:"name"`
-	PhaseID    *string      `json:"phase_id,omitempty"`
+	// Details regarding partner for the workflow step
+	Partner *PartnerDetails `json:"partner,omitempty"`
+	PhaseID *string         `json:"phase_id,omitempty"`
 	// requirements that need to be fulfilled in order to enable the task while flow instances are running
 	Requirements []EnableRequirement `json:"requirements,omitempty"`
 	Schedule     *Schedule           `json:"schedule,omitempty"`
@@ -339,6 +341,13 @@ func (d *DecisionTask) GetName() string {
 		return ""
 	}
 	return d.Name
+}
+
+func (d *DecisionTask) GetPartner() *PartnerDetails {
+	if d == nil {
+		return nil
+	}
+	return d.Partner
 }
 
 func (d *DecisionTask) GetPhaseID() *string {

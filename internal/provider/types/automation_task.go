@@ -8,7 +8,7 @@ import (
 
 type AutomationTask struct {
 	AssignedTo           []FlowTemplateAssignedTo `tfsdk:"assigned_to"`
-	AutomationConfig     *AutomationConfig        `tfsdk:"automation_config"`
+	AutomationConfig     AutomationConfig         `tfsdk:"automation_config"`
 	CreatedAutomatically types.Bool               `tfsdk:"created_automatically"`
 	Description          *StepDescription         `tfsdk:"description"`
 	DueDate              types.String             `tfsdk:"due_date"`
@@ -18,6 +18,7 @@ type AutomationTask struct {
 	Installer            *ECPDetails              `tfsdk:"installer"`
 	Journey              *StepJourney             `tfsdk:"journey"`
 	Name                 types.String             `tfsdk:"name"`
+	Partner              *PartnerDetails          `tfsdk:"partner"`
 	PhaseID              types.String             `tfsdk:"phase_id"`
 	Requirements         []EnableRequirement      `tfsdk:"requirements"`
 	Schedule             *ActionSchedule          `tfsdk:"schedule"`

@@ -111,7 +111,9 @@ type TaskBase struct {
 	Installer *ECPDetails  `json:"installer,omitempty"`
 	Journey   *StepJourney `json:"journey,omitempty"`
 	Name      string       `json:"name"`
-	PhaseID   *string      `json:"phase_id,omitempty"`
+	// Details regarding partner for the workflow step
+	Partner *PartnerDetails `json:"partner,omitempty"`
+	PhaseID *string         `json:"phase_id,omitempty"`
 	// requirements that need to be fulfilled in order to enable the task while flow instances are running
 	Requirements []EnableRequirement `json:"requirements,omitempty"`
 	TaskType     TaskType            `json:"task_type"`
@@ -191,6 +193,13 @@ func (t *TaskBase) GetName() string {
 		return ""
 	}
 	return t.Name
+}
+
+func (t *TaskBase) GetPartner() *PartnerDetails {
+	if t == nil {
+		return nil
+	}
+	return t.Partner
 }
 
 func (t *TaskBase) GetPhaseID() *string {

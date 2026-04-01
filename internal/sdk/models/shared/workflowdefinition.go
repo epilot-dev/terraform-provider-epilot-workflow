@@ -7,6 +7,8 @@ import (
 )
 
 type WorkflowDefinition struct {
+	// The manifest IDs associated with this workflow
+	Manifest       []string          `json:"_manifest,omitempty"`
 	AssignedTo     []string          `json:"assignedTo,omitempty"`
 	ClosingReasons []ClosingReasonID `json:"closingReasons,omitempty"`
 	// ISO String Date & Time
@@ -44,6 +46,13 @@ func (w *WorkflowDefinition) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	return nil
+}
+
+func (w *WorkflowDefinition) GetManifest() []string {
+	if w == nil {
+		return nil
+	}
+	return w.Manifest
 }
 
 func (w *WorkflowDefinition) GetAssignedTo() []string {

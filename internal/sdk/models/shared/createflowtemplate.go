@@ -109,6 +109,8 @@ func (c *CreateFlowTemplateClosingReasons) GetID() string {
 }
 
 type CreateFlowTemplate struct {
+	// The manifest IDs associated with this workflow
+	Manifest []string `json:"_manifest,omitempty"`
 	// Additional trigger configurations that can also start this flow. Useful for flows that should be startable via multiple methods (e.g., both automation AND manual).
 	AdditionalTriggers []Trigger                      `json:"additional_triggers,omitempty"`
 	AssignedTo         []CreateFlowTemplateAssignedTo `json:"assigned_to,omitempty"`
@@ -155,6 +157,13 @@ func (c *CreateFlowTemplate) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	return nil
+}
+
+func (c *CreateFlowTemplate) GetManifest() []string {
+	if c == nil {
+		return nil
+	}
+	return c.Manifest
 }
 
 func (c *CreateFlowTemplate) GetAdditionalTriggers() []Trigger {
