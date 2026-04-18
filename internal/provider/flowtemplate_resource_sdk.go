@@ -30,6 +30,11 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 				additionalTriggers.AutomationTrigger = &tfTypes.AutomationTrigger{}
 				additionalTriggers.AutomationTrigger.AutomationID = types.StringPointerValue(additionalTriggersItem.AutomationTrigger.AutomationID)
 				additionalTriggers.AutomationTrigger.ID = types.StringPointerValue(additionalTriggersItem.AutomationTrigger.ID)
+				if additionalTriggersItem.AutomationTrigger.InputEntity != nil {
+					additionalTriggers.AutomationTrigger.InputEntity = types.StringValue(string(*additionalTriggersItem.AutomationTrigger.InputEntity))
+				} else {
+					additionalTriggers.AutomationTrigger.InputEntity = types.StringNull()
+				}
 				additionalTriggers.AutomationTrigger.TriggerConfig = []tfTypes.TriggerConfig{}
 
 				for _, triggerConfigItem := range additionalTriggersItem.AutomationTrigger.TriggerConfig {
@@ -146,8 +151,10 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 		for _, entitySyncItem := range resp.EntitySync {
 			var entitySync tfTypes.EntitySync
 
+			entitySync.Target = &tfTypes.Target{}
 			entitySync.Target.EntityAttribute = types.StringValue(entitySyncItem.Target.EntityAttribute)
 			entitySync.Target.EntitySchema = types.StringValue(entitySyncItem.Target.EntitySchema)
+			entitySync.Trigger = &tfTypes.EntitySyncTrigger{}
 			entitySync.Trigger.Event = types.StringValue(string(entitySyncItem.Trigger.Event))
 			if entitySyncItem.Trigger.Filter == nil {
 				entitySync.Trigger.Filter = nil
@@ -156,6 +163,7 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 				entitySync.Trigger.Filter.PhaseTemplateID = types.StringPointerValue(entitySyncItem.Trigger.Filter.PhaseTemplateID)
 				entitySync.Trigger.Filter.TaskTemplateID = types.StringPointerValue(entitySyncItem.Trigger.Filter.TaskTemplateID)
 			}
+			entitySync.Value = &tfTypes.Value{}
 			entitySync.Value.Source = types.StringValue(string(entitySyncItem.Value.Source))
 			entitySync.Value.Value = types.StringPointerValue(entitySyncItem.Value.Value)
 
@@ -357,6 +365,7 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 
 					tasks.AutomationTask.AssignedTo = append(tasks.AutomationTask.AssignedTo, assignedTo3)
 				}
+				tasks.AutomationTask.AutomationConfig = &tfTypes.AutomationConfig{}
 				if tasksItem.AutomationTask.AutomationConfig.ActionConfig == nil {
 					tasks.AutomationTask.AutomationConfig.ActionConfig = nil
 				} else {
@@ -482,6 +491,7 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 						tasks.AutomationTask.Schedule.RelativeSchedule.Direction = types.StringValue(string(tasksItem.AutomationTask.Schedule.RelativeSchedule.Direction))
 						tasks.AutomationTask.Schedule.RelativeSchedule.Duration = types.Float64Value(tasksItem.AutomationTask.Schedule.RelativeSchedule.Duration)
 						tasks.AutomationTask.Schedule.RelativeSchedule.Mode = types.StringValue(string(tasksItem.AutomationTask.Schedule.RelativeSchedule.Mode))
+						tasks.AutomationTask.Schedule.RelativeSchedule.Reference = &tfTypes.Reference{}
 						tasks.AutomationTask.Schedule.RelativeSchedule.Reference.Attribute = types.StringPointerValue(tasksItem.AutomationTask.Schedule.RelativeSchedule.Reference.Attribute)
 						tasks.AutomationTask.Schedule.RelativeSchedule.Reference.ID = types.StringValue(tasksItem.AutomationTask.Schedule.RelativeSchedule.Reference.ID)
 						tasks.AutomationTask.Schedule.RelativeSchedule.Reference.Origin = types.StringValue(string(tasksItem.AutomationTask.Schedule.RelativeSchedule.Reference.Origin))
@@ -502,6 +512,7 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 			}
 			if tasksItem.DecisionTask != nil {
 				tasks.DecisionTask = &tfTypes.DecisionTask{}
+				tasks.DecisionTask.AllowParallelExecution = types.BoolPointerValue(tasksItem.DecisionTask.AllowParallelExecution)
 				tasks.DecisionTask.AssignedTo = []tfTypes.FlowTemplateAssignedTo{}
 
 				for _, assignedToItem4 := range tasksItem.DecisionTask.AssignedTo {
@@ -537,6 +548,7 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 
 							statements.ID = types.StringValue(statementsItem.ID)
 							statements.Operator = types.StringValue(string(statementsItem.Operator))
+							statements.Source = &tfTypes.EvaluationSource{}
 							statements.Source.Attribute = types.StringPointerValue(statementsItem.Source.Attribute)
 							if statementsItem.Source.AttributeOperation != nil {
 								statements.Source.AttributeOperation = types.StringValue(string(*statementsItem.Source.AttributeOperation))
@@ -585,6 +597,8 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 
 							conditions.Statements = append(conditions.Statements, statements)
 						}
+					} else {
+						conditions.Statements = nil
 					}
 
 					tasks.DecisionTask.Conditions = append(tasks.DecisionTask.Conditions, conditions)
@@ -693,6 +707,7 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 						tasks.DecisionTask.Schedule.RelativeSchedule.Direction = types.StringValue(string(tasksItem.DecisionTask.Schedule.RelativeSchedule.Direction))
 						tasks.DecisionTask.Schedule.RelativeSchedule.Duration = types.Float64Value(tasksItem.DecisionTask.Schedule.RelativeSchedule.Duration)
 						tasks.DecisionTask.Schedule.RelativeSchedule.Mode = types.StringValue(string(tasksItem.DecisionTask.Schedule.RelativeSchedule.Mode))
+						tasks.DecisionTask.Schedule.RelativeSchedule.Reference = &tfTypes.Reference{}
 						tasks.DecisionTask.Schedule.RelativeSchedule.Reference.Attribute = types.StringPointerValue(tasksItem.DecisionTask.Schedule.RelativeSchedule.Reference.Attribute)
 						tasks.DecisionTask.Schedule.RelativeSchedule.Reference.ID = types.StringValue(tasksItem.DecisionTask.Schedule.RelativeSchedule.Reference.ID)
 						tasks.DecisionTask.Schedule.RelativeSchedule.Reference.Origin = types.StringValue(string(tasksItem.DecisionTask.Schedule.RelativeSchedule.Reference.Origin))
@@ -830,6 +845,11 @@ func (r *FlowTemplateResourceModel) RefreshFromSharedFlowTemplate(ctx context.Co
 				r.Trigger.AutomationTrigger = &tfTypes.AutomationTrigger{}
 				r.Trigger.AutomationTrigger.AutomationID = types.StringPointerValue(resp.Trigger.AutomationTrigger.AutomationID)
 				r.Trigger.AutomationTrigger.ID = types.StringPointerValue(resp.Trigger.AutomationTrigger.ID)
+				if resp.Trigger.AutomationTrigger.InputEntity != nil {
+					r.Trigger.AutomationTrigger.InputEntity = types.StringValue(string(*resp.Trigger.AutomationTrigger.InputEntity))
+				} else {
+					r.Trigger.AutomationTrigger.InputEntity = types.StringNull()
+				}
 				r.Trigger.AutomationTrigger.TriggerConfig = []tfTypes.TriggerConfig{}
 
 				for _, triggerConfigItem1 := range resp.Trigger.AutomationTrigger.TriggerConfig {
@@ -978,6 +998,12 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 			} else {
 				id1 = nil
 			}
+			inputEntity := new(shared.InputEntity)
+			if !r.AdditionalTriggers[additionalTriggersItem].AutomationTrigger.InputEntity.IsUnknown() && !r.AdditionalTriggers[additionalTriggersItem].AutomationTrigger.InputEntity.IsNull() {
+				*inputEntity = shared.InputEntity(r.AdditionalTriggers[additionalTriggersItem].AutomationTrigger.InputEntity.ValueString())
+			} else {
+				inputEntity = nil
+			}
 			triggerConfig := make([]shared.TriggerConfig, 0, len(r.AdditionalTriggers[additionalTriggersItem].AutomationTrigger.TriggerConfig))
 			for triggerConfigIndex := range r.AdditionalTriggers[additionalTriggersItem].AutomationTrigger.TriggerConfig {
 				var additionalProperties map[string]any
@@ -1003,6 +1029,7 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 			automationTrigger := shared.AutomationTrigger{
 				AutomationID:  automationID,
 				ID:            id1,
+				InputEntity:   inputEntity,
 				TriggerConfig: triggerConfig,
 				Type:          typeVar1,
 			}
@@ -2115,6 +2142,12 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 			})
 		}
 		if r.Tasks[tasksItem].DecisionTask != nil {
+			allowParallelExecution := new(bool)
+			if !r.Tasks[tasksItem].DecisionTask.AllowParallelExecution.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.AllowParallelExecution.IsNull() {
+				*allowParallelExecution = r.Tasks[tasksItem].DecisionTask.AllowParallelExecution.ValueBool()
+			} else {
+				allowParallelExecution = nil
+			}
 			assignedTo4 := make([]shared.DecisionTaskAssignedTo, 0, len(r.Tasks[tasksItem].DecisionTask.AssignedTo))
 			for assignedToItem4 := range r.Tasks[tasksItem].DecisionTask.AssignedTo {
 				if !r.Tasks[tasksItem].DecisionTask.AssignedTo[assignedToItem4].Str.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.AssignedTo[assignedToItem4].Str.IsNull() {
@@ -2625,24 +2658,25 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 			}
 			triggerMode1 := shared.TriggerMode(r.Tasks[tasksItem].DecisionTask.TriggerMode.ValueString())
 			decisionTask := shared.DecisionTask{
-				AssignedTo:    assignedTo4,
-				Conditions:    conditions,
-				Description:   description9,
-				DueDate:       dueDate4,
-				DueDateConfig: dueDateConfig4,
-				Ecp:           ecp2,
-				ID:            id21,
-				Installer:     installer2,
-				Journey:       journey8,
-				LoopConfig:    loopConfig,
-				Name:          name13,
-				Partner:       partner2,
-				PhaseID:       phaseId9,
-				Requirements:  requirements2,
-				Schedule:      schedule1,
-				TaskType:      taskType2,
-				Taxonomies:    taxonomies3,
-				TriggerMode:   triggerMode1,
+				AllowParallelExecution: allowParallelExecution,
+				AssignedTo:             assignedTo4,
+				Conditions:             conditions,
+				Description:            description9,
+				DueDate:                dueDate4,
+				DueDateConfig:          dueDateConfig4,
+				Ecp:                    ecp2,
+				ID:                     id21,
+				Installer:              installer2,
+				Journey:                journey8,
+				LoopConfig:             loopConfig,
+				Name:                   name13,
+				Partner:                partner2,
+				PhaseID:                phaseId9,
+				Requirements:           requirements2,
+				Schedule:               schedule1,
+				TaskType:               taskType2,
+				Taxonomies:             taxonomies3,
+				TriggerMode:            triggerMode1,
 			}
 			tasks = append(tasks, shared.Task{
 				DecisionTask: &decisionTask,
@@ -3027,6 +3061,12 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 			} else {
 				id30 = nil
 			}
+			inputEntity1 := new(shared.InputEntity)
+			if !r.Trigger.AutomationTrigger.InputEntity.IsUnknown() && !r.Trigger.AutomationTrigger.InputEntity.IsNull() {
+				*inputEntity1 = shared.InputEntity(r.Trigger.AutomationTrigger.InputEntity.ValueString())
+			} else {
+				inputEntity1 = nil
+			}
 			triggerConfig1 := make([]shared.TriggerConfig, 0, len(r.Trigger.AutomationTrigger.TriggerConfig))
 			for triggerConfigIndex1 := range r.Trigger.AutomationTrigger.TriggerConfig {
 				var additionalProperties3 map[string]any
@@ -3052,6 +3092,7 @@ func (r *FlowTemplateResourceModel) ToSharedCreateFlowTemplate(ctx context.Conte
 			automationTrigger1 = &shared.AutomationTrigger{
 				AutomationID:  automationId2,
 				ID:            id30,
+				InputEntity:   inputEntity1,
 				TriggerConfig: triggerConfig1,
 				Type:          typeVar12,
 			}
@@ -3210,6 +3251,12 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			} else {
 				id1 = nil
 			}
+			inputEntity := new(shared.InputEntity)
+			if !r.AdditionalTriggers[additionalTriggersItem].AutomationTrigger.InputEntity.IsUnknown() && !r.AdditionalTriggers[additionalTriggersItem].AutomationTrigger.InputEntity.IsNull() {
+				*inputEntity = shared.InputEntity(r.AdditionalTriggers[additionalTriggersItem].AutomationTrigger.InputEntity.ValueString())
+			} else {
+				inputEntity = nil
+			}
 			triggerConfig := make([]shared.TriggerConfig, 0, len(r.AdditionalTriggers[additionalTriggersItem].AutomationTrigger.TriggerConfig))
 			for triggerConfigIndex := range r.AdditionalTriggers[additionalTriggersItem].AutomationTrigger.TriggerConfig {
 				var additionalProperties map[string]any
@@ -3235,6 +3282,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			automationTrigger := shared.AutomationTrigger{
 				AutomationID:  automationID,
 				ID:            id1,
+				InputEntity:   inputEntity,
 				TriggerConfig: triggerConfig,
 				Type:          typeVar1,
 			}
@@ -4364,6 +4412,12 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			})
 		}
 		if r.Tasks[tasksItem].DecisionTask != nil {
+			allowParallelExecution := new(bool)
+			if !r.Tasks[tasksItem].DecisionTask.AllowParallelExecution.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.AllowParallelExecution.IsNull() {
+				*allowParallelExecution = r.Tasks[tasksItem].DecisionTask.AllowParallelExecution.ValueBool()
+			} else {
+				allowParallelExecution = nil
+			}
 			assignedTo4 := make([]shared.DecisionTaskAssignedTo, 0, len(r.Tasks[tasksItem].DecisionTask.AssignedTo))
 			for assignedToItem4 := range r.Tasks[tasksItem].DecisionTask.AssignedTo {
 				if !r.Tasks[tasksItem].DecisionTask.AssignedTo[assignedToItem4].Str.IsUnknown() && !r.Tasks[tasksItem].DecisionTask.AssignedTo[assignedToItem4].Str.IsNull() {
@@ -4874,24 +4928,25 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			}
 			triggerMode1 := shared.TriggerMode(r.Tasks[tasksItem].DecisionTask.TriggerMode.ValueString())
 			decisionTask := shared.DecisionTask{
-				AssignedTo:    assignedTo4,
-				Conditions:    conditions,
-				Description:   description9,
-				DueDate:       dueDate4,
-				DueDateConfig: dueDateConfig4,
-				Ecp:           ecp2,
-				ID:            id21,
-				Installer:     installer2,
-				Journey:       journey8,
-				LoopConfig:    loopConfig,
-				Name:          name13,
-				Partner:       partner2,
-				PhaseID:       phaseId9,
-				Requirements:  requirements2,
-				Schedule:      schedule1,
-				TaskType:      taskType2,
-				Taxonomies:    taxonomies3,
-				TriggerMode:   triggerMode1,
+				AllowParallelExecution: allowParallelExecution,
+				AssignedTo:             assignedTo4,
+				Conditions:             conditions,
+				Description:            description9,
+				DueDate:                dueDate4,
+				DueDateConfig:          dueDateConfig4,
+				Ecp:                    ecp2,
+				ID:                     id21,
+				Installer:              installer2,
+				Journey:                journey8,
+				LoopConfig:             loopConfig,
+				Name:                   name13,
+				Partner:                partner2,
+				PhaseID:                phaseId9,
+				Requirements:           requirements2,
+				Schedule:               schedule1,
+				TaskType:               taskType2,
+				Taxonomies:             taxonomies3,
+				TriggerMode:            triggerMode1,
 			}
 			tasks = append(tasks, shared.Task{
 				DecisionTask: &decisionTask,
@@ -5276,6 +5331,12 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			} else {
 				id30 = nil
 			}
+			inputEntity1 := new(shared.InputEntity)
+			if !r.Trigger.AutomationTrigger.InputEntity.IsUnknown() && !r.Trigger.AutomationTrigger.InputEntity.IsNull() {
+				*inputEntity1 = shared.InputEntity(r.Trigger.AutomationTrigger.InputEntity.ValueString())
+			} else {
+				inputEntity1 = nil
+			}
 			triggerConfig1 := make([]shared.TriggerConfig, 0, len(r.Trigger.AutomationTrigger.TriggerConfig))
 			for triggerConfigIndex1 := range r.Trigger.AutomationTrigger.TriggerConfig {
 				var additionalProperties3 map[string]any
@@ -5301,6 +5362,7 @@ func (r *FlowTemplateResourceModel) ToSharedFlowTemplateInput(ctx context.Contex
 			automationTrigger1 = &shared.AutomationTrigger{
 				AutomationID:  automationId2,
 				ID:            id30,
+				InputEntity:   inputEntity1,
 				TriggerConfig: triggerConfig1,
 				Type:          typeVar12,
 			}

@@ -30,6 +30,11 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 				additionalTriggers.AutomationTrigger = &tfTypes.AutomationTrigger{}
 				additionalTriggers.AutomationTrigger.AutomationID = types.StringPointerValue(additionalTriggersItem.AutomationTrigger.AutomationID)
 				additionalTriggers.AutomationTrigger.ID = types.StringPointerValue(additionalTriggersItem.AutomationTrigger.ID)
+				if additionalTriggersItem.AutomationTrigger.InputEntity != nil {
+					additionalTriggers.AutomationTrigger.InputEntity = types.StringValue(string(*additionalTriggersItem.AutomationTrigger.InputEntity))
+				} else {
+					additionalTriggers.AutomationTrigger.InputEntity = types.StringNull()
+				}
 				additionalTriggers.AutomationTrigger.TriggerConfig = []tfTypes.TriggerConfig{}
 
 				for _, triggerConfigItem := range additionalTriggersItem.AutomationTrigger.TriggerConfig {
@@ -146,8 +151,10 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 		for _, entitySyncItem := range resp.EntitySync {
 			var entitySync tfTypes.EntitySync
 
+			entitySync.Target = &tfTypes.Target{}
 			entitySync.Target.EntityAttribute = types.StringValue(entitySyncItem.Target.EntityAttribute)
 			entitySync.Target.EntitySchema = types.StringValue(entitySyncItem.Target.EntitySchema)
+			entitySync.Trigger = &tfTypes.EntitySyncTrigger{}
 			entitySync.Trigger.Event = types.StringValue(string(entitySyncItem.Trigger.Event))
 			if entitySyncItem.Trigger.Filter == nil {
 				entitySync.Trigger.Filter = nil
@@ -156,6 +163,7 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 				entitySync.Trigger.Filter.PhaseTemplateID = types.StringPointerValue(entitySyncItem.Trigger.Filter.PhaseTemplateID)
 				entitySync.Trigger.Filter.TaskTemplateID = types.StringPointerValue(entitySyncItem.Trigger.Filter.TaskTemplateID)
 			}
+			entitySync.Value = &tfTypes.Value{}
 			entitySync.Value.Source = types.StringValue(string(entitySyncItem.Value.Source))
 			entitySync.Value.Value = types.StringPointerValue(entitySyncItem.Value.Value)
 
@@ -357,6 +365,7 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 
 					tasks.AutomationTask.AssignedTo = append(tasks.AutomationTask.AssignedTo, assignedTo3)
 				}
+				tasks.AutomationTask.AutomationConfig = &tfTypes.AutomationConfig{}
 				if tasksItem.AutomationTask.AutomationConfig.ActionConfig == nil {
 					tasks.AutomationTask.AutomationConfig.ActionConfig = nil
 				} else {
@@ -482,6 +491,7 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 						tasks.AutomationTask.Schedule.RelativeSchedule.Direction = types.StringValue(string(tasksItem.AutomationTask.Schedule.RelativeSchedule.Direction))
 						tasks.AutomationTask.Schedule.RelativeSchedule.Duration = types.Float64Value(tasksItem.AutomationTask.Schedule.RelativeSchedule.Duration)
 						tasks.AutomationTask.Schedule.RelativeSchedule.Mode = types.StringValue(string(tasksItem.AutomationTask.Schedule.RelativeSchedule.Mode))
+						tasks.AutomationTask.Schedule.RelativeSchedule.Reference = &tfTypes.Reference{}
 						tasks.AutomationTask.Schedule.RelativeSchedule.Reference.Attribute = types.StringPointerValue(tasksItem.AutomationTask.Schedule.RelativeSchedule.Reference.Attribute)
 						tasks.AutomationTask.Schedule.RelativeSchedule.Reference.ID = types.StringValue(tasksItem.AutomationTask.Schedule.RelativeSchedule.Reference.ID)
 						tasks.AutomationTask.Schedule.RelativeSchedule.Reference.Origin = types.StringValue(string(tasksItem.AutomationTask.Schedule.RelativeSchedule.Reference.Origin))
@@ -502,6 +512,7 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 			}
 			if tasksItem.DecisionTask != nil {
 				tasks.DecisionTask = &tfTypes.DecisionTask{}
+				tasks.DecisionTask.AllowParallelExecution = types.BoolPointerValue(tasksItem.DecisionTask.AllowParallelExecution)
 				tasks.DecisionTask.AssignedTo = []tfTypes.FlowTemplateAssignedTo{}
 
 				for _, assignedToItem4 := range tasksItem.DecisionTask.AssignedTo {
@@ -537,6 +548,7 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 
 							statements.ID = types.StringValue(statementsItem.ID)
 							statements.Operator = types.StringValue(string(statementsItem.Operator))
+							statements.Source = &tfTypes.EvaluationSource{}
 							statements.Source.Attribute = types.StringPointerValue(statementsItem.Source.Attribute)
 							if statementsItem.Source.AttributeOperation != nil {
 								statements.Source.AttributeOperation = types.StringValue(string(*statementsItem.Source.AttributeOperation))
@@ -585,6 +597,8 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 
 							conditions.Statements = append(conditions.Statements, statements)
 						}
+					} else {
+						conditions.Statements = nil
 					}
 
 					tasks.DecisionTask.Conditions = append(tasks.DecisionTask.Conditions, conditions)
@@ -693,6 +707,7 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 						tasks.DecisionTask.Schedule.RelativeSchedule.Direction = types.StringValue(string(tasksItem.DecisionTask.Schedule.RelativeSchedule.Direction))
 						tasks.DecisionTask.Schedule.RelativeSchedule.Duration = types.Float64Value(tasksItem.DecisionTask.Schedule.RelativeSchedule.Duration)
 						tasks.DecisionTask.Schedule.RelativeSchedule.Mode = types.StringValue(string(tasksItem.DecisionTask.Schedule.RelativeSchedule.Mode))
+						tasks.DecisionTask.Schedule.RelativeSchedule.Reference = &tfTypes.Reference{}
 						tasks.DecisionTask.Schedule.RelativeSchedule.Reference.Attribute = types.StringPointerValue(tasksItem.DecisionTask.Schedule.RelativeSchedule.Reference.Attribute)
 						tasks.DecisionTask.Schedule.RelativeSchedule.Reference.ID = types.StringValue(tasksItem.DecisionTask.Schedule.RelativeSchedule.Reference.ID)
 						tasks.DecisionTask.Schedule.RelativeSchedule.Reference.Origin = types.StringValue(string(tasksItem.DecisionTask.Schedule.RelativeSchedule.Reference.Origin))
@@ -830,6 +845,11 @@ func (r *FlowTemplateDataSourceModel) RefreshFromSharedFlowTemplate(ctx context.
 				r.Trigger.AutomationTrigger = &tfTypes.AutomationTrigger{}
 				r.Trigger.AutomationTrigger.AutomationID = types.StringPointerValue(resp.Trigger.AutomationTrigger.AutomationID)
 				r.Trigger.AutomationTrigger.ID = types.StringPointerValue(resp.Trigger.AutomationTrigger.ID)
+				if resp.Trigger.AutomationTrigger.InputEntity != nil {
+					r.Trigger.AutomationTrigger.InputEntity = types.StringValue(string(*resp.Trigger.AutomationTrigger.InputEntity))
+				} else {
+					r.Trigger.AutomationTrigger.InputEntity = types.StringNull()
+				}
 				r.Trigger.AutomationTrigger.TriggerConfig = []tfTypes.TriggerConfig{}
 
 				for _, triggerConfigItem1 := range resp.Trigger.AutomationTrigger.TriggerConfig {

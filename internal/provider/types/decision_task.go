@@ -7,22 +7,23 @@ import (
 )
 
 type DecisionTask struct {
-	AssignedTo    []FlowTemplateAssignedTo `tfsdk:"assigned_to"`
-	Conditions    []Condition              `tfsdk:"conditions"`
-	Description   *StepDescription         `tfsdk:"description"`
-	DueDate       types.String             `tfsdk:"due_date"`
-	DueDateConfig *DueDateConfig           `tfsdk:"due_date_config"`
-	Ecp           *ECPDetails              `tfsdk:"ecp"`
-	ID            types.String             `tfsdk:"id"`
-	Installer     *ECPDetails              `tfsdk:"installer"`
-	Journey       *StepJourney             `tfsdk:"journey"`
-	LoopConfig    *LoopConfig              `tfsdk:"loop_config"`
-	Name          types.String             `tfsdk:"name"`
-	Partner       *PartnerDetails          `tfsdk:"partner"`
-	PhaseID       types.String             `tfsdk:"phase_id"`
-	Requirements  []EnableRequirement      `tfsdk:"requirements"`
-	Schedule      *Schedule                `tfsdk:"schedule"`
-	TaskType      types.String             `tfsdk:"task_type"`
-	Taxonomies    []types.String           `tfsdk:"taxonomies"`
-	TriggerMode   types.String             `tfsdk:"trigger_mode"`
+	AllowParallelExecution types.Bool               `tfsdk:"allow_parallel_execution"`
+	AssignedTo             []FlowTemplateAssignedTo `tfsdk:"assigned_to"`
+	Conditions             []Condition              `tfsdk:"conditions"`
+	Description            *StepDescription         `tfsdk:"description"`
+	DueDate                types.String             `tfsdk:"due_date"`
+	DueDateConfig          *DueDateConfig           `tfsdk:"due_date_config"`
+	Ecp                    *ECPDetails              `tfsdk:"ecp"`
+	ID                     types.String             `tfsdk:"id"`
+	Installer              *ECPDetails              `tfsdk:"installer"`
+	Journey                *StepJourney             `tfsdk:"journey"`
+	LoopConfig             *LoopConfig              `tfsdk:"loop_config"`
+	Name                   types.String             `tfsdk:"name"`
+	Partner                *PartnerDetails          `tfsdk:"partner"`
+	PhaseID                types.String             `tfsdk:"phase_id"`
+	Requirements           []EnableRequirement      `tfsdk:"requirements"`
+	Schedule               *Schedule                `tfsdk:"schedule"`
+	TaskType               types.String             `tfsdk:"task_type"`
+	Taxonomies             []types.String           `tfsdk:"taxonomies"`
+	TriggerMode            types.String             `tfsdk:"trigger_mode"`
 }

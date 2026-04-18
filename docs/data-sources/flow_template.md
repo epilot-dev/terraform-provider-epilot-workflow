@@ -14,6 +14,7 @@ FlowTemplate DataSource
 
 ```terraform
 data "epilot-workflow_flow_template" "my_flowtemplate" {
+  id = "...my_id..."
 }
 ```
 
@@ -66,6 +67,7 @@ Read-Only:
 
 - `automation_id` (String) Id of the automation config that triggers this workflow
 - `id` (String)
+- `input_entity` (String) For email thread triggers, specifies which entity from the triggered email thread to use as the primary input for automation and decision tasks. Defaults to `thread` when not specified.
 - `trigger_config` (Attributes List) Transient field. Trigger configurations for creating or updating the trigger automation flow. Each item follows the automation API trigger schema. Processed by the backend during create/update and stripped before storage. (see [below for nested schema](#nestedatt--additional_triggers--automation_trigger--trigger_config))
 - `type` (String)
 
@@ -630,6 +632,7 @@ Read-Only:
 
 Read-Only:
 
+- `allow_parallel_execution` (Boolean) When true, all branches with met conditions execute in parallel. When false, only the first branch with a met condition is executed. Defaults to true for backwards compatibility.
 - `assigned_to` (Attributes List) (see [below for nested schema](#nestedatt--tasks--decision_task--assigned_to))
 - `conditions` (Attributes List) (see [below for nested schema](#nestedatt--tasks--decision_task--conditions))
 - `description` (Attributes) Longer information regarding Task (see [below for nested schema](#nestedatt--tasks--decision_task--description))
@@ -1018,6 +1021,7 @@ Read-Only:
 
 - `automation_id` (String) Id of the automation config that triggers this workflow
 - `id` (String)
+- `input_entity` (String) For email thread triggers, specifies which entity from the triggered email thread to use as the primary input for automation and decision tasks. Defaults to `thread` when not specified.
 - `trigger_config` (Attributes List) Transient field. Trigger configurations for creating or updating the trigger automation flow. Each item follows the automation API trigger schema. Processed by the backend during create/update and stripped before storage. (see [below for nested schema](#nestedatt--trigger--automation_trigger--trigger_config))
 - `type` (String)
 

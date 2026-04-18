@@ -18,7 +18,7 @@ resource "epilot-workflow_workflow_definition" "my_workflowdefinition" {
     time_period           = "days"
   }
   enable_ecp_workflow = false
-  enabled             = false
+  enabled             = true
   flow                = "{ \"see\": \"documentation\" }"
   id                  = "...my_id..."
   last_update_time    = "2021-04-27T12:01:13.000Z"

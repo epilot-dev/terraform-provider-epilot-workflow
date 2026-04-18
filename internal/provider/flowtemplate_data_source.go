@@ -79,6 +79,10 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 								"id": schema.StringAttribute{
 									Computed: true,
 								},
+								"input_entity": schema.StringAttribute{
+									Computed:    true,
+									Description: `For email thread triggers, specifies which entity from the triggered email thread to use as the primary input for automation and decision tasks. Defaults to ` + "`" + `thread` + "`" + ` when not specified.`,
+								},
 								"trigger_config": schema.ListNestedAttribute{
 									Computed: true,
 									NestedObject: schema.NestedAttributeObject{
@@ -330,6 +334,7 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 			},
 			"id": schema.StringAttribute{
 				Computed: true,
+				Optional: true,
 			},
 			"manifest": schema.ListAttribute{
 				Computed:    true,
@@ -938,6 +943,10 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 						"decision_task": schema.SingleNestedAttribute{
 							Computed: true,
 							Attributes: map[string]schema.Attribute{
+								"allow_parallel_execution": schema.BoolAttribute{
+									Computed:    true,
+									Description: `When true, all branches with met conditions execute in parallel. When false, only the first branch with a met condition is executed. Defaults to true for backwards compatibility.`,
+								},
 								"assigned_to": schema.ListNestedAttribute{
 									Computed: true,
 									NestedObject: schema.NestedAttributeObject{
@@ -1519,6 +1528,10 @@ func (r *FlowTemplateDataSource) Schema(ctx context.Context, req datasource.Sche
 							},
 							"id": schema.StringAttribute{
 								Computed: true,
+							},
+							"input_entity": schema.StringAttribute{
+								Computed:    true,
+								Description: `For email thread triggers, specifies which entity from the triggered email thread to use as the primary input for automation and decision tasks. Defaults to ` + "`" + `thread` + "`" + ` when not specified.`,
 							},
 							"trigger_config": schema.ListNestedAttribute{
 								Computed: true,
