@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-type UpdateEntityAttributes struct {
+type AutomationInputContext struct {
 	Source types.String `tfsdk:"source"`
-	Target *Target      `tfsdk:"target"`
+	TaskID types.String `tfsdk:"task_id"`
 }

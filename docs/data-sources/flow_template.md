@@ -14,6 +14,7 @@ FlowTemplate DataSource
 
 ```terraform
 data "epilot-workflow_flow_template" "my_flowtemplate" {
+  id = "...my_id..."
 }
 ```
 
@@ -66,6 +67,7 @@ Read-Only:
 
 - `automation_id` (String) Id of the automation config that triggers this workflow
 - `id` (String)
+- `input_entity` (String) For email thread triggers, specifies which entity from the triggered email thread to use as the primary input for automation and decision tasks. Defaults to `thread` when not specified.
 - `trigger_config` (Attributes List) Transient field. Trigger configurations for creating or updating the trigger automation flow. Each item follows the automation API trigger schema. Processed by the backend during create/update and stripped before storage. (see [below for nested schema](#nestedatt--additional_triggers--automation_trigger--trigger_config))
 - `type` (String)
 
@@ -464,7 +466,9 @@ Read-Only:
 Read-Only:
 
 - `action_config` (Attributes) Transient field. The full automation action configuration following the automation API action schema. Processed by the backend during create/update and stripped before storage. When present without a flow_id, a new automation flow is created. When present with a flow_id, the existing automation flow is updated. (see [below for nested schema](#nestedatt--tasks--automation_task--automation_config--action_config))
+- `duplicated_flow_id` (String) Transient field. When present, the backend clones the automation flow referenced by this ID and assigns the new flow_id to the task. Used when duplicating an automation task to give it an independent automation. Stripped before storage.
 - `flow_id` (String) Id of the configured automation to run
+- `input_context` (Attributes) Optional. Source of the entity fed into this automation task. If omitted, the workflow's primary entity is used. (see [below for nested schema](#nestedatt--tasks--automation_task--automation_config--input_context))
 
 <a id="nestedatt--tasks--automation_task--automation_config--action_config"></a>
 ### Nested Schema for `tasks.automation_task.automation_config.action_config`
@@ -474,6 +478,15 @@ Read-Only:
 - `additional_properties` (String) Parsed as JSON.
 - `config` (Map of String) Action-specific configuration
 - `type` (String) The action type (e.g. send-email, trigger-workflow)
+
+
+<a id="nestedatt--tasks--automation_task--automation_config--input_context"></a>
+### Nested Schema for `tasks.automation_task.automation_config.input_context`
+
+Read-Only:
+
+- `source` (String) `trigger` = workflow's primary (trigger) entity. `task` = entity produced by an upstream task in the graph.
+- `task_id` (String) Required when source is `task`. The id of the upstream task whose output entity should feed this task.
 
 
 
@@ -630,6 +643,7 @@ Read-Only:
 
 Read-Only:
 
+- `allow_parallel_execution` (Boolean) When true, all branches with met conditions execute in parallel. When false, only the first branch with a met condition is executed. Defaults to true for backwards compatibility.
 - `assigned_to` (Attributes List) (see [below for nested schema](#nestedatt--tasks--decision_task--assigned_to))
 - `conditions` (Attributes List) (see [below for nested schema](#nestedatt--tasks--decision_task--conditions))
 - `description` (Attributes) Longer information regarding Task (see [below for nested schema](#nestedatt--tasks--decision_task--description))
@@ -1018,6 +1032,7 @@ Read-Only:
 
 - `automation_id` (String) Id of the automation config that triggers this workflow
 - `id` (String)
+- `input_entity` (String) For email thread triggers, specifies which entity from the triggered email thread to use as the primary input for automation and decision tasks. Defaults to `thread` when not specified.
 - `trigger_config` (Attributes List) Transient field. Trigger configurations for creating or updating the trigger automation flow. Each item follows the automation API trigger schema. Processed by the backend during create/update and stripped before storage. (see [below for nested schema](#nestedatt--trigger--automation_trigger--trigger_config))
 - `type` (String)
 

@@ -19,6 +19,7 @@ resource "epilot-workflow_flow_template" "my_flowtemplate" {
       automation_trigger = {
         automation_id = "...my_automation_id..."
         id            = "...my_id..."
+        input_entity  = "last_email"
         trigger_config = [
           {
             additional_properties = "{ \"see\": \"documentation\" }"
@@ -151,7 +152,7 @@ resource "epilot-workflow_flow_template" "my_flowtemplate" {
           description = "...my_description..."
           enabled     = true
           journey = {
-            complete_task_automatically = false
+            complete_task_automatically = true
             id                          = "...my_id..."
             journey_id                  = "...my_journey_id..."
             name                        = "...my_name..."
@@ -159,7 +160,7 @@ resource "epilot-workflow_flow_template" "my_flowtemplate" {
           label = "...my_label..."
         }
         journey = {
-          complete_task_automatically = false
+          complete_task_automatically = true
           id                          = "...my_id..."
           journey_id                  = "...my_journey_id..."
           name                        = "...my_name..."
@@ -456,7 +457,9 @@ Optional:
 Optional:
 
 - `action_config` (Attributes) Transient field. The full automation action configuration following the automation API action schema. Processed by the backend during create/update and stripped before storage. When present without a flow_id, a new automation flow is created. When present with a flow_id, the existing automation flow is updated. (see [below for nested schema](#nestedatt--tasks--automation_task--automation_config--action_config))
+- `duplicated_flow_id` (String) Transient field. When present, the backend clones the automation flow referenced by this ID and assigns the new flow_id to the task. Used when duplicating an automation task to give it an independent automation. Stripped before storage.
 - `flow_id` (String) Id of the configured automation to run
+- `input_context` (Attributes) Optional. Source of the entity fed into this automation task. If omitted, the workflow's primary entity is used. (see [below for nested schema](#nestedatt--tasks--automation_task--automation_config--input_context))
 
 <a id="nestedatt--tasks--automation_task--automation_config--action_config"></a>
 ### Nested Schema for `tasks.automation_task.automation_config.action_config`
@@ -466,6 +469,15 @@ Optional:
 - `additional_properties` (String) Parsed as JSON.
 - `config` (Map of String) Action-specific configuration
 - `type` (String) The action type (e.g. send-email, trigger-workflow). Not Null
+
+
+<a id="nestedatt--tasks--automation_task--automation_config--input_context"></a>
+### Nested Schema for `tasks.automation_task.automation_config.input_context`
+
+Optional:
+
+- `source` (String) `trigger` = workflow's primary (trigger) entity. `task` = entity produced by an upstream task in the graph. Not Null; must be one of ["trigger", "task"]
+- `task_id` (String) Required when source is `task`. The id of the upstream task whose output entity should feed this task.
 
 
 
@@ -622,6 +634,7 @@ Optional:
 
 Optional:
 
+- `allow_parallel_execution` (Boolean) When true, all branches with met conditions execute in parallel. When false, only the first branch with a met condition is executed. Defaults to true for backwards compatibility. Default: true
 - `assigned_to` (Attributes List) (see [below for nested schema](#nestedatt--tasks--decision_task--assigned_to))
 - `conditions` (Attributes List) Not Null (see [below for nested schema](#nestedatt--tasks--decision_task--conditions))
 - `description` (Attributes) Longer information regarding Task (see [below for nested schema](#nestedatt--tasks--decision_task--description))
@@ -1010,6 +1023,7 @@ Optional:
 
 - `automation_id` (String) Id of the automation config that triggers this workflow
 - `id` (String)
+- `input_entity` (String) For email thread triggers, specifies which entity from the triggered email thread to use as the primary input for automation and decision tasks. Defaults to `thread` when not specified. must be one of ["thread", "first_email", "last_email"]
 - `trigger_config` (Attributes List) Transient field. Trigger configurations for creating or updating the trigger automation flow. Each item follows the automation API trigger schema. Processed by the backend during create/update and stripped before storage. (see [below for nested schema](#nestedatt--additional_triggers--automation_trigger--trigger_config))
 - `type` (String) Not Null; must be "automation"
 
@@ -1215,6 +1229,7 @@ Optional:
 
 - `automation_id` (String) Id of the automation config that triggers this workflow
 - `id` (String)
+- `input_entity` (String) For email thread triggers, specifies which entity from the triggered email thread to use as the primary input for automation and decision tasks. Defaults to `thread` when not specified. must be one of ["thread", "first_email", "last_email"]
 - `trigger_config` (Attributes List) Transient field. Trigger configurations for creating or updating the trigger automation flow. Each item follows the automation API trigger schema. Processed by the backend during create/update and stripped before storage. (see [below for nested schema](#nestedatt--trigger--automation_trigger--trigger_config))
 - `type` (String) Not Null; must be "automation"
 

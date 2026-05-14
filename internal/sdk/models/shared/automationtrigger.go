@@ -8,6 +8,36 @@ import (
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/internal/utils"
 )
 
+// InputEntity - For email thread triggers, specifies which entity from the triggered email thread to use as the primary input for automation and decision tasks. Defaults to `thread` when not specified.
+type InputEntity string
+
+const (
+	InputEntityThread     InputEntity = "thread"
+	InputEntityFirstEmail InputEntity = "first_email"
+	InputEntityLastEmail  InputEntity = "last_email"
+)
+
+func (e InputEntity) ToPointer() *InputEntity {
+	return &e
+}
+func (e *InputEntity) UnmarshalJSON(data []byte) error {
+	var v string
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+	switch v {
+	case "thread":
+		fallthrough
+	case "first_email":
+		fallthrough
+	case "last_email":
+		*e = InputEntity(v)
+		return nil
+	default:
+		return fmt.Errorf("invalid value for InputEntity: %v", v)
+	}
+}
+
 type TriggerConfig struct {
 	AdditionalProperties any `additionalProperties:"true" json:"-"`
 	// Trigger-specific configuration
@@ -75,6 +105,9 @@ type AutomationTrigger struct {
 	// Id of the automation config that triggers this workflow
 	AutomationID *string `json:"automation_id,omitempty"`
 	ID           *string `json:"id,omitempty"`
+	// For email thread triggers, specifies which entity from the triggered email thread to use as the primary input for automation and decision tasks. Defaults to `thread` when not specified.
+	//
+	InputEntity *InputEntity `json:"input_entity,omitempty"`
 	// Transient field. Trigger configurations for creating or updating the trigger automation flow. Each item follows the automation API trigger schema. Processed by the backend during create/update and stripped before storage.
 	//
 	TriggerConfig []TriggerConfig `json:"trigger_config,omitempty"`
@@ -104,6 +137,13 @@ func (a *AutomationTrigger) GetID() *string {
 		return nil
 	}
 	return a.ID
+}
+
+func (a *AutomationTrigger) GetInputEntity() *InputEntity {
+	if a == nil {
+		return nil
+	}
+	return a.InputEntity
 }
 
 func (a *AutomationTrigger) GetTriggerConfig() []TriggerConfig {
