@@ -7,18 +7,18 @@ import (
 	"fmt"
 )
 
-type Source string
+type UpdateEntityAttributesSource string
 
 const (
-	SourceWorkflowStatus Source = "workflow_status"
-	SourceCurrentSection Source = "current_section"
-	SourceCurrentStep    Source = "current_step"
+	UpdateEntityAttributesSourceWorkflowStatus UpdateEntityAttributesSource = "workflow_status"
+	UpdateEntityAttributesSourceCurrentSection UpdateEntityAttributesSource = "current_section"
+	UpdateEntityAttributesSourceCurrentStep    UpdateEntityAttributesSource = "current_step"
 )
 
-func (e Source) ToPointer() *Source {
+func (e UpdateEntityAttributesSource) ToPointer() *UpdateEntityAttributesSource {
 	return &e
 }
-func (e *Source) UnmarshalJSON(data []byte) error {
+func (e *UpdateEntityAttributesSource) UnmarshalJSON(data []byte) error {
 	var v string
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -29,10 +29,10 @@ func (e *Source) UnmarshalJSON(data []byte) error {
 	case "current_section":
 		fallthrough
 	case "current_step":
-		*e = Source(v)
+		*e = UpdateEntityAttributesSource(v)
 		return nil
 	default:
-		return fmt.Errorf("invalid value for Source: %v", v)
+		return fmt.Errorf("invalid value for UpdateEntityAttributesSource: %v", v)
 	}
 }
 
@@ -56,13 +56,13 @@ func (u *UpdateEntityAttributesTarget) GetEntitySchema() string {
 }
 
 type UpdateEntityAttributes struct {
-	Source Source                       `json:"source"`
+	Source UpdateEntityAttributesSource `json:"source"`
 	Target UpdateEntityAttributesTarget `json:"target"`
 }
 
-func (u *UpdateEntityAttributes) GetSource() Source {
+func (u *UpdateEntityAttributes) GetSource() UpdateEntityAttributesSource {
 	if u == nil {
-		return Source("")
+		return UpdateEntityAttributesSource("")
 	}
 	return u.Source
 }

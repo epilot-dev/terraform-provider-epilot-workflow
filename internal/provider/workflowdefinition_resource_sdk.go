@@ -65,6 +65,7 @@ func (r *WorkflowDefinitionResourceModel) RefreshFromSharedWorkflowDefinition(ct
 			var updateEntityAttributes tfTypes.UpdateEntityAttributes
 
 			updateEntityAttributes.Source = types.StringValue(string(updateEntityAttributesItem.Source))
+			updateEntityAttributes.Target = &tfTypes.Target{}
 			updateEntityAttributes.Target.EntityAttribute = types.StringValue(updateEntityAttributesItem.Target.EntityAttribute)
 			updateEntityAttributes.Target.EntitySchema = types.StringValue(updateEntityAttributesItem.Target.EntitySchema)
 
@@ -232,7 +233,7 @@ func (r *WorkflowDefinitionResourceModel) ToSharedWorkflowDefinition(ctx context
 	}
 	updateEntityAttributes := make([]shared.UpdateEntityAttributes, 0, len(r.UpdateEntityAttributes))
 	for updateEntityAttributesIndex := range r.UpdateEntityAttributes {
-		source := shared.Source(r.UpdateEntityAttributes[updateEntityAttributesIndex].Source.ValueString())
+		source := shared.UpdateEntityAttributesSource(r.UpdateEntityAttributes[updateEntityAttributesIndex].Source.ValueString())
 		var entityAttribute string
 		entityAttribute = r.UpdateEntityAttributes[updateEntityAttributesIndex].Target.EntityAttribute.ValueString()
 

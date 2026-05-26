@@ -8,6 +8,7 @@ import (
 )
 
 type GetFlowTemplateRequest struct {
+	// Unique identifier of the flow template to retrieve.
 	FlowID string `pathParam:"style=simple,explode=false,name=flowId"`
 }
 

@@ -8,7 +8,7 @@ import (
 )
 
 type DeleteDefinitionRequest struct {
-	// Id of the definition to de deleted.
+	// Unique identifier of the workflow definition to be deleted.
 	DefinitionID string `pathParam:"style=simple,explode=false,name=definitionId"`
 }
 

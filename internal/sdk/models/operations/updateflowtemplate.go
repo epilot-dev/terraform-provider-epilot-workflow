@@ -8,9 +8,10 @@ import (
 )
 
 type UpdateFlowTemplateRequest struct {
-	// Flow Template payload
+	// Updated flow template payload containing the full workflow definition.
 	FlowTemplate shared.FlowTemplateInput `request:"mediaType=application/json"`
-	FlowID       string                   `pathParam:"style=simple,explode=false,name=flowId"`
+	// Unique identifier of the flow template to update.
+	FlowID string `pathParam:"style=simple,explode=false,name=flowId"`
 }
 
 func (u *UpdateFlowTemplateRequest) GetFlowTemplate() shared.FlowTemplateInput {
@@ -30,7 +31,9 @@ func (u *UpdateFlowTemplateRequest) GetFlowID() string {
 type UpdateFlowTemplateResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
-	// Validation Errors
+	// Flow template not found
+	DefinitionNotFoundResp *shared.DefinitionNotFoundResp
+	// Validation errors - request body contains invalid data
 	ErrorResp *shared.ErrorResp
 	// Flow template has been updated successfully
 	FlowTemplate *shared.FlowTemplate
@@ -45,6 +48,13 @@ func (u *UpdateFlowTemplateResponse) GetContentType() string {
 		return ""
 	}
 	return u.ContentType
+}
+
+func (u *UpdateFlowTemplateResponse) GetDefinitionNotFoundResp() *shared.DefinitionNotFoundResp {
+	if u == nil {
+		return nil
+	}
+	return u.DefinitionNotFoundResp
 }
 
 func (u *UpdateFlowTemplateResponse) GetErrorResp() *shared.ErrorResp {

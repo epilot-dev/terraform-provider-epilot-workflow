@@ -2,7 +2,9 @@
 
 package shared
 
+// ErrorResp - Standard error response returned when an API request fails.
 type ErrorResp struct {
+	// Human-readable error message describing what went wrong.
 	Message *string `json:"message,omitempty"`
 }
 

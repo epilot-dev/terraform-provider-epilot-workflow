@@ -19,6 +19,9 @@ func (g *GetClosingReasonV1Request) GetReasonID() string {
 	return g.ReasonID
 }
 
+// #region class-body-getclosingreasonv1request
+// #endregion class-body-getclosingreasonv1request
+
 type GetClosingReasonV1Response struct {
 	// Returns the closing reason
 	ClosingReason *shared.ClosingReason
@@ -75,3 +78,6 @@ func (g *GetClosingReasonV1Response) GetRawResponse() *http.Response {
 	}
 	return g.RawResponse
 }
+
+// #region class-body-getclosingreasonv1response
+// #endregion class-body-getclosingreasonv1response

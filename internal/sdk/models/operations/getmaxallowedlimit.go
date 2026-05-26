@@ -10,7 +10,7 @@ import (
 type GetMaxAllowedLimitResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
-	// Other errors
+	// Internal server error
 	ErrorResp *shared.ErrorResp
 	// A combo of current number of workflows, and the max allowed number of workflows.
 	MaxAllowedLimit *shared.MaxAllowedLimit

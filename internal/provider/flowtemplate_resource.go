@@ -5,8 +5,6 @@ package provider
 import (
 	"context"
 	"fmt"
-	speakeasy_objectplanmodifier "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/planmodifiers/objectplanmodifier"
-	speakeasy_stringplanmodifier "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/planmodifiers/stringplanmodifier"
 	tfTypes "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/provider/types"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/validators"
@@ -15,7 +13,9 @@ import (
 	speakeasy_objectvalidators "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/validators/objectvalidators"
 	speakeasy_stringvalidators "github.com/epilot-dev/terraform-provider-epilot-workflow/internal/validators/stringvalidators"
 	"github.com/hashicorp/terraform-plugin-framework-jsontypes/jsontypes"
+	"github.com/hashicorp/terraform-plugin-framework-validators/float64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/mapvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/objectvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -24,7 +24,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
@@ -88,9 +87,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 					Attributes: map[string]schema.Attribute{
 						"automation_trigger": schema.SingleNestedAttribute{
 							Optional: true,
-							PlanModifiers: []planmodifier.Object{
-								speakeasy_objectplanmodifier.UseConfigValue(),
-							},
 							Attributes: map[string]schema.Attribute{
 								"automation_id": schema.StringAttribute{
 									Computed:    true,
@@ -100,6 +96,18 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 								"id": schema.StringAttribute{
 									Computed: true,
 									Optional: true,
+								},
+								"input_entity": schema.StringAttribute{
+									Computed:    true,
+									Optional:    true,
+									Description: `For email thread triggers, specifies which entity from the triggered email thread to use as the primary input for automation and decision tasks. Defaults to ` + "`" + `thread` + "`" + ` when not specified. must be one of ["thread", "first_email", "last_email"]`,
+									Validators: []validator.String{
+										stringvalidator.OneOf(
+											"thread",
+											"first_email",
+											"last_email",
+										),
+									},
 								},
 								"trigger_config": schema.ListNestedAttribute{
 									Computed: true,
@@ -158,9 +166,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 						},
 						"journey_automation_trigger": schema.SingleNestedAttribute{
 							Optional: true,
-							PlanModifiers: []planmodifier.Object{
-								speakeasy_objectplanmodifier.UseConfigValue(),
-							},
 							Attributes: map[string]schema.Attribute{
 								"entity_schema": schema.StringAttribute{
 									Computed:    true,
@@ -193,9 +198,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 						},
 						"journey_submission_trigger": schema.SingleNestedAttribute{
 							Optional: true,
-							PlanModifiers: []planmodifier.Object{
-								speakeasy_objectplanmodifier.UseConfigValue(),
-							},
 							Attributes: map[string]schema.Attribute{
 								"automation_id": schema.StringAttribute{
 									Computed: true,
@@ -240,9 +242,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 						},
 						"manual_trigger": schema.SingleNestedAttribute{
 							Optional: true,
-							PlanModifiers: []planmodifier.Object{
-								speakeasy_objectplanmodifier.UseConfigValue(),
-							},
 							Attributes: map[string]schema.Attribute{
 								"entity_schema": schema.StringAttribute{
 									Computed: true,
@@ -284,9 +283,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 					Attributes: map[string]schema.Attribute{
 						"str": schema.StringAttribute{
 							Optional: true,
-							PlanModifiers: []planmodifier.String{
-								speakeasy_stringplanmodifier.UseConfigValue(),
-							},
 							Validators: []validator.String{
 								stringvalidator.ConflictsWith(path.Expressions{
 									path.MatchRelative().AtParent().AtName("variable_assignment"),
@@ -295,9 +291,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 						},
 						"variable_assignment": schema.SingleNestedAttribute{
 							Optional: true,
-							PlanModifiers: []planmodifier.Object{
-								speakeasy_objectplanmodifier.UseConfigValue(),
-							},
 							Attributes: map[string]schema.Attribute{
 								"value": schema.ListAttribute{
 									Computed:    true,
@@ -366,8 +359,12 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 				Description: `ISO String Date & Time`,
 			},
 			"description": schema.StringAttribute{
-				Computed: true,
-				Optional: true,
+				Computed:    true,
+				Optional:    true,
+				Description: `Optional detailed description of the workflow's purpose and behavior.`,
+				Validators: []validator.String{
+					stringvalidator.UTF8LengthAtMost(5000),
+				},
 			},
 			"due_date": schema.StringAttribute{
 				Computed: true,
@@ -411,7 +408,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 					"unit": schema.StringAttribute{
 						Computed:    true,
 						Optional:    true,
-						Description: `Not Null; must be one of ["minutes", "hours", "days", "weeks", "months"]`,
+						Description: `Not Null; must be one of ["minutes", "hours", "days", "weeks", "months", "years"]`,
 						Validators: []validator.String{
 							speakeasy_stringvalidators.NotNull(),
 							stringvalidator.OneOf(
@@ -420,6 +417,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 								"days",
 								"weeks",
 								"months",
+								"years",
 							),
 						},
 					},
@@ -603,10 +601,14 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 						},
 					},
 				},
+				Validators: []validator.List{
+					listvalidator.SizeAtMost(30),
+				},
 			},
 			"id": schema.StringAttribute{
-				Computed: true,
-				Optional: true,
+				Computed:    true,
+				Optional:    true,
+				Description: `Unique identifier for the flow template, generated by the system.`,
 			},
 			"manifest": schema.ListAttribute{
 				Computed:    true,
@@ -615,11 +617,16 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 				Description: `The manifest IDs associated with this workflow`,
 			},
 			"name": schema.StringAttribute{
-				Required: true,
+				Required:    true,
+				Description: `Display name for the workflow, shown to users in the UI.`,
+				Validators: []validator.String{
+					stringvalidator.UTF8LengthAtLeast(3),
+				},
 			},
 			"org_id": schema.StringAttribute{
-				Computed: true,
-				Optional: true,
+				Computed:    true,
+				Optional:    true,
+				Description: `Organization identifier that owns this flow template.`,
 			},
 			"phases": schema.ListNestedAttribute{
 				Computed: true,
@@ -639,9 +646,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 								Attributes: map[string]schema.Attribute{
 									"str": schema.StringAttribute{
 										Optional: true,
-										PlanModifiers: []planmodifier.String{
-											speakeasy_stringplanmodifier.UseConfigValue(),
-										},
 										Validators: []validator.String{
 											stringvalidator.ConflictsWith(path.Expressions{
 												path.MatchRelative().AtParent().AtName("variable_assignment"),
@@ -650,9 +654,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 									},
 									"variable_assignment": schema.SingleNestedAttribute{
 										Optional: true,
-										PlanModifiers: []planmodifier.Object{
-											speakeasy_objectplanmodifier.UseConfigValue(),
-										},
 										Attributes: map[string]schema.Attribute{
 											"value": schema.ListAttribute{
 												Computed:    true,
@@ -721,7 +722,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 								"unit": schema.StringAttribute{
 									Computed:    true,
 									Optional:    true,
-									Description: `Not Null; must be one of ["minutes", "hours", "days", "weeks", "months"]`,
+									Description: `Not Null; must be one of ["minutes", "hours", "days", "weeks", "months", "years"]`,
 									Validators: []validator.String{
 										speakeasy_stringvalidators.NotNull(),
 										stringvalidator.OneOf(
@@ -730,6 +731,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 											"days",
 											"weeks",
 											"months",
+											"years",
 										),
 									},
 								},
@@ -775,9 +777,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 					Attributes: map[string]schema.Attribute{
 						"ai_agent_task": schema.SingleNestedAttribute{
 							Optional: true,
-							PlanModifiers: []planmodifier.Object{
-								speakeasy_objectplanmodifier.UseConfigValue(),
-							},
 							Attributes: map[string]schema.Attribute{
 								"agent_config": schema.SingleNestedAttribute{
 									Computed: true,
@@ -810,9 +809,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 										Attributes: map[string]schema.Attribute{
 											"str": schema.StringAttribute{
 												Optional: true,
-												PlanModifiers: []planmodifier.String{
-													speakeasy_stringplanmodifier.UseConfigValue(),
-												},
 												Validators: []validator.String{
 													stringvalidator.ConflictsWith(path.Expressions{
 														path.MatchRelative().AtParent().AtName("variable_assignment"),
@@ -821,9 +817,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 											},
 											"variable_assignment": schema.SingleNestedAttribute{
 												Optional: true,
-												PlanModifiers: []planmodifier.Object{
-													speakeasy_objectplanmodifier.UseConfigValue(),
-												},
 												Attributes: map[string]schema.Attribute{
 													"value": schema.ListAttribute{
 														Computed:    true,
@@ -861,6 +854,9 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 										"value": schema.StringAttribute{
 											Computed: true,
 											Optional: true,
+											Validators: []validator.String{
+												stringvalidator.UTF8LengthAtMost(5000),
+											},
 										},
 									},
 									Description: `Longer information regarding Task`,
@@ -907,7 +903,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 										"unit": schema.StringAttribute{
 											Computed:    true,
 											Optional:    true,
-											Description: `Not Null; must be one of ["minutes", "hours", "days", "weeks", "months"]`,
+											Description: `Not Null; must be one of ["minutes", "hours", "days", "weeks", "months", "years"]`,
 											Validators: []validator.String{
 												speakeasy_stringvalidators.NotNull(),
 												stringvalidator.OneOf(
@@ -916,6 +912,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 													"days",
 													"weeks",
 													"months",
+													"years",
 												),
 											},
 										},
@@ -1136,9 +1133,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 						},
 						"automation_task": schema.SingleNestedAttribute{
 							Optional: true,
-							PlanModifiers: []planmodifier.Object{
-								speakeasy_objectplanmodifier.UseConfigValue(),
-							},
 							Attributes: map[string]schema.Attribute{
 								"assigned_to": schema.ListNestedAttribute{
 									Computed: true,
@@ -1150,9 +1144,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 										Attributes: map[string]schema.Attribute{
 											"str": schema.StringAttribute{
 												Optional: true,
-												PlanModifiers: []planmodifier.String{
-													speakeasy_stringplanmodifier.UseConfigValue(),
-												},
 												Validators: []validator.String{
 													stringvalidator.ConflictsWith(path.Expressions{
 														path.MatchRelative().AtParent().AtName("variable_assignment"),
@@ -1161,9 +1152,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 											},
 											"variable_assignment": schema.SingleNestedAttribute{
 												Optional: true,
-												PlanModifiers: []planmodifier.Object{
-													speakeasy_objectplanmodifier.UseConfigValue(),
-												},
 												Attributes: map[string]schema.Attribute{
 													"value": schema.ListAttribute{
 														Computed:    true,
@@ -1224,10 +1212,39 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 											},
 											Description: `Transient field. The full automation action configuration following the automation API action schema. Processed by the backend during create/update and stripped before storage. When present without a flow_id, a new automation flow is created. When present with a flow_id, the existing automation flow is updated.`,
 										},
+										"duplicated_flow_id": schema.StringAttribute{
+											Computed:    true,
+											Optional:    true,
+											Description: `Transient field. When present, the backend clones the automation flow referenced by this ID and assigns the new flow_id to the task. Used when duplicating an automation task to give it an independent automation. Stripped before storage.`,
+										},
 										"flow_id": schema.StringAttribute{
 											Computed:    true,
 											Optional:    true,
 											Description: `Id of the configured automation to run`,
+										},
+										"input_context": schema.SingleNestedAttribute{
+											Computed: true,
+											Optional: true,
+											Attributes: map[string]schema.Attribute{
+												"source": schema.StringAttribute{
+													Computed:    true,
+													Optional:    true,
+													Description: `` + "`" + `trigger` + "`" + ` = workflow's primary (trigger) entity. ` + "`" + `task` + "`" + ` = entity produced by an upstream task in the graph. Not Null; must be one of ["trigger", "task"]`,
+													Validators: []validator.String{
+														speakeasy_stringvalidators.NotNull(),
+														stringvalidator.OneOf(
+															"trigger",
+															"task",
+														),
+													},
+												},
+												"task_id": schema.StringAttribute{
+													Computed:    true,
+													Optional:    true,
+													Description: `Required when source is ` + "`" + `task` + "`" + `. The id of the upstream task whose output entity should feed this task.`,
+												},
+											},
+											Description: `Optional. Source of the entity fed into this automation task. If omitted, the workflow's primary entity is used.`,
 										},
 									},
 									Description: `Configuration for automation execution to run. Not Null`,
@@ -1252,6 +1269,9 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 										"value": schema.StringAttribute{
 											Computed: true,
 											Optional: true,
+											Validators: []validator.String{
+												stringvalidator.UTF8LengthAtMost(5000),
+											},
 										},
 									},
 									Description: `Longer information regarding Task`,
@@ -1298,7 +1318,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 										"unit": schema.StringAttribute{
 											Computed:    true,
 											Optional:    true,
-											Description: `Not Null; must be one of ["minutes", "hours", "days", "weeks", "months"]`,
+											Description: `Not Null; must be one of ["minutes", "hours", "days", "weeks", "months", "years"]`,
 											Validators: []validator.String{
 												speakeasy_stringvalidators.NotNull(),
 												stringvalidator.OneOf(
@@ -1307,6 +1327,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 													"days",
 													"weeks",
 													"months",
+													"years",
 												),
 											},
 										},
@@ -1502,9 +1523,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 									Attributes: map[string]schema.Attribute{
 										"delayed_schedule": schema.SingleNestedAttribute{
 											Optional: true,
-											PlanModifiers: []planmodifier.Object{
-												speakeasy_objectplanmodifier.UseConfigValue(),
-											},
 											Attributes: map[string]schema.Attribute{
 												"duration": schema.Float64Attribute{
 													Computed:    true,
@@ -1512,6 +1530,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 													Description: `Not Null`,
 													Validators: []validator.Float64{
 														speakeasy_float64validators.NotNull(),
+														float64validator.AtLeast(1),
 													},
 												},
 												"mode": schema.StringAttribute{
@@ -1526,7 +1545,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 												"unit": schema.StringAttribute{
 													Computed:    true,
 													Optional:    true,
-													Description: `Not Null; must be one of ["minutes", "hours", "days", "weeks", "months"]`,
+													Description: `Not Null; must be one of ["minutes", "hours", "days", "weeks", "months", "years"]`,
 													Validators: []validator.String{
 														speakeasy_stringvalidators.NotNull(),
 														stringvalidator.OneOf(
@@ -1535,6 +1554,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 															"days",
 															"weeks",
 															"months",
+															"years",
 														),
 													},
 												},
@@ -1548,9 +1568,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 										},
 										"immediate_schedule": schema.SingleNestedAttribute{
 											Optional: true,
-											PlanModifiers: []planmodifier.Object{
-												speakeasy_objectplanmodifier.UseConfigValue(),
-											},
 											Attributes: map[string]schema.Attribute{
 												"mode": schema.StringAttribute{
 													Computed:    true,
@@ -1572,9 +1589,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 										},
 										"relative_schedule": schema.SingleNestedAttribute{
 											Optional: true,
-											PlanModifiers: []planmodifier.Object{
-												speakeasy_objectplanmodifier.UseConfigValue(),
-											},
 											Attributes: map[string]schema.Attribute{
 												"direction": schema.StringAttribute{
 													Computed:    true,
@@ -1594,6 +1608,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 													Description: `Not Null`,
 													Validators: []validator.Float64{
 														speakeasy_float64validators.NotNull(),
+														float64validator.AtLeast(1),
 													},
 												},
 												"mode": schema.StringAttribute{
@@ -1650,7 +1665,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 												"unit": schema.StringAttribute{
 													Computed:    true,
 													Optional:    true,
-													Description: `Not Null; must be one of ["minutes", "hours", "days", "weeks", "months"]`,
+													Description: `Not Null; must be one of ["minutes", "hours", "days", "weeks", "months", "years"]`,
 													Validators: []validator.String{
 														speakeasy_stringvalidators.NotNull(),
 														stringvalidator.OneOf(
@@ -1659,6 +1674,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 															"days",
 															"weeks",
 															"months",
+															"years",
 														),
 													},
 												},
@@ -1714,10 +1730,13 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 						},
 						"decision_task": schema.SingleNestedAttribute{
 							Optional: true,
-							PlanModifiers: []planmodifier.Object{
-								speakeasy_objectplanmodifier.UseConfigValue(),
-							},
 							Attributes: map[string]schema.Attribute{
+								"allow_parallel_execution": schema.BoolAttribute{
+									Computed:    true,
+									Optional:    true,
+									Default:     booldefault.StaticBool(true),
+									Description: `When true, all branches with met conditions execute in parallel. When false, only the first branch with a met condition is executed. Defaults to true for backwards compatibility. Default: true`,
+								},
 								"assigned_to": schema.ListNestedAttribute{
 									Computed: true,
 									Optional: true,
@@ -1728,9 +1747,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 										Attributes: map[string]schema.Attribute{
 											"str": schema.StringAttribute{
 												Optional: true,
-												PlanModifiers: []planmodifier.String{
-													speakeasy_stringplanmodifier.UseConfigValue(),
-												},
 												Validators: []validator.String{
 													stringvalidator.ConflictsWith(path.Expressions{
 														path.MatchRelative().AtParent().AtName("variable_assignment"),
@@ -1739,9 +1755,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 											},
 											"variable_assignment": schema.SingleNestedAttribute{
 												Optional: true,
-												PlanModifiers: []planmodifier.Object{
-													speakeasy_objectplanmodifier.UseConfigValue(),
-												},
 												Attributes: map[string]schema.Attribute{
 													"value": schema.ListAttribute{
 														Computed:    true,
@@ -1782,7 +1795,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 												Description: `The name of the branch. Not Null`,
 												Validators: []validator.String{
 													speakeasy_stringvalidators.NotNull(),
-													stringvalidator.UTF8LengthAtMost(255),
 												},
 											},
 											"id": schema.StringAttribute{
@@ -1989,12 +2001,16 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 														},
 													},
 												},
+												Validators: []validator.List{
+													listvalidator.SizeAtLeast(1),
+												},
 											},
 										},
 									},
 									Description: `Not Null`,
 									Validators: []validator.List{
 										speakeasy_listvalidators.NotNull(),
+										listvalidator.SizeAtLeast(2),
 									},
 								},
 								"description": schema.SingleNestedAttribute{
@@ -2008,6 +2024,9 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 										"value": schema.StringAttribute{
 											Computed: true,
 											Optional: true,
+											Validators: []validator.String{
+												stringvalidator.UTF8LengthAtMost(5000),
+											},
 										},
 									},
 									Description: `Longer information regarding Task`,
@@ -2054,7 +2073,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 										"unit": schema.StringAttribute{
 											Computed:    true,
 											Optional:    true,
-											Description: `Not Null; must be one of ["minutes", "hours", "days", "weeks", "months"]`,
+											Description: `Not Null; must be one of ["minutes", "hours", "days", "weeks", "months", "years"]`,
 											Validators: []validator.String{
 												speakeasy_stringvalidators.NotNull(),
 												stringvalidator.OneOf(
@@ -2063,6 +2082,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 													"days",
 													"weeks",
 													"months",
+													"years",
 												),
 											},
 										},
@@ -2213,7 +2233,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 											Default:     int64default.StaticInt64(3),
 											Description: `Maximum number of iterations for the loop branch. Default: 3`,
 											Validators: []validator.Int64{
-												int64validator.Between(1, 100),
+												int64validator.AtLeast(1),
 											},
 										},
 									},
@@ -2289,9 +2309,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 									Attributes: map[string]schema.Attribute{
 										"delayed_schedule": schema.SingleNestedAttribute{
 											Optional: true,
-											PlanModifiers: []planmodifier.Object{
-												speakeasy_objectplanmodifier.UseConfigValue(),
-											},
 											Attributes: map[string]schema.Attribute{
 												"duration": schema.Float64Attribute{
 													Computed:    true,
@@ -2299,6 +2316,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 													Description: `Not Null`,
 													Validators: []validator.Float64{
 														speakeasy_float64validators.NotNull(),
+														float64validator.AtLeast(1),
 													},
 												},
 												"mode": schema.StringAttribute{
@@ -2313,7 +2331,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 												"unit": schema.StringAttribute{
 													Computed:    true,
 													Optional:    true,
-													Description: `Not Null; must be one of ["minutes", "hours", "days", "weeks", "months"]`,
+													Description: `Not Null; must be one of ["minutes", "hours", "days", "weeks", "months", "years"]`,
 													Validators: []validator.String{
 														speakeasy_stringvalidators.NotNull(),
 														stringvalidator.OneOf(
@@ -2322,6 +2340,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 															"days",
 															"weeks",
 															"months",
+															"years",
 														),
 													},
 												},
@@ -2334,9 +2353,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 										},
 										"relative_schedule": schema.SingleNestedAttribute{
 											Optional: true,
-											PlanModifiers: []planmodifier.Object{
-												speakeasy_objectplanmodifier.UseConfigValue(),
-											},
 											Attributes: map[string]schema.Attribute{
 												"direction": schema.StringAttribute{
 													Computed:    true,
@@ -2356,6 +2372,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 													Description: `Not Null`,
 													Validators: []validator.Float64{
 														speakeasy_float64validators.NotNull(),
+														float64validator.AtLeast(1),
 													},
 												},
 												"mode": schema.StringAttribute{
@@ -2412,7 +2429,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 												"unit": schema.StringAttribute{
 													Computed:    true,
 													Optional:    true,
-													Description: `Not Null; must be one of ["minutes", "hours", "days", "weeks", "months"]`,
+													Description: `Not Null; must be one of ["minutes", "hours", "days", "weeks", "months", "years"]`,
 													Validators: []validator.String{
 														speakeasy_stringvalidators.NotNull(),
 														stringvalidator.OneOf(
@@ -2421,6 +2438,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 															"days",
 															"weeks",
 															"months",
+															"years",
 														),
 													},
 												},
@@ -2476,9 +2494,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 						},
 						"task_base": schema.SingleNestedAttribute{
 							Optional: true,
-							PlanModifiers: []planmodifier.Object{
-								speakeasy_objectplanmodifier.UseConfigValue(),
-							},
 							Attributes: map[string]schema.Attribute{
 								"assigned_to": schema.ListNestedAttribute{
 									Computed: true,
@@ -2490,9 +2505,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 										Attributes: map[string]schema.Attribute{
 											"str": schema.StringAttribute{
 												Optional: true,
-												PlanModifiers: []planmodifier.String{
-													speakeasy_stringplanmodifier.UseConfigValue(),
-												},
 												Validators: []validator.String{
 													stringvalidator.ConflictsWith(path.Expressions{
 														path.MatchRelative().AtParent().AtName("variable_assignment"),
@@ -2501,9 +2513,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 											},
 											"variable_assignment": schema.SingleNestedAttribute{
 												Optional: true,
-												PlanModifiers: []planmodifier.Object{
-													speakeasy_objectplanmodifier.UseConfigValue(),
-												},
 												Attributes: map[string]schema.Attribute{
 													"value": schema.ListAttribute{
 														Computed:    true,
@@ -2541,6 +2550,9 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 										"value": schema.StringAttribute{
 											Computed: true,
 											Optional: true,
+											Validators: []validator.String{
+												stringvalidator.UTF8LengthAtMost(5000),
+											},
 										},
 									},
 									Description: `Longer information regarding Task`,
@@ -2587,7 +2599,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 										"unit": schema.StringAttribute{
 											Computed:    true,
 											Optional:    true,
-											Description: `Not Null; must be one of ["minutes", "hours", "days", "weeks", "months"]`,
+											Description: `Not Null; must be one of ["minutes", "hours", "days", "weeks", "months", "years"]`,
 											Validators: []validator.String{
 												speakeasy_stringvalidators.NotNull(),
 												stringvalidator.OneOf(
@@ -2596,6 +2608,7 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 													"days",
 													"weeks",
 													"months",
+													"years",
 												),
 											},
 										},
@@ -2816,6 +2829,9 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 						},
 					},
 				},
+				Validators: []validator.List{
+					listvalidator.SizeAtLeast(1),
+				},
 			},
 			"taxonomies": schema.ListAttribute{
 				Computed:    true,
@@ -2829,9 +2845,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 				Attributes: map[string]schema.Attribute{
 					"automation_trigger": schema.SingleNestedAttribute{
 						Optional: true,
-						PlanModifiers: []planmodifier.Object{
-							speakeasy_objectplanmodifier.UseConfigValue(),
-						},
 						Attributes: map[string]schema.Attribute{
 							"automation_id": schema.StringAttribute{
 								Computed:    true,
@@ -2841,6 +2854,18 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 							"id": schema.StringAttribute{
 								Computed: true,
 								Optional: true,
+							},
+							"input_entity": schema.StringAttribute{
+								Computed:    true,
+								Optional:    true,
+								Description: `For email thread triggers, specifies which entity from the triggered email thread to use as the primary input for automation and decision tasks. Defaults to ` + "`" + `thread` + "`" + ` when not specified. must be one of ["thread", "first_email", "last_email"]`,
+								Validators: []validator.String{
+									stringvalidator.OneOf(
+										"thread",
+										"first_email",
+										"last_email",
+									),
+								},
 							},
 							"trigger_config": schema.ListNestedAttribute{
 								Computed: true,
@@ -2899,9 +2924,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 					},
 					"journey_automation_trigger": schema.SingleNestedAttribute{
 						Optional: true,
-						PlanModifiers: []planmodifier.Object{
-							speakeasy_objectplanmodifier.UseConfigValue(),
-						},
 						Attributes: map[string]schema.Attribute{
 							"entity_schema": schema.StringAttribute{
 								Computed:    true,
@@ -2934,9 +2956,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 					},
 					"journey_submission_trigger": schema.SingleNestedAttribute{
 						Optional: true,
-						PlanModifiers: []planmodifier.Object{
-							speakeasy_objectplanmodifier.UseConfigValue(),
-						},
 						Attributes: map[string]schema.Attribute{
 							"automation_id": schema.StringAttribute{
 								Computed: true,
@@ -2981,9 +3000,6 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 					},
 					"manual_trigger": schema.SingleNestedAttribute{
 						Optional: true,
-						PlanModifiers: []planmodifier.Object{
-							speakeasy_objectplanmodifier.UseConfigValue(),
-						},
 						Attributes: map[string]schema.Attribute{
 							"entity_schema": schema.StringAttribute{
 								Computed: true,

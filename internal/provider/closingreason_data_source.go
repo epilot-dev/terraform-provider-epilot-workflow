@@ -51,6 +51,7 @@ func (r *ClosingReasonDataSource) Schema(ctx context.Context, req datasource.Sch
 			},
 			"id": schema.StringAttribute{
 				Computed: true,
+				Optional: true,
 			},
 			"last_update_time": schema.StringAttribute{
 				Computed: true,

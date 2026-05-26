@@ -52,8 +52,14 @@ type AutomationConfig struct {
 	// Transient field. The full automation action configuration following the automation API action schema. Processed by the backend during create/update and stripped before storage. When present without a flow_id, a new automation flow is created. When present with a flow_id, the existing automation flow is updated.
 	//
 	ActionConfig *ActionConfig `json:"action_config,omitempty"`
+	// Transient field. When present, the backend clones the automation flow referenced by this ID and assigns the new flow_id to the task. Used when duplicating an automation task to give it an independent automation. Stripped before storage.
+	//
+	DuplicatedFlowID *string `json:"duplicated_flow_id,omitempty"`
 	// Id of the configured automation to run
 	FlowID *string `json:"flow_id,omitempty"`
+	// Optional. Source of the entity fed into this automation task. If omitted, the workflow's primary entity is used.
+	//
+	InputContext *AutomationInputContext `json:"input_context,omitempty"`
 }
 
 func (a AutomationConfig) MarshalJSON() ([]byte, error) {
@@ -74,9 +80,23 @@ func (a *AutomationConfig) GetActionConfig() *ActionConfig {
 	return a.ActionConfig
 }
 
+func (a *AutomationConfig) GetDuplicatedFlowID() *string {
+	if a == nil {
+		return nil
+	}
+	return a.DuplicatedFlowID
+}
+
 func (a *AutomationConfig) GetFlowID() *string {
 	if a == nil {
 		return nil
 	}
 	return a.FlowID
+}
+
+func (a *AutomationConfig) GetInputContext() *AutomationInputContext {
+	if a == nil {
+		return nil
+	}
+	return a.InputContext
 }

@@ -8,7 +8,7 @@ import (
 )
 
 type GetAllClosingReasonsRequest struct {
-	// Filter Closing Reasons by status like active inactiv
+	// When set to true, includes inactive closing reasons in the response. By default, only active closing reasons are returned.
 	IncludeInactive *bool `queryParam:"style=form,explode=true,name=includeInactive"`
 }
 

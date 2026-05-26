@@ -8,7 +8,7 @@ import (
 )
 
 type DeleteFlowTemplateRequest struct {
-	// Id of the flow template to de deleted.
+	// Unique identifier of the flow template to be deleted.
 	FlowID string `pathParam:"style=simple,explode=false,name=flowId"`
 }
 
@@ -22,6 +22,8 @@ func (d *DeleteFlowTemplateRequest) GetFlowID() string {
 type DeleteFlowTemplateResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
+	// Flow template not found
+	DefinitionNotFoundResp *shared.DefinitionNotFoundResp
 	// Failed to authenticate
 	ErrorResp *shared.ErrorResp
 	// HTTP response status code for this operation
@@ -35,6 +37,13 @@ func (d *DeleteFlowTemplateResponse) GetContentType() string {
 		return ""
 	}
 	return d.ContentType
+}
+
+func (d *DeleteFlowTemplateResponse) GetDefinitionNotFoundResp() *shared.DefinitionNotFoundResp {
+	if d == nil {
+		return nil
+	}
+	return d.DefinitionNotFoundResp
 }
 
 func (d *DeleteFlowTemplateResponse) GetErrorResp() *shared.ErrorResp {

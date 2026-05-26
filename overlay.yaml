@@ -5,6 +5,8 @@ info:
 actions:
   - target: $
     update:
+      servers:
+        - url: https://workflows-definition.sls.epilot.io
       x-speakeasy-retries:
         strategy: backoff
         backoff:
@@ -15,6 +17,7 @@ actions:
         statusCodes:
           - 5XX
         retryConnectionErrors: true
+
   # Workflow Definitions
   - target: $["paths"]["/v1/workflows/definitions/{definitionId}"]["get"]
     update:

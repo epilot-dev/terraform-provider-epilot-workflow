@@ -9,6 +9,7 @@ import (
 type AutomationTrigger struct {
 	AutomationID  types.String    `tfsdk:"automation_id"`
 	ID            types.String    `tfsdk:"id"`
+	InputEntity   types.String    `tfsdk:"input_entity"`
 	TriggerConfig []TriggerConfig `tfsdk:"trigger_config"`
 	Type          types.String    `tfsdk:"type"`
 }

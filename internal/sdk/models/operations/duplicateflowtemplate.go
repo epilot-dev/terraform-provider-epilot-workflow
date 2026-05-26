@@ -8,6 +8,7 @@ import (
 )
 
 type DuplicateFlowTemplateRequest struct {
+	// Unique identifier of the flow template to duplicate.
 	FlowID string `pathParam:"style=simple,explode=false,name=flowId"`
 }
 
@@ -21,7 +22,9 @@ func (d *DuplicateFlowTemplateRequest) GetFlowID() string {
 type DuplicateFlowTemplateResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
-	// Validation Errors
+	// Source flow template not found
+	DefinitionNotFoundResp *shared.DefinitionNotFoundResp
+	// Validation errors - source template contains invalid data
 	ErrorResp *shared.ErrorResp
 	// Flow template has been duplicated successfully
 	FlowTemplate *shared.FlowTemplate
@@ -36,6 +39,13 @@ func (d *DuplicateFlowTemplateResponse) GetContentType() string {
 		return ""
 	}
 	return d.ContentType
+}
+
+func (d *DuplicateFlowTemplateResponse) GetDefinitionNotFoundResp() *shared.DefinitionNotFoundResp {
+	if d == nil {
+		return nil
+	}
+	return d.DefinitionNotFoundResp
 }
 
 func (d *DuplicateFlowTemplateResponse) GetErrorResp() *shared.ErrorResp {

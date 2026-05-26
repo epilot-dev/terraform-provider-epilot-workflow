@@ -2,8 +2,9 @@
 
 package shared
 
-// ClosingReasonNotFoundResp - Closing reason could be not found
+// ClosingReasonNotFoundResp - Error response returned when a closing reason is not found.
 type ClosingReasonNotFoundResp struct {
+	// Human-readable message indicating the closing reason was not found.
 	Message *string `json:"message,omitempty"`
 }
 

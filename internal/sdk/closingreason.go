@@ -17,6 +17,9 @@ import (
 	"net/url"
 )
 
+// ClosingReason - Manage closing reasons that can be associated with workflows. Closing reasons provide
+// predefined options for users to select when closing or completing a workflow execution,
+// enabling better tracking and reporting of workflow outcomes.
 type ClosingReason struct {
 	rootSDK          *SDK
 	sdkConfiguration config.SDKConfiguration
@@ -205,6 +208,7 @@ func (s *ClosingReason) ChangeReasonStatus(ctx context.Context, request operatio
 
 	switch {
 	case httpRes.StatusCode == 202:
+		utils.DrainBody(httpRes)
 	case httpRes.StatusCode == 400:
 		switch {
 		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
@@ -632,6 +636,7 @@ func (s *ClosingReason) DeleteClosingReason(ctx context.Context, request operati
 
 	switch {
 	case httpRes.StatusCode == 204:
+		utils.DrainBody(httpRes)
 	case httpRes.StatusCode == 403:
 		switch {
 		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):

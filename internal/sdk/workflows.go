@@ -17,6 +17,8 @@ import (
 	"net/url"
 )
 
+// Workflows - Manage V1 workflow definitions with sections and steps. These endpoints support the legacy
+// linear workflow model where definitions contain a sequential flow of sections and steps.
 type Workflows struct {
 	rootSDK          *SDK
 	sdkConfiguration config.SDKConfiguration
@@ -32,7 +34,9 @@ func newWorkflows(rootSDK *SDK, sdkConfig config.SDKConfiguration, hooks *hooks.
 }
 
 // CreateDefinition - createDefinition
-// Create a Workflow Definition.
+// Create a new V1 workflow definition. The definition consists of sections and steps
+// that define the structure of the workflow. Once created, the definition can be used
+// to start workflow executions.
 func (s *Workflows) CreateDefinition(ctx context.Context, request shared.WorkflowDefinition, opts ...operations.Option) (*operations.CreateDefinitionResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
@@ -448,6 +452,7 @@ func (s *Workflows) DeleteDefinition(ctx context.Context, request operations.Del
 
 	switch {
 	case httpRes.StatusCode == 204:
+		utils.DrainBody(httpRes)
 	case httpRes.StatusCode == 401:
 		switch {
 		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
@@ -470,6 +475,7 @@ func (s *Workflows) DeleteDefinition(ctx context.Context, request operations.Del
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -747,7 +753,7 @@ func (s *Workflows) GetDefinition(ctx context.Context, request operations.GetDef
 }
 
 // GetDefinitions - getDefinitions
-// Retrieve all Workflow Definitions from an Organization
+// Retrieve all V1 workflow definitions belonging to the authenticated organization.
 func (s *Workflows) GetDefinitions(ctx context.Context, opts ...operations.Option) (*operations.GetDefinitionsResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
@@ -1559,6 +1565,7 @@ func (s *Workflows) SetWorkflowClosingReasons(ctx context.Context, request opera
 
 	switch {
 	case httpRes.StatusCode == 201:
+		utils.DrainBody(httpRes)
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {

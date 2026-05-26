@@ -2,7 +2,7 @@
 
 package sdk
 
-// Generated from OpenAPI doc version 1.1.0 and generator version 2.795.8
+// Generated from OpenAPI doc version 1.1.0 and generator version 2.881.16
 
 import (
 	"context"
@@ -47,12 +47,50 @@ func Float64(f float64) *float64 { return &f }
 // Pointer provides a helper function to return a pointer to a type
 func Pointer[T any](v T) *T { return &v }
 
-// SDK - Workflows Definitions: Service for Workflow Definitions for different processes inside of an Organization
+// SDK - Workflows Definitions: The Workflows Definitions API enables you to create, manage, and configure reusable workflow templates
+// within your organization. Workflow definitions serve as blueprints that define the structure and behavior
+// of business processes, which can then be instantiated as workflow executions.
+//
+// ## Core Concepts
+//
+// ### Workflow Definition (V1)
+// A workflow definition is a template that describes a business process. It consists of:
+// - **Sections**: Logical groupings (phases) that organize related steps together
+// - **Steps**: Individual tasks or actions that need to be completed within a section
+// - **Closing Reasons**: Predefined reasons that can be selected when closing/completing a workflow
+//
+// ### Flow Template (V2)
+// The modern workflow model that provides advanced capabilities:
+// - **Phases**: Named stages that group related tasks and track progress through the workflow
+// - **Tasks**: Individual units of work that can be manual, automated, AI-powered, or decision points
+// - **Edges**: Connections between tasks that define the flow sequence and support conditional branching
+// - **Triggers**: Define how a workflow is started (manual, automation, journey submission)
+//
+// ### Task Types (V2)
+// - **MANUAL**: Tasks assigned to users that require human action to complete
+// - **AUTOMATION**: Tasks that execute automated actions when reached
+// - **DECISION**: Conditional branching points that evaluate conditions to determine the next path
+// - **AI_AGENT**: Tasks that invoke AI agents to perform intelligent actions
+//
+// ## API Versions
+// - **V1 endpoints** (`/v1/workflows/...`): Legacy linear workflow model with sections and steps
+// - **V2 endpoints** (`/v2/flows/...`): Modern graph-based flow model with phases, tasks, and edges
 type SDK struct {
-	SDKVersion    string
+	SDKVersion string
+	// Manage closing reasons that can be associated with workflows. Closing reasons provide
+	// predefined options for users to select when closing or completing a workflow execution,
+	// enabling better tracking and reporting of workflow outcomes.
+	//
 	ClosingReason *ClosingReason
-	Workflows     *Workflows
-	FlowsV2       *FlowsV2
+	// Manage V1 workflow definitions with sections and steps. These endpoints support the legacy
+	// linear workflow model where definitions contain a sequential flow of sections and steps.
+	//
+	Workflows *Workflows
+	// Manage V2 flow templates with phases, tasks, and edges. The modern workflow model supports
+	// advanced features including conditional branching, multiple trigger types, automation tasks,
+	// AI agent tasks, and flexible task dependencies.
+	//
+	FlowsV2 *FlowsV2
 
 	sdkConfiguration config.SDKConfiguration
 	hooks            *hooks.Hooks
@@ -60,7 +98,7 @@ type SDK struct {
 
 type SDKOption func(*SDK)
 
-// WithServerURL allows the overriding of the default server URL
+// WithServerURL allows providing an alternative server URL
 func WithServerURL(serverURL string) SDKOption {
 	return func(sdk *SDK) {
 		sdk.sdkConfiguration.ServerURL = serverURL
@@ -128,9 +166,9 @@ func WithTimeout(timeout time.Duration) SDKOption {
 // New creates a new instance of the SDK with the provided options
 func New(opts ...SDKOption) *SDK {
 	sdk := &SDK{
-		SDKVersion: "0.29.0",
+		SDKVersion: "0.18.7",
 		sdkConfiguration: config.SDKConfiguration{
-			UserAgent:  "speakeasy-sdk/terraform 0.29.0 2.795.8 1.1.0 github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk",
+			UserAgent:  "speakeasy-sdk/terraform 0.18.7 2.881.16 1.1.0 github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk",
 			ServerList: ServerList,
 		},
 		hooks: hooks.New(),

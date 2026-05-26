@@ -10,7 +10,7 @@ import (
 type GetDefinitionsResponse struct {
 	// HTTP response content type for this operation
 	ContentType string
-	// Other errors
+	// Internal server error
 	ErrorResp *shared.ErrorResp
 	// HTTP response status code for this operation
 	StatusCode int

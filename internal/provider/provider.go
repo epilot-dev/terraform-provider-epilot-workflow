@@ -6,8 +6,10 @@ import (
 	"context"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk"
 	"github.com/epilot-dev/terraform-provider-epilot-workflow/internal/sdk/models/shared"
+	"github.com/hashicorp/terraform-plugin-framework/action"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/ephemeral"
+	"github.com/hashicorp/terraform-plugin-framework/function"
 	"github.com/hashicorp/terraform-plugin-framework/list"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
@@ -17,7 +19,9 @@ import (
 )
 
 var _ provider.Provider = (*EpilotWorkflowProvider)(nil)
+var _ provider.ProviderWithActions = (*EpilotWorkflowProvider)(nil)
 var _ provider.ProviderWithEphemeralResources = (*EpilotWorkflowProvider)(nil)
+var _ provider.ProviderWithFunctions = (*EpilotWorkflowProvider)(nil)
 
 type EpilotWorkflowProvider struct {
 	// version is set to the provider version on release, "dev" when the
@@ -50,7 +54,34 @@ func (p *EpilotWorkflowProvider) Schema(ctx context.Context, req provider.Schema
 				Optional:    true,
 			},
 		},
-		MarkdownDescription: `Workflows Definitions: Service for Workflow Definitions for different processes inside of an Organization`,
+		MarkdownDescription: `Workflows Definitions: The Workflows Definitions API enables you to create, manage, and configure reusable workflow templates` + "\n" +
+			`within your organization. Workflow definitions serve as blueprints that define the structure and behavior` + "\n" +
+			`of business processes, which can then be instantiated as workflow executions.` + "\n" +
+			`` + "\n" +
+			`## Core Concepts` + "\n" +
+			`` + "\n" +
+			`### Workflow Definition (V1)` + "\n" +
+			`A workflow definition is a template that describes a business process. It consists of:` + "\n" +
+			`- **Sections**: Logical groupings (phases) that organize related steps together` + "\n" +
+			`- **Steps**: Individual tasks or actions that need to be completed within a section` + "\n" +
+			`- **Closing Reasons**: Predefined reasons that can be selected when closing/completing a workflow` + "\n" +
+			`` + "\n" +
+			`### Flow Template (V2)` + "\n" +
+			`The modern workflow model that provides advanced capabilities:` + "\n" +
+			`- **Phases**: Named stages that group related tasks and track progress through the workflow` + "\n" +
+			`- **Tasks**: Individual units of work that can be manual, automated, AI-powered, or decision points` + "\n" +
+			`- **Edges**: Connections between tasks that define the flow sequence and support conditional branching` + "\n" +
+			`- **Triggers**: Define how a workflow is started (manual, automation, journey submission)` + "\n" +
+			`` + "\n" +
+			`### Task Types (V2)` + "\n" +
+			`- **MANUAL**: Tasks assigned to users that require human action to complete` + "\n" +
+			`- **AUTOMATION**: Tasks that execute automated actions when reached` + "\n" +
+			`- **DECISION**: Conditional branching points that evaluate conditions to determine the next path` + "\n" +
+			`- **AI_AGENT**: Tasks that invoke AI agents to perform intelligent actions` + "\n" +
+			`` + "\n" +
+			`## API Versions` + "\n" +
+			`- **V1 endpoints** (` + "`" + `/v1/workflows/...` + "`" + `): Legacy linear workflow model with sections and steps` + "\n" +
+			`- **V2 endpoints** (` + "`" + `/v2/flows/...` + "`" + `): Modern graph-based flow model with phases, tasks, and edges`,
 	}
 }
 
@@ -97,10 +128,19 @@ func (p *EpilotWorkflowProvider) Configure(ctx context.Context, req provider.Con
 	}
 
 	client := sdk.New(opts...)
+	resp.ActionData = client
 	resp.DataSourceData = client
 	resp.EphemeralResourceData = client
 	resp.ListResourceData = client
 	resp.ResourceData = client
+}
+
+func (p *EpilotWorkflowProvider) Functions(_ context.Context) []func() function.Function {
+	return []func() function.Function{}
+}
+
+func (p *EpilotWorkflowProvider) Actions(_ context.Context) []func() action.Action {
+	return []func() action.Action{}
 }
 
 func (p *EpilotWorkflowProvider) Resources(ctx context.Context) []func() resource.Resource {

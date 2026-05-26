@@ -2,8 +2,9 @@
 
 package shared
 
-// DefinitionNotFoundResp - Definition could be not found
+// DefinitionNotFoundResp - Error response returned when a workflow definition or flow template is not found.
 type DefinitionNotFoundResp struct {
+	// Human-readable message indicating the resource was not found.
 	Message *string `json:"message,omitempty"`
 }
 

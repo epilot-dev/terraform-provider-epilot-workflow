@@ -36,13 +36,17 @@ func (e *ActionTypeCondition) UnmarshalJSON(data []byte) error {
 	}
 }
 
-// DynamicDueDate - set a Duedate for a step then a specific
+// DynamicDueDate - Configuration for calculating a due date dynamically based on workflow events.
+// The due date is computed by adding a duration (numberOfUnits + timePeriod) to
+// a reference point defined by actionTypeCondition (e.g., when workflow started,
+// when a step closed, or when a phase finished).
 type DynamicDueDate struct {
 	ActionTypeCondition ActionTypeCondition `json:"actionTypeCondition"`
-	NumberOfUnits       float64             `json:"numberOfUnits"`
-	PhaseID             *string             `json:"phaseId,omitempty"`
-	StepID              *string             `json:"stepId,omitempty"`
-	TimePeriod          TimeUnit            `json:"timePeriod"`
+	// Number of time units to add to the reference point.
+	NumberOfUnits float64  `json:"numberOfUnits"`
+	PhaseID       *string  `json:"phaseId,omitempty"`
+	StepID        *string  `json:"stepId,omitempty"`
+	TimePeriod    TimeUnit `json:"timePeriod"`
 }
 
 func (d *DynamicDueDate) GetActionTypeCondition() ActionTypeCondition {

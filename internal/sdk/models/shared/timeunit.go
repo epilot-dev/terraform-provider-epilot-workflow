@@ -15,6 +15,7 @@ const (
 	TimeUnitDays    TimeUnit = "days"
 	TimeUnitWeeks   TimeUnit = "weeks"
 	TimeUnitMonths  TimeUnit = "months"
+	TimeUnitYears   TimeUnit = "years"
 )
 
 func (e TimeUnit) ToPointer() *TimeUnit {
@@ -35,6 +36,8 @@ func (e *TimeUnit) UnmarshalJSON(data []byte) error {
 	case "weeks":
 		fallthrough
 	case "months":
+		fallthrough
+	case "years":
 		*e = TimeUnit(v)
 		return nil
 	default:

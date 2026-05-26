@@ -63,14 +63,14 @@ terraform {
   required_providers {
     epilot-workflow = {
       source  = "epilot-dev/epilot-workflow"
-      version = "0.29.0"
+      version = "0.18.6"
     }
   }
 }
 
 provider "epilot-workflow" {
   bearer_auth = "<YOUR_BEARER_AUTH>" # Required
-  server_url = "..." # Optional
+  server_url  = "..."                # Optional
 }
 ```
 <!-- End Installation [installation] -->
@@ -132,11 +132,12 @@ Available configuration:
 <!-- Start Available Resources and Data Sources [operations] -->
 ## Available Resources and Data Sources
 
-### Resources
+### Managed Resources
 
 * [epilot-workflow_closing_reason](docs/resources/closing_reason.md)
 * [epilot-workflow_flow_template](docs/resources/flow_template.md)
 * [epilot-workflow_workflow_definition](docs/resources/workflow_definition.md)
+
 ### Data Sources
 
 * [epilot-workflow_closing_reason](docs/data-sources/closing_reason.md)
@@ -147,7 +148,34 @@ Available configuration:
 <!-- Start Summary [summary] -->
 ## Summary
 
-Workflows Definitions: Service for Workflow Definitions for different processes inside of an Organization
+Workflows Definitions: The Workflows Definitions API enables you to create, manage, and configure reusable workflow templates
+within your organization. Workflow definitions serve as blueprints that define the structure and behavior
+of business processes, which can then be instantiated as workflow executions.
+
+## Core Concepts
+
+### Workflow Definition (V1)
+A workflow definition is a template that describes a business process. It consists of:
+- **Sections**: Logical groupings (phases) that organize related steps together
+- **Steps**: Individual tasks or actions that need to be completed within a section
+- **Closing Reasons**: Predefined reasons that can be selected when closing/completing a workflow
+
+### Flow Template (V2)
+The modern workflow model that provides advanced capabilities:
+- **Phases**: Named stages that group related tasks and track progress through the workflow
+- **Tasks**: Individual units of work that can be manual, automated, AI-powered, or decision points
+- **Edges**: Connections between tasks that define the flow sequence and support conditional branching
+- **Triggers**: Define how a workflow is started (manual, automation, journey submission)
+
+### Task Types (V2)
+- **MANUAL**: Tasks assigned to users that require human action to complete
+- **AUTOMATION**: Tasks that execute automated actions when reached
+- **DECISION**: Conditional branching points that evaluate conditions to determine the next path
+- **AI_AGENT**: Tasks that invoke AI agents to perform intelligent actions
+
+## API Versions
+- **V1 endpoints** (`/v1/workflows/...`): Legacy linear workflow model with sections and steps
+- **V2 endpoints** (`/v2/flows/...`): Modern graph-based flow model with phases, tasks, and edges
 <!-- End Summary [summary] -->
 
 <!-- Start Table of Contents [toc] -->
@@ -158,6 +186,8 @@ Workflows Definitions: Service for Workflow Definitions for different processes 
   * [Testing the provider locally](#testing-the-provider-locally)
   * [Authentication](#authentication)
   * [Available Resources and Data Sources](#available-resources-and-data-sources)
+  * [Core Concepts](#core-concepts)
+  * [API Versions](#api-versions)
 
 <!-- End Table of Contents [toc] -->
 

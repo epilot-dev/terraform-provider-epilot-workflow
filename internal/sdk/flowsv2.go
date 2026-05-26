@@ -17,6 +17,9 @@ import (
 	"net/url"
 )
 
+// FlowsV2 - Manage V2 flow templates with phases, tasks, and edges. The modern workflow model supports
+// advanced features including conditional branching, multiple trigger types, automation tasks,
+// AI agent tasks, and flexible task dependencies.
 type FlowsV2 struct {
 	rootSDK          *SDK
 	sdkConfiguration config.SDKConfiguration
@@ -32,7 +35,11 @@ func newFlowsV2(rootSDK *SDK, sdkConfig config.SDKConfiguration, hooks *hooks.Ho
 }
 
 // CreateFlowTemplate - createFlowTemplate
-// Create a new Flow Template.
+// Create a new Flow Template (V2 workflow definition).
+//
+// A flow template defines the structure of a workflow including its phases, tasks,
+// edges (connections between tasks), and trigger configuration. Once created, the
+// template can be used to start workflow executions.
 func (s *FlowsV2) CreateFlowTemplate(ctx context.Context, request shared.CreateFlowTemplate, opts ...operations.Option) (*operations.CreateFlowTemplateResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
@@ -448,6 +455,7 @@ func (s *FlowsV2) DeleteFlowTemplate(ctx context.Context, request operations.Del
 
 	switch {
 	case httpRes.StatusCode == 204:
+		utils.DrainBody(httpRes)
 	case httpRes.StatusCode == 401:
 		switch {
 		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
@@ -470,6 +478,47 @@ func (s *FlowsV2) DeleteFlowTemplate(ctx context.Context, request operations.Del
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
 	case httpRes.StatusCode == 404:
+		switch {
+		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
+			rawBody, err := utils.ConsumeRawBody(httpRes)
+			if err != nil {
+				return nil, err
+			}
+
+			var out shared.DefinitionNotFoundResp
+			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
+				return nil, err
+			}
+
+			res.DefinitionNotFoundResp = &out
+		default:
+			rawBody, err := utils.ConsumeRawBody(httpRes)
+			if err != nil {
+				return nil, err
+			}
+			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
+		}
+	case httpRes.StatusCode == 500:
+		switch {
+		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
+			rawBody, err := utils.ConsumeRawBody(httpRes)
+			if err != nil {
+				return nil, err
+			}
+
+			var out shared.ErrorResp
+			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
+				return nil, err
+			}
+
+			res.ErrorResp = &out
+		default:
+			rawBody, err := utils.ConsumeRawBody(httpRes)
+			if err != nil {
+				return nil, err
+			}
+			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
+		}
 	default:
 		rawBody, err := utils.ConsumeRawBody(httpRes)
 		if err != nil {
@@ -483,7 +532,9 @@ func (s *FlowsV2) DeleteFlowTemplate(ctx context.Context, request operations.Del
 }
 
 // DuplicateFlowTemplate - duplicateFlowTemplate
-// Duplicate a Flow Template from an existing workflow.
+// Create a copy of an existing flow template. The duplicated template will have a new
+// unique identifier and can be modified independently of the original. This is useful
+// for creating variations of existing workflows without starting from scratch.
 func (s *FlowsV2) DuplicateFlowTemplate(ctx context.Context, request operations.DuplicateFlowTemplateRequest, opts ...operations.Option) (*operations.DuplicateFlowTemplateResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
@@ -692,6 +743,27 @@ func (s *FlowsV2) DuplicateFlowTemplate(ctx context.Context, request operations.
 			}
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	case httpRes.StatusCode == 404:
+		switch {
+		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
+			rawBody, err := utils.ConsumeRawBody(httpRes)
+			if err != nil {
+				return nil, err
+			}
+
+			var out shared.DefinitionNotFoundResp
+			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
+				return nil, err
+			}
+
+			res.DefinitionNotFoundResp = &out
+		default:
+			rawBody, err := utils.ConsumeRawBody(httpRes)
+			if err != nil {
+				return nil, err
+			}
+			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
+		}
 	case httpRes.StatusCode == 500:
 		switch {
 		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
@@ -726,7 +798,7 @@ func (s *FlowsV2) DuplicateFlowTemplate(ctx context.Context, request operations.
 }
 
 // GetFlowTemplate - getFlowTemplate
-// Get specific FLow template for a customer
+// Retrieve a specific flow template by its unique identifier.
 func (s *FlowsV2) GetFlowTemplate(ctx context.Context, request operations.GetFlowTemplateRequest, opts ...operations.Option) (*operations.GetFlowTemplateResponse, error) {
 	o := operations.Options{}
 	supportedOptions := []string{
@@ -1634,9 +1706,32 @@ func (s *FlowsV2) UpdateFlowTemplate(ctx context.Context, request operations.Upd
 			}
 			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
 		}
+	case httpRes.StatusCode == 404:
+		switch {
+		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
+			rawBody, err := utils.ConsumeRawBody(httpRes)
+			if err != nil {
+				return nil, err
+			}
+
+			var out shared.DefinitionNotFoundResp
+			if err := utils.UnmarshalJsonFromResponseBody(bytes.NewBuffer(rawBody), &out, ""); err != nil {
+				return nil, err
+			}
+
+			res.DefinitionNotFoundResp = &out
+		default:
+			rawBody, err := utils.ConsumeRawBody(httpRes)
+			if err != nil {
+				return nil, err
+			}
+			return nil, errors.NewSDKError(fmt.Sprintf("unknown content-type received: %s", httpRes.Header.Get("Content-Type")), httpRes.StatusCode, string(rawBody), httpRes)
+		}
 	case httpRes.StatusCode == 400:
 		fallthrough
 	case httpRes.StatusCode == 401:
+		fallthrough
+	case httpRes.StatusCode == 409:
 		switch {
 		case utils.MatchContentType(httpRes.Header.Get("Content-Type"), `application/json`):
 			rawBody, err := utils.ConsumeRawBody(httpRes)

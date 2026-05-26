@@ -228,8 +228,10 @@ func (u Schedule) MarshalJSON() ([]byte, error) {
 }
 
 type DecisionTask struct {
-	AssignedTo []DecisionTaskAssignedTo `json:"assigned_to,omitempty"`
-	Conditions []Condition              `json:"conditions"`
+	// When true, all branches with met conditions execute in parallel. When false, only the first branch with a met condition is executed. Defaults to true for backwards compatibility.
+	AllowParallelExecution *bool                    `default:"true" json:"allow_parallel_execution"`
+	AssignedTo             []DecisionTaskAssignedTo `json:"assigned_to,omitempty"`
+	Conditions             []Condition              `json:"conditions"`
 	// Longer information regarding Task
 	Description *StepDescription `json:"description,omitempty"`
 	DueDate     *string          `json:"due_date,omitempty"`
@@ -264,6 +266,13 @@ func (d *DecisionTask) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	return nil
+}
+
+func (d *DecisionTask) GetAllowParallelExecution() *bool {
+	if d == nil {
+		return nil
+	}
+	return d.AllowParallelExecution
 }
 
 func (d *DecisionTask) GetAssignedTo() []DecisionTaskAssignedTo {
