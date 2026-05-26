@@ -2001,16 +2001,12 @@ func (r *FlowTemplateResource) Schema(ctx context.Context, req resource.SchemaRe
 														},
 													},
 												},
-												Validators: []validator.List{
-													listvalidator.SizeAtLeast(1),
-												},
 											},
 										},
 									},
 									Description: `Not Null`,
 									Validators: []validator.List{
 										speakeasy_listvalidators.NotNull(),
-										listvalidator.SizeAtLeast(2),
 									},
 								},
 								"description": schema.SingleNestedAttribute{
